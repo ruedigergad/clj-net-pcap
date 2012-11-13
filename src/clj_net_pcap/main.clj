@@ -25,8 +25,8 @@
   (:use clojure.pprint
         clojure.tools.cli
         clj-net-pcap.core
-        clj-net-pcap.native)
-  (:import (java.util.concurrent Executors TimeUnit))
+        clj-net-pcap.native
+        clj-assorted-utils.util)
   (:gen-class))
 
 (defn -main [& args]
@@ -61,12 +61,12 @@
                            (arg-map :interface) 
                            (arg-map :filter))
               stat-interval (arg-map :stats)
-              executor (Executors/newSingleThreadScheduledExecutor)
+              executor (executor)
               shutdown-fn (fn [] (do
                                    (println "clj-net-pcap is shuting down...")
                                    (when (> stat-interval 0)
                                      (println "Stopping stat output.")
-                                     (.shutdown executor))
+                                     (shutdown executor))
                                    (print-stat-cljnetpcap cljnetpcap)
                                    (stop-cljnetpcap cljnetpcap)
                                    (println "Removing temporarily extracted native libs...")
@@ -74,7 +74,7 @@
           (println "clj-net-pcap standalone executable started.\nType \"q\" followed by <Return> to quit: ")
           (when (> stat-interval 0)
             (println "Printing stats to stderr in intervalls of" stat-interval "ms.")
-            (.scheduleAtFixedRate executor #(print-stat-cljnetpcap cljnetpcap) 0 stat-interval TimeUnit/MILLISECONDS))
+            (run-repeat executor #(print-stat-cljnetpcap cljnetpcap) stat-interval))
           ;;; Running the main from, e.g., leiningen results in stdout not being properly accessible.
           ;;; Hence, this will not work when run this way but works when run from a jar via "java -jar ...".
           (while (not= "q" (read-line))

@@ -53,11 +53,11 @@
           stat-fn (create-stat-fn pcap)
           stat-print-fn #(print-err-ln "pcap-stats:" (stat-fn))]
       (fn [k]
-        (cond
-          (= k :stat) (stat-print-fn)
-          (= k :stop) (do
-                        (stop-sniffer sniffer)
-                        (stop-forwarder forwarder)))))))
+        (condp = k
+          :stat (stat-print-fn)
+          :stop (do
+                  (stop-sniffer sniffer)
+                  (stop-forwarder forwarder)))))))
 
 (defn print-stat-cljnetpcap [cljnetpcap]
   (cljnetpcap :stat))

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>jnetpcap</groupId>
+  <artifactId>jnetpcap</artifactId>
+  <version>1.4.r1390-1a</version>
+  <name>jnetpcap</name>
+  <description>jNetPcap: http://jnetpcap.com/</description>
+  <licenses>
+    <license>
+      <name>GNU Lesser General Public License (LGPL) Version 3</name>
+      <url>http://www.gnu.org/copyleft/lesser.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <repositories>
+    <repository>
+      <id>clojars</id>
+      <url>http://clojars.org/repo/</url>
+    </repository>
+  </repositories>
+</project>

@@ -1,6 +1,6 @@
 # clj-net-pcap
 
-jNetPcap is a wrapper/adapter/facade (No matter how you wanna call it.)
+clj-net-pcap is a wrapper/adapter/facade (No matter how you wanna call it.)
 around jNetPcap that enables and eases packet capturing with Clojure.
 
 ## Usage

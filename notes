@@ -1,0 +1,8 @@
+Use the local-repo Leiningen plug-in to create a local repository for jnetpcap.
+
+Install the local-repo plug-in:
+lein plugin install lein-localrepo "0.3"
+
+Add "our" jnetpcap Jar to that repo:
+lein localrepo install jnetpcap/jnetpcap.jar jnetpcap 1.4.r1380-2
+

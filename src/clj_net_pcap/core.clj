@@ -174,31 +174,46 @@
             Http$Request/RequestUrl
             Http$Request/RequestVersion])]))))
 
+(declare stdout-byte-array-forwarder-fn)
+
 (defn parse-pcap-header [^PcapPacket packet]
-  (let [header (.getCaptureHeader packet)]
-    {(classname header) {"timestampInNanos" (.timestampInNanos header)
-                         "wirelen" (.wirelen header)}}))
+  (try
+    (let [header (.getCaptureHeader packet)]
+      {(classname header) {"timestampInNanos" (.timestampInNanos header)
+                           "wirelen" (.wirelen header)}})
+    (catch Exception e
+      (println "Error parsing the pcap packet header!")
+      (.printStackTrace e)
+      (println "Packet raw data was:")
+      (stdout-byte-array-forwarder-fn packet))))
 
 (defn parse-pcap-packet [^PcapPacket packet]
-  (reduce into [{}
-                (parse-pcap-header packet)
-                (parse-protocol-headers packet)]))
+  (try
+    (reduce into [{}
+                  (parse-pcap-header packet)
+                  (parse-protocol-headers packet)])
+    (catch Exception e
+      (println "Error parsing the pcap packet!")
+      (.printStackTrace e)
+      (println "Packet raw data was:")
+      (stdout-byte-array-forwarder-fn packet))))
 
 (defn stdout-forwarder-fn [packet]
   (pprint (parse-pcap-packet (:pcap-packet packet))))
 
+(defn pcap-packet-to-byte-vector [pcap-packet]
+  (let [buffer (byte-array (.getTotalSize pcap-packet) (byte 0))
+        _ (.transferStateAndDataTo pcap-packet buffer)]
+    (vec buffer)))
+
 (defn stdout-byte-array-forwarder-fn [packet]
   (let [pcap-packet (:pcap-packet packet)
-        buffer (byte-array (.getTotalSize pcap-packet) (byte 0))
-        _ (.transferStateAndDataTo pcap-packet buffer)
-        buffer-seq (vec buffer)]
+        buffer-seq (pcap-packet-to-byte-vector pcap-packet)]
     (println "Packet Start (size:" (count buffer-seq) "):" buffer-seq "Packet End\n\n")))
 
 (defn stdout-combined-forwarder-fn [packet]
   (let [pcap-packet (:pcap-packet packet)
-        buffer (byte-array (.getTotalSize pcap-packet) (byte 0))
-        _ (.transferStateAndDataTo pcap-packet buffer)
-        buffer-seq (vec buffer)]
+        buffer-seq (pcap-packet-to-byte-vector pcap-packet)]
     (pprint (parse-pcap-packet (:pcap-packet packet)))
     (println "Packet Start (size:" (count buffer-seq) "):" buffer-seq "Packet End\n\n")))
 

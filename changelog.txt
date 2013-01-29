@@ -1,10 +1,8 @@
-
 master
 
-1.7.0
-  - Update jnetpcap to 1.4.r1390-1
-  - Add function for querying stats.
-  - Output stats on shutdown.
-  - Add option to output stats in regular intervals.
-  - Add source and target MAC/IP to ARP output/map.
+1.0.1
+  - Be more robust in case of exceptions.
+  - Refactor function to extract bytes as vector.
 
+1.0.0
+  - New release as clj-net-pcap.

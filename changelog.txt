@@ -1,5 +1,12 @@
 master
 
+1.0.3
+  - Fix formating of IPv6 addresses in jnetpcap.
+    This fix should be submitted upstream.
+
+1.0.2
+  - Add missing native libs for Linux i386
+
 1.0.1
   - Be more robust in case of exceptions.
   - Refactor function to extract bytes as vector.

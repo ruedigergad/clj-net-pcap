@@ -11,7 +11,7 @@
   <scm>
     <connection>scm:git:git://github.com/ruedigergad/clj-net-pcap.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/ruedigergad/clj-net-pcap.git</developerConnection>
-    <tag>af6c1ded67e64f53017272cb5067176d80793a50</tag>
+    <tag>e366f48c94e37403514a49c9b72b04e55b2ea35a</tag>
     <url>https://github.com/ruedigergad/clj-net-pcap</url>
   </scm>
   <build>

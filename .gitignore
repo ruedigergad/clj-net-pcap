@@ -3,3 +3,5 @@
 /.lein-failures
 /*jar
 /pom.xml
+/native
+*swp

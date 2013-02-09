@@ -1,0 +1,32 @@
+From e2c5bd72c1c844314d9b313d72a5c83c7c948230 Mon Sep 17 00:00:00 2001
+From: Ruediger Gad <r.c.g@gmx.de>
+Date: Sat, 9 Feb 2013 11:11:06 +0100
+Subject: [PATCH 3/3] For :0000: fields that could not be reduced to :: simply
+ print :0:.
+
+
+Signed-off-by: Ruediger Gad <r.c.g@gmx.de>
+---
+ src/java1.5/org/jnetpcap/packet/format/FormatUtils.java | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/src/java1.5/org/jnetpcap/packet/format/FormatUtils.java b/src/java1.5/org/jnetpcap/packet/format/FormatUtils.java
+index fd4d1b1..a8fc55a 100644
+--- a/src/java1.5/org/jnetpcap/packet/format/FormatUtils.java
++++ b/src/java1.5/org/jnetpcap/packet/format/FormatUtils.java
+@@ -336,6 +336,12 @@ public class FormatUtils {
+ 
+ 			if (buf.length() != 0 && (i % 2) == 0) {
+ 				buf.append(':');
++
++                if (b == 0 && array[i+1] == 0) {
++                    buf.append('0');
++                    i++;
++                    continue;                    
++                }
+ 			}
+ 			if (b >= 0 && b < 16) {
+ 				buf.append('0');
+-- 
+1.8.1.2
+

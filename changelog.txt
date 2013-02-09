@@ -1,5 +1,11 @@
 master
 
+1.0.6
+  - Increment jnetpcap version to reflect that we use a custom patched
+  version.
+    This version fixes various issues with respect to IPv6 address formating.
+  - Add the formating patches under jnetpcap.
+
 1.0.5
   - IPv6 formating: print ":0:" instead of ":0000:" for
     sequences of zeros that had could not be shortened as "::".

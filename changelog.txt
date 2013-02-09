@@ -1,5 +1,9 @@
 master
 
+1.0.5
+  - IPv6 formating: print ":0:" instead of ":0000:" for
+    sequences of zeros that had could not be shortened as "::".
+
 1.0.4
   - Fix formating of IPv6 addresses in jnetpcap.
     This fix solves issues with respect to intermediate sequences of zeros.

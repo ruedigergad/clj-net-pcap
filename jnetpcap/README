@@ -1,0 +1,19 @@
+jNetPcap is developed and released by Sly Technologies: http://jnetpcap.com/
+
+
+As I am providing readily compiled versions for download I also provide a copy 
+of the original source code as released by Sly Technologies as well as patches
+that had been applied for creating the jNetPcap version that is available here.
+
+Additionally, the i386 Linux native libs had not been available from 
+jnetpcap.com but are customly compiled.
+
+
+All changes/patches and compiled files are released under the terms of the LGPLv3.
+This is the same license under which the original jNetPcap code is released as well.
+
+All this is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License (LGPL) for more details.
+

@@ -1,5 +1,9 @@
 master
 
+1.0.4
+  - Fix formating of IPv6 addresses in jnetpcap.
+    This fix solves issues with respect to intermediate sequences of zeros.
+
 1.0.3
   - Fix formating of IPv6 addresses in jnetpcap.
     This fix should be submitted upstream.

@@ -137,6 +137,7 @@
          (src-dst ip4)
          {"id" (.id ip4)
           "tos" (.tos ip4)
+          "type" (.type ip4)
           "ttl" (.ttl ip4)}]
         [ip6
          (src-dst ip6)

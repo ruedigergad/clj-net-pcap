@@ -22,13 +22,34 @@
     :doc "Clojure jNetPcap wrapper tests"} 
   clj-net-pcap.test.pcap-offline
   (:use clojure.test
-        clj-net-pcap.pcap))
+        clj-net-pcap.pcap
+        clj-assorted-utils.util)
+  (:import (org.jnetpcap.packet PcapPacketHandler)))
+
+(def test-file "offline-test.pcap")
 
 (deftest test-create-pcap-from-file-error
   (let [pcap (create-pcap-from-file "this.file.does-not-exist")]
     (is (nil? pcap))))
 
 (deftest test-create-pcap-from-file
-  (let [pcap (create-pcap-from-file "offline-test.pcap")]
+  (let [pcap (create-pcap-from-file test-file)]
     (is (not (nil? pcap)))))
+
+(deftest test-create-pcap-from-file-and-dispatch
+  (let [pcap (create-pcap-from-file test-file)
+        my-counter (prepare-counter)
+        packet-handler (proxy [PcapPacketHandler] []
+                         (nextPacket [p u] (inc-counter my-counter)))]
+    (is (= 0 @my-counter))
+    (.dispatch pcap -1 packet-handler nil)
+    (sleep 200)
+    (is (= 6 @my-counter))))
+
+(deftest test-process-pcap-file
+  (let [my-counter (prepare-counter)
+        handler-fn (fn [_ _] (inc-counter my-counter))]
+    (is (= 0 @my-counter))
+    (process-pcap-file test-file handler-fn)
+    (is (= 6 @my-counter))))
 

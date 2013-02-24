@@ -123,3 +123,7 @@
         (.toString pcap-stats)
         (print-err-ln (.getErr pcap))))))
 
+(defn create-pcap-from-file [file-name]
+  (let [err (StringBuilder.)]
+    (Pcap/openOffline file-name err)))
+

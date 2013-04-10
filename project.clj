@@ -7,5 +7,5 @@
                  [clj-assorted-utils "1.0.0"]
                  [jnetpcap "1.4.r1390-1b"]]
   :main clj-net-pcap.main
-  :java-source-path "src"
+  :java-source-paths ["src-java"]
   :omit-source true)

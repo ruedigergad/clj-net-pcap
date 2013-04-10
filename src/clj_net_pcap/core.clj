@@ -29,7 +29,7 @@
         clj-assorted-utils.util)
   (:import (java.net InetAddress)
            (java.util.concurrent LinkedBlockingQueue)
-           (org.jnetpcap.packet PcapPacket)
+           (org.jnetpcap.packet PcapPacket PcapPacketHandler)
            (org.jnetpcap.packet.format FormatUtils)
            (org.jnetpcap.protocol.lan Ethernet)
            (org.jnetpcap.protocol.network Arp Icmp Ip4 Ip6)
@@ -217,4 +217,20 @@
         buffer-seq (pcap-packet-to-byte-vector pcap-packet)]
     (pprint (parse-pcap-packet (:pcap-packet packet)))
     (println "Packet Start (size:" (count buffer-seq) "):" buffer-seq "Packet End\n\n")))
+
+(defn process-pcap-file
+  ([file-name handler-fn]
+    (process-pcap-file file-name handler-fn nil))
+  ([file-name handler-fn user-data]
+    (let [pcap (create-pcap-from-file file-name)
+          packet-handler (proxy [PcapPacketHandler] []
+                           (nextPacket [p u] (handler-fn p u)))]
+      (.dispatch pcap -1 packet-handler user-data))))
+
+(defn process-pcap-file-to-map
+  [file-name handler-fn]
+    (process-pcap-file 
+      file-name
+      (fn [p _]
+        (handler-fn (parse-pcap-packet p)))))
 

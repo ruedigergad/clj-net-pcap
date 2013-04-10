@@ -25,8 +25,7 @@
   clj-net-pcap.pcap
   (:use clj-assorted-utils.util)
   (:import (java.util ArrayList) 
-           (org.jnetpcap Pcap PcapBpfProgram PcapIf PcapStat)
-           (org.jnetpcap.packet PcapPacketHandler)))
+           (org.jnetpcap Pcap PcapBpfProgram PcapIf PcapStat)))
 
 
 (def ^:dynamic *buffer-size* (int (Math/pow 2 27)))
@@ -124,18 +123,8 @@
         (.toString pcap-stats)
         (print-err-ln (.getErr pcap))))))
 
+
 (defn create-pcap-from-file [file-name]
   (let [err (StringBuilder.)]
     (Pcap/openOffline file-name err)))
-
-(defn process-pcap-file
-  ([file-name handler-fn]
-    (process-pcap-file file-name handler-fn nil))
-  ([file-name handler-fn user-data]
-    (let [pcap (create-pcap-from-file file-name)
-          packet-handler (proxy [PcapPacketHandler] []
-                           (nextPacket [p u] (handler-fn p u)))]
-      (.dispatch pcap -1 packet-handler user-data))))
-
-
 

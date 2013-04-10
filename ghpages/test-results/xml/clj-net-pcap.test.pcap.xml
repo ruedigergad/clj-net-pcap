@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="clj-net-pcap.test.pcap" errors="0" failures="0" tests="9" time="9.2748" timestamp="2013-04-10_21:52:12+0200">
+    <testcase name="test-device-exists" classname="clj-net-pcap.test.pcap" time="0.1217">
+    </testcase>
+    <testcase name="test-create-and-activate-pcap" classname="clj-net-pcap.test.pcap" time="1.3089">
+    </testcase>
+    <testcase name="test-create-and-set-filter" classname="clj-net-pcap.test.pcap" time="0.7078">
+    </testcase>
+    <testcase name="test-create-filter" classname="clj-net-pcap.test.pcap" time="0.0035">
+    </testcase>
+    <testcase name="test-create-pcap" classname="clj-net-pcap.test.pcap" time="0.0025">
+    </testcase>
+    <testcase name="test-create-get-stat-fn" classname="clj-net-pcap.test.pcap" time="3.5850">
+    </testcase>
+    <testcase name="test-set-filter" classname="clj-net-pcap.test.pcap" time="3.2449">
+    </testcase>
+    <testcase name="test-get-devices" classname="clj-net-pcap.test.pcap" time="0.1289">
+    </testcase>
+    <testcase name="test-get-device" classname="clj-net-pcap.test.pcap" time="0.1222">
+    </testcase>
+</testsuite>

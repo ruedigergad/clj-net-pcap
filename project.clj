@@ -8,4 +8,9 @@
                  [jnetpcap "1.4.r1390-1b"]]
   :main clj-net-pcap.main
   :java-source-paths ["src-java"]
-  :omit-source true)
+  :omit-source true
+  :html5-docs-docs-dir "ghpages/doc"
+  :html5-docs-ns-includes #"^clj-net-pcap.*"
+  :html5-docs-repository-url "https://github.com/ruedigergad/clj-net-pcap/blob/master"
+  :test2junit-output-dir "ghpages/test-results"
+  :test2junit-run-ant true)

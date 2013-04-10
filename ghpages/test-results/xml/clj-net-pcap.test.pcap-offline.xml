@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="clj-net-pcap.test.pcap-offline" errors="0" failures="0" tests="5" time="0.3023" timestamp="2013-04-10_21:52:12+0200">
+    <testcase name="test-create-pcap-from-file-error" classname="clj-net-pcap.test.pcap-offline" time="0.0028">
+    </testcase>
+    <testcase name="test-process-pcap-file-to-map" classname="clj-net-pcap.test.pcap-offline" time="0.0460">
+    </testcase>
+    <testcase name="test-create-pcap-from-file" classname="clj-net-pcap.test.pcap-offline" time="0.0030">
+    </testcase>
+    <testcase name="test-create-pcap-from-file-and-dispatch" classname="clj-net-pcap.test.pcap-offline" time="0.2123">
+    </testcase>
+    <testcase name="test-process-pcap-file" classname="clj-net-pcap.test.pcap-offline" time="0.0115">
+    </testcase>
+</testsuite>

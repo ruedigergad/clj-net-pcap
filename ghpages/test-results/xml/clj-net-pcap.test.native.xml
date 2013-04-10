@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="clj-net-pcap.test.native" errors="0" failures="0" tests="6" time="0.1542" timestamp="2013-04-10_21:52:02+0200">
+    <testcase name="extract-from-jar-to-file" classname="clj-net-pcap.test.native" time="0.0474">
+    </testcase>
+    <testcase name="extract-remove-native-libs" classname="clj-net-pcap.test.native" time="0.0516">
+    </testcase>
+    <testcase name="get-url-for-lib" classname="clj-net-pcap.test.native" time="0.0027">
+    </testcase>
+    <testcase name="mk-rm-native-lib-dir" classname="clj-net-pcap.test.native" time="0.0110">
+    </testcase>
+    <testcase name="get-url-for-lib-error" classname="clj-net-pcap.test.native" time="0.0022">
+    </testcase>
+    <testcase name="find-lib-in-jar" classname="clj-net-pcap.test.native" time="0.0049">
+    </testcase>
+</testsuite>

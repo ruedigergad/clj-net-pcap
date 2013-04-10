@@ -27,7 +27,7 @@
         clj-assorted-utils.util)
   (:import (org.jnetpcap.packet PcapPacketHandler)))
 
-(def test-file "offline-test.pcap")
+(def test-file "test/clj_net_pcap/test/data/offline-test.pcap")
 
 (deftest test-create-pcap-from-file-error
   (let [pcap (create-pcap-from-file "this.file.does-not-exist")]
@@ -59,7 +59,7 @@
         handler-fn (fn [m]
                      (dosync (ref-set my-map m)))]
     (is (= {} @my-map))
-    (process-pcap-file-to-map "icmp-echo-request.pcap" handler-fn)
+    (process-pcap-file-to-map "test/clj_net_pcap/test/data/icmp-echo-request.pcap" handler-fn)
     (is (= {"PcapHeader" {"timestampInNanos" 1365516583196346000, "wirelen" 98},
             "DataLinkLayer" {"index" 0, "ProtocolType" "Ethernet", "destination" "E0:CB:4E:E3:38:46", "source" "90:E6:BA:3C:9A:47", "next" 2},
             "NetworkLayer" {"ttl" 64, "destination" "173.194.69.94", "index" 1, "ProtocolType" "Ip4", "next" 12, "tos" 0, "type" 1, "source" "192.168.20.126", "id" 0},

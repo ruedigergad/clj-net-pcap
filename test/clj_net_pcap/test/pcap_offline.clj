@@ -22,6 +22,7 @@
     :doc "Clojure jNetPcap wrapper tests"} 
   clj-net-pcap.test.pcap-offline
   (:use clojure.test
+        clj-net-pcap.core
         clj-net-pcap.pcap
         clj-assorted-utils.util)
   (:import (org.jnetpcap.packet PcapPacketHandler)))
@@ -52,4 +53,16 @@
     (is (= 0 @my-counter))
     (process-pcap-file test-file handler-fn)
     (is (= 6 @my-counter))))
+
+(deftest test-process-pcap-file-to-map
+  (let [my-map (ref {})
+        handler-fn (fn [m]
+                     (dosync (ref-set my-map m)))]
+    (is (= {} @my-map))
+    (process-pcap-file-to-map "icmp-echo-request.pcap" handler-fn)
+    (is (= {"PcapHeader" {"timestampInNanos" 1365516583196346000, "wirelen" 98},
+            "DataLinkLayer" {"index" 0, "ProtocolType" "Ethernet", "destination" "E0:CB:4E:E3:38:46", "source" "90:E6:BA:3C:9A:47", "next" 2},
+            "NetworkLayer" {"ttl" 64, "destination" "173.194.69.94", "index" 1, "ProtocolType" "Ip4", "next" 12, "tos" 0, "type" 1, "source" "192.168.20.126", "id" 0},
+            "Icmp" {"index" 2, "typeDescription" "echo request", "next" 0}}
+           @my-map))))
 

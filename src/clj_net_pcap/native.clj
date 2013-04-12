@@ -28,10 +28,11 @@
 (def ^:dynamic *lib-dir* "clj-net-pcap")
 
 (defn native-lib-dir []
-  (cond
-    (is-os? "linux") (str "/tmp/" *lib-dir* "/")
-    (is-os? "windows") (str "C:\\TEMP\\" *lib-dir* "\\")
-    :default (str "~/" *lib-dir* "/")))
+  (let [user (System/getProperty "user.name")]
+    (cond
+      (is-os? "linux") (str "/tmp/" *lib-dir* "_" user "/")
+      (is-os? "windows") (str "C:\\TEMP\\" *lib-dir* "_" user "\\")
+      :default (str "~/" *lib-dir* user "/"))))
 
 (defn pcap-lib-name [p]
   (let [prefix (cond 

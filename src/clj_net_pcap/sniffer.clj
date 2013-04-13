@@ -81,12 +81,13 @@
                         (.join sniffer-thread)
                         (.close pcap)))))))
 
-(defn stop-sniffer [sniffer]
+(defn stop-sniffer
   "Convenience function for stopping a sniffer that has been created with 
    create-and-start-sniffer."
+  [sniffer]
   (sniffer :stop))
 
-(defn create-and-start-forwarder [^BlockingQueue queue forwarder-fn]
+(defn create-and-start-forwarder
   "Creates a thread in which the actual processing of the received packets is
    supposed to happen. 
    This function accepts a queue that is an instance of 
@@ -94,6 +95,7 @@
    taken from the queue passing the packet instance to forwarder-fn.
    When no packets are int the queue the execution of forwarder-fn blocks until
    new packets are available for being processed."
+  [^BlockingQueue queue forwarder-fn]
   (let [running (ref true)
         run-fn (fn [] (while @running 
                         (let [packet (try (.take queue)
@@ -112,7 +114,8 @@
                       (.interrupt forwarder-thread)
                       (.join forwarder-thread))))))
 
-(defn stop-forwarder [forwarder]
+(defn stop-forwarder
   "Stops the given forwarder."
+  [forwarder]
   (forwarder :stop))
 

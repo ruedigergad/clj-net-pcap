@@ -136,13 +136,13 @@
              fields)))
 
 (def parse-protocol-headers-to-map
-  "Function to parse the information contained in the protocol headers 
-   of a org.jnetpcap.packet.PcapPacket instance into a map.
+  ^{:doc "Function to parse the information contained in the protocol headers 
+          of a org.jnetpcap.packet.PcapPacket instance into a map.
 
-   This function is a closure over the individual protocol class instances.
-   The reason for this is to minimize the overhead due to instantiating those classes.
-   This is a typical design pattern when working with jNetPcap.
-   Please refer to the jNetPcap documentation for more information."
+          This function is a closure over the individual protocol class instances.
+          The reason for this is to minimize the overhead due to instantiating those classes.
+          This is a typical design pattern when working with jNetPcap.
+          Please refer to the jNetPcap documentation for more information."}
   (let [eth (Ethernet.)
         arp (Arp.)
         icmp (Icmp.)

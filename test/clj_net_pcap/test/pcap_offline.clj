@@ -19,7 +19,7 @@
 
 (ns 
   ^{:author "Ruediger Gad",
-    :doc "Clojure jNetPcap wrapper tests"} 
+    :doc "Clojure tests for reading from pcap files."} 
   clj-net-pcap.test.pcap-offline
   (:use clojure.test
         clj-net-pcap.core

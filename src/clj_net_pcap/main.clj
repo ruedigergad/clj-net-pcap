@@ -27,6 +27,7 @@
         clojure.tools.cli
         clj-net-pcap.core
         clj-net-pcap.native
+        clj-net-pcap.pcap-data
         clj-assorted-utils.util)
   (:gen-class))
 

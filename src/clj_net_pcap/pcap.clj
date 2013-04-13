@@ -37,53 +37,63 @@
 (def any "any")
 
 
-(defn get-devices []
+(defn get-devices
   "Returns a vector containing all network devices found by Pcap or nil if an
    error occured."
+  []
   (let [devs (ArrayList.)
         err (StringBuilder.)]
     (if (= (Pcap/findAllDevs devs err) 0)
       (vec devs)
       ;;; TODO: Should we throw an exception when something went wrong or is 
       ;;;       returning nil sufficient?
-      (println (.toString err)))))
+      (println "An error occured while querying available devices:" err))))
 
-(defn get-device [dev-name]
+(defn get-device
   "Returns the network device with the supplied dev-name or nil if the device 
    does not exist."
+  [dev-name]
   (some #(if (= (.getName %1) dev-name) %1) (get-devices)))
 
-(defn device-exists? [dev-name]
+(defn device-exists?
   "Convenience function for checking if the device with dev-name exists."
+  [dev-name]
   (not (nil? (get-device dev-name))))
 
-(defn create-pcap [dev-name]
+(defn create-pcap
   "Creates a Pcap instance and initializes it with the values for:
    *buffer-size*, *flags*, *snap-len*. You can \"override\" the default values
    by \"re-binding\" those vars.
    Please note: *flags* is currently only passed to Pcap.setPromisc()."
-  (let [err (StringBuilder.)]
-    (doto (Pcap/create dev-name err)
-      (.setBufferSize *buffer-size*)
-      (.setPromisc *flags*)
-      (.setSnaplen *snap-len*))))
+  [dev-name]
+  (let [err (StringBuilder.)
+        pcap (doto (Pcap/create dev-name err)
+               (.setBufferSize *buffer-size*)
+               (.setPromisc *flags*)
+               (.setSnaplen *snap-len*))]
+    (if (nil? pcap)
+      (println "An error occured while creating a pcap instance:" err)
+      pcap)))
 
-(defn activate-pcap [^Pcap pcap]
+(defn activate-pcap
   "Activates the passed Pcap instance."
+  [^Pcap pcap]
   (if (= (.activate pcap) Pcap/OK)
     pcap
     (let [errmsg (str "Error activating pcap: " (.getErr pcap))]
       (println errmsg)
       (throw (RuntimeException. errmsg)))))
 
-(defn create-and-activate-pcap [dev-name]
+(defn create-and-activate-pcap
   "Convenience function for creating and activating a Pcap instance in one step.
    See create-pcap and activate-pcap for details."
+  [dev-name]
   (let [pcap (create-pcap dev-name)]
     (activate-pcap pcap)))
 
-(defn close-pcap [pcap]
+(defn close-pcap
   "Closes the given Pcap instance."
+  [pcap]
   (.close pcap))
 
 (defn create-filter
@@ -103,8 +113,9 @@
         ;;;       returning nil sufficient?
         (println "Error compiling pcap filter: " (.getErr pcap))))))
 
-(defn set-filter [pcap f]
+(defn set-filter
   "Sets the given filter f for the given Pcap instance pcap."
+  [pcap f]
   (if (not= (.setFilter pcap f) Pcap/OK)
     (let [errmsg (str "Error setting pcap filter: " (.getErr pcap))]
       (println errmsg)
@@ -116,15 +127,22 @@
   (let [f (create-filter pcap filter-string)]
     (set-filter pcap f)))
 
-(defn create-stat-fn [pcap]
+(defn create-stat-fn
+  "Returns an fn that prints statistical data about a org.jnetpcap.Pcap instance.
+   Argument is the org.jnetpcap.Pcap instance."
+  [pcap]
   (let [pcap-stats (PcapStat.)]
     (fn []
       (if (= 0 (.stats pcap pcap-stats))
         (.toString pcap-stats)
         (print-err-ln (.getErr pcap))))))
 
-
-(defn create-pcap-from-file [file-name]
-  (let [err (StringBuilder.)]
-    (Pcap/openOffline file-name err)))
+(defn create-pcap-from-file
+  "Create an offline org.jnetpcap.Pcap from a file."
+  [file-name]
+  (let [err (StringBuilder.)
+        pcap (Pcap/openOffline file-name err)]
+    (if (nil? pcap)
+      (println "An error occured while opening the offline pcap file:" err)
+      pcap)))
 

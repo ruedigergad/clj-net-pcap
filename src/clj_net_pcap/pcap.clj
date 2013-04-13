@@ -47,7 +47,7 @@
       (vec devs)
       ;;; TODO: Should we throw an exception when something went wrong or is 
       ;;;       returning nil sufficient?
-      (println "An error occured while querying available devices:" err))))
+      (println "An error occured while querying available devices:" (str err)))))
 
 (defn get-device
   "Returns the network device with the supplied dev-name or nil if the device 
@@ -72,7 +72,7 @@
                (.setPromisc *flags*)
                (.setSnaplen *snap-len*))]
     (if (nil? pcap)
-      (println "An error occured while creating a pcap instance:" err)
+      (println "An error occured while creating a pcap instance:" (str err))
       pcap)))
 
 (defn activate-pcap
@@ -143,6 +143,6 @@
   (let [err (StringBuilder.)
         pcap (Pcap/openOffline file-name err)]
     (if (nil? pcap)
-      (println "An error occured while opening the offline pcap file:" err)
+      (println "An error occured while opening the offline pcap file:" (str err))
       pcap)))
 

@@ -47,7 +47,7 @@
       (vec devs)
       ;;; TODO: Should we throw an exception when something went wrong or is 
       ;;;       returning nil sufficient?
-      (println "An error occured while querying available devices:" (str err)))))
+      (println-err "An error occured while querying available devices:" (str err)))))
 
 (defn get-device
   "Returns the network device with the supplied dev-name or nil if the device 
@@ -72,7 +72,7 @@
                (.setPromisc *flags*)
                (.setSnaplen *snap-len*))]
     (if (nil? pcap)
-      (println "An error occured while creating a pcap instance:" (str err))
+      (println-err "An error occured while creating a pcap instance:" (str err))
       pcap)))
 
 (defn activate-pcap
@@ -81,7 +81,7 @@
   (if (= (.activate pcap) Pcap/OK)
     pcap
     (let [errmsg (str "Error activating pcap: " (.getErr pcap))]
-      (println errmsg)
+      (println-err errmsg)
       (throw (RuntimeException. errmsg)))))
 
 (defn create-and-activate-pcap
@@ -111,19 +111,20 @@
         f
         ;;; TODO: Should we throw an exception when something went wrong or is 
         ;;;       returning nil sufficient?
-        (println "Error compiling pcap filter: " (.getErr pcap))))))
+        (println-err "Error compiling pcap filter: " (.getErr pcap))))))
 
 (defn set-filter
   "Sets the given filter f for the given Pcap instance pcap."
   [pcap f]
-  (if (not= (.setFilter pcap f) Pcap/OK)
+  (when (not= (.setFilter pcap f) Pcap/OK)
     (let [errmsg (str "Error setting pcap filter: " (.getErr pcap))]
-      (println errmsg)
+      (println-err errmsg)
       (throw (RuntimeException. errmsg)))))
 
-(defn create-and-set-filter [pcap filter-string]
+(defn create-and-set-filter
   "Convenience function for creating and setting a filter in one step.
    For details see create-filter and set-filter."
+  [pcap filter-string]
   (let [f (create-filter pcap filter-string)]
     (set-filter pcap f)))
 
@@ -143,6 +144,6 @@
   (let [err (StringBuilder.)
         pcap (Pcap/openOffline file-name err)]
     (if (nil? pcap)
-      (println "An error occured while opening the offline pcap file:" (str err))
+      (println-err "An error occured while opening the offline pcap file:" (str err))
       pcap)))
 

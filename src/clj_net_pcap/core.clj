@@ -91,3 +91,13 @@
       (fn [p _]
         (handler-fn (parse-pcap-packet p)))))
 
+(defn extract-maps-from-pcap-file
+  "Convenience function to extract the data from a pcap file in map format.
+   Please note that all data will be stored in memory.
+   So this is not suited for large amounts of data."
+  [file-name]
+    (let [extracted-data (ref [])]
+      (process-pcap-file-as-maps file-name
+                                 #(dosync (alter extracted-data conj %)))
+      @extracted-data))
+

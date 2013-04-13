@@ -28,12 +28,8 @@
          margin-right: auto;
          overflow: hidden;
          background-color: #FFFFFF;
-         border: 3px solid DarkGray; }</style></head><body><div id="top"><header><h1>Namspace clj-net-pcap.core</h1><h4>clj-net-pcap is a wrapper/adapter/facade (whatever) around jNetPcap that 
-          enables and ease...</h4></header><section id="ns-toc"><h2>Other Namespaces</h2><table><tr><td><a href="clj-net-pcap.main.html">clj-net-pcap.main</a></td><td><div>Main class and method for launching a simple clj-net-pcap based sniffer
-          that prints some i...</div></td></tr><tr><td><a href="clj-net-pcap.native.html">clj-net-pcap.native</a></td><td><div>Functions etc. for extracting, loading etc. native libraries from the jar file.</div></td></tr><tr><td><a href="clj-net-pcap.pcap.html">clj-net-pcap.pcap</a></td><td><div>Functions for handling functionality related to org.jnetpcap.Pcap
-          such as listing network ...</div></td></tr><tr><td><a href="clj-net-pcap.pcap-data.html">clj-net-pcap.pcap-data</a></td><td><div>Convenience functions for processing pcap data like packets and headers.</div></td></tr><tr><td><a href="clj-net-pcap.sniffer.html">clj-net-pcap.sniffer</a></td><td><div>Convenience functions for easing the implementation of a working
-          sniffer.</div></td></tr><tr><td><a href="index.html">Back to Index</a></td><td></td></tr></table></section><section id="pubvars-toc"><h2>Public Vars</h2><nav><a href="#IDcreate-and-start-cljnetpcap">create-and-start-cljnetpcap</a>, <a href="#IDprint-stat-cljnetpcap">print-stat-cljnetpcap</a>, <a href="#IDprocess-pcap-file">process-pcap-file</a>, <a href="#IDprocess-pcap-file-to-map">process-pcap-file-to-map</a>, <a href="#IDstop-cljnetpcap">stop-cljnetpcap</a></nav></section><section><h2>Usage Documentation</h2><details open="open"><summary>Show/Hide</summary><pre>clj-net-pcap is a wrapper/adapter/facade (whatever) around jNetPcap that 
-          enables and eases packet capturing with Clojure.</pre></details><a href="#top">Back to top</a></section><section id="details"><h2>Details of Public Vars</h2><div id="IDcreate-and-start-cljnetpcap"><div><h3>Function: create-and-start-cljnetpcap</h3><pre>Arglists:
+         border: 3px solid DarkGray; }</style></head><body><div id="top"><header><h1>Namspace clj-net-pcap.core</h1><h4></h4></header><section id="ns-toc"><h2>Other Namespaces</h2><table><tr><td><a href="clj-net-pcap.CljNetPcapJavaAdapter.html">clj-net-pcap.CljNetPcapJavaAdapter</a></td><td><div>Adapter class to enable usage of clj-net-pcap from Java.</div></td></tr><tr><td><a href="clj-net-pcap.main.html">clj-net-pcap.main</a></td><td><div>Main class and method for launching a simple clj-net-pcap based sniffer
+          that prints some i...</div></td></tr><tr><td><a href="clj-net-pcap.native.html">clj-net-pcap.native</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.pcap.html">clj-net-pcap.pcap</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.pcap-data.html">clj-net-pcap.pcap-data</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.sniffer.html">clj-net-pcap.sniffer</a></td><td><div></div></td></tr><tr><td><a href="index.html">Back to Index</a></td><td></td></tr></table></section><section id="pubvars-toc"><h2>Public Vars</h2><nav><a href="#IDcreate-and-start-cljnetpcap">create-and-start-cljnetpcap</a>, <a href="#IDextract-maps-from-pcap-file">extract-maps-from-pcap-file</a>, <a href="#IDprint-stat-cljnetpcap">print-stat-cljnetpcap</a>, <a href="#IDprocess-pcap-file">process-pcap-file</a>, <a href="#IDprocess-pcap-file-as-maps">process-pcap-file-as-maps</a>, <a href="#IDstop-cljnetpcap">stop-cljnetpcap</a></nav></section><section id="details"><h2>Details of Public Vars</h2><div id="IDcreate-and-start-cljnetpcap"><div><h3>Function: create-and-start-cljnetpcap</h3><pre>Arglists:
 =========
 
   (create-and-start-cljnetpcap forwarder-fn)
@@ -47,7 +43,18 @@ Docstring:
    forwarder-fn will be called for each captured packet.
    Capturing can be influenced via the optional device and filter-expression arguments.
    By default the 'any' device is used for capturing with no filter being applied.
-   Please note that the returned handle should be stored as it is needed for stopping the capture.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/srcclj_net_pcap/core.clj#L34">View Source</a></div><div id="IDprint-stat-cljnetpcap"><div><h3>Function: print-stat-cljnetpcap</h3><pre>Arglists:
+   Please note that the returned handle should be stored as it is needed for stopping the capture.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L34">View Source</a></div><div id="IDextract-maps-from-pcap-file"><div><h3>Function: extract-maps-from-pcap-file</h3><pre>Arglists:
+=========
+
+  (extract-maps-from-pcap-file file-name)
+
+Docstring:
+==========
+
+  Convenience function to extract the data from a pcap file in map format.
+   Please note that all data will be stored in memory.
+   So this is not suited for large amounts of data.
+   Returns a vector that contains the extracted maps.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L94">View Source</a></div><div id="IDprint-stat-cljnetpcap"><div><h3>Function: print-stat-cljnetpcap</h3><pre>Arglists:
 =========
 
   (print-stat-cljnetpcap cljnetpcap)
@@ -56,7 +63,7 @@ Docstring:
 ==========
 
   Given a handle as returned by, e.g., create-and-start-cljnetpcap,
-   this prints statistical output about the capture process.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/srcclj_net_pcap/core.clj#L62">View Source</a></div><div id="IDprocess-pcap-file"><div><h3>Function: process-pcap-file</h3><pre>Arglists:
+   this prints statistical output about the capture process.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L62">View Source</a></div><div id="IDprocess-pcap-file"><div><h3>Function: process-pcap-file</h3><pre>Arglists:
 =========
 
   (process-pcap-file file-name handler-fn)
@@ -68,15 +75,15 @@ Docstring:
   Convenience function to process data stored in pcap files.
    Arguments are the file-name of the pcap file, the handler-fn that is executed for each read packet, and optional user data.
    handler-fn takes two arguments, the first is the org.jnetpcap.packet.PcapPacket instance, the second is the user data.
-   By default nil is used as user data.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/srcclj_net_pcap/core.clj#L73">View Source</a></div><div id="IDprocess-pcap-file-to-map"><div><h3>Function: process-pcap-file-to-map</h3><pre>Arglists:
+   By default nil is used as user data.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L73">View Source</a></div><div id="IDprocess-pcap-file-as-maps"><div><h3>Function: process-pcap-file-as-maps</h3><pre>Arglists:
 =========
 
-  (process-pcap-file-to-map file-name handler-fn)
+  (process-pcap-file-as-maps file-name handler-fn)
 
 Docstring:
 ==========
 
-  Convenience function to read a pcap file and process the packets in map format.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/srcclj_net_pcap/core.clj#L86">View Source</a></div><div id="IDstop-cljnetpcap"><div><h3>Function: stop-cljnetpcap</h3><pre>Arglists:
+  Convenience function to read a pcap file and process the packets in map format.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L86">View Source</a></div><div id="IDstop-cljnetpcap"><div><h3>Function: stop-cljnetpcap</h3><pre>Arglists:
 =========
 
   (stop-cljnetpcap cljnetpcap)
@@ -84,4 +91,4 @@ Docstring:
 Docstring:
 ==========
 
-  Stops a running capture. Argument is the handle as returned by create-and-start-cljnetpcap.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/srcclj_net_pcap/core.clj#L68">View Source</a></div></section><footer><p>These docs were generated by the <a href="https://github.com/tsdh/lein-html5-docs">Leiningen HTML5 Docs Plugin</a>.</p><a href="http://www.w3.org/html/logo/"><img alt="HTML5 Powered" height="64" src="http://www.w3.org/html/logo/badge/html5-badge-h-solo.png" title="HTML5 Powered" width="63" /></a></footer></div></body></html>
+  Stops a running capture. Argument is the handle as returned by create-and-start-cljnetpcap.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L68">View Source</a></div></section><footer><p>These docs were generated by the <a href="https://github.com/tsdh/lein-html5-docs">Leiningen HTML5 Docs Plugin</a>.</p><a href="http://www.w3.org/html/logo/"><img alt="HTML5 Powered" height="64" src="http://www.w3.org/html/logo/badge/html5-badge-h-solo.png" title="HTML5 Powered" width="63" /></a></footer></div></body></html>

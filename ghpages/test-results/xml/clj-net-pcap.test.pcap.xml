@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.pcap" errors="0" failures="0" tests="9" time="0.7416" timestamp="2013-04-13_11:48:46+0200">
-    <testcase name="test-device-exists" classname="clj-net-pcap.test.pcap" time="0.2092">
+<testsuite name="clj-net-pcap.test.pcap" errors="0" failures="0" tests="9" time="0.7405" timestamp="2013-04-13_14:16:10+0200">
+    <testcase name="test-device-exists" classname="clj-net-pcap.test.pcap" time="0.2181">
     </testcase>
-    <testcase name="test-create-and-activate-pcap" classname="clj-net-pcap.test.pcap" time="0.0936">
+    <testcase name="test-create-and-activate-pcap" classname="clj-net-pcap.test.pcap" time="0.0880">
     </testcase>
-    <testcase name="test-create-and-set-filter" classname="clj-net-pcap.test.pcap" time="0.0617">
+    <testcase name="test-create-and-set-filter" classname="clj-net-pcap.test.pcap" time="0.0640">
     </testcase>
     <testcase name="test-create-filter" classname="clj-net-pcap.test.pcap" time="0.0005">
     </testcase>
-    <testcase name="test-create-pcap" classname="clj-net-pcap.test.pcap" time="0.0003">
+    <testcase name="test-create-pcap" classname="clj-net-pcap.test.pcap" time="0.0004">
     </testcase>
-    <testcase name="test-create-get-stat-fn" classname="clj-net-pcap.test.pcap" time="0.0923">
+    <testcase name="test-create-get-stat-fn" classname="clj-net-pcap.test.pcap" time="0.0870">
     </testcase>
-    <testcase name="test-set-filter" classname="clj-net-pcap.test.pcap" time="0.1011">
+    <testcase name="test-set-filter" classname="clj-net-pcap.test.pcap" time="0.1001">
     </testcase>
-    <testcase name="test-get-devices" classname="clj-net-pcap.test.pcap" time="0.0865">
+    <testcase name="test-get-devices" classname="clj-net-pcap.test.pcap" time="0.0826">
     </testcase>
-    <testcase name="test-get-device" classname="clj-net-pcap.test.pcap" time="0.0859">
+    <testcase name="test-get-device" classname="clj-net-pcap.test.pcap" time="0.0899">
     </testcase>
 </testsuite>

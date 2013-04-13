@@ -1,5 +1,8 @@
 master
 
+1.3.1
+  - Throw runtime exceptions on critical errors.
+
 1.3.0
   - Add function to extract all packets from a pcap file as vector of maps.
   - Add adapter class for using clj-net-pcap from Java.

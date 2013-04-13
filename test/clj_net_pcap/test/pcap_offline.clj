@@ -32,7 +32,13 @@
 (deftest test-create-pcap-from-file-error
   (let [_ (println "Please note: this test is supposed to emit an error message.\n"
                    "The error message should complain about the file 'this.file.does-not-exist' not being there.")
-        pcap (create-pcap-from-file "this.file.does-not-exist")]
+        flag (prepare-flag)
+        pcap (try
+               (create-pcap-from-file "this.file.does-not-exist")
+               (catch Exception e
+                 (set-flag flag)
+                 nil))]
+    (is (flag-set? flag))
     (is (nil? pcap))))
 
 (deftest test-create-pcap-from-file

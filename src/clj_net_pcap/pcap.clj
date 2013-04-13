@@ -23,7 +23,8 @@
           such as listing network devices, creating and setting filters, or 
           creating, starting, and stopping an pcap instance."} 
   clj-net-pcap.pcap
-  (:use clj-assorted-utils.util)
+  (:use clj-assorted-utils.util
+        clj-net-pcap.native)
   (:import (java.util ArrayList) 
            (org.jnetpcap Pcap PcapBpfProgram PcapIf PcapStat)))
 
@@ -43,11 +44,11 @@
   []
   (let [devs (ArrayList.)
         err (StringBuilder.)]
-    (if (= (Pcap/findAllDevs devs err) 0)
+    (if (= (Pcap/findAllDevs devs err) Pcap/OK)
       (vec devs)
-      ;;; TODO: Should we throw an exception when something went wrong or is 
-      ;;;       returning nil sufficient?
-      (println-err "An error occured while querying available devices:" (str err)))))
+      (let [errmsg (str "An error occured while querying available devices:" (str err))]
+        (println-err errmsg)
+        (throw (RuntimeException. errmsg))))))
 
 (defn get-device
   "Returns the network device with the supplied dev-name or nil if the device 
@@ -72,7 +73,9 @@
                (.setPromisc *flags*)
                (.setSnaplen *snap-len*))]
     (if (nil? pcap)
-      (println-err "An error occured while creating a pcap instance:" (str err))
+      (let [errmsg (str "An error occured while creating a pcap instance: " (str err))]
+        (println-err errmsg)
+        (throw (RuntimeException. errmsg)))
       pcap)))
 
 (defn activate-pcap
@@ -144,6 +147,8 @@
   (let [err (StringBuilder.)
         pcap (Pcap/openOffline file-name err)]
     (if (nil? pcap)
-      (println-err "An error occured while opening the offline pcap file:" (str err))
+      (let [errmsg (str "An error occured while opening the offline pcap file:" (str err))]
+        (println-err errmsg)
+        (throw (RuntimeException. errmsg)))
       pcap)))
 

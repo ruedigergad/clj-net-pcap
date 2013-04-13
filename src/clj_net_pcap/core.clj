@@ -83,7 +83,7 @@
                            (nextPacket [p u] (handler-fn p u)))]
       (.dispatch pcap -1 packet-handler user-data))))
 
-(defn process-pcap-file-to-map
+(defn process-pcap-file-as-maps
   "Convenience function to read a pcap file and process the packets in map format."
   [file-name handler-fn]
     (process-pcap-file 

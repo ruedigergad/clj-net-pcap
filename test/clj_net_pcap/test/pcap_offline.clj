@@ -30,7 +30,9 @@
 (def test-file "test/clj_net_pcap/test/data/offline-test.pcap")
 
 (deftest test-create-pcap-from-file-error
-  (let [pcap (create-pcap-from-file "this.file.does-not-exist")]
+  (let [_ (println "Please note: this test is supposed to emit an error message.\n"
+                   "The error message should complain about the file 'this.file.does-not-exist' not being there.")
+        pcap (create-pcap-from-file "this.file.does-not-exist")]
     (is (nil? pcap))))
 
 (deftest test-create-pcap-from-file

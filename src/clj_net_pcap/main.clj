@@ -20,7 +20,8 @@
 (ns 
   ^{:author "Ruediger Gad",
     :doc "Main class and method for launching a simple clj-net-pcap based sniffer
-          that prints some information about the captured packets to stdout."} 
+          that prints some information about the captured packets to stdout.
+          This is primarily intended for testing and documentation purposes."} 
   clj-net-pcap.main
   (:use clojure.pprint
         clojure.tools.cli

@@ -93,7 +93,8 @@
 
 (defn extract-and-load-native-libs []
   (extract-native-libs)
-  (load-native-libs))
+  (load-native-libs)
+  (add-shutdown-hook remove-native-libs))
 
 (extract-and-load-native-libs)
 

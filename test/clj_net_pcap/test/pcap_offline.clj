@@ -56,7 +56,7 @@
     (process-pcap-file test-file handler-fn)
     (is (= 6 @my-counter))))
 
-(deftest test-process-pcap-file-to-map
+(deftest test-process-pcap-file-as-maps
   (let [my-map (ref {})
         handler-fn (fn [m]
                      (dosync (ref-set my-map m)))]

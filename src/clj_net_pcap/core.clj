@@ -94,7 +94,8 @@
 (defn extract-maps-from-pcap-file
   "Convenience function to extract the data from a pcap file in map format.
    Please note that all data will be stored in memory.
-   So this is not suited for large amounts of data."
+   So this is not suited for large amounts of data.
+   Returns a vector that contains the extracted maps."
   [file-name]
     (let [extracted-data (ref [])]
       (process-pcap-file-as-maps file-name

@@ -193,7 +193,41 @@
 
 (defn pcap-packet-to-byte-vector
   "Convert the given org.jnetpcap.packet.PcapPacket to its byte array representation and return it as vector.
-   This can be handy for debugging purposes as the resulting vector can be easily converted back into a org.jnetpcap.packet.PcapPacket instance."
+   This can be handy for debugging purposes as the resulting vector can be easily converted back into a org.jnetpcap.packet.PcapPacket instance.
+
+   The re-assembly process is as follows:
+[rc@WOPR dist]$ CLASSPATH=$CLASSPATH:clj-net-pcap-1.3.1.jar:../lib/jnetpcap-1.4.r1390-1b.jar:../lib/clj-assorted-utils-1.0.0.jar clojure
+Clojure 1.5.1
+user=> (use 'clj-net-pcap.native)
+nil
+user=> (extract-and-load-native-libs)
+nil
+user=> (import '(org.jnetpcap.packet PcapPacket))
+org.jnetpcap.packet.PcapPacket
+user=> (import '(org.jnetpcap.nio JMemory))
+org.jnetpcap.nio.JMemory
+user=> (import '(org.jnetpcap.nio JMemory$Type))
+org.jnetpcap.nio.JMemory$Type
+user=> (def pkt (PcapPacket. JMemory$Type/POINTER))
+#'user/pkt
+user=> (def ba (byte-array (map byte [22 3 -110 81 0 0 0 0 100 12 2 0 0 0 0 0 -48 0 0 0 -48 0 0 0 42 0 0 0 0 0 0 0 -9 -82 104 95 1 0 3 0 3 3 5 0 12 95 104 83 -1 2 0 12 17 0 0 0 17 0 0 0 67 -12 0 0 108 7 0 0 -1 2 0 12 12 95 104 83 17 0 0 0 17 0 0 0 108 7 0 0 67 -12 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 6 0 0 0 0 0 0 0 43 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -48 0 0 0 -48 0 0 0 4 0 0 0 0 0 0 0 1 0 0 0 0 8 0 0 0 0 0 0 14 0 0 0 -62 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3 0 0 0 0 8 0 0 14 0 0 0 40 0 0 0 -102 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 5 0 0 0 0 8 0 0 54 0 0 0 8 0 0 0 -110 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 8 0 0 62 0 0 0 -110 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 51 51 0 0 0 12 8 0 39 113 22 114 -122 -35 96 0 0 0 0 -102 17 1 -2 -128 0 0 0 0 0 0 81 -56 104 119 -93 23 0 36 -1 2 0 0 0 0 0 0 0 0 0 0 0 0 0 12 -12 67 7 108 0 -102 69 -96 77 45 83 69 65 82 67 72 32 42 32 72 84 84 80 47 49 46 49 13 10 72 111 115 116 58 91 70 70 48 50 58 58 67 93 58 49 57 48 48 13 10 83 84 58 117 114 110 58 77 105 99 114 111 115 111 102 116 32 87 105 110 100 111 119 115 32 80 101 101 114 32 78 97 109 101 32 82 101 115 111 108 117 116 105 111 110 32 80 114 111 116 111 99 111 108 58 32 86 52 58 73 80 86 54 58 76 105 110 107 76 111 99 97 108 13 10 77 97 110 58 34 115 115 100 112 58 100 105 115 99 111 118 101 114 34 13 10 77 88 58 51 13 10 13 10])))
+#'user/ba
+user=> (.transferStateAndDataFrom pkt ba)
+576
+  user=> (import '(org.jnetpcap.protocol.network Ip6))
+org.jnetpcap.protocol.network.Ip6
+user=> (def ip6 (Ip6.))
+#'user/ip6
+user=> (.hasHeader pkt ip6)
+true
+user=> (.source ip6)
+#<byte[] [B@3c1c6c94>
+user=> (use 'clj-net-pcap.pcap-data)
+nil
+user=> (prettify-addr-array (.source ip6))
+\"FE80::51C8:6877:A317:0024\"
+user=>
+  "
   [pcap-packet]
   (let [buffer (byte-array (.getTotalSize pcap-packet) (byte 0))
         _ (.transferStateAndDataTo pcap-packet buffer)]

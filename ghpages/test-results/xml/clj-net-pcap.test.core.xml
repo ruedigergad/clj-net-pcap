@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.core" errors="0" failures="0" tests="1" time="2.9528" timestamp="2013-07-04_22:54:09+0200">
-    <testcase name="cljnetpcap-test" classname="clj-net-pcap.test.core" time="2.9401">
+<testsuite name="clj-net-pcap.test.core" errors="0" failures="0" tests="1" time="2.7385" timestamp="2013-07-04_23:33:14+0200">
+    <testcase name="cljnetpcap-test" classname="clj-net-pcap.test.core" time="2.7279">
     </testcase>
 </testsuite>

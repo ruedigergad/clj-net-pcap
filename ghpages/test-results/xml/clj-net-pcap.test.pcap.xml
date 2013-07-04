@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.pcap" errors="0" failures="0" tests="9" time="2.8684" timestamp="2013-07-04_22:54:12+0200">
-    <testcase name="test-device-exists" classname="clj-net-pcap.test.pcap" time="0.1682">
+<testsuite name="clj-net-pcap.test.pcap" errors="0" failures="0" tests="9" time="4.7020" timestamp="2013-07-04_23:33:18+0200">
+    <testcase name="test-device-exists" classname="clj-net-pcap.test.pcap" time="0.1575">
     </testcase>
-    <testcase name="test-create-and-activate-pcap" classname="clj-net-pcap.test.pcap" time="0.5910">
+    <testcase name="test-create-and-activate-pcap" classname="clj-net-pcap.test.pcap" time="0.9804">
     </testcase>
-    <testcase name="test-create-and-set-filter" classname="clj-net-pcap.test.pcap" time="0.5442">
+    <testcase name="test-create-and-set-filter" classname="clj-net-pcap.test.pcap" time="0.6575">
     </testcase>
-    <testcase name="test-create-filter" classname="clj-net-pcap.test.pcap" time="0.0006">
+    <testcase name="test-create-filter" classname="clj-net-pcap.test.pcap" time="0.0009">
     </testcase>
-    <testcase name="test-create-pcap" classname="clj-net-pcap.test.pcap" time="0.0003">
+    <testcase name="test-create-pcap" classname="clj-net-pcap.test.pcap" time="0.0004">
     </testcase>
-    <testcase name="test-create-get-stat-fn" classname="clj-net-pcap.test.pcap" time="0.6615">
+    <testcase name="test-create-get-stat-fn" classname="clj-net-pcap.test.pcap" time="1.8919">
     </testcase>
-    <testcase name="test-set-filter" classname="clj-net-pcap.test.pcap" time="0.6479">
+    <testcase name="test-set-filter" classname="clj-net-pcap.test.pcap" time="0.7579">
     </testcase>
-    <testcase name="test-get-devices" classname="clj-net-pcap.test.pcap" time="0.1613">
+    <testcase name="test-get-devices" classname="clj-net-pcap.test.pcap" time="0.1670">
     </testcase>
-    <testcase name="test-get-device" classname="clj-net-pcap.test.pcap" time="0.0847">
+    <testcase name="test-get-device" classname="clj-net-pcap.test.pcap" time="0.0799">
     </testcase>
 </testsuite>

@@ -129,10 +129,10 @@
   [protocol]
   `(let [src# (prettify-addr-array (.source ~protocol))
          dst# (prettify-addr-array (.source ~protocol))]
-    {"source-network" (guess-subnet src#)
-     "source-netmask-bits" (guess-subnet-mask-bits src#)
-     "destination-network" (guess-subnet dst#)
-     "destination-netmask-bits" (guess-subnet-mask-bits dst#)}))
+    {"sourceNetwork" (guess-subnet src#)
+     "sourceNetmaskBits" (guess-subnet-mask-bits src#)
+     "destinationNetwork" (guess-subnet dst#)
+     "destinationNetmaskBits" (guess-subnet-mask-bits dst#)}))
 
 (defn extract-http-fields-to-map
   "Extract the given fields from an org.jnetpcap.protocol.tcpip.Http instance and store each into a map.

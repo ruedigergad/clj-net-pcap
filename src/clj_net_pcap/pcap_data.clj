@@ -38,6 +38,7 @@
   [ip-addr]
   (cond
     (.startsWith ip-addr "192.168.") :class-c
+    (.startsWith ip-addr "10.") :class-a
     :default nil))
 
 (defn guess-subnet
@@ -54,14 +55,18 @@
   [ip-addr]
   (let [n-class (network-class ip-addr)]
     (cond
-      (= :class-c n-class) "255.255.255.0")))
+      (= :class-c n-class) "255.255.255.0"
+      (= :class-a n-class) "255.0.0.0"
+    :default nil)))
 
 (defn guess-subnet-mask-bits
   "Try to guess the number of bits in the subnet mask based on network classes."
   [ip-addr]
   (let [n-class (network-class ip-addr)]
     (cond
-      (= :class-c n-class) 24)))
+      (= :class-c n-class) 24
+      (= :class-c n-class) 8
+      :default nil)))
 
 (defn prettify-addr-array
   "Convenience function to print addresses as strings."

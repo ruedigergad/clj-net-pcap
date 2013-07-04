@@ -33,3 +33,10 @@
     (is (= "255.255.255.0" (guess-subnet-mask ip-addr)))
     (is (= 24 (guess-subnet-mask-bits ip-addr)))))
 
+(deftest test-guess-class-a-net
+  (let [ip-addr "10.123.45.67"]
+    (is (= :class-c (network-class ip-addr)))
+    (is (= "10.0.0.0" (guess-subnet ip-addr)))
+    (is (= "255.0.0.0" (guess-subnet-mask ip-addr)))
+    (is (= 8 (guess-subnet-mask-bits ip-addr)))))
+

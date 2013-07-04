@@ -40,3 +40,17 @@
     (is (= "255.0.0.0" (guess-subnet-mask ip-addr)))
     (is (= 8 (guess-subnet-mask-bits ip-addr)))))
 
+(deftest test-guess-class-b-net
+  (let [ip-addr "172.16.123.45"]
+    (is (= :class-b (network-class ip-addr)))
+    (is (= "172.16.0.0" (guess-subnet ip-addr)))
+    (is (= "255.255.0.0" (guess-subnet-mask ip-addr)))
+    (is (= 16 (guess-subnet-mask-bits ip-addr)))))
+
+(deftest test-guess-class-b-net-2
+  (let [ip-addr "172.31.123.45"]
+    (is (= :class-b (network-class ip-addr)))
+    (is (= "172.31.0.0" (guess-subnet ip-addr)))
+    (is (= "255.255.0.0" (guess-subnet-mask ip-addr)))
+    (is (= 16 (guess-subnet-mask-bits ip-addr)))))
+

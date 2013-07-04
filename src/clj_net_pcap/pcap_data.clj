@@ -22,7 +22,9 @@
     :doc "Convenience functions for processing pcap data like packets and headers."}  
   clj-net-pcap.pcap-data
   (:use clojure.pprint 
-        clj-assorted-utils.util)
+        [clojure.string :only (join split)]
+        clj-assorted-utils.util
+        clj-net-pcap.native)
   (:import (java.net InetAddress)
            (org.jnetpcap.packet PcapPacket)
            (org.jnetpcap.packet.format FormatUtils)
@@ -30,6 +32,36 @@
            (org.jnetpcap.protocol.network Arp Icmp Ip4 Ip6)
            (org.jnetpcap.protocol.tcpip Http Http$Request Http$Response 
                                         Tcp Tcp$Flag Tcp$Timestamp Udp)))
+
+(defn network-class
+  "Determine the network class. This assume no CIDR is used."
+  [ip-addr]
+  (cond
+    (.startsWith ip-addr "192.168.") :class-c
+    :default nil))
+
+(defn guess-subnet
+  "Try to guess the subnet address based on network classes."
+  [ip-addr]
+  (let [addr-bytes (split ip-addr #"\.")
+        n-class (network-class ip-addr)]
+    (cond
+      (= :class-c n-class) (join "." (conj (vec (drop-last addr-bytes)) "0"))
+      :default nil)))
+
+(defn guess-subnet-mask
+  "Try to guess the subnet mask based on network classes."
+  [ip-addr]
+  (let [n-class (network-class ip-addr)]
+    (cond
+      (= :class-c n-class) "255.255.255.0")))
+
+(defn guess-subnet-mask-bits
+  "Try to guess the number of bits in the subnet mask based on network classes."
+  [ip-addr]
+  (let [n-class (network-class ip-addr)]
+    (cond
+      (= :class-c n-class) 24)))
 
 (defn prettify-addr-array
   "Convenience function to print addresses as strings."

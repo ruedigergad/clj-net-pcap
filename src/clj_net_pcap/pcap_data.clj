@@ -48,6 +48,7 @@
         n-class (network-class ip-addr)]
     (cond
       (= :class-c n-class) (join "." (conj (vec (drop-last addr-bytes)) "0"))
+      (= :class-a n-class) (join "." (reduce conj (vec (drop-last 3 addr-bytes)) (repeat 3 "0")))
       :default nil)))
 
 (defn guess-subnet-mask
@@ -65,7 +66,7 @@
   (let [n-class (network-class ip-addr)]
     (cond
       (= :class-c n-class) 24
-      (= :class-c n-class) 8
+      (= :class-a n-class) 8
       :default nil)))
 
 (defn prettify-addr-array

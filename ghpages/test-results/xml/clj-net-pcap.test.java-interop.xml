@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.java-interop" errors="0" failures="0" tests="1" time="0.0121" timestamp="2013-04-13_14:55:38+0200">
-    <testcase name="test-java-static-extract-maps-from-pcap-file" classname="clj-net-pcap.test.java-interop" time="0.0099">
+<testsuite name="clj-net-pcap.test.java-interop" errors="0" failures="0" tests="1" time="0.0185" timestamp="2013-07-04_22:54:09+0200">
+    <testcase name="test-java-static-extract-maps-from-pcap-file" classname="clj-net-pcap.test.java-interop" time="0.0157">
     </testcase>
 </testsuite>

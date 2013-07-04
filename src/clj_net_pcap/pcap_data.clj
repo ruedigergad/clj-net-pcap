@@ -123,6 +123,17 @@
   `{"source" (prettify-addr-array (.source ~protocol))
     "destination" (prettify-addr-array (.destination ~protocol))})
 
+(defmacro extract-subnet-information-to-map
+  "Try to get information about source and destination subnets like network addresses or subnet masks.
+   This is just a wild guess based on the private network ranges as defined in RFC 1918."
+  [protocol]
+  `(let [src# (prettify-addr-array (.source ~protocol))
+         dst# (prettify-addr-array (.source ~protocol))]
+    {"source-network" (guess-subnet src#)
+     "source-netmask-bits" (guess-subnet-mask-bits src#)
+     "destination-network" (guess-subnet dst#)
+     "destination-netmask-bits" (guess-subnet-mask-bits dst#)}))
+
 (defn extract-http-fields-to-map
   "Extract the given fields from an org.jnetpcap.protocol.tcpip.Http instance and store each into a map.
    fields is a vector that specifies which fields shall be extracted."
@@ -163,6 +174,7 @@
           "sourceIp" (prettify-addr-array (.spa arp))}]
         [ip4
          (src-dst-to-map ip4)
+         (extract-subnet-information-to-map ip4)
          {"id" (.id ip4)
           "tos" (.tos ip4)
           "type" (.type ip4)

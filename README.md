@@ -2,6 +2,9 @@
 clj-net-pcap is a wrapper/adapter/facade (No matter how you wanna call it.)
 around jNetPcap that enables and eases packet capturing with Clojure.
 
+## Requirements
+Please note that clj-net-pcap requires Java 1.7 and libpcap.
+
 ## API Docs
 Automatically generated API docs are available:
 
@@ -23,9 +26,6 @@ However, it can be run as sample stand-alone command line application as follows
 java -jar <clj-net-pcap-standalone-jar-file>
 
 For more information about the available options use the "-h" or "--help" option.
-
-# Requirements
-Please note that clj-net-pcap requires Java 1.7 and libpcap.
 
 ## Building etc.
 clj-net-pcap uses Leiningen.

@@ -5,6 +5,5 @@ script:
   - sudo LEIN_ROOT=1 lein2 do javac, test
 lein: lein2
 jdk:
-  - openjdk6
   - openjdk7
   - oraclejdk7

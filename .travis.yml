@@ -1,4 +1,6 @@
 language: clojure
+before_install:
+  - sudo apt-get install libpcap-dev -qq
 lein: lein2
 jdk:
   - openjdk6

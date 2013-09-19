@@ -4,11 +4,16 @@ around jNetPcap that enables and eases packet capturing with Clojure.
 
 ## API Docs
 Automatically generated API docs are available:
+
 http://ruedigergad.github.io/clj-net-pcap/doc/
+
+## CI
+[![Build Status](https://travis-ci.org/ruedigergad/clj-net-pcap.png?branch=master)](https://travis-ci.org/ruedigergad/clj-net-pcap)
 
 ## Test Results
 clj-net-pcap is developed following the test-driven development paradigm.
 Test results are available here:
+
 http://ruedigergad.github.io/clj-net-pcap/test-results/html/
 
 ## Usage
@@ -18,6 +23,9 @@ However, it can be run as sample stand-alone command line application as follows
 java -jar <clj-net-pcap-standalone-jar-file>
 
 For more information about the available options use the "-h" or "--help" option.
+
+# Requirements
+Please note that clj-net-pcap requires Java 1.7 and libpcap.
 
 ## Building etc.
 clj-net-pcap uses Leiningen.

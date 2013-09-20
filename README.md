@@ -23,7 +23,7 @@ http://ruedigergad.github.io/clj-net-pcap/test-results/html/
 clj-net-pcap is primarily intended as a library that is used by other applications.
 However, it can be run as sample stand-alone command line application as follows:
 
-java -jar <clj-net-pcap-standalone-jar-file>
+java -jar clj-net-pcap-standalone-jar-file.jar
 
 For more information about the available options use the "-h" or "--help" option.
 

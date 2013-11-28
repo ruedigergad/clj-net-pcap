@@ -33,6 +33,10 @@
            (org.jnetpcap.protocol.tcpip Http Http$Request Http$Response 
                                         Tcp Tcp$Flag Tcp$Timestamp Udp)))
 
+
+(def ^:dynamic *tcp-flags-as-set* true)
+
+
 (defn network-class
   "Determine the network class based on the private network classes as defined in RFC 1918. This assume no CIDR is used."
   [ip-addr]
@@ -190,9 +194,11 @@
          (src-dst-to-map tcp)
          {"ack" (.ack tcp)
           "seq" (.seq tcp)
-          "flags" (set 
-                    (map #(.toString %1)
-                         (.flagsEnum tcp)))}
+          "flags" (if *tcp-flags-as-set*
+                    (set 
+                      (map #(.toString %1)
+                           (.flagsEnum tcp)))
+                    (.flags tcp))}
          (when (.hasSubHeader tcp tcp-timestamp)
            (into 
              {"tsval" (.tsval tcp-timestamp)}

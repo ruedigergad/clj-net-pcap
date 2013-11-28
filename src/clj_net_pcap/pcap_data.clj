@@ -29,7 +29,7 @@
            (org.jnetpcap.packet PcapPacket)
            (org.jnetpcap.packet.format FormatUtils)
            (org.jnetpcap.protocol.lan Ethernet)
-           (org.jnetpcap.protocol.network Arp Icmp Ip4 Ip6)
+           (org.jnetpcap.protocol.network Arp Icmp Icmp$EchoReply Icmp$EchoRequest Ip4 Ip6)
            (org.jnetpcap.protocol.tcpip Http Http$Request Http$Response 
                                         Tcp Tcp$Flag Tcp$Timestamp Udp)))
 
@@ -295,6 +295,12 @@
     (alter m
            assoc "icmp_type" (.typeDescription icmp))))
 
+(defn- add-icmp-echo-fields
+  [m icmp-echo]
+  (dosync
+    (alter m
+           assoc "icmp_echo_seq" (.sequence icmp-echo))))
+
 (defn- add-tcp-fields
   [m tcp]
   (dosync
@@ -305,7 +311,7 @@
     (alter m
            assoc "tcp_ack" (.ack tcp))
     (alter m
-           assoc "tcp_syn" (.syn tcp))
+           assoc "tcp_seq" (.seq tcp))
     (alter m
            assoc "tcp_flags" (.flags tcp))))
 
@@ -326,10 +332,13 @@
            assoc "udp_dst" (prettify-addr-array (.destination udp)))))
 
 (def pcap-packet-to-map
-  "Convenience function to parse a org.jnetpcap.packet.PcapPacket into a map."
+  "Convenience function to parse a org.jnetpcap.packet.PcapPacket into a flat,
+   non-nested map."
   (let [eth (Ethernet.)
         arp (Arp.)
         icmp (Icmp.)
+        icmp-echo-reply (Icmp$EchoReply.)
+        icmp-echo-request (Icmp$EchoRequest.)
         ip4 (Ip4.)
         ip6 (Ip6.)
         tcp (Tcp.)
@@ -350,7 +359,11 @@
           (when (.hasHeader pkt ip6)
             (add-ip6-fields m ip6))
           (when (.hasHeader pkt icmp)
-            (add-icmp-fields m icmp))
+            (add-icmp-fields m icmp)
+            (when (.hasSubHeader icmp icmp-echo-reply)
+              (add-icmp-echo-fields m icmp-echo-reply))
+            (when (.hasSubHeader icmp icmp-echo-request)
+              (add-icmp-echo-fields m icmp-echo-request)))
           (when (.hasHeader pkt tcp)
             (add-tcp-fields m tcp))
           (when (.hasHeader pkt udp)

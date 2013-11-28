@@ -84,8 +84,8 @@
       :default (FormatUtils/asString a))
     a))
 
-(defmacro process-protocol-headers-to-map
-  "Macro for processing protocol header information into a map representation.
+(defmacro process-protocol-headers-to-nested-maps
+  "Macro for processing protocol header information into a representation of nested maps.
    packet is a org.jnetpcap.packet.PcapPacket instance.
    headers contains the description about which information shall be retrieved for each protocol.
 
@@ -162,7 +162,7 @@
         udp (Udp.)
         http (Http.)]
     (fn [^PcapPacket packet]
-      (process-protocol-headers-to-map
+      (process-protocol-headers-to-nested-maps
         packet
         [eth 
          (src-dst-to-map eth)]

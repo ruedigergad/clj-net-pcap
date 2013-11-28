@@ -22,7 +22,9 @@
     :doc "Convenience functions for processing pcap data like packets and headers."}  
   clj-net-pcap.pcap-data
   (:use clojure.pprint 
-        clj-assorted-utils.util)
+        [clojure.string :only (join split)]
+        clj-assorted-utils.util
+        clj-net-pcap.native)
   (:import (java.net InetAddress)
            (org.jnetpcap.packet PcapPacket)
            (org.jnetpcap.packet.format FormatUtils)
@@ -30,6 +32,46 @@
            (org.jnetpcap.protocol.network Arp Icmp Ip4 Ip6)
            (org.jnetpcap.protocol.tcpip Http Http$Request Http$Response 
                                         Tcp Tcp$Flag Tcp$Timestamp Udp)))
+
+(defn network-class
+  "Determine the network class based on the private network classes as defined in RFC 1918. This assume no CIDR is used."
+  [ip-addr]
+  (cond
+    (.startsWith ip-addr "192.168.") :class-c
+    (.startsWith ip-addr "10.") :class-a
+    (.startsWith ip-addr "172.") :class-b
+    :default nil))
+
+(defn guess-subnet
+  "Try to guess the subnet address based on private network classes as defined in RFC 1918."
+  [ip-addr]
+  (let [addr-bytes (split ip-addr #"\.")
+        n-class (network-class ip-addr)]
+    (cond
+      (= :class-c n-class) (join "." (conj (vec (drop-last addr-bytes)) "0"))
+      (= :class-a n-class) (join "." (reduce conj (vec (drop-last 3 addr-bytes)) (repeat 3 "0")))
+      (= :class-b n-class) (join "." (reduce conj (vec (drop-last 2 addr-bytes)) (repeat 2 "0")))
+      :default nil)))
+
+(defn guess-subnet-mask
+  "Try to guess the subnet mask based on private network classes as defined in RFC 1918."
+  [ip-addr]
+  (let [n-class (network-class ip-addr)]
+    (cond
+      (= :class-c n-class) "255.255.255.0"
+      (= :class-a n-class) "255.0.0.0"
+      (= :class-b n-class) "255.255.0.0"
+    :default nil)))
+
+(defn guess-subnet-mask-bits
+  "Try to guess the number of bits in the subnet mask based on private network classes as defined in RFC 1918."
+  [ip-addr]
+  (let [n-class (network-class ip-addr)]
+    (cond
+      (= :class-c n-class) 24
+      (= :class-a n-class) 8
+      (= :class-b n-class) 16
+      :default nil)))
 
 (defn prettify-addr-array
   "Convenience function to print addresses as strings."
@@ -81,6 +123,17 @@
   `{"source" (prettify-addr-array (.source ~protocol))
     "destination" (prettify-addr-array (.destination ~protocol))})
 
+(defmacro extract-subnet-information-to-map
+  "Try to get information about source and destination subnets like network addresses or subnet masks.
+   This is just a wild guess based on the private network ranges as defined in RFC 1918."
+  [protocol]
+  `(let [src# (prettify-addr-array (.source ~protocol))
+         dst# (prettify-addr-array (.source ~protocol))]
+    {"sourceNetwork" (guess-subnet src#)
+     "sourceNetmaskBits" (guess-subnet-mask-bits src#)
+     "destinationNetwork" (guess-subnet dst#)
+     "destinationNetmaskBits" (guess-subnet-mask-bits dst#)}))
+
 (defn extract-http-fields-to-map
   "Extract the given fields from an org.jnetpcap.protocol.tcpip.Http instance and store each into a map.
    fields is a vector that specifies which fields shall be extracted."
@@ -121,6 +174,7 @@
           "sourceIp" (prettify-addr-array (.spa arp))}]
         [ip4
          (src-dst-to-map ip4)
+         (extract-subnet-information-to-map ip4)
          {"id" (.id ip4)
           "tos" (.tos ip4)
           "type" (.type ip4)

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="clj-net-pcap.test.pcap-data" errors="0" failures="0" tests="4" time="0.0120" timestamp="2013-07-04_23:33:18+0200">
+    <testcase name="test-guess-class-b-net-2" classname="clj-net-pcap.test.pcap-data" time="0.0024">
+    </testcase>
+    <testcase name="test-guess-class-c-net" classname="clj-net-pcap.test.pcap-data" time="0.0022">
+    </testcase>
+    <testcase name="test-guess-class-a-net" classname="clj-net-pcap.test.pcap-data" time="0.0020">
+    </testcase>
+    <testcase name="test-guess-class-b-net" classname="clj-net-pcap.test.pcap-data" time="0.0024">
+    </testcase>
+</testsuite>

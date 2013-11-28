@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.pcap-offline" errors="0" failures="0" tests="6" time="0.2168" timestamp="2013-04-13_14:55:40+0200">
-    <testcase name="test-create-pcap-from-file-error" classname="clj-net-pcap.test.pcap-offline" time="0.0017">
+<testsuite name="clj-net-pcap.test.pcap-offline" errors="0" failures="0" tests="6" time="0.2193" timestamp="2013-07-04_23:33:19+0200">
+    <testcase name="test-create-pcap-from-file-error" classname="clj-net-pcap.test.pcap-offline" time="0.0022">
     </testcase>
-    <testcase name="test-process-pcap-file-as-maps" classname="clj-net-pcap.test.pcap-offline" time="0.0019">
+    <testcase name="test-process-pcap-file-as-maps" classname="clj-net-pcap.test.pcap-offline" time="0.0039">
     </testcase>
-    <testcase name="test-create-pcap-from-file" classname="clj-net-pcap.test.pcap-offline" time="0.0002">
+    <testcase name="test-create-pcap-from-file" classname="clj-net-pcap.test.pcap-offline" time="0.0004">
     </testcase>
-    <testcase name="test-extract-maps-from-pcap-file" classname="clj-net-pcap.test.pcap-offline" time="0.0026">
+    <testcase name="test-extract-maps-from-pcap-file" classname="clj-net-pcap.test.pcap-offline" time="0.0027">
     </testcase>
-    <testcase name="test-create-pcap-from-file-and-dispatch" classname="clj-net-pcap.test.pcap-offline" time="0.2024">
+    <testcase name="test-create-pcap-from-file-and-dispatch" classname="clj-net-pcap.test.pcap-offline" time="0.2038">
     </testcase>
-    <testcase name="test-process-pcap-file" classname="clj-net-pcap.test.pcap-offline" time="0.0033">
+    <testcase name="test-process-pcap-file" classname="clj-net-pcap.test.pcap-offline" time="0.0018">
     </testcase>
 </testsuite>

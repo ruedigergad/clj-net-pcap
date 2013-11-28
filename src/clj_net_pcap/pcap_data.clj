@@ -251,6 +251,117 @@
       (println "Packet raw data was:")
       (stdout-byte-array-forwarder-fn packet))))
 
+(defn- add-eth-fields
+  [m eth]
+  (dosync m
+	  (alter m
+	         assoc "eth_src" (prettify-addr-array (.source eth)))
+	  (alter m
+	         assoc "eth_dst" (prettify-addr-array (.destination eth)))))
+
+(defn- add-arp-fields
+  [m arp]
+  (dosync
+    (alter m
+           assoc "arp_opDesc" (.operationDescription arp))
+    (alter m 
+           assoc "arp_targetMac" (prettify-addr-array (.tha arp)))
+    (alter m
+           assoc "arp_targetIp" (prettify-addr-array (.tpa arp)))
+    (alter m
+           assoc "arp_sourceMac" (prettify-addr-array (.sha arp)))
+    (alter m
+           assoc "arp_sourceIp" (prettify-addr-array (.spa arp)))))
+
+(defn- add-ip4-fields
+  [m ip4]
+  (dosync
+	  (alter m
+	         assoc "ip4_src" (prettify-addr-array (.source ip4)))
+	  (alter m
+	         assoc "ip4_dst" (prettify-addr-array (.destination ip4)))))
+
+(defn- add-ip6-fields
+  [m ip6]
+  (dosync
+    (alter m
+           assoc "ip6_src" (prettify-addr-array (.source ip6)))
+    (alter m
+           assoc "ip6_dst" (prettify-addr-array (.destination ip6)))))
+
+(defn- add-icmp-fields
+  [m icmp]
+  (dosync
+    (alter m
+           assoc "icmp_type" (.typeDescription icmp))))
+
+(defn- add-tcp-fields
+  [m tcp]
+  (dosync
+    (alter m
+           assoc "tcp_src" (prettify-addr-array (.source tcp)))
+    (alter m
+           assoc "tcp_dst" (prettify-addr-array (.destination tcp)))
+    (alter m
+           assoc "tcp_ack" (.ack tcp))
+    (alter m
+           assoc "tcp_syn" (.syn tcp))
+    (alter m
+           assoc "tcp_flags" (.flags tcp))))
+
+(defn- add-tcp-timestamp-fields
+  [m tcp-timestamp]
+  (dosync
+    (alter m
+           assoc "tcp_tsval" (.tsval tcp-timestamp))
+    (alter m
+           assoc "tcp_tsecr" (.tsecr tcp-timestamp))))
+
+(defn- add-udp-fields
+  [m udp]
+  (dosync
+    (alter m
+           assoc "udp_src" (prettify-addr-array (.source udp)))
+    (alter m
+           assoc "udp_dst" (prettify-addr-array (.destination udp)))))
+
+(def pcap-packet-to-map
+  "Convenience function to parse a org.jnetpcap.packet.PcapPacket into a map."
+  (let [eth (Ethernet.)
+        arp (Arp.)
+        icmp (Icmp.)
+        ip4 (Ip4.)
+        ip6 (Ip6.)
+        tcp (Tcp.)
+        tcp-timestamp (Tcp$Timestamp.)
+        udp (Udp.)
+        http (Http.)]
+    (fn [^PcapPacket pkt]
+		  (try
+		    (let [hdr (.getCaptureHeader pkt)
+		          m (ref {"ts" (.timestampInNanos hdr)
+		                  "len" (.wirelen hdr)})]
+          (when (.hasHeader pkt eth)
+            (add-eth-fields m eth))
+          (when (.hasHeader pkt arp)
+            (add-arp-fields m arp))
+          (when (.hasHeader pkt ip4)
+            (add-ip4-fields m ip4))
+          (when (.hasHeader pkt ip6)
+            (add-ip6-fields m ip6))
+          (when (.hasHeader pkt icmp)
+            (add-icmp-fields m icmp))
+          (when (.hasHeader pkt tcp)
+            (add-tcp-fields m tcp))
+          (when (.hasHeader pkt udp)
+            (add-udp-fields m udp))
+          @m)
+		    (catch Exception e
+		      (println "Error parsing the pcap packet!")
+		      (.printStackTrace e)
+		      (println "Packet raw data was:")
+		      (stdout-byte-array-forwarder-fn pkt))))))
+
 (defn pcap-packet-to-byte-vector
   "Convert the given org.jnetpcap.packet.PcapPacket to its byte array representation and return it as vector.
    This can be handy for debugging purposes as the resulting vector can be easily converted back into a org.jnetpcap.packet.PcapPacket instance.
@@ -311,6 +422,6 @@ user=>
   "Print both, the map and the byte vector representations, of a org.jnetpcap.packet.PcapPacket to *out*."
   (let [pcap-packet (:pcap-packet packet)
         buffer-seq (pcap-packet-to-byte-vector pcap-packet)]
-    (pprint (pcap-packet-to-nested-maps (:pcap-packet packet)))
+    (pprint (pcap-packet-to-map (:pcap-packet packet)))
     (println "Packet Start (size:" (count buffer-seq) "):" buffer-seq "Packet End\n\n")))
 

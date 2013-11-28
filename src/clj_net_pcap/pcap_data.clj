@@ -191,7 +191,7 @@
          {"ack" (.ack tcp)
           "seq" (.seq tcp)
           "flags" (set 
-                    (map (fn [f] (.toString f))
+                    (map #(.toString %1)
                          (.flagsEnum tcp)))}
          (when (.hasSubHeader tcp tcp-timestamp)
            (into 

@@ -1,6 +1,8 @@
 master
   - Add functionality to choose whether TCP flags are emitted as set or
   integer.
+  - Add prototype for extracting non-nested, flat maps from pcap packets.
+    This should help improving the performance.
 
 1.4.0
   - Add a simple way to emit subnet information.

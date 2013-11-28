@@ -1,4 +1,6 @@
 master
+  - Add functionality to choose whether TCP flags are emitted as set or
+  integer.
 
 1.4.0
   - Add a simple way to emit subnet information.

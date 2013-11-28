@@ -223,7 +223,7 @@
 
 (declare stdout-byte-array-forwarder-fn)
 
-(defn parse-pcap-header-to-map
+(defn parse-pcap-header-to-nested-map
   "Parse the information contained in the pcap header of a org.jnetpcap.packet.PcapPacket instance
    and store it into a map. The resulting map is returned."
   [^PcapPacket packet]
@@ -243,7 +243,7 @@
   [^PcapPacket packet]
   (try
     (reduce into [{}
-                  (parse-pcap-header-to-map packet)
+                  (parse-pcap-header-to-nested-map packet)
                   (parse-protocol-headers-to-nested-maps packet)])
     (catch Exception e
       (println "Error parsing the pcap packet!")

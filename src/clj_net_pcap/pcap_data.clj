@@ -93,7 +93,7 @@
    packet is a org.jnetpcap.packet.PcapPacket instance.
    headers contains the description about which information shall be retrieved for each protocol.
 
-   For an example usage see parse-protocol-headers-to-map."
+   For an example usage see parse-protocol-headers-to-nested-maps."
   [packet & headers]
   `(let [~'data-link-layer-protocols #{"Ethernet"}
          ~'network-layer-protocols #{"Ip4" "Ip6"}]
@@ -148,7 +148,7 @@
                  {(.toString f) (.fieldValue http f)}))
              fields)))
 
-(def parse-protocol-headers-to-map
+(def parse-protocol-headers-to-nested-maps
   ^{:doc "Function to parse the information contained in the protocol headers 
           of a org.jnetpcap.packet.PcapPacket instance into a map.
 
@@ -237,14 +237,14 @@
       (println "Packet raw data was:")
       (stdout-byte-array-forwarder-fn packet))))
 
-(defn parse-pcap-packet
+(defn pcap-packet-to-nested-maps
   "Convenience function to parse a org.jnetpcap.packet.PcapPacket into a map.
    The result contains the pcap header and protocol header information."
   [^PcapPacket packet]
   (try
     (reduce into [{}
                   (parse-pcap-header-to-map packet)
-                  (parse-protocol-headers-to-map packet)])
+                  (parse-protocol-headers-to-nested-maps packet)])
     (catch Exception e
       (println "Error parsing the pcap packet!")
       (.printStackTrace e)
@@ -297,7 +297,7 @@ user=>
   "Pre-defined forwarder function which outputs information about org.jnetpcap.packet.PcapPacket to *out*.
    The information is in form of a map. The is pretty printed with pprint."
   [packet]
-  (pprint (parse-pcap-packet (:pcap-packet packet))))
+  (pprint (pcap-packet-to-nested-maps (:pcap-packet packet))))
 
 (defn stdout-byte-array-forwarder-fn
   "Print the byte vector representation of a org.jnetpcap.packet.PcapPacket as returned by pcap-packet-to-byte-vector to *out*."
@@ -311,6 +311,6 @@ user=>
   "Print both, the map and the byte vector representations, of a org.jnetpcap.packet.PcapPacket to *out*."
   (let [pcap-packet (:pcap-packet packet)
         buffer-seq (pcap-packet-to-byte-vector pcap-packet)]
-    (pprint (parse-pcap-packet (:pcap-packet packet)))
+    (pprint (pcap-packet-to-nested-maps (:pcap-packet packet)))
     (println "Packet Start (size:" (count buffer-seq) "):" buffer-seq "Packet End\n\n")))
 

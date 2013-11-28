@@ -27,8 +27,8 @@
 
 (def test-file "test/clj_net_pcap/test/data/offline-test.pcap")
 
-(deftest test-java-static-extract-maps-from-pcap-file
-  (let [my-map (CljNetPcapJavaAdapter/extractMapsFromPcapFile "test/clj_net_pcap/test/data/icmp-echo-request.pcap")]
+(deftest test-java-static-extract-nested-maps-from-pcap-file
+  (let [my-map (CljNetPcapJavaAdapter/extractNestedMapsFromPcapFile "test/clj_net_pcap/test/data/icmp-echo-request.pcap")]
     (is (= 1 (count my-map)))
     (is (= {"PcapHeader" {"timestampInNanos" 1365516583196346000, "wirelen" 98},
             "DataLinkLayer" {"index" 0, "ProtocolType" "Ethernet", "destination" "E0:CB:4E:E3:38:46", "source" "90:E6:BA:3C:9A:47", "next" 2},

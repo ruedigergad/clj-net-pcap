@@ -62,20 +62,20 @@
     (process-pcap-file test-file handler-fn)
     (is (= 6 @my-counter))))
 
-(deftest test-process-pcap-file-as-maps
+(deftest test-process-pcap-file-as-nested-maps
   (let [my-map (ref {})
         handler-fn (fn [m]
                      (dosync (ref-set my-map m)))]
     (is (= {} @my-map))
-    (process-pcap-file-as-maps "test/clj_net_pcap/test/data/icmp-echo-request.pcap" handler-fn)
+    (process-pcap-file-as-nested-maps "test/clj_net_pcap/test/data/icmp-echo-request.pcap" handler-fn)
     (is (= {"PcapHeader" {"timestampInNanos" 1365516583196346000, "wirelen" 98},
             "DataLinkLayer" {"index" 0, "ProtocolType" "Ethernet", "destination" "E0:CB:4E:E3:38:46", "source" "90:E6:BA:3C:9A:47", "next" 2},
             "NetworkLayer" {"destinationNetmaskBits" 24, "ttl" 64, "destination" "173.194.69.94", "destinationNetwork" "192.168.20.0", "index" 1, "ProtocolType" "Ip4", "next" 12, "tos" 0, "type" 1, "source" "192.168.20.126", "id" 0, "sourceNetwork" "192.168.20.0", "sourceNetmaskBits" 24},
             "Icmp" {"index" 2, "typeDescription" "echo request", "next" 0}}
            @my-map))))
 
-(deftest test-extract-maps-from-pcap-file
-  (let [my-map (extract-maps-from-pcap-file "test/clj_net_pcap/test/data/icmp-echo-request.pcap")]
+(deftest test-extract-nested-maps-from-pcap-file
+  (let [my-map (extract-nested-maps-from-pcap-file "test/clj_net_pcap/test/data/icmp-echo-request.pcap")]
     (is (= 1 (count my-map)))
     (is (= {"PcapHeader" {"timestampInNanos" 1365516583196346000, "wirelen" 98},
             "DataLinkLayer" {"index" 0, "ProtocolType" "Ethernet", "destination" "E0:CB:4E:E3:38:46", "source" "90:E6:BA:3C:9A:47", "next" 2},

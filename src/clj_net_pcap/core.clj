@@ -83,22 +83,22 @@
                            (nextPacket [p u] (handler-fn p u)))]
       (.dispatch pcap -1 packet-handler user-data))))
 
-(defn process-pcap-file-as-maps
+(defn process-pcap-file-as-nested-maps
   "Convenience function to read a pcap file and process the packets in map format."
   [file-name handler-fn]
     (process-pcap-file 
       file-name
       (fn [p _]
-        (handler-fn (parse-pcap-packet p)))))
+        (handler-fn (pcap-packet-to-nested-maps p)))))
 
-(defn extract-maps-from-pcap-file
+(defn extract-nested-maps-from-pcap-file
   "Convenience function to extract the data from a pcap file in map format.
    Please note that all data will be stored in memory.
    So this is not suited for large amounts of data.
    Returns a vector that contains the extracted maps."
   [file-name]
     (let [extracted-data (ref [])]
-      (process-pcap-file-as-maps file-name
+      (process-pcap-file-as-nested-maps file-name
                                  #(dosync (alter extracted-data conj %)))
       @extracted-data))
 

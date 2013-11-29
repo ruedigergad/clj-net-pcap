@@ -26,6 +26,8 @@
         clj-assorted-utils.util
         clj-net-pcap.native)
   (:import (java.net InetAddress)
+           (clj_net_pcap PacketHeaderDataBean)
+           (org.jnetpcap PcapHeader)
            (org.jnetpcap.packet PcapPacket)
            (org.jnetpcap.packet.format FormatUtils)
            (org.jnetpcap.protocol.lan Ethernet)
@@ -361,6 +363,103 @@
 		      (println "Packet raw data was:")
 		      (stdout-byte-array-forwarder-fn pkt))))))
 
+(defn- add-pcap-header-data-bean
+  [^PacketHeaderDataBean p ^PcapHeader hdr]
+  (doto p
+    (.setTs (.timestampInNanos hdr))
+    (.setLen (.wirelen hdr))))
+
+(defn- add-eth-fields-bean
+  [^PacketHeaderDataBean p ^PcapPacket pkt ^Ethernet eth]
+  (if (.hasHeader pkt eth)
+    (doto p
+      (.setEthSrc (prettify-addr-array (.source eth)))
+      (.setEthDst (prettify-addr-array (.destination eth))))
+    p))
+
+(defn- add-arp-fields-bean
+  [^PcapHeader p ^PcapPacket pkt ^Arp arp]
+  (if (.hasHeader pkt arp)
+    (doto p
+      (.setArpOpDesc (.operationDescription arp))
+      (.setArpTargetMac (prettify-addr-array (.tha arp)))
+      (.setArpTargetIp (prettify-addr-array (.tpa arp)))
+      (.setArpSrcMac (prettify-addr-array (.sha arp)))
+      (.setArpSrcIp (prettify-addr-array (.spa arp))))
+    p))
+
+(defn- add-ip4-fields-bean
+  [^PacketHeaderDataBean p ^PcapPacket pkt ^Ip4 ip4]
+  (if (.hasHeader pkt ip4)
+    (doto p
+      (.setIp4Src (prettify-addr-array (.source ip4)))
+      (.setIp4Dst (prettify-addr-array (.destination ip4))))
+    p))
+
+(defn- add-ip6-fields-bean
+  [^PacketHeaderDataBean p ^PcapPacket pkt ^Ip6 ip6]
+  (if (.hasHeader pkt ip6)
+    (doto p
+      (.setIp6Src (prettify-addr-array (.source ip6)))
+      (.setIp6Dst (prettify-addr-array (.destination ip6))))
+    p))
+
+(defn- add-icmp-fields-bean
+  [^PacketHeaderDataBean p ^PcapPacket pkt ^Icmp icmp]
+  (if (.hasHeader pkt icmp)
+    (doto p
+      (.setIcmpType (.typeDescription icmp)))
+    p))
+
+(defn- add-tcp-fields-bean
+  [^PacketHeaderDataBean p ^PcapPacket pkt ^Tcp tcp]
+  (if (.hasHeader pkt tcp)
+    (doto p
+      (.setTcpSrc (.source tcp))
+      (.setTcpDst (.destination tcp))
+      (.setTcpAck (.ack tcp))
+      (.setTcpSeq (.seq tcp))
+      (.setTcpFlags (.flags tcp)))
+    p))
+
+(defn- add-udp-fields-bean
+  [^PacketHeaderDataBean p ^PcapPacket pkt ^Udp udp]
+  (if (.hasHeader pkt udp)
+    (doto p
+      (.setUdpSrc (.source udp))
+      (.setUdpDst (.destination udp)))
+    p))
+
+(def pcap-packet-to-bean
+  "Convenience function to parse a org.jnetpcap.packet.PcapPacket into a flat,
+   non-nested map."
+  (let [eth (Ethernet.)
+        arp (Arp.)
+        icmp (Icmp.)
+        ip4 (Ip4.)
+        ip6 (Ip6.)
+        tcp (Tcp.)
+        udp (Udp.)
+        http (Http.)]
+    (fn [^PcapPacket pkt]
+		  (try
+		    (let [hdr (.getCaptureHeader pkt)
+              p (PacketHeaderDataBean.)]
+          (-> p
+            (add-pcap-header-data-bean hdr)
+            (add-eth-fields-bean pkt eth)
+            (add-arp-fields-bean pkt arp)
+            (add-ip4-fields-bean pkt ip4)
+            (add-ip6-fields-bean pkt ip6)
+            (add-icmp-fields-bean pkt icmp)
+            (add-tcp-fields-bean pkt tcp)
+            (add-udp-fields-bean pkt udp)))
+		    (catch Exception e
+		      (println "Error parsing the pcap packet!")
+		      (.printStackTrace e)
+		      (println "Packet raw data was:")
+		      (stdout-byte-array-forwarder-fn pkt))))))
+
 (defn pcap-packet-to-byte-vector
   "Convert the given org.jnetpcap.packet.PcapPacket to its byte array representation and return it as vector.
    This can be handy for debugging purposes as the resulting vector can be easily converted back into a org.jnetpcap.packet.PcapPacket instance.
@@ -426,7 +525,7 @@ user=>
   "Forwarder that converts the packets to maps but doesn't do anything else.
    This is used for testing purposes."
   [^PcapPacket packet]
-  (pcap-packet-to-map packet))
+  (pcap-packet-to-bean packet))
 
 (def counting-map-converter-forwarder-fn
   "Forwarder that converts the packets to maps and counts how many times it was called.

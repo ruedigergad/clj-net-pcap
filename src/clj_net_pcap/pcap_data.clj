@@ -378,14 +378,14 @@
     p))
 
 (defn- add-arp-fields-bean
-  [^PcapHeader p ^PcapPacket pkt ^Arp arp]
+  [^PacketHeaderDataBean p ^PcapPacket pkt ^Arp arp]
   (if (.hasHeader pkt arp)
     (doto p
       (.setArpOpDesc (.operationDescription arp))
       (.setArpTargetMac (prettify-addr-array (.tha arp)))
       (.setArpTargetIp (prettify-addr-array (.tpa arp)))
-      (.setArpSrcMac (prettify-addr-array (.sha arp)))
-      (.setArpSrcIp (prettify-addr-array (.spa arp))))
+      (.setArpSourceMac (prettify-addr-array (.sha arp)))
+      (.setArpSourceIp (prettify-addr-array (.spa arp))))
     p))
 
 (defn- add-ip4-fields-bean

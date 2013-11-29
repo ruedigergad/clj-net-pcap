@@ -3,6 +3,7 @@ master
   integer.
   - Add prototype for extracting non-nested, flat maps from pcap packets.
     This should help improving the performance.
+  - Add functionality to extract ICMP sequence number.
 
 1.4.0
   - Add a simple way to emit subnet information.

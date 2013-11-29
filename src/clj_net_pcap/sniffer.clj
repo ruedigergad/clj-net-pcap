@@ -40,7 +40,7 @@
    Note: the current implementation clones the optional user data if this is 
    passed (using Object.clone()). This may affect the performance negatively." 
 ;;; Need to use type hints here as PcapPackets constructor/deep-copy mechanism 
-;;; seems not to work well when reflection is involved.
+;;; seems not to work otherwise.
   ([^PcapPacket pcap-packet]
     (create-packet pcap-packet nil))
   ([^PcapPacket pcap-packet ^Object user-data]

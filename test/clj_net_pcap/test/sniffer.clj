@@ -66,3 +66,17 @@
     (stop-sniffer sniffer)
     (stop-forwarder forwarder)))
 
+(deftest sniffer-forwarder-interaction-cloned
+  (let [was-run (prepare-flag)
+        queue (LinkedBlockingQueue.)
+        handler-fn (fn [p _] (.offer queue (clone-packet p)))
+        forwarder-fn (fn [_] (set-flag was-run))
+        forwarder (create-and-start-forwarder queue forwarder-fn)
+        pcap (create-and-activate-pcap lo)
+        sniffer (create-and-start-sniffer pcap handler-fn)]
+    (Thread/sleep receive-delay)
+    (exec-blocking "ping -c 1 localhost")
+    (Thread/sleep receive-delay)
+    (is (flag-set? was-run))
+    (stop-sniffer sniffer)
+    (stop-forwarder forwarder)))

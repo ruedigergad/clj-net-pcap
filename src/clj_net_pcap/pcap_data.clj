@@ -398,7 +398,7 @@ user=> (prettify-addr-array (.source ip6))
 \"FE80::51C8:6877:A317:0024\"
 user=>
   "
-  [pcap-packet]
+  [^PcapPacket pcap-packet]
   (let [buffer (byte-array (.getTotalSize pcap-packet) (byte 0))
         _ (.transferStateAndDataTo pcap-packet buffer)]
     (vec buffer)))
@@ -406,38 +406,36 @@ user=>
 (defn stdout-forwarder-fn
   "Pre-defined forwarder function which outputs information about org.jnetpcap.packet.PcapPacket to *out*.
    The information is in form of a map. The is pretty printed with pprint."
-  [packet]
-  (pprint (pcap-packet-to-map (:pcap-packet packet))))
+  [^PcapPacket packet]
+  (pprint (pcap-packet-to-map packet)))
 
 (defn stdout-byte-array-forwarder-fn
   "Print the byte vector representation of a org.jnetpcap.packet.PcapPacket as returned by pcap-packet-to-byte-vector to *out*."
-  [packet]
-  (let [pcap-packet (:pcap-packet packet)
-        buffer-seq (pcap-packet-to-byte-vector pcap-packet)]
+  [^PcapPacket packet]
+  (let [buffer-seq (pcap-packet-to-byte-vector packet)]
     (println "Packet Start (size:" (count buffer-seq) "):" buffer-seq "Packet End\n\n")))
 
 (defn stdout-combined-forwarder-fn
-  [packet]
+  [^PcapPacket packet]
   "Print both, the map and the byte vector representations, of a org.jnetpcap.packet.PcapPacket to *out*."
-  (let [pcap-packet (:pcap-packet packet)
-        buffer-seq (pcap-packet-to-byte-vector pcap-packet)]
-    (pprint (pcap-packet-to-map (:pcap-packet packet)))
+  (let [buffer-seq (pcap-packet-to-byte-vector packet)]
+    (pprint (pcap-packet-to-map packet))
     (println "Packet Start (size:" (count buffer-seq) "):" buffer-seq "Packet End\n\n")))
 
 (defn no-op-map-converter-forwarder-fn
   "Forwarder that converts the packets to maps but doesn't do anything else.
    This is used for testing purposes."
-  [packet]
-  (pcap-packet-to-map (:pcap-packet packet)))
+  [^PcapPacket packet]
+  (pcap-packet-to-map packet))
 
 (def counting-map-converter-forwarder-fn
   "Forwarder that converts the packets to maps and counts how many times it was called.
    This is used for testing purposes."
   (let [cntr (counter)]
     (fn
-      [packet]
+      [^PcapPacket packet]
       (do
-        (pcap-packet-to-map (:pcap-packet packet))
+        (pcap-packet-to-map packet)
         (cntr inc)
         (if (= 0 (mod (cntr) 1000))
           (println (cntr)))))))

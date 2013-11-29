@@ -48,6 +48,10 @@
              (if-not (nil? user-data)
                (.clone user-data)))))
 
+(defn clone-packet
+  [^PcapPacket p]
+  (PcapPacket. p))
+
 (defn create-and-start-sniffer
   "Creates a thread in which Pcap.loop() is called with Pcap/LOOP_INFINITE set.
    Each received packet is passed to the supplied handler-fn. 

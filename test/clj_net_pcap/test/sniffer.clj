@@ -48,6 +48,7 @@
         forwarder (create-and-start-forwarder queue forwarder-fn)]
     (is (not (flag-set? was-run)))
     (.offer queue "foo")
+    (Thread/sleep receive-delay)
     (is (flag-set? was-run))
     (stop-forwarder forwarder)))
 

@@ -60,8 +60,8 @@
 ;                           stdout-combined-forwarder-fn
 ;                           stdout-byte-array-forwarder-fn
 ;                           stdout-forwarder-fn
-                           no-op-map-converter-forwarder-fn
-;                           counting-map-converter-forwarder-fn
+;                           no-op-converter-forwarder-fn
+                           counting-converter-forwarder-fn
                            (arg-map :interface) 
                            (arg-map :filter))
               stat-interval (arg-map :stats)

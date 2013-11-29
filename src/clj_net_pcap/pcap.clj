@@ -31,7 +31,7 @@
 
 (def ^:dynamic *buffer-size* (int (Math/pow 2 27)))
 (def ^:dynamic *flags* Pcap/MODE_PROMISCUOUS)
-(def ^:dynamic *snap-len* 0x00100)
+(def ^:dynamic *snap-len* 0x00080)
 
 
 (def lo "lo")
@@ -107,7 +107,7 @@
     (create-filter pcap filter-string 1))
   ([pcap filter-string optimize]
     (create-filter pcap filter-string optimize 0))
-  ([pcap filter-string optimize netmask] 
+  ([^Pcap pcap filter-string optimize netmask] 
     (let [f (PcapBpfProgram.)]
       (if 
         (= (.compile pcap f filter-string optimize netmask) Pcap/OK)
@@ -118,7 +118,7 @@
 
 (defn set-filter
   "Sets the given filter f for the given Pcap instance pcap."
-  [pcap f]
+  [^Pcap pcap f]
   (when (not= (.setFilter pcap f) Pcap/OK)
     (let [errmsg (str "Error setting pcap filter: " (.getErr pcap))]
       (println-err errmsg)
@@ -134,7 +134,7 @@
 (defn create-stat-fn
   "Returns an fn that prints statistical data about a org.jnetpcap.Pcap instance.
    Argument is the org.jnetpcap.Pcap instance."
-  [pcap]
+  [^Pcap pcap]
   (let [pcap-stats (PcapStat.)]
     (fn []
       (if (= 0 (.stats pcap pcap-stats))

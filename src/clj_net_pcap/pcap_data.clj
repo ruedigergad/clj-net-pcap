@@ -257,72 +257,72 @@
   [m ^PcapPacket pkt ^Ethernet eth]
   (if (.hasHeader pkt eth)
     (assoc m
-           "eth_src" (prettify-addr-array (.source eth))
-	         "eth_dst" (prettify-addr-array (.destination eth)))
+           "ethSrc" (prettify-addr-array (.source eth))
+	         "ethDst" (prettify-addr-array (.destination eth)))
     m))
 
 (defn- add-arp-fields
   [m ^PcapPacket pkt ^Arp arp]
   (if (.hasHeader pkt arp)
     (assoc m 
-           "arp_opDesc" (.operationDescription arp)
-           "arp_targetMac" (prettify-addr-array (.tha arp))
-           "arp_targetIp" (prettify-addr-array (.tpa arp))
-           "arp_sourceMac" (prettify-addr-array (.sha arp))
-           "arp_sourceIp" (prettify-addr-array (.spa arp)))
+           "arpOpDesc" (.operationDescription arp)
+           "arpTargetMac" (prettify-addr-array (.tha arp))
+           "arpTargetIp" (prettify-addr-array (.tpa arp))
+           "arpSourceMac" (prettify-addr-array (.sha arp))
+           "arpSourceIp" (prettify-addr-array (.spa arp)))
     m))
 
 (defn- add-ip4-fields
   [m ^PcapPacket pkt ^Ip4 ip4]
   (if (.hasHeader pkt ip4)
     (assoc m
-           "ip4_src" (prettify-addr-array (.source ip4))
-           "ip4_dst" (prettify-addr-array (.destination ip4)))
+           "ip4Src" (prettify-addr-array (.source ip4))
+           "ip4Dst" (prettify-addr-array (.destination ip4)))
     m))
 
 (defn- add-ip6-fields
   [m ^PcapPacket pkt ^Ip6 ip6]
   (if (.hasHeader pkt ip6)
     (assoc m 
-           "ip6_src" (prettify-addr-array (.source ip6))
-           "ip6_dst" (prettify-addr-array (.destination ip6)))
+           "ip6Src" (prettify-addr-array (.source ip6))
+           "ip6Dst" (prettify-addr-array (.destination ip6)))
     m))
 
 (defn- add-icmp-fields
   [m ^PcapPacket pkt ^Icmp icmp]
   (if (.hasHeader pkt icmp)
-    (assoc m "icmp_type" (.typeDescription icmp))
+    (assoc m "icmpType" (.typeDescription icmp))
     m))
 
 (defn- add-icmp-echo-fields
-  [m ^Icmp$Echo icmp-echo]
-  (dosync
-    (alter m
-           assoc "icmp_echo_seq" (.sequence icmp-echo))))
+  [m ^Icmp icmp ^Icmp$Echo icmp-echo]
+  (if (.hasSubHeader icmp icmp-echo)
+    (assoc m "icmpEchoSeq" (.sequence icmp-echo))
+    m))
 
 (defn- add-tcp-fields
   [m ^PcapPacket pkt ^Tcp tcp]
   (if (.hasHeader pkt tcp)
     (assoc m 
-           "tcp_src" (.source tcp)
-           "tcp_dst" (.destination tcp)
-           "tcp_ack" (.ack tcp)
-           "tcp_seq" (.seq tcp)
-           "tcp_flags" (.flags tcp)))
+           "tcpSrc" (.source tcp)
+           "tcpDst" (.destination tcp)
+           "tcpAck" (.ack tcp)
+           "tcpSeq" (.seq tcp)
+           "tcpFlags" (.flags tcp)))
   m)
 
 (defn- add-tcp-timestamp-fields
   [m tcp-timestamp]
   (assoc m
-         "tcp_tsval" (.tsval tcp-timestamp)
-         "tcp_tsecr" (.tsecr tcp-timestamp)))
+         "tcpTsval" (.tsval tcp-timestamp)
+         "tcpTsecr" (.tsecr tcp-timestamp)))
 
 (defn- add-udp-fields
   [m ^PcapPacket pkt ^Udp udp]
   (if (.hasHeader pkt udp)
     (assoc m
-           "udp_src" (.source udp)
-           "udp_dst" (.destination udp))
+           "udpSrc" (.source udp)
+           "udpDst" (.destination udp))
     m))
 
 (def pcap-packet-to-map
@@ -349,12 +349,9 @@
             (add-arp-fields pkt arp)
             (add-ip4-fields pkt ip4)
             (add-ip6-fields pkt ip6)
-;          (when (.hasHeader pkt icmp)
             (add-icmp-fields pkt icmp)
-;            (if (.hasSubHeader icmp icmp-echo-reply)
-;              (add-icmp-echo-fields m icmp-echo-reply)
-;              (if (.hasSubHeader icmp icmp-echo-request)
-;                (add-icmp-echo-fields m icmp-echo-request))))
+            (add-icmp-echo-fields icmp icmp-echo-reply)
+            (add-icmp-echo-fields icmp icmp-echo-request)
             (add-tcp-fields pkt tcp)
             (add-udp-fields pkt udp)))
 		    (catch Exception e
@@ -411,6 +408,13 @@
       (.setIcmpType (.typeDescription icmp)))
     p))
 
+(defn- add-icmp-echo-fields-bean
+  [^PacketHeaderDataBean p ^Icmp icmp ^Icmp$Echo icmp-echo]
+  (if (.hasSubHeader icmp icmp-echo)
+    (doto p
+      (.setIcmpEchoSeq (.sequence icmp-echo)))
+    p))
+
 (defn- add-tcp-fields-bean
   [^PacketHeaderDataBean p ^PcapPacket pkt ^Tcp tcp]
   (if (.hasHeader pkt tcp)
@@ -435,6 +439,8 @@
   (let [eth (Ethernet.)
         arp (Arp.)
         icmp (Icmp.)
+        icmp-echo-reply (Icmp$EchoReply.)
+        icmp-echo-request (Icmp$EchoRequest.)
         ip4 (Ip4.)
         ip6 (Ip6.)
         tcp (Tcp.)
@@ -451,6 +457,8 @@
             (add-ip4-fields-bean pkt ip4)
             (add-ip6-fields-bean pkt ip6)
             (add-icmp-fields-bean pkt icmp)
+            (add-icmp-echo-fields-bean icmp icmp-echo-reply)
+            (add-icmp-echo-fields-bean icmp icmp-echo-request)
             (add-tcp-fields-bean pkt tcp)
             (add-udp-fields-bean pkt udp)))
 		    (catch Exception e

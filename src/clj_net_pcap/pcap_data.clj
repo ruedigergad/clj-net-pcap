@@ -252,41 +252,45 @@
       (stdout-byte-array-forwarder-fn packet))))
 
 (defn- add-eth-fields
-  [m eth]
-  (dosync m
-	  (alter m assoc 
-          "eth_src" (prettify-addr-array (.source eth))
-	        "eth_dst" (prettify-addr-array (.destination eth)))))
+  [m ^PcapPacket pkt ^Ethernet eth]
+  (if (.hasHeader pkt eth)
+    (assoc m
+           "eth_src" (prettify-addr-array (.source eth))
+	         "eth_dst" (prettify-addr-array (.destination eth)))
+    m))
 
 (defn- add-arp-fields
-  [m arp]
-  (dosync
-    (alter m assoc 
+  [m ^PcapPacket pkt ^Arp arp]
+  (if (.hasHeader pkt arp)
+    (assoc m 
            "arp_opDesc" (.operationDescription arp)
            "arp_targetMac" (prettify-addr-array (.tha arp))
            "arp_targetIp" (prettify-addr-array (.tpa arp))
            "arp_sourceMac" (prettify-addr-array (.sha arp))
-           "arp_sourceIp" (prettify-addr-array (.spa arp)))))
+           "arp_sourceIp" (prettify-addr-array (.spa arp)))
+    m))
 
 (defn- add-ip4-fields
-  [m ip4]
-  (dosync
-	  (alter m assoc
+  [m ^PcapPacket pkt ^Ip4 ip4]
+  (if (.hasHeader pkt ip4)
+    (assoc m
            "ip4_src" (prettify-addr-array (.source ip4))
-           "ip4_dst" (prettify-addr-array (.destination ip4)))))
+           "ip4_dst" (prettify-addr-array (.destination ip4)))
+    m))
 
 (defn- add-ip6-fields
-  [m ip6]
-  (dosync
-    (alter m assoc 
+  [m ^PcapPacket pkt ^Ip6 ip6]
+  (if (.hasHeader pkt ip6)
+    (assoc m 
            "ip6_src" (prettify-addr-array (.source ip6))
-           "ip6_dst" (prettify-addr-array (.destination ip6)))))
+           "ip6_dst" (prettify-addr-array (.destination ip6)))
+    m))
 
 (defn- add-icmp-fields
-  [m icmp]
-  (dosync
-    (alter m
-           assoc "icmp_type" (.typeDescription icmp))))
+  [m ^PcapPacket pkt ^Icmp icmp]
+  (if (.hasHeader pkt icmp)
+    (assoc m "icmp_type" (.typeDescription icmp))
+    m))
 
 (defn- add-icmp-echo-fields
   [m icmp-echo]
@@ -295,28 +299,29 @@
            assoc "icmp_echo_seq" (.sequence icmp-echo))))
 
 (defn- add-tcp-fields
-  [m tcp]
-  (dosync
-    (alter m assoc 
-           "tcp_src" (prettify-addr-array (.source tcp))
-           "tcp_dst" (prettify-addr-array (.destination tcp))
+  [m ^PcapPacket pkt ^Tcp tcp]
+  (if (.hasHeader pkt tcp)
+    (assoc m 
+           "tcp_src" (.source tcp)
+           "tcp_dst" (.destination tcp)
            "tcp_ack" (.ack tcp)
            "tcp_seq" (.seq tcp)
-           "tcp_flags" (.flags tcp))))
+           "tcp_flags" (.flags tcp)))
+  m)
 
 (defn- add-tcp-timestamp-fields
   [m tcp-timestamp]
-  (dosync
-    (alter m assoc
-           "tcp_tsval" (.tsval tcp-timestamp)
-           "tcp_tsecr" (.tsecr tcp-timestamp))))
+  (assoc m
+         "tcp_tsval" (.tsval tcp-timestamp)
+         "tcp_tsecr" (.tsecr tcp-timestamp)))
 
 (defn- add-udp-fields
-  [m udp]
-  (dosync
-    (alter m assoc
-           "udp_src" (prettify-addr-array (.source udp))
-           "udp_dst" (prettify-addr-array (.destination udp)))))
+  [m ^PcapPacket pkt ^Udp udp]
+  (if (.hasHeader pkt udp)
+    (assoc m
+           "udp_src" (.source udp)
+           "udp_dst" (.destination udp))
+    m))
 
 (def pcap-packet-to-map
   "Convenience function to parse a org.jnetpcap.packet.PcapPacket into a flat,
@@ -335,27 +340,21 @@
     (fn [^PcapPacket pkt]
 		  (try
 		    (let [hdr (.getCaptureHeader pkt)
-		          m (ref {"ts" (.timestampInNanos hdr)
-		                  "len" (.wirelen hdr)})]
-          (if (.hasHeader pkt eth)
-            (add-eth-fields m eth))
-          (if (.hasHeader pkt arp)
-            (add-arp-fields m arp))
-          (if (.hasHeader pkt ip4)
-            (add-ip4-fields m ip4))
-          (if (.hasHeader pkt ip6)
-            (add-ip6-fields m ip6))
-          (when (.hasHeader pkt icmp)
-            (add-icmp-fields m icmp)
-            (if (.hasSubHeader icmp icmp-echo-reply)
-              (add-icmp-echo-fields m icmp-echo-reply)
-              (if (.hasSubHeader icmp icmp-echo-request)
-                (add-icmp-echo-fields m icmp-echo-request))))
-          (if (.hasHeader pkt tcp)
-            (add-tcp-fields m tcp))
-          (if (.hasHeader pkt udp)
-            (add-udp-fields m udp))
-          @m)
+		          m {"ts" (.timestampInNanos hdr)
+		             "len" (.wirelen hdr)}]
+          (-> m
+            (add-eth-fields pkt eth)
+            (add-arp-fields pkt arp)
+            (add-ip4-fields pkt ip4)
+            (add-ip6-fields pkt ip6)
+;          (when (.hasHeader pkt icmp)
+            (add-icmp-fields pkt icmp)
+;            (if (.hasSubHeader icmp icmp-echo-reply)
+;              (add-icmp-echo-fields m icmp-echo-reply)
+;              (if (.hasSubHeader icmp icmp-echo-request)
+;                (add-icmp-echo-fields m icmp-echo-request))))
+            (add-tcp-fields pkt tcp)
+            (add-udp-fields pkt udp)))
 		    (catch Exception e
 		      (println "Error parsing the pcap packet!")
 		      (.printStackTrace e)

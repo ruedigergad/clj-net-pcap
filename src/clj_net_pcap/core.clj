@@ -32,7 +32,7 @@
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
 
 
-(def ^:dynamic *trace-handler-fn* false)
+(def ^:dynamic *trace-handler-fn* true)
 
 
 (defmacro insert-counter-tracing

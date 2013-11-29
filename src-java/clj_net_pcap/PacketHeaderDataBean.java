@@ -404,4 +404,143 @@ public class PacketHeaderDataBean {
 		return builder.toString();
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((arpOpDesc == null) ? 0 : arpOpDesc.hashCode());
+		result = prime * result
+				+ ((arpSourceIp == null) ? 0 : arpSourceIp.hashCode());
+		result = prime * result
+				+ ((arpSourceMac == null) ? 0 : arpSourceMac.hashCode());
+		result = prime * result
+				+ ((arpTargetIp == null) ? 0 : arpTargetIp.hashCode());
+		result = prime * result
+				+ ((arpTargetMac == null) ? 0 : arpTargetMac.hashCode());
+		result = prime * result + capLen;
+		result = prime * result + ((ethDst == null) ? 0 : ethDst.hashCode());
+		result = prime * result + ((ethSrc == null) ? 0 : ethSrc.hashCode());
+		result = prime * result + hdrLen;
+		result = prime * result + icmpEchoSeq;
+		result = prime * result
+				+ ((icmpType == null) ? 0 : icmpType.hashCode());
+		result = prime * result + ((ip4Dst == null) ? 0 : ip4Dst.hashCode());
+		result = prime * result + ((ip4Src == null) ? 0 : ip4Src.hashCode());
+		result = prime * result + ((ip6Dst == null) ? 0 : ip6Dst.hashCode());
+		result = prime * result + ((ip6Src == null) ? 0 : ip6Src.hashCode());
+		result = prime * result + len;
+		result = prime * result + (int) (tcpAck ^ (tcpAck >>> 32));
+		result = prime * result + tcpDst;
+		result = prime * result + tcpFlags;
+		result = prime * result + (int) (tcpSeq ^ (tcpSeq >>> 32));
+		result = prime * result + tcpSrc;
+		result = prime * result + (int) (tcpTsecr ^ (tcpTsecr >>> 32));
+		result = prime * result + (int) (tcpTsval ^ (tcpTsval >>> 32));
+		result = prime * result + (int) (ts ^ (ts >>> 32));
+		result = prime * result + udpDst;
+		result = prime * result + udpSrc;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof PacketHeaderDataBean))
+			return false;
+		PacketHeaderDataBean other = (PacketHeaderDataBean) obj;
+		if (arpOpDesc == null) {
+			if (other.arpOpDesc != null)
+				return false;
+		} else if (!arpOpDesc.equals(other.arpOpDesc))
+			return false;
+		if (arpSourceIp == null) {
+			if (other.arpSourceIp != null)
+				return false;
+		} else if (!arpSourceIp.equals(other.arpSourceIp))
+			return false;
+		if (arpSourceMac == null) {
+			if (other.arpSourceMac != null)
+				return false;
+		} else if (!arpSourceMac.equals(other.arpSourceMac))
+			return false;
+		if (arpTargetIp == null) {
+			if (other.arpTargetIp != null)
+				return false;
+		} else if (!arpTargetIp.equals(other.arpTargetIp))
+			return false;
+		if (arpTargetMac == null) {
+			if (other.arpTargetMac != null)
+				return false;
+		} else if (!arpTargetMac.equals(other.arpTargetMac))
+			return false;
+		if (capLen != other.capLen)
+			return false;
+		if (ethDst == null) {
+			if (other.ethDst != null)
+				return false;
+		} else if (!ethDst.equals(other.ethDst))
+			return false;
+		if (ethSrc == null) {
+			if (other.ethSrc != null)
+				return false;
+		} else if (!ethSrc.equals(other.ethSrc))
+			return false;
+		if (hdrLen != other.hdrLen)
+			return false;
+		if (icmpEchoSeq != other.icmpEchoSeq)
+			return false;
+		if (icmpType == null) {
+			if (other.icmpType != null)
+				return false;
+		} else if (!icmpType.equals(other.icmpType))
+			return false;
+		if (ip4Dst == null) {
+			if (other.ip4Dst != null)
+				return false;
+		} else if (!ip4Dst.equals(other.ip4Dst))
+			return false;
+		if (ip4Src == null) {
+			if (other.ip4Src != null)
+				return false;
+		} else if (!ip4Src.equals(other.ip4Src))
+			return false;
+		if (ip6Dst == null) {
+			if (other.ip6Dst != null)
+				return false;
+		} else if (!ip6Dst.equals(other.ip6Dst))
+			return false;
+		if (ip6Src == null) {
+			if (other.ip6Src != null)
+				return false;
+		} else if (!ip6Src.equals(other.ip6Src))
+			return false;
+		if (len != other.len)
+			return false;
+		if (tcpAck != other.tcpAck)
+			return false;
+		if (tcpDst != other.tcpDst)
+			return false;
+		if (tcpFlags != other.tcpFlags)
+			return false;
+		if (tcpSeq != other.tcpSeq)
+			return false;
+		if (tcpSrc != other.tcpSrc)
+			return false;
+		if (tcpTsecr != other.tcpTsecr)
+			return false;
+		if (tcpTsval != other.tcpTsval)
+			return false;
+		if (ts != other.ts)
+			return false;
+		if (udpDst != other.udpDst)
+			return false;
+		if (udpSrc != other.udpSrc)
+			return false;
+		return true;
+	}
+
 }

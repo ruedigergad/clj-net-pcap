@@ -1,10 +1,12 @@
 master
-  - Add functionality to choose whether TCP flags are emitted as set or
-  integer.
   - Add prototype for extracting non-nested, flat maps from pcap packets.
     This should help improving the performance.
-  - Add functionality to extract ICMP sequence number.
+  - Add prototpye for extracting data as bean.
+    This should improve the performance even more.
   - Further improve performance.
+  - Add functionality to extract ICMP sequence number.
+  - Add functionality to choose whether TCP flags are emitted as set or
+    integer for nested map forma.
 
 1.4.0
   - Add a simple way to emit subnet information.

@@ -57,9 +57,9 @@
         (println "Starting clj-net-pcap using the following options:")
         (pprint arg-map)
         (let [cljnetpcap (create-and-start-cljnetpcap
-                           stdout-combined-forwarder-fn
+;                           stdout-combined-forwarder-fn
 ;                           stdout-byte-array-forwarder-fn
-;                           stdout-forwarder-fn 
+                           stdout-forwarder-fn 
                            (arg-map :interface) 
                            (arg-map :filter))
               stat-interval (arg-map :stats)

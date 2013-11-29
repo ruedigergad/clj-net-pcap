@@ -51,7 +51,7 @@
                          (.offer queue (create-packet p u))))
           sniffer (create-and-start-sniffer pcap handler-fn)
           stat-fn (create-stat-fn pcap)
-          stat-print-fn #(print-err-ln "pcap-stats:" (stat-fn))]
+          stat-print-fn #(print-err-ln (str "pcap-stats(recv;drop;idrop)," (stat-fn) ",queue_size," (.size queue)))]
       (fn [k]
         (condp = k
           :stat (stat-print-fn)

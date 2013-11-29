@@ -138,7 +138,7 @@
   (let [pcap-stats (PcapStat.)]
     (fn []
       (if (= 0 (.stats pcap pcap-stats))
-        (.toString pcap-stats)
+        (str (.getRecv pcap-stats) "," (.getDrop pcap-stats) "," (.getIfDrop pcap-stats))  
         (print-err-ln (.getErr pcap))))))
 
 (defn create-pcap-from-file

@@ -431,8 +431,7 @@
     p))
 
 (def pcap-packet-to-bean
-  "Convenience function to parse a org.jnetpcap.packet.PcapPacket into a flat,
-   non-nested map."
+  "Convenience function to parse a org.jnetpcap.packet.PcapPacket into a bean."
   (let [eth (Ethernet.)
         arp (Arp.)
         icmp (Icmp.)

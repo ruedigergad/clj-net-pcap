@@ -19,7 +19,7 @@
  *
  */
 
-package cljNetPcap;
+package clj_net_pcap;
 
 /**
  * 

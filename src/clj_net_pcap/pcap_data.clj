@@ -254,40 +254,33 @@
 (defn- add-eth-fields
   [m eth]
   (dosync m
-	  (alter m
-	         assoc "eth_src" (prettify-addr-array (.source eth)))
-	  (alter m
-	         assoc "eth_dst" (prettify-addr-array (.destination eth)))))
+	  (alter m assoc 
+          "eth_src" (prettify-addr-array (.source eth))
+	        "eth_dst" (prettify-addr-array (.destination eth)))))
 
 (defn- add-arp-fields
   [m arp]
   (dosync
-    (alter m
-           assoc "arp_opDesc" (.operationDescription arp))
-    (alter m 
-           assoc "arp_targetMac" (prettify-addr-array (.tha arp)))
-    (alter m
-           assoc "arp_targetIp" (prettify-addr-array (.tpa arp)))
-    (alter m
-           assoc "arp_sourceMac" (prettify-addr-array (.sha arp)))
-    (alter m
-           assoc "arp_sourceIp" (prettify-addr-array (.spa arp)))))
+    (alter m assoc 
+           "arp_opDesc" (.operationDescription arp)
+           "arp_targetMac" (prettify-addr-array (.tha arp))
+           "arp_targetIp" (prettify-addr-array (.tpa arp))
+           "arp_sourceMac" (prettify-addr-array (.sha arp))
+           "arp_sourceIp" (prettify-addr-array (.spa arp)))))
 
 (defn- add-ip4-fields
   [m ip4]
   (dosync
-	  (alter m
-	         assoc "ip4_src" (prettify-addr-array (.source ip4)))
-	  (alter m
-	         assoc "ip4_dst" (prettify-addr-array (.destination ip4)))))
+	  (alter m assoc
+           "ip4_src" (prettify-addr-array (.source ip4))
+           "ip4_dst" (prettify-addr-array (.destination ip4)))))
 
 (defn- add-ip6-fields
   [m ip6]
   (dosync
-    (alter m
-           assoc "ip6_src" (prettify-addr-array (.source ip6)))
-    (alter m
-           assoc "ip6_dst" (prettify-addr-array (.destination ip6)))))
+    (alter m assoc 
+           "ip6_src" (prettify-addr-array (.source ip6))
+           "ip6_dst" (prettify-addr-array (.destination ip6)))))
 
 (defn- add-icmp-fields
   [m icmp]
@@ -304,32 +297,26 @@
 (defn- add-tcp-fields
   [m tcp]
   (dosync
-    (alter m
-           assoc "tcp_src" (prettify-addr-array (.source tcp)))
-    (alter m
-           assoc "tcp_dst" (prettify-addr-array (.destination tcp)))
-    (alter m
-           assoc "tcp_ack" (.ack tcp))
-    (alter m
-           assoc "tcp_seq" (.seq tcp))
-    (alter m
-           assoc "tcp_flags" (.flags tcp))))
+    (alter m assoc 
+           "tcp_src" (prettify-addr-array (.source tcp))
+           "tcp_dst" (prettify-addr-array (.destination tcp))
+           "tcp_ack" (.ack tcp)
+           "tcp_seq" (.seq tcp)
+           "tcp_flags" (.flags tcp))))
 
 (defn- add-tcp-timestamp-fields
   [m tcp-timestamp]
   (dosync
-    (alter m
-           assoc "tcp_tsval" (.tsval tcp-timestamp))
-    (alter m
-           assoc "tcp_tsecr" (.tsecr tcp-timestamp))))
+    (alter m assoc
+           "tcp_tsval" (.tsval tcp-timestamp)
+           "tcp_tsecr" (.tsecr tcp-timestamp))))
 
 (defn- add-udp-fields
   [m udp]
   (dosync
-    (alter m
-           assoc "udp_src" (prettify-addr-array (.source udp)))
-    (alter m
-           assoc "udp_dst" (prettify-addr-array (.destination udp)))))
+    (alter m assoc
+           "udp_src" (prettify-addr-array (.source udp))
+           "udp_dst" (prettify-addr-array (.destination udp)))))
 
 (def pcap-packet-to-map
   "Convenience function to parse a org.jnetpcap.packet.PcapPacket into a flat,
@@ -350,13 +337,13 @@
 		    (let [hdr (.getCaptureHeader pkt)
 		          m (ref {"ts" (.timestampInNanos hdr)
 		                  "len" (.wirelen hdr)})]
-          (when (.hasHeader pkt eth)
+          (if (.hasHeader pkt eth)
             (add-eth-fields m eth))
-          (when (.hasHeader pkt arp)
+          (if (.hasHeader pkt arp)
             (add-arp-fields m arp))
-          (when (.hasHeader pkt ip4)
+          (if (.hasHeader pkt ip4)
             (add-ip4-fields m ip4))
-          (when (.hasHeader pkt ip6)
+          (if (.hasHeader pkt ip6)
             (add-ip6-fields m ip6))
           (when (.hasHeader pkt icmp)
             (add-icmp-fields m icmp)
@@ -364,9 +351,9 @@
               (add-icmp-echo-fields m icmp-echo-reply)
               (if (.hasSubHeader icmp icmp-echo-request)
                 (add-icmp-echo-fields m icmp-echo-request))))
-          (when (.hasHeader pkt tcp)
+          (if (.hasHeader pkt tcp)
             (add-tcp-fields m tcp))
-          (when (.hasHeader pkt udp)
+          (if (.hasHeader pkt udp)
             (add-udp-fields m udp))
           @m)
 		    (catch Exception e
@@ -421,7 +408,7 @@ user=>
   "Pre-defined forwarder function which outputs information about org.jnetpcap.packet.PcapPacket to *out*.
    The information is in form of a map. The is pretty printed with pprint."
   [packet]
-  (pprint (pcap-packet-to-nested-maps (:pcap-packet packet))))
+  (pprint (pcap-packet-to-map (:pcap-packet packet))))
 
 (defn stdout-byte-array-forwarder-fn
   "Print the byte vector representation of a org.jnetpcap.packet.PcapPacket as returned by pcap-packet-to-byte-vector to *out*."

@@ -7,6 +7,7 @@
                  [clj-assorted-utils "1.4.0"]
                  [jnetpcap "1.4.r1390-1b"]]
   :aot [#"^clj-net-pcap.*"]
+  :global-vars {*warn-on-reflection* true}
   :main clj-net-pcap.main
   :java-source-paths ["src-java"]
   :omit-source true

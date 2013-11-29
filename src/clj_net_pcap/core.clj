@@ -29,10 +29,11 @@
         clj-net-pcap.sniffer
         clj-assorted-utils.util)
   (:import (java.util.concurrent LinkedBlockingQueue)
+           (org.jnetpcap Pcap)
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
 
 
-(def ^:dynamic *trace-handler-fn* true)
+(def ^:dynamic *trace-handler-fn* false)
 
 
 (defmacro insert-counter-tracing
@@ -97,7 +98,7 @@
   ([file-name handler-fn]
     (process-pcap-file file-name handler-fn nil))
   ([file-name handler-fn user-data]
-    (let [pcap (create-pcap-from-file file-name)
+    (let [^Pcap pcap (create-pcap-from-file file-name)
           packet-handler (proxy [PcapPacketHandler] []
                            (nextPacket [p u] (handler-fn p u)))]
       (.dispatch pcap -1 packet-handler user-data))))

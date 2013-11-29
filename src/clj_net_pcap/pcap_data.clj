@@ -29,7 +29,7 @@
            (org.jnetpcap.packet PcapPacket)
            (org.jnetpcap.packet.format FormatUtils)
            (org.jnetpcap.protocol.lan Ethernet)
-           (org.jnetpcap.protocol.network Arp Icmp Icmp$EchoReply Icmp$EchoRequest Ip4 Ip6)
+           (org.jnetpcap.protocol.network Arp Icmp Icmp$Echo Icmp$EchoReply Icmp$EchoRequest Ip4 Ip6)
            (org.jnetpcap.protocol.tcpip Http Http$Request Http$Response 
                                         Tcp Tcp$Flag Tcp$Timestamp Udp)))
 
@@ -39,7 +39,7 @@
 
 (defn network-class
   "Determine the network class based on the private network classes as defined in RFC 1918. This assume no CIDR is used."
-  [ip-addr]
+  [^String ip-addr]
   (cond
     (.startsWith ip-addr "192.168.") :class-c
     (.startsWith ip-addr "10.") :class-a
@@ -79,7 +79,7 @@
 
 (defn prettify-addr-array
   "Convenience function to print addresses as strings."
-  [^Object a]
+  [#^bytes a]
   (if (-> (.getClass a) (.isArray))
     (cond
       (= (alength a) 6) (FormatUtils/mac a)
@@ -141,7 +141,7 @@
 (defn extract-http-fields-to-map
   "Extract the given fields from an org.jnetpcap.protocol.tcpip.Http instance and store each into a map.
    fields is a vector that specifies which fields shall be extracted."
-  [http fields]
+  [^Http http fields]
   (into {}
         (map (fn [f] 
                (if (.hasField http f)
@@ -293,7 +293,7 @@
     m))
 
 (defn- add-icmp-echo-fields
-  [m icmp-echo]
+  [m ^Icmp$Echo icmp-echo]
   (dosync
     (alter m
            assoc "icmp_echo_seq" (.sequence icmp-echo))))

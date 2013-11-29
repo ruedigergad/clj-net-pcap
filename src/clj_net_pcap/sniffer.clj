@@ -43,10 +43,9 @@
 ;;; seems not to work otherwise.
   ([^PcapPacket pcap-packet]
     (create-packet pcap-packet nil))
-  ([^PcapPacket pcap-packet ^Object user-data]
+  ([^PcapPacket pcap-packet ^java.lang.Object user-data]
     (Packet. (PcapPacket. pcap-packet) 
-             (if-not (nil? user-data)
-               (.clone user-data)))))
+             user-data)))
 
 (defn clone-packet
   [^PcapPacket p]
@@ -63,9 +62,9 @@
    stop-sniffer function. Stopping the sniffer also takes care of closing pcap."
   ([pcap handler-fn]
     (create-and-start-sniffer pcap handler-fn nil))
-  ([pcap handler-fn user-data]
+  ([^Pcap pcap handler-fn user-data]
     (let [packet-handler (proxy [PcapPacketHandler] []
-                           (nextPacket [p u] (handler-fn p u)))
+                           (nextPacket [^PcapPacket p ^Object u] (handler-fn p u)))
           run-fn (fn [] 
                    (.loop pcap Pcap/LOOP_INFINITE packet-handler user-data)) 
           sniffer-thread (doto (Thread. run-fn) (.start))]

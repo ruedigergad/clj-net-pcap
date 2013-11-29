@@ -32,7 +32,6 @@
   (:gen-class))
 
 (defn -main [& args]
-  (binding [*warn-on-reflection* true]
   (let [cli-args (cli args
                       ["-i" "--interface" 
                        "Interface on which the packets are captured" 
@@ -85,5 +84,5 @@
           (while (not= "q" (read-line))
             (println "Type \"q\" followed by <Return> to quit: "))
           (shutdown-fn)
-          (println "Leaving (-main [& args] ...).")))))))
+          (println "Leaving (-main [& args] ...)."))))))
 

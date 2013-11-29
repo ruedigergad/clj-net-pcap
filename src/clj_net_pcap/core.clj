@@ -31,6 +31,19 @@
   (:import (java.util.concurrent LinkedBlockingQueue)
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
 
+
+(def ^:dynamic *trace-handler-fn* false)
+
+
+(defmacro insert-counter-tracing
+  [cntr txt]
+  (if *trace-handler-fn*
+	  `(do
+	     (~cntr inc)
+	     (if (= 0 (mod (~cntr) 1000))
+	       (println ~txt 
+	                (~cntr))))))
+
 (defn create-and-start-cljnetpcap
   "Convenience function for creating and starting packet capturing.
    forwarder-fn will be called for each captured packet.
@@ -46,8 +59,14 @@
           forwarder (create-and-start-forwarder queue forwarder-fn)
           pcap (create-and-activate-pcap device)
           _ (create-and-set-filter pcap filter-expression)
-          handler-fn (fn [p u] 
-                       (if-not (nil? p)
+          handler-fn-invocation-counter (counter)
+          handler-fn-packet-counter (counter)
+          handler-fn (fn [p u]
+                       (insert-counter-tracing handler-fn-invocation-counter 
+                                               "handler-fn-invocations:")
+                       (when-not (nil? p)
+                         (insert-counter-tracing handler-fn-packet-counter 
+                                               "handler-fn-packets:")
                          (.offer queue (create-packet p u))))
           sniffer (create-and-start-sniffer pcap handler-fn)
           stat-fn (create-stat-fn pcap)

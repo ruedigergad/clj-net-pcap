@@ -1,4 +1,6 @@
 master
+
+1.5.0
   - Add prototype for extracting non-nested, flat maps from pcap packets.
     This should help improving the performance.
   - Add prototpye for extracting data as bean.

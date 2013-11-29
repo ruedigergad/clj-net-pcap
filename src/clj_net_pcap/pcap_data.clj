@@ -517,7 +517,8 @@ user=>
   "Pre-defined forwarder function which outputs information about org.jnetpcap.packet.PcapPacket to *out*.
    The information is in form of a map. The is pretty printed with pprint."
   [^PcapPacket packet]
-  (pprint (pcap-packet-to-bean packet)))
+  (pprint (pcap-packet-to-map packet))
+  (println "---"))
 
 (defn stdout-byte-array-forwarder-fn
   "Print the byte vector representation of a org.jnetpcap.packet.PcapPacket as returned by pcap-packet-to-byte-vector to *out*."

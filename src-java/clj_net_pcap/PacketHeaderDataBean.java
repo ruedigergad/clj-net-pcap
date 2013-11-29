@@ -12,10 +12,10 @@ public class PacketHeaderDataBean {
 	/*
 	 * General pcap information
 	 */
-	private long ts = -1;
-	private int len = -1;
-	private int hdrLen = -1;
-	private int capLen = -1;
+	private long ts = 0;
+	private int len = 0;
+	private int hdrLen = 0;
+	private int capLen = 0;
 
 	/*
 	 * Ethernet
@@ -53,19 +53,19 @@ public class PacketHeaderDataBean {
 	/*
 	 * TCP
 	 */
-	private int tcpSrc = -1;
-	private int tcpDst = -1;
+	private int tcpSrc = 0;
+	private int tcpDst = 0;
 	private long tcpAck = -1;
 	private long tcpSeq = -1;
 	private int tcpFlags = -1;
-	private long tcpTsval = -1;
-	private long tcpTsecr = -1;
+	private long tcpTsval = 0;
+	private long tcpTsecr = 0;
 
 	/*
 	 * UDP
 	 */
-	private int udpSrc = -1;
-	private int udpDst = -1;
+	private int udpSrc = 0;
+	private int udpDst = 0;
 
 	/*
 	 * Getter and setter
@@ -282,19 +282,19 @@ public class PacketHeaderDataBean {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("PacketHeaderDataBean");
-		if (ts > -1) {
+		if (ts > 0) {
 			builder.append("ts=");
 			builder.append(ts);
 		}
-		if (len > -1) {
+		if (len > 0) {
 			builder.append(", len=");
 			builder.append(len);
 		}
-		if (hdrLen > -1) {
+		if (hdrLen > 0) {
 			builder.append(", hdrLen=");
 			builder.append(hdrLen);
 		}
-		if (capLen > -1) {
+		if (capLen > 0) {
 			builder.append(", capLen=");
 			builder.append(capLen);
 		}
@@ -364,11 +364,11 @@ public class PacketHeaderDataBean {
 			builder.append(icmpEchoSeq);
 			builder.append(", ");
 		}
-		if (tcpSrc > -1) {
+		if (tcpSrc > 0) {
 			builder.append("tcpSrc=");
 			builder.append(tcpSrc);
 		}
-		if (tcpDst > -1) {
+		if (tcpDst > 0) {
 			builder.append(", tcpDst=");
 			builder.append(tcpDst);
 		}
@@ -384,19 +384,19 @@ public class PacketHeaderDataBean {
 			builder.append(", tcpFlags=");
 			builder.append(tcpFlags);
 		}
-		if (tcpTsval > -1) {
+		if (tcpTsval > 0) {
 			builder.append(", tcpTsval=");
 			builder.append(tcpTsval);
 		}
-		if (tcpTsecr > -1) {
+		if (tcpTsecr > 0) {
 			builder.append(", tcpTsecr=");
 			builder.append(tcpTsecr);
 		}
-		if (udpSrc > -1) {
+		if (udpSrc > 0) {
 			builder.append(", udpSrc=");
 			builder.append(udpSrc);
 		}
-		if (udpDst > -1) {
+		if (udpDst > 0) {
 			builder.append(", udpDst=");
 			builder.append(udpDst);
 		}

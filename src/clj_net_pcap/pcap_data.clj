@@ -425,3 +425,20 @@ user=>
     (pprint (pcap-packet-to-map (:pcap-packet packet)))
     (println "Packet Start (size:" (count buffer-seq) "):" buffer-seq "Packet End\n\n")))
 
+(defn no-op-map-converter-forwarder-fn
+  "Forwarder that converts the packets to maps but doesn't do anything else.
+   This is used for testing purposes."
+  [packet]
+  (pcap-packet-to-map (:pcap-packet packet)))
+
+(def counting-map-converter-forwarder-fn
+  "Forwarder that converts the packets to maps and counts how many times it was called.
+   This is used for testing purposes."
+  (let [cntr (counter)]
+    (fn
+      [packet]
+      (do
+        (pcap-packet-to-map (:pcap-packet packet))
+        (cntr inc)
+        (if (= 0 (mod (cntr) 1000))
+          (println (cntr)))))))

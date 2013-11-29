@@ -29,7 +29,7 @@
          overflow: hidden;
          background-color: #FFFFFF;
          border: 3px solid DarkGray; }</style></head><body><div id="top"><header><h1>Namspace clj-net-pcap.sniffer</h1><h4></h4></header><section id="ns-toc"><h2>Other Namespaces</h2><table><tr><td><a href="clj-net-pcap.CljNetPcapJavaAdapter.html">clj-net-pcap.CljNetPcapJavaAdapter</a></td><td><div>Adapter class to enable usage of clj-net-pcap from Java.</div></td></tr><tr><td><a href="clj-net-pcap.core.html">clj-net-pcap.core</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.main.html">clj-net-pcap.main</a></td><td><div>Main class and method for launching a simple clj-net-pcap based sniffer
-          that prints some i...</div></td></tr><tr><td><a href="clj-net-pcap.native.html">clj-net-pcap.native</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.pcap.html">clj-net-pcap.pcap</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.pcap-data.html">clj-net-pcap.pcap-data</a></td><td><div></div></td></tr><tr><td><a href="index.html">Back to Index</a></td><td></td></tr></table></section><section id="pubvars-toc"><h2>Public Vars</h2><nav><a href="#ID-GREATERPacket">-&gt;Packet</a>, <a href="#IDcreate-and-start-forwarder">create-and-start-forwarder</a>, <a href="#IDcreate-and-start-sniffer">create-and-start-sniffer</a>, <a href="#IDcreate-packet">create-packet</a>, <a href="#IDmap-GREATERPacket">map-&gt;Packet</a>, <a href="#IDstop-forwarder">stop-forwarder</a>, <a href="#IDstop-sniffer">stop-sniffer</a></nav></section><section id="details"><h2>Details of Public Vars</h2><div id="ID-GREATERPacket"><div><h3>Type/Record Constructor: -&gt;Packet</h3><pre>Arglists:
+          that prints some i...</div></td></tr><tr><td><a href="clj-net-pcap.native.html">clj-net-pcap.native</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.pcap.html">clj-net-pcap.pcap</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.pcap-data.html">clj-net-pcap.pcap-data</a></td><td><div></div></td></tr><tr><td><a href="index.html">Back to Index</a></td><td></td></tr></table></section><section id="pubvars-toc"><h2>Public Vars</h2><nav><a href="#ID-GREATERPacket">-&gt;Packet</a>, <a href="#IDclone-packet">clone-packet</a>, <a href="#IDcreate-and-start-forwarder">create-and-start-forwarder</a>, <a href="#IDcreate-and-start-sniffer">create-and-start-sniffer</a>, <a href="#IDcreate-packet">create-packet</a>, <a href="#IDmap-GREATERPacket">map-&gt;Packet</a>, <a href="#IDstop-forwarder">stop-forwarder</a>, <a href="#IDstop-sniffer">stop-sniffer</a></nav></section><section id="details"><h2>Details of Public Vars</h2><div id="ID-GREATERPacket"><div><h3>Type/Record Constructor: -&gt;Packet</h3><pre>Arglists:
 =========
 
   (-&gt;Packet pcap-packet user-data)
@@ -37,7 +37,15 @@
 Docstring:
 ==========
 
-  Positional factory function for class clj_net_pcap.sniffer.Packet.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/sniffer.clj#L31">View Source</a></div><div id="IDcreate-and-start-forwarder"><div><h3>Function: create-and-start-forwarder</h3><pre>Arglists:
+  Positional factory function for class clj_net_pcap.sniffer.Packet.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/sniffer.clj#L31">View Source</a></div><div id="IDclone-packet"><div><h3>Function: clone-packet</h3><pre>Arglists:
+=========
+
+  (clone-packet p)
+
+Docstring:
+==========
+
+  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/sniffer.clj#L50">View Source</a></div><div id="IDcreate-and-start-forwarder"><div><h3>Function: create-and-start-forwarder</h3><pre>Arglists:
 =========
 
   (create-and-start-forwarder queue forwarder-fn)
@@ -51,7 +59,7 @@ Docstring:
    java.util.concurrent.BlockingQueue and executes forwarder-fn for each packet
    taken from the queue passing the packet instance to forwarder-fn.
    When no packets are int the queue the execution of forwarder-fn blocks until
-   new packets are available for being processed.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/sniffer.clj#L90">View Source</a></div><div id="IDcreate-and-start-sniffer"><div><h3>Function: create-and-start-sniffer</h3><pre>Arglists:
+   new packets are available for being processed.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/sniffer.clj#L93">View Source</a></div><div id="IDcreate-and-start-sniffer"><div><h3>Function: create-and-start-sniffer</h3><pre>Arglists:
 =========
 
   (create-and-start-sniffer pcap handler-fn)
@@ -67,7 +75,7 @@ Docstring:
    create-and-start-sniffer that got forwarded via the Pcap sniffing loop.
    If no user data is passed nil is used as user data.
    Please note that the sniffer must be explicitly stopped using the 
-   stop-sniffer function. Stopping the sniffer also takes care of closing pcap.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/sniffer.clj#L51">View Source</a></div><div id="IDcreate-packet"><div><h3>Function: create-packet</h3><pre>Arglists:
+   stop-sniffer function. Stopping the sniffer also takes care of closing pcap.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/sniffer.clj#L54">View Source</a></div><div id="IDcreate-packet"><div><h3>Function: create-packet</h3><pre>Arglists:
 =========
 
   (create-packet pcap-packet)
@@ -95,7 +103,7 @@ Docstring:
 Docstring:
 ==========
 
-  Stops the given forwarder.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/sniffer.clj#L117">View Source</a></div><div id="IDstop-sniffer"><div><h3>Function: stop-sniffer</h3><pre>Arglists:
+  Stops the given forwarder.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/sniffer.clj#L120">View Source</a></div><div id="IDstop-sniffer"><div><h3>Function: stop-sniffer</h3><pre>Arglists:
 =========
 
   (stop-sniffer sniffer)
@@ -104,4 +112,4 @@ Docstring:
 ==========
 
   Convenience function for stopping a sniffer that has been created with 
-   create-and-start-sniffer.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/sniffer.clj#L84">View Source</a></div></section><footer><p>These docs were generated by the <a href="https://github.com/tsdh/lein-html5-docs">Leiningen HTML5 Docs Plugin</a>.</p><a href="http://www.w3.org/html/logo/"><img alt="HTML5 Powered" height="64" src="http://www.w3.org/html/logo/badge/html5-badge-h-solo.png" title="HTML5 Powered" width="63" /></a></footer></div></body></html>
+   create-and-start-sniffer.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/sniffer.clj#L87">View Source</a></div></section><footer><p>These docs were generated by the <a href="https://github.com/tsdh/lein-html5-docs">Leiningen HTML5 Docs Plugin</a>.</p><a href="http://www.w3.org/html/logo/"><img alt="HTML5 Powered" height="64" src="http://www.w3.org/html/logo/badge/html5-badge-h-solo.png" title="HTML5 Powered" width="63" /></a></footer></div></body></html>

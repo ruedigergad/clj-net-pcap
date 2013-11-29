@@ -20,7 +20,7 @@ if [ $# -ne 0 ]
 then
   TEMPLATE_URL="$1"
 else
-  TEMPLATE_URL="http://slytechs.com/downloads/dist/a120913os/jnetpcap-1.4.r1390-1.win32.zip"
+  TEMPLATE_URL="http://slytechs.com/downloads/dist/a130819os/jnetpcap-1.4.r1425-1.win32.zip"
 fi
 echo "Using URL: $TEMPLATE_URL"
 
@@ -40,8 +40,8 @@ cd "$TEMP_DIR"
 #
 # Operating system specific strings.
 #
-LINUX_i386="linux.i386"
-LINUX_X86_64="linux.x86_64"
+LINUX_i386="linux32.i386"
+LINUX_X86_64="linux64.x86_64"
 WIN32="win32"
 WIN64="win64"
 # Temp dir

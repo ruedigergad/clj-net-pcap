@@ -77,4 +77,3 @@
     (is (not (nil? (stat-fn))))
     (println (stat-fn)
     (close-pcap pcap))))
-

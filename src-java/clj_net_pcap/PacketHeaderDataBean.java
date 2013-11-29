@@ -33,16 +33,11 @@ public class PacketHeaderDataBean {
 	private String arpSourceIp;
 
 	/*
-	 * IPv4
+	 * IP
 	 */
-	private String ip4Src;
-	private String ip4Dst;
-
-	/*
-	 * IPv6
-	 */
-	private String ip6Src;
-	private String ip6Dst;
+	private String ipSrc;
+	private String ipDst;
+	private int ipVer = 0;
 
 	/*
 	 * ICMP
@@ -159,35 +154,27 @@ public class PacketHeaderDataBean {
 	}
 
 	public String getIp4Src() {
-		return ip4Src;
+		return ipSrc;
 	}
 
 	public void setIp4Src(String ip4Src) {
-		this.ip4Src = ip4Src;
+		this.ipSrc = ip4Src;
 	}
 
-	public String getIp4Dst() {
-		return ip4Dst;
+	public String getIpDst() {
+		return ipDst;
 	}
 
-	public void setIp4Dst(String ip4Dst) {
-		this.ip4Dst = ip4Dst;
+	public void setIpDst(String ipDst) {
+		this.ipDst = ipDst;
 	}
 
-	public String getIp6Src() {
-		return ip6Src;
+	public int getIpVer() {
+		return ipVer;
 	}
 
-	public void setIp6Src(String ip6Src) {
-		this.ip6Src = ip6Src;
-	}
-
-	public String getIp6Dst() {
-		return ip6Dst;
-	}
-
-	public void setIp6Dst(String ip6Dst) {
-		this.ip6Dst = ip6Dst;
+	public void setIpVer(int ipVer) {
+		this.ipVer = ipVer;
 	}
 
 	public String getIcmpType() {
@@ -334,24 +321,19 @@ public class PacketHeaderDataBean {
 			builder.append(arpSourceIp);
 			builder.append(", ");
 		}
-		if (ip4Src != null) {
+		if (ipSrc != null) {
 			builder.append("ip4Src=");
-			builder.append(ip4Src);
+			builder.append(ipSrc);
 			builder.append(", ");
 		}
-		if (ip4Dst != null) {
+		if (ipDst != null) {
 			builder.append("ip4Dst=");
-			builder.append(ip4Dst);
+			builder.append(ipDst);
 			builder.append(", ");
 		}
-		if (ip6Src != null) {
-			builder.append("ip6Src=");
-			builder.append(ip6Src);
-			builder.append(", ");
-		}
-		if (ip6Dst != null) {
-			builder.append("ip6Dst=");
-			builder.append(ip6Dst);
+		if (ipVer > 0) {
+			builder.append("ipVer=");
+			builder.append(ipVer);
 			builder.append(", ");
 		}
 		if (icmpType != null) {
@@ -425,10 +407,9 @@ public class PacketHeaderDataBean {
 		result = prime * result + icmpEchoSeq;
 		result = prime * result
 				+ ((icmpType == null) ? 0 : icmpType.hashCode());
-		result = prime * result + ((ip4Dst == null) ? 0 : ip4Dst.hashCode());
-		result = prime * result + ((ip4Src == null) ? 0 : ip4Src.hashCode());
-		result = prime * result + ((ip6Dst == null) ? 0 : ip6Dst.hashCode());
-		result = prime * result + ((ip6Src == null) ? 0 : ip6Src.hashCode());
+		result = prime * result + ((ipDst == null) ? 0 : ipDst.hashCode());
+		result = prime * result + ((ipSrc == null) ? 0 : ipSrc.hashCode());
+		result = prime * result + ipVer;
 		result = prime * result + len;
 		result = prime * result + (int) (tcpAck ^ (tcpAck >>> 32));
 		result = prime * result + tcpDst;
@@ -498,25 +479,17 @@ public class PacketHeaderDataBean {
 				return false;
 		} else if (!icmpType.equals(other.icmpType))
 			return false;
-		if (ip4Dst == null) {
-			if (other.ip4Dst != null)
+		if (ipDst == null) {
+			if (other.ipDst != null)
 				return false;
-		} else if (!ip4Dst.equals(other.ip4Dst))
+		} else if (!ipDst.equals(other.ipDst))
 			return false;
-		if (ip4Src == null) {
-			if (other.ip4Src != null)
+		if (ipSrc == null) {
+			if (other.ipSrc != null)
 				return false;
-		} else if (!ip4Src.equals(other.ip4Src))
+		} else if (!ipSrc.equals(other.ipSrc))
 			return false;
-		if (ip6Dst == null) {
-			if (other.ip6Dst != null)
-				return false;
-		} else if (!ip6Dst.equals(other.ip6Dst))
-			return false;
-		if (ip6Src == null) {
-			if (other.ip6Src != null)
-				return false;
-		} else if (!ip6Src.equals(other.ip6Src))
+		if (ipVer != other.ipVer)
 			return false;
 		if (len != other.len)
 			return false;

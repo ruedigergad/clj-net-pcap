@@ -276,16 +276,18 @@
   [m ^PcapPacket pkt ^Ip4 ip4]
   (if (.hasHeader pkt ip4)
     (assoc m
-           "ip4Src" (prettify-addr-array (.source ip4))
-           "ip4Dst" (prettify-addr-array (.destination ip4)))
+           "ipSrc" (prettify-addr-array (.source ip4))
+           "ipDst" (prettify-addr-array (.destination ip4))
+           "ipVer" 4)
     m))
 
 (defn- add-ip6-fields
   [m ^PcapPacket pkt ^Ip6 ip6]
   (if (.hasHeader pkt ip6)
     (assoc m 
-           "ip6Src" (prettify-addr-array (.source ip6))
-           "ip6Dst" (prettify-addr-array (.destination ip6)))
+           "ipSrc" (prettify-addr-array (.source ip6))
+           "ipDst" (prettify-addr-array (.destination ip6))
+           "ipVer" 6)
     m))
 
 (defn- add-icmp-fields
@@ -389,16 +391,18 @@
   [^PacketHeaderDataBean p ^PcapPacket pkt ^Ip4 ip4]
   (if (.hasHeader pkt ip4)
     (doto p
-      (.setIp4Src (prettify-addr-array (.source ip4)))
-      (.setIp4Dst (prettify-addr-array (.destination ip4))))
+      (.setIpSrc (prettify-addr-array (.source ip4)))
+      (.setIpDst (prettify-addr-array (.destination ip4)))
+      (.setIpVer 4))
     p))
 
 (defn- add-ip6-fields-bean
   [^PacketHeaderDataBean p ^PcapPacket pkt ^Ip6 ip6]
   (if (.hasHeader pkt ip6)
     (doto p
-      (.setIp6Src (prettify-addr-array (.source ip6)))
-      (.setIp6Dst (prettify-addr-array (.destination ip6))))
+      (.setIpSrc (prettify-addr-array (.source ip6)))
+      (.setIpDst (prettify-addr-array (.destination ip6)))
+      (.setIpVer 6))
     p))
 
 (defn- add-icmp-fields-bean

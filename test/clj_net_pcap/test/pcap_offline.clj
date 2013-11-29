@@ -92,6 +92,6 @@
     (is (= 1 (count my-maps)))
     (is (= {"ts" 1365516583196346000, "len" 98,
             "ethDst" "E0:CB:4E:E3:38:46", "ethSrc" "90:E6:BA:3C:9A:47",
-            "ip4Dst" "173.194.69.94", "ip4Src" "192.168.20.126",
+            "ipDst" "173.194.69.94", "ipSrc" "192.168.20.126", "ipVer" 4,
             "icmpType" "echo request", "icmpEchoSeq" 21}
             (first my-maps)))))

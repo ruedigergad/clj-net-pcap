@@ -5,7 +5,7 @@
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [org.clojure/tools.cli "0.2.2"]
                  [clj-assorted-utils "1.4.0"]
-                 [jnetpcap "1.4.r1390-1b"]]
+                 [jnetpcap "1.4.r1425-1a"]]
   :aot [#"^clj-net-pcap.*"]
   :global-vars {*warn-on-reflection* true}
   :main clj-net-pcap.main

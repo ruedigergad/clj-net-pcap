@@ -31,7 +31,7 @@
 
 (def ^:dynamic *buffer-size* (int (Math/pow 2 27)))
 (def ^:dynamic *flags* Pcap/MODE_PROMISCUOUS)
-(def ^:dynamic *snap-len* 0x10000)
+(def ^:dynamic *snap-len* 0x00100)
 
 
 (def lo "lo")

@@ -26,7 +26,8 @@
         clj-net-pcap.pcap
         clj-net-pcap.pcap-data
         clj-assorted-utils.util)
-  (:import (org.jnetpcap.packet PcapPacketHandler)))
+  (:import (org.jnetpcap.packet PcapPacketHandler)
+           (clj_net_pcap PacketHeaderDataBean)))
 
 (def test-file "test/clj_net_pcap/test/data/offline-test.pcap")
 
@@ -72,6 +73,7 @@
       "test/clj_net_pcap/test/data/icmp-echo-request.pcap"
       handler-fn
       pcap-packet-to-nested-maps)
+; FIXME: The destination netmask and bits are wrong.
     (is (= {"PcapHeader" {"timestampInNanos" 1365516583196346000, "wirelen" 98},
             "DataLinkLayer" {"index" 0, "ProtocolType" "Ethernet", "destination" "E0:CB:4E:E3:38:46", "source" "90:E6:BA:3C:9A:47", "next" 2},
             "NetworkLayer" {"destinationNetmaskBits" 24, "ttl" 64, "destination" "173.194.69.94", "destinationNetwork" "192.168.20.0", "index" 1, "ProtocolType" "Ip4", "next" 12, "tos" 0, "type" 1, "source" "192.168.20.126", "id" 0, "sourceNetwork" "192.168.20.0", "sourceNetmaskBits" 24},
@@ -95,3 +97,14 @@
             "ipDst" "173.194.69.94", "ipSrc" "192.168.20.126", "ipVer" 4,
             "icmpType" "echo request", "icmpEchoSeq" 21}
             (first my-maps)))))
+
+(deftest test-extract-beans-from-pcap-file
+  (let [my-beans (extract-beans-from-pcap-file "test/clj_net_pcap/test/data/icmp-echo-request.pcap")
+        expected (doto (PacketHeaderDataBean.)
+                   (.setTs 1365516583196346000) (.setLen 98)
+                   (.setEthDst "E0:CB:4E:E3:38:46") (.setEthSrc "90:E6:BA:3C:9A:47")
+                   (.setIpDst "173.194.69.94") (.setIpSrc "192.168.20.126")
+                   (.setIpVer 4) (.setIcmpType "echo request") (.setIcmpEchoSeq 21))]
+    (is (= 1 (count my-beans)))
+    (is (= expected
+           (first my-beans)))))

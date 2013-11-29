@@ -153,12 +153,12 @@ public class PacketHeaderDataBean {
 		this.arpSourceIp = arpSourceIp;
 	}
 
-	public String getIp4Src() {
+	public String getIpSrc() {
 		return ipSrc;
 	}
 
-	public void setIp4Src(String ip4Src) {
-		this.ipSrc = ip4Src;
+	public void setIpSrc(String ipSrc) {
+		this.ipSrc = ipSrc;
 	}
 
 	public String getIpDst() {

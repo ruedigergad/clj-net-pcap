@@ -111,28 +111,45 @@
       (fn [p _]
         (handler-fn (extraction-fn p)))))
 
+(defn extract-data-from-pcap-file
+  "Function to extract the data from a pcap file.
+   The data will be formatted with format-fn.
+   Please note that all data will be stored in memory.
+   So this is not suited for large amounts of data.
+   Returns a vector that contains the extracted maps.
+
+   See also:
+   extract-nested-maps-from-pcap-file
+   extract-maps-from-pcap-file
+   extract-maps-from-pcap-file"
+  [file-name format-fn]
+    (let [extracted-data (ref [])]
+      (process-pcap-file-with-extraction-fn 
+        file-name
+        #(dosync (alter extracted-data conj %))
+        format-fn)
+      @extracted-data))
+
 (defn extract-nested-maps-from-pcap-file
   "Convenience function to extract the data from a pcap file in nested map format.
    Please note that all data will be stored in memory.
    So this is not suited for large amounts of data.
    Returns a vector that contains the extracted maps."
   [file-name]
-    (let [extracted-data (ref [])]
-      (process-pcap-file-with-extraction-fn 
-        file-name
-        #(dosync (alter extracted-data conj %))
-        pcap-packet-to-nested-maps)
-      @extracted-data))
+  (extract-data-from-pcap-file file-name pcap-packet-to-nested-maps))
 
 (defn extract-maps-from-pcap-file
-  "Convenience function to extract the data from a pcap file in map format.
+  "Convenience function to extract the data from a pcap file in flat map format.
    Please note that all data will be stored in memory.
    So this is not suited for large amounts of data.
    Returns a vector that contains the extracted maps."
   [file-name]
-    (let [extracted-data (ref [])]
-      (process-pcap-file-with-extraction-fn
-        file-name
-        #(dosync (alter extracted-data conj %))
-        pcap-packet-to-map)
-      @extracted-data))
+  (extract-data-from-pcap-file file-name pcap-packet-to-map))
+
+(defn extract-beans-from-pcap-file
+  "Convenience function to extract the data from a pcap file in bean format.
+   Please note that all data will be stored in memory.
+   So this is not suited for large amounts of data.
+   Returns a vector that contains the extracted maps."
+  [file-name]
+  (extract-data-from-pcap-file file-name pcap-packet-to-bean))

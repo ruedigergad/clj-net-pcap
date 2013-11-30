@@ -23,10 +23,21 @@
   clj-net-pcap.CljNetPcapJavaAdapter
   (:use clj-net-pcap.core)
   (:gen-class
-    :methods [#^{:static true} [extractNestedMapsFromPcapFile [String] java.util.List]]))
+    :methods [#^{:static true} [extractNestedMapsFromPcapFile [String] java.util.List]
+              #^{:static true} [extractMapsFromPcapFile [String] java.util.List]
+              #^{:static true} [extractBeansFromPcapFile [String] java.util.List]]))
 
 (defn -extractNestedMapsFromPcapFile
   "Wrapper function for extract-nested-maps-from-pcap-file."
   [file]
   (extract-nested-maps-from-pcap-file file))
 
+(defn -extractMapsFromPcapFile
+  "Wrapper function for extract-maps-from-pcap-file."
+  [file]
+  (extract-maps-from-pcap-file file))
+
+(defn -extractBeansFromPcapFile
+  "Wrapper function for extract-beans-from-pcap-file."
+  [file]
+  (extract-beans-from-pcap-file file))

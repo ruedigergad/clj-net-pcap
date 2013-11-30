@@ -290,16 +290,19 @@
            "ipVer" 6)
     m))
 
-(defn- add-icmp-fields
-  [m ^PcapPacket pkt ^Icmp icmp]
-  (if (.hasHeader pkt icmp)
-    (assoc m "icmpType" (.typeDescription icmp))
-    m))
-
 (defn- add-icmp-echo-fields
   [m ^Icmp icmp ^Icmp$Echo icmp-echo]
   (if (.hasSubHeader icmp icmp-echo)
     (assoc m "icmpEchoSeq" (.sequence icmp-echo))
+    m))
+
+(defn- add-icmp-fields
+  [m ^PcapPacket pkt ^Icmp icmp ^Icmp$EchoReply icmp-echo-reply ^Icmp$EchoRequest icmp-echo-request]
+  (if (.hasHeader pkt icmp)
+    (doto m
+      (assoc "icmpType" (.typeDescription icmp))
+      (add-icmp-echo-fields icmp icmp-echo-reply)
+      (add-icmp-echo-fields icmp icmp-echo-request))
     m))
 
 (defn- add-tcp-fields
@@ -351,9 +354,7 @@
             (add-arp-fields pkt arp)
             (add-ip4-fields pkt ip4)
             (add-ip6-fields pkt ip6)
-            (add-icmp-fields pkt icmp)
-            (add-icmp-echo-fields icmp icmp-echo-reply)
-            (add-icmp-echo-fields icmp icmp-echo-request)
+            (add-icmp-fields pkt icmp icmp-echo-reply icmp-echo-request)
             (add-tcp-fields pkt tcp)
             (add-udp-fields pkt udp)))
 		    (catch Exception e
@@ -405,18 +406,20 @@
       (.setIpVer 6))
     p))
 
-(defn- add-icmp-fields-bean
-  [^PacketHeaderDataBean p ^PcapPacket pkt ^Icmp icmp]
-  (if (.hasHeader pkt icmp)
-    (doto p
-      (.setIcmpType (.typeDescription icmp)))
-    p))
-
 (defn- add-icmp-echo-fields-bean
   [^PacketHeaderDataBean p ^Icmp icmp ^Icmp$Echo icmp-echo]
   (if (.hasSubHeader icmp icmp-echo)
     (doto p
       (.setIcmpEchoSeq (.sequence icmp-echo)))
+    p))
+
+(defn- add-icmp-fields-bean
+  [^PacketHeaderDataBean p ^PcapPacket pkt ^Icmp icmp ^Icmp$EchoReply icmp-echo-reply ^Icmp$EchoRequest icmp-echo-request]
+  (if (.hasHeader pkt icmp)
+    (doto p
+      (.setIcmpType (.typeDescription icmp))
+      (add-icmp-echo-fields-bean icmp icmp-echo-reply)
+      (add-icmp-echo-fields-bean icmp icmp-echo-request))
     p))
 
 (defn- add-tcp-fields-bean
@@ -460,9 +463,7 @@
             (add-arp-fields-bean pkt arp)
             (add-ip4-fields-bean pkt ip4)
             (add-ip6-fields-bean pkt ip6)
-            (add-icmp-fields-bean pkt icmp)
-            (add-icmp-echo-fields-bean icmp icmp-echo-reply)
-            (add-icmp-echo-fields-bean icmp icmp-echo-request)
+            (add-icmp-fields-bean pkt icmp icmp-echo-reply icmp-echo-request)
             (add-tcp-fields-bean pkt tcp)
             (add-udp-fields-bean pkt udp)))
 		    (catch Exception e

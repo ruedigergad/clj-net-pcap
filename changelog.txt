@@ -1,5 +1,8 @@
 master
 
+1.5.1
+  - Add missing Java interop methods.
+
 1.5.0
   - Add prototype for extracting non-nested, flat maps from pcap packets.
     This should help improving the performance.

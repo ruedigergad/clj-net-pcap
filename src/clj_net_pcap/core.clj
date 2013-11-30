@@ -20,7 +20,10 @@
 (ns 
   ^{:author "Ruediger Gad",
     :doc "clj-net-pcap is a wrapper/adapter/facade (whatever) around jNetPcap that 
-          enables and eases packet capturing with Clojure."}  
+          enables and eases packet capturing with Clojure.
+
+          The core namespace contains the external API. For most use-cases the 
+          functionality provided in core should be sufficient."}  
   clj-net-pcap.core
   (:use clojure.pprint 
         clj-net-pcap.native

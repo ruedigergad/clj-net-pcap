@@ -1,5 +1,8 @@
 master
 
+1.5.2
+  - Fix parsing for new formats.
+
 1.5.1
   - Add missing Java interop methods.
 

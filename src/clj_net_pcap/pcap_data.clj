@@ -299,7 +299,7 @@
 (defn- add-icmp-fields
   [m ^PcapPacket pkt ^Icmp icmp ^Icmp$EchoReply icmp-echo-reply ^Icmp$EchoRequest icmp-echo-request]
   (if (.hasHeader pkt icmp)
-    (doto m
+    (-> m
       (assoc "icmpType" (.typeDescription icmp))
       (add-icmp-echo-fields icmp icmp-echo-reply)
       (add-icmp-echo-fields icmp icmp-echo-request))

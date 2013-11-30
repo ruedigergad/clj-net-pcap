@@ -29,7 +29,7 @@
          overflow: hidden;
          background-color: #FFFFFF;
          border: 3px solid DarkGray; }</style></head><body><div id="top"><header><h1>Namspace clj-net-pcap.core</h1><h4></h4></header><section id="ns-toc"><h2>Other Namespaces</h2><table><tr><td><a href="clj-net-pcap.CljNetPcapJavaAdapter.html">clj-net-pcap.CljNetPcapJavaAdapter</a></td><td><div>Adapter class to enable usage of clj-net-pcap from Java.</div></td></tr><tr><td><a href="clj-net-pcap.main.html">clj-net-pcap.main</a></td><td><div>Main class and method for launching a simple clj-net-pcap based sniffer
-          that prints some i...</div></td></tr><tr><td><a href="clj-net-pcap.native.html">clj-net-pcap.native</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.pcap.html">clj-net-pcap.pcap</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.pcap-data.html">clj-net-pcap.pcap-data</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.sniffer.html">clj-net-pcap.sniffer</a></td><td><div></div></td></tr><tr><td><a href="index.html">Back to Index</a></td><td></td></tr></table></section><section id="pubvars-toc"><h2>Public Vars</h2><nav><a href="#IDMULtrace-handler-fnMUL">*trace-handler-fn*</a>, <a href="#IDcreate-and-start-cljnetpcap">create-and-start-cljnetpcap</a>, <a href="#IDextract-beans-from-pcap-file">extract-beans-from-pcap-file</a>, <a href="#IDextract-data-from-pcap-file">extract-data-from-pcap-file</a>, <a href="#IDextract-maps-from-pcap-file">extract-maps-from-pcap-file</a>, <a href="#IDextract-nested-maps-from-pcap-file">extract-nested-maps-from-pcap-file</a>, <a href="#IDinsert-counter-tracing">insert-counter-tracing</a>, <a href="#IDprint-stat-cljnetpcap">print-stat-cljnetpcap</a>, <a href="#IDprocess-pcap-file">process-pcap-file</a>, <a href="#IDprocess-pcap-file-with-extraction-fn">process-pcap-file-with-extraction-fn</a>, <a href="#IDstop-cljnetpcap">stop-cljnetpcap</a></nav></section><section id="details"><h2>Details of Public Vars</h2><div id="IDMULtrace-handler-fnMUL"><div><h3>Dynamic Var: *trace-handler-fn*</h3><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L36">View Source</a></div><div id="IDcreate-and-start-cljnetpcap"><div><h3>Function: create-and-start-cljnetpcap</h3><pre>Arglists:
+          that prints some i...</div></td></tr><tr><td><a href="clj-net-pcap.native.html">clj-net-pcap.native</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.pcap.html">clj-net-pcap.pcap</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.pcap-data.html">clj-net-pcap.pcap-data</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.sniffer.html">clj-net-pcap.sniffer</a></td><td><div></div></td></tr><tr><td><a href="index.html">Back to Index</a></td><td></td></tr></table></section><section id="pubvars-toc"><h2>Public Vars</h2><nav><a href="#IDMULtrace-handler-fnMUL">*trace-handler-fn*</a>, <a href="#IDcreate-and-start-cljnetpcap">create-and-start-cljnetpcap</a>, <a href="#IDextract-beans-from-pcap-file">extract-beans-from-pcap-file</a>, <a href="#IDextract-data-from-pcap-file">extract-data-from-pcap-file</a>, <a href="#IDextract-maps-from-pcap-file">extract-maps-from-pcap-file</a>, <a href="#IDextract-nested-maps-from-pcap-file">extract-nested-maps-from-pcap-file</a>, <a href="#IDinsert-counter-tracing">insert-counter-tracing</a>, <a href="#IDprint-stat-cljnetpcap">print-stat-cljnetpcap</a>, <a href="#IDprocess-pcap-file">process-pcap-file</a>, <a href="#IDprocess-pcap-file-with-extraction-fn">process-pcap-file-with-extraction-fn</a>, <a href="#IDstop-cljnetpcap">stop-cljnetpcap</a></nav></section><section id="details"><h2>Details of Public Vars</h2><div id="IDMULtrace-handler-fnMUL"><div><h3>Dynamic Var: *trace-handler-fn*</h3><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L39">View Source</a></div><div id="IDcreate-and-start-cljnetpcap"><div><h3>Function: create-and-start-cljnetpcap</h3><pre>Arglists:
 =========
 
   (create-and-start-cljnetpcap forwarder-fn)
@@ -43,7 +43,7 @@ Docstring:
    forwarder-fn will be called for each captured packet.
    Capturing can be influenced via the optional device and filter-expression arguments.
    By default the 'any' device is used for capturing with no filter being applied.
-   Please note that the returned handle should be stored as it is needed for stopping the capture.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L48">View Source</a></div><div id="IDextract-beans-from-pcap-file"><div><h3>Function: extract-beans-from-pcap-file</h3><pre>Arglists:
+   Please note that the returned handle should be stored as it is needed for stopping the capture.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L51">View Source</a></div><div id="IDextract-beans-from-pcap-file"><div><h3>Function: extract-beans-from-pcap-file</h3><pre>Arglists:
 =========
 
   (extract-beans-from-pcap-file file-name)
@@ -54,7 +54,7 @@ Docstring:
   Convenience function to extract the data from a pcap file in bean format.
    Please note that all data will be stored in memory.
    So this is not suited for large amounts of data.
-   Returns a vector that contains the extracted maps.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L149">View Source</a></div><div id="IDextract-data-from-pcap-file"><div><h3>Function: extract-data-from-pcap-file</h3><pre>Arglists:
+   Returns a vector that contains the extracted maps.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L152">View Source</a></div><div id="IDextract-data-from-pcap-file"><div><h3>Function: extract-data-from-pcap-file</h3><pre>Arglists:
 =========
 
   (extract-data-from-pcap-file file-name format-fn)
@@ -71,7 +71,7 @@ Docstring:
    See also:
    extract-nested-maps-from-pcap-file
    extract-maps-from-pcap-file
-   extract-maps-from-pcap-file</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L114">View Source</a></div><div id="IDextract-maps-from-pcap-file"><div><h3>Function: extract-maps-from-pcap-file</h3><pre>Arglists:
+   extract-maps-from-pcap-file</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L117">View Source</a></div><div id="IDextract-maps-from-pcap-file"><div><h3>Function: extract-maps-from-pcap-file</h3><pre>Arglists:
 =========
 
   (extract-maps-from-pcap-file file-name)
@@ -82,7 +82,7 @@ Docstring:
   Convenience function to extract the data from a pcap file in flat map format.
    Please note that all data will be stored in memory.
    So this is not suited for large amounts of data.
-   Returns a vector that contains the extracted maps.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L141">View Source</a></div><div id="IDextract-nested-maps-from-pcap-file"><div><h3>Function: extract-nested-maps-from-pcap-file</h3><pre>Arglists:
+   Returns a vector that contains the extracted maps.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L144">View Source</a></div><div id="IDextract-nested-maps-from-pcap-file"><div><h3>Function: extract-nested-maps-from-pcap-file</h3><pre>Arglists:
 =========
 
   (extract-nested-maps-from-pcap-file file-name)
@@ -93,7 +93,7 @@ Docstring:
   Convenience function to extract the data from a pcap file in nested map format.
    Please note that all data will be stored in memory.
    So this is not suited for large amounts of data.
-   Returns a vector that contains the extracted maps.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L133">View Source</a></div><div id="IDinsert-counter-tracing"><div><h3>Macro: insert-counter-tracing</h3><pre>Arglists:
+   Returns a vector that contains the extracted maps.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L136">View Source</a></div><div id="IDinsert-counter-tracing"><div><h3>Macro: insert-counter-tracing</h3><pre>Arglists:
 =========
 
   (insert-counter-tracing cntr txt)
@@ -101,7 +101,7 @@ Docstring:
 Docstring:
 ==========
 
-  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L39">View Source</a></div><div id="IDprint-stat-cljnetpcap"><div><h3>Function: print-stat-cljnetpcap</h3><pre>Arglists:
+  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L42">View Source</a></div><div id="IDprint-stat-cljnetpcap"><div><h3>Function: print-stat-cljnetpcap</h3><pre>Arglists:
 =========
 
   (print-stat-cljnetpcap cljnetpcap)
@@ -110,7 +110,7 @@ Docstring:
 ==========
 
   Given a handle as returned by, e.g., create-and-start-cljnetpcap,
-   this prints statistical output about the capture process.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L82">View Source</a></div><div id="IDprocess-pcap-file"><div><h3>Function: process-pcap-file</h3><pre>Arglists:
+   this prints statistical output about the capture process.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L85">View Source</a></div><div id="IDprocess-pcap-file"><div><h3>Function: process-pcap-file</h3><pre>Arglists:
 =========
 
   (process-pcap-file file-name handler-fn)
@@ -122,7 +122,7 @@ Docstring:
   Convenience function to process data stored in pcap files.
    Arguments are the file-name of the pcap file, the handler-fn that is executed for each read packet, and optional user data.
    handler-fn takes two arguments, the first is the org.jnetpcap.packet.PcapPacket instance, the second is the user data.
-   By default nil is used as user data.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L93">View Source</a></div><div id="IDprocess-pcap-file-with-extraction-fn"><div><h3>Function: process-pcap-file-with-extraction-fn</h3><pre>Arglists:
+   By default nil is used as user data.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L96">View Source</a></div><div id="IDprocess-pcap-file-with-extraction-fn"><div><h3>Function: process-pcap-file-with-extraction-fn</h3><pre>Arglists:
 =========
 
   (process-pcap-file-with-extraction-fn
@@ -133,7 +133,7 @@ Docstring:
 Docstring:
 ==========
 
-  Convenience function to read a pcap file and process the packets in map format.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L106">View Source</a></div><div id="IDstop-cljnetpcap"><div><h3>Function: stop-cljnetpcap</h3><pre>Arglists:
+  Convenience function to read a pcap file and process the packets in map format.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L109">View Source</a></div><div id="IDstop-cljnetpcap"><div><h3>Function: stop-cljnetpcap</h3><pre>Arglists:
 =========
 
   (stop-cljnetpcap cljnetpcap)
@@ -141,4 +141,4 @@ Docstring:
 Docstring:
 ==========
 
-  Stops a running capture. Argument is the handle as returned by create-and-start-cljnetpcap.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L88">View Source</a></div></section><footer><p>These docs were generated by the <a href="https://github.com/tsdh/lein-html5-docs">Leiningen HTML5 Docs Plugin</a>.</p><a href="http://www.w3.org/html/logo/"><img alt="HTML5 Powered" height="64" src="http://www.w3.org/html/logo/badge/html5-badge-h-solo.png" title="HTML5 Powered" width="63" /></a></footer></div></body></html>
+  Stops a running capture. Argument is the handle as returned by create-and-start-cljnetpcap.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/core.clj#L91">View Source</a></div></section><footer><p>These docs were generated by the <a href="https://github.com/tsdh/lein-html5-docs">Leiningen HTML5 Docs Plugin</a>.</p><a href="http://www.w3.org/html/logo/"><img alt="HTML5 Powered" height="64" src="http://www.w3.org/html/logo/badge/html5-badge-h-solo.png" title="HTML5 Powered" width="63" /></a></footer></div></body></html>

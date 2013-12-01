@@ -355,8 +355,8 @@
             (add-ip4-fields pkt ip4)
             (add-ip6-fields pkt ip6)
             (add-tcp-fields pkt tcp)
-            (add-icmp-fields pkt icmp icmp-echo-reply icmp-echo-request)
-            (add-udp-fields pkt udp)))
+            (add-udp-fields pkt udp)
+            (add-icmp-fields pkt icmp icmp-echo-reply icmp-echo-request)))
 		    (catch Exception e
 		      (println "Error parsing the pcap packet!")
 		      (.printStackTrace e)

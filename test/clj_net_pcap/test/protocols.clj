@@ -47,3 +47,23 @@
     (is (= 1 (count my-beans)))
     (is (= expected
            (first my-beans)))))
+
+(deftest test-extract-udp-maps-from-pcap-file
+  (let [my-maps (extract-maps-from-pcap-file "test/clj_net_pcap/test/data/dns-query-response.pcap")]
+    (is (= 2 (count my-maps)))
+    (is (= {"ipVer" 4, "ipDst" "192.168.0.1", 
+            "ipSrc" "192.168.0.51", "ethDst" "00:24:FE:B1:8F:DC", 
+            "ethSrc" "74:DE:2B:08:78:09", "ts" 1385804494276477000, "len" 77,
+            "udpSrc" 34904, "udpDst" 53}
+           (first my-maps)))))
+
+(deftest test-extract-udp-beans-from-pcap-file
+  (let [my-beans (extract-beans-from-pcap-file "test/clj_net_pcap/test/data/dns-query-response.pcap")
+        expected (doto (PacketHeaderDataBean.)
+                   (.setTs 1385804494276477000) (.setLen 77)
+                   (.setEthDst "00:24:FE:B1:8F:DC") (.setEthSrc "74:DE:2B:08:78:09")
+                   (.setIpDst "192.168.0.1") (.setIpSrc "192.168.0.51")
+                   (.setIpVer 4) (.setUdpSrc 34904) (.setUdpDst 53))]
+    (is (= 2 (count my-beans)))
+    (is (= expected
+           (first my-beans)))))

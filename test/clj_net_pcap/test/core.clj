@@ -38,4 +38,3 @@
     (Thread/sleep receive-delay)
     (is (flag-set? was-run))
     (stop-cljnetpcap cljnetpcap)))
-

@@ -1,5 +1,9 @@
 master
 
+1.5.4
+  - Add unit tests for problematic parsing tasks.
+  - Fix problematic parsing functionality.
+
 1.5.3
   - Fix ICMP parsing for flat maps.
 

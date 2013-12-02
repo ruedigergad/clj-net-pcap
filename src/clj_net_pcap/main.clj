@@ -17,11 +17,11 @@
 ;;; along with clj-net-pcap.  If not, see <http://www.gnu.org/licenses/>.
 ;;;
 
-(ns 
+(ns
   ^{:author "Ruediger Gad",
     :doc "Main class and method for launching a simple clj-net-pcap based sniffer
           that prints some information about the captured packets to stdout.
-          This is primarily intended for testing and documentation purposes."} 
+          This is primarily intended for testing and documentation purposes."}
   clj-net-pcap.main
   (:use clojure.pprint
         clojure.tools.cli
@@ -33,13 +33,13 @@
 
 (defn -main [& args]
   (let [cli-args (cli args
-                      ["-i" "--interface" 
-                       "Interface on which the packets are captured" 
+                      ["-i" "--interface"
+                       "Interface on which the packets are captured"
                        :default "eth0"]
-                      ["-f" "--filter" 
-                       (str "Pcap filter to be used. " 
-                            "Defaults to the empty String which means that all " 
-                            "packets are captured.") 
+                      ["-f" "--filter"
+                       (str "Pcap filter to be used. "
+                            "Defaults to the empty String which means that all "
+                            "packets are captured.")
                        :default ""]
                       ["-S" "--stats"
                        (str "Print stats to stderr in a regular interval."
@@ -59,10 +59,11 @@
         (let [cljnetpcap (create-and-start-cljnetpcap
 ;                           stdout-combined-forwarder-fn
 ;                           stdout-byte-array-forwarder-fn
-                           stdout-forwarder-fn
+;                           stdout-forwarder-fn
 ;                           no-op-converter-forwarder-fn
 ;                           counting-converter-forwarder-fn
-                           (arg-map :interface) 
+                           calls-per-second-converter-forwarder-fn
+                           (arg-map :interface)
                            (arg-map :filter))
               stat-interval (arg-map :stats)
               executor (executor)

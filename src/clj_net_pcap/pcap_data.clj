@@ -17,22 +17,23 @@
 ;;; along with clj-net-pcap.  If not, see <http://www.gnu.org/licenses/>.
 ;;;
 
-(ns 
+(ns
   ^{:author "Ruediger Gad",
-    :doc "Convenience functions for processing pcap data like packets and headers."}  
+    :doc "Convenience functions for processing pcap data like packets and headers."}
   clj-net-pcap.pcap-data
-  (:use clojure.pprint 
+  (:use clojure.pprint
         [clojure.string :only (join split)]
         clj-assorted-utils.util
         clj-net-pcap.native)
   (:import (java.net InetAddress)
+           (java.util.concurrent ScheduledThreadPoolExecutor)
            (clj_net_pcap PacketHeaderDataBean)
            (org.jnetpcap PcapHeader)
            (org.jnetpcap.packet PcapPacket)
            (org.jnetpcap.packet.format FormatUtils)
            (org.jnetpcap.protocol.lan Ethernet)
            (org.jnetpcap.protocol.network Arp Icmp Icmp$Echo Icmp$EchoReply Icmp$EchoRequest Ip4 Ip6)
-           (org.jnetpcap.protocol.tcpip Http Http$Request Http$Response 
+           (org.jnetpcap.protocol.tcpip Http Http$Request Http$Response
                                         Tcp Tcp$Flag Tcp$Timestamp Udp)))
 
 
@@ -99,27 +100,27 @@
   [packet & headers]
   `(let [~'data-link-layer-protocols #{"Ethernet"}
          ~'network-layer-protocols #{"Ip4" "Ip6"}]
-     (if 
+     (if
        (not (nil? ~packet))
-       (reduce into [{} 
+       (reduce into [{}
                      ~@(map (fn [h]
                               (let [protocol-header (first h)
                                     body (rest h)]
-                                `(if (.hasHeader ~packet ~protocol-header) 
+                                `(if (.hasHeader ~packet ~protocol-header)
                                    (let [protocol-class# (classname ~protocol-header)]
                                      {(cond
                                         (~'data-link-layer-protocols protocol-class#) "DataLinkLayer"
                                         (~'network-layer-protocols protocol-class#) "NetworkLayer"
                                         :default protocol-class#)
-                                      (reduce into 
+                                      (reduce into
                                               [{}
                                                {"index" (.getIndex ~protocol-header)}
                                                (if
-                                                 (or (~'data-link-layer-protocols protocol-class#) 
+                                                 (or (~'data-link-layer-protocols protocol-class#)
                                                      (~'network-layer-protocols protocol-class#))
                                                  {"ProtocolType" protocol-class#})
-                                               ~@body    
-                                               (if (.hasNextHeader ~protocol-header) 
+                                               ~@body
+                                               (if (.hasNextHeader ~protocol-header)
                                                  {"next" (.getNextHeaderId ~protocol-header)})])}))))
                             headers)]))))
 
@@ -145,13 +146,13 @@
    fields is a vector that specifies which fields shall be extracted."
   [^Http http fields]
   (into {}
-        (map (fn [f] 
+        (map (fn [f]
                (if (.hasField http f)
                  {(.toString f) (.fieldValue http f)}))
              fields)))
 
 (def parse-protocol-headers-to-nested-maps
-  ^{:doc "Function to parse the information contained in the protocol headers 
+  ^{:doc "Function to parse the information contained in the protocol headers
           of a org.jnetpcap.packet.PcapPacket instance into a map.
 
           This function is a closure over the individual protocol class instances.
@@ -170,7 +171,7 @@
     (fn [^PcapPacket packet]
       (process-protocol-headers-to-nested-maps
         packet
-        [eth 
+        [eth
          (src-dst-to-map eth)]
         [arp
          {"operationDescription" (.operationDescription arp)
@@ -196,20 +197,20 @@
          {"ack" (.ack tcp)
           "seq" (.seq tcp)
           "flags" (if *tcp-flags-as-set*
-                    (set 
+                    (set
                       (map #(.toString %1)
                            (.flagsEnum tcp)))
                     (.flags tcp))}
          (when (.hasSubHeader tcp tcp-timestamp)
-           (into 
+           (into
              {"tsval" (.tsval tcp-timestamp)}
              (if (.flags_ACK tcp)
                {"tsecr" (.tsecr tcp-timestamp)})))]
-        [udp 
+        [udp
          (src-dst-to-map udp)]
         [http
-         (extract-http-fields-to-map 
-           http 
+         (extract-http-fields-to-map
+           http
            [Http$Response/Content_Length
             Http$Response/Content_Type
             Http$Response/ResponseCode
@@ -263,7 +264,7 @@
 (defn- add-arp-fields
   [m ^PcapPacket pkt ^Arp arp]
   (if (.hasHeader pkt arp)
-    (assoc m 
+    (assoc m
            "arpOpDesc" (.operationDescription arp)
            "arpTargetMac" (prettify-addr-array (.tha arp))
            "arpTargetIp" (prettify-addr-array (.tpa arp))
@@ -283,7 +284,7 @@
 (defn- add-ip6-fields
   [m ^PcapPacket pkt ^Ip6 ip6]
   (if (.hasHeader pkt ip6)
-    (assoc m 
+    (assoc m
            "ipSrc" (prettify-addr-array (.source ip6))
            "ipDst" (prettify-addr-array (.destination ip6))
            "ipVer" 6)
@@ -307,7 +308,7 @@
 (defn- add-tcp-fields
   [m ^PcapPacket pkt ^Tcp tcp]
   (if (.hasHeader pkt tcp)
-    (assoc m 
+    (assoc m
            "tcpSrc" (.source tcp)
            "tcpDst" (.destination tcp)
            "tcpAck" (.ack tcp)
@@ -550,3 +551,21 @@ user=>
         (cntr inc)
         (if (= 0 (mod (cntr) 1000))
           (println (cntr)))))))
+
+(def calls-per-second-converter-forwarder-fn
+  "Forwarder that converts the packets and periodically prints how many times it was called per second.
+   This is used for testing purposes."
+  (let [cntr (counter)
+        time-tmp (ref (System/currentTimeMillis))]
+    (fn
+      [^PcapPacket packet]
+      (do
+        (pcap-packet-to-bean packet)
+        (cntr inc)
+        (if (> (cntr) 1000)
+          (let [time-delta (- (System/currentTimeMillis) @time-tmp )]
+            (when (> time-delta 1000)
+              (println "pps" (float (/ (cntr) (/ time-delta 1000))))
+              (cntr (fn [_] 0))
+              (dosync
+                (alter time-tmp (fn [_] (System/currentTimeMillis)))))))))))

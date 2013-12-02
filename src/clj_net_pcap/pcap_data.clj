@@ -180,7 +180,6 @@
           "sourceIp" (prettify-addr-array (.spa arp))}]
         [ip4
          (src-dst-to-map ip4)
-         (extract-subnet-information-to-map ip4)
          {"id" (.id ip4)
           "tos" (.tos ip4)
           "type" (.type ip4)

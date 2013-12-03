@@ -17,9 +17,9 @@
 ;;; along with clj-net-pcap.  If not, see <http://www.gnu.org/licenses/>.
 ;;;
 
-(ns 
+(ns
   ^{:author "Ruediger Gad",
-    :doc "Tests for clj-net-pcap Java interoperability"} 
+    :doc "Tests for clj-net-pcap Java interoperability"}
   clj-net-pcap.test.java-interop
   (:use clojure.test
         clj-assorted-utils.util)
@@ -32,7 +32,10 @@
     (is (= 1 (count my-map)))
     (is (= {"PcapHeader" {"timestampInNanos" 1365516583196346000, "wirelen" 98},
             "DataLinkLayer" {"index" 0, "ProtocolType" "Ethernet", "destination" "E0:CB:4E:E3:38:46", "source" "90:E6:BA:3C:9A:47", "next" 2},
-            "NetworkLayer" {"destinationNetmaskBits" 24, "ttl" 64, "destination" "173.194.69.94", "destinationNetwork" "192.168.20.0", "index" 1, "ProtocolType" "Ip4", "next" 12, "tos" 0, "type" 1, "source" "192.168.20.126", "id" 0, "sourceNetwork" "192.168.20.0", "sourceNetmaskBits" 24},
+            "NetworkLayer" {
+;              "destinationNetmaskBits" 24, "destinationNetwork" "192.168.20.0", "sourceNetwork" "192.168.20.0", "sourceNetmaskBits" 24},
+              "ttl" 64, "destination" "173.194.69.94", "index" 1, "ProtocolType" "Ip4", "next" 12, "tos" 0, "type" 1, "source" "192.168.20.126", "id" 0
+            }
             "Icmp" {"index" 2, "typeDescription" "echo request", "next" 0}}
             (first my-map)))))
 

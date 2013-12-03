@@ -88,10 +88,11 @@
                   (stop-sniffer sniffer)
                   (stop-forwarder forwarder))
           :get-filters @filter-expressions
-          :add-filter (do
-                        (dosync
-                          (alter filter-expressions conj (first opt-args)))
-                        (create-and-set-filter pcap (join " " @filter-expressions)))
+          :add-filter (let [new-filter-expr (first opt-args)]
+                        (when (and new-filter-expr (not= new-filter-expr ""))
+                          (dosync
+                            (alter filter-expressions conj (first opt-args)))
+                          (create-and-set-filter pcap (join " " @filter-expressions))))
           :remove-last-filter (do
                                 (dosync
                                   (alter filter-expressions pop))

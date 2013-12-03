@@ -1,4 +1,5 @@
 master
+  - Add functionality to get all filters.
 
 1.5.4
   - Add unit tests for problematic parsing tasks.

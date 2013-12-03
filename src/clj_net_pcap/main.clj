@@ -105,7 +105,7 @@
                     (= cmd "remove-last-filter")) (remove-last-filter cljnetpcap)
                   :default (when (not= cmd "")
                              (println "Unknown command:" cmd)
-                             (println "Valid commands are: add-filter (af), show-filters (sf), remove-last-filter (rlf)" )))
+                             (println "Valid commands are: add-filter (af), show-filters (sf), remove-last-filter (rlf)")))
                 (print "cljnetpcap=> ")
                 (flush)
                 (recur (read-line)))))

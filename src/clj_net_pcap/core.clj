@@ -92,6 +92,10 @@
                         (dosync
                           (alter filter-expressions conj (first opt-args)))
                         (create-and-set-filter pcap (join " " @filter-expressions)))
+          :remove-last-filter (do
+                                (dosync
+                                  (alter filter-expressions pop))
+                                (create-and-set-filter pcap (join " " @filter-expressions)))
           :default (throw (RuntimeException. (str "Unsupported operation: " k))))))))
 
 (defn print-stat-cljnetpcap
@@ -114,6 +118,11 @@
   "Add filter to a running pcap instance."
   [cljnetpcap filter-expr]
   (cljnetpcap :add-filter filter-expr))
+
+(defn remove-last-filter
+  "Remove the last filter expression."
+  [cljnetpcap]
+  (cljnetpcap :remove-last-filter))
 
 (defn process-pcap-file
   "Convenience function to process data stored in pcap files.

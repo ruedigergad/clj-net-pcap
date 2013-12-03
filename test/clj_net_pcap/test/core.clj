@@ -38,3 +38,20 @@
     (Thread/sleep receive-delay)
     (is (flag-set? was-run))
     (stop-cljnetpcap cljnetpcap)))
+
+(deftest test-unsupported-operation-throws-exception
+  (let [forwarder-fn (fn [_])
+        filter-expression "tcp[tcpflags] & tcp-syn != 0"
+        device "lo"
+        cljnetpcap (create-and-start-cljnetpcap forwarder-fn device filter-expression)]
+    (is (thrown? RuntimeException (cljnetpcap :unsupported-operation)))
+    (stop-cljnetpcap  cljnetpcap)))
+
+(deftest test-get-filter
+  (let [forwarder-fn (fn [_])
+        filter-expression "tcp[tcpflags] & tcp-syn != 0"
+        device "lo"
+        cljnetpcap (create-and-start-cljnetpcap forwarder-fn device filter-expression)]
+    (is (= (type []) (type (get-filters cljnetpcap))))
+    (is (= "tcp[tcpflags] & tcp-syn != 0" (first (get-filters cljnetpcap))))
+    (stop-cljnetpcap cljnetpcap)))

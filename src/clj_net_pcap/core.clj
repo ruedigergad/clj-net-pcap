@@ -58,11 +58,16 @@
     (create-and-start-cljnetpcap forwarder-fn any))
   ([forwarder-fn device]
     (create-and-start-cljnetpcap forwarder-fn device ""))
-  ([forwarder-fn device filter-expression]
+  ([forwarder-fn device filter-expr]
     (let [queue (LinkedBlockingQueue.)
           forwarder (create-and-start-forwarder queue forwarder-fn)
           pcap (create-and-activate-pcap device)
-          _ (create-and-set-filter pcap filter-expression)
+          filter-expressions (ref [])
+          _ (if (and 
+                  filter-expr 
+                  (not= "" filter-expr))
+              (dosync (alter filter-expressions conj filter-expr)))
+          _ (create-and-set-filter pcap filter-expr)
           handler-fn-invocation-counter (counter)
           handler-fn-packet-counter (counter)
           handler-fn (fn [p _]
@@ -80,7 +85,9 @@
           :stat (stat-print-fn)
           :stop (do
                   (stop-sniffer sniffer)
-                  (stop-forwarder forwarder)))))))
+                  (stop-forwarder forwarder))
+          :get-filters @filter-expressions
+          :default (throw (RuntimeException. (str "Unsupported operation: " k))))))))
 
 (defn print-stat-cljnetpcap
   "Given a handle as returned by, e.g., create-and-start-cljnetpcap,
@@ -92,6 +99,11 @@
   "Stops a running capture. Argument is the handle as returned by create-and-start-cljnetpcap."
   [cljnetpcap]
   (cljnetpcap :stop))
+
+(defn get-filters
+  "Returns the vector containing all currently applied filter sub-expressions."
+  [cljnetpcap]
+  (cljnetpcap :get-filters))
 
 (defn process-pcap-file
   "Convenience function to process data stored in pcap files.

@@ -55,3 +55,13 @@
     (is (= (type []) (type (get-filters cljnetpcap))))
     (is (= "tcp[tcpflags] & tcp-syn != 0" (first (get-filters cljnetpcap))))
     (stop-cljnetpcap cljnetpcap)))
+
+(deftest test-add-filter
+  (let [forwarder-fn (fn [_])
+        filter-expression ""
+        device "lo"
+        cljnetpcap (create-and-start-cljnetpcap forwarder-fn device filter-expression)]
+    (is (empty? (get-filters cljnetpcap)))
+    (add-filter cljnetpcap "tcp[tcpflags] & tcp-syn != 0")
+    (is (= "tcp[tcpflags] & tcp-syn != 0" (first (get-filters cljnetpcap))))
+    (stop-cljnetpcap cljnetpcap)))

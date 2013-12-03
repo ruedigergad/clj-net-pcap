@@ -26,6 +26,7 @@
           functionality provided in core should be sufficient."}  
   clj-net-pcap.core
   (:use clojure.pprint 
+        [clojure.string :only [join]]
         clj-net-pcap.native
         clj-net-pcap.pcap
         clj-net-pcap.pcap-data
@@ -80,13 +81,17 @@
           sniffer (create-and-start-sniffer pcap handler-fn)
           stat-fn (create-stat-fn pcap)
           stat-print-fn #(print-err-ln (str "pcap-stats," (stat-fn) ",queue_size," (.size queue)))]
-      (fn [k]
+      (fn [k & opt-args]
         (condp = k
           :stat (stat-print-fn)
           :stop (do
                   (stop-sniffer sniffer)
                   (stop-forwarder forwarder))
           :get-filters @filter-expressions
+          :add-filter (do
+                        (dosync
+                          (alter filter-expressions conj (first opt-args)))
+                        (create-and-set-filter pcap (join " " @filter-expressions)))
           :default (throw (RuntimeException. (str "Unsupported operation: " k))))))))
 
 (defn print-stat-cljnetpcap
@@ -104,6 +109,11 @@
   "Returns the vector containing all currently applied filter sub-expressions."
   [cljnetpcap]
   (cljnetpcap :get-filters))
+
+(defn add-filter
+  "Add filter to a running pcap instance."
+  [cljnetpcap filter-expr]
+  (cljnetpcap :add-filter filter-expr))
 
 (defn process-pcap-file
   "Convenience function to process data stored in pcap files.

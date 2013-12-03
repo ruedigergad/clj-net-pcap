@@ -99,7 +99,7 @@
                                               (println "Error adding filter:" e)))
                   (or
                     (= cmd "sf")
-                    (= cmd "show-filters")) (println (get-filters cljnetpcap))
+                    (= cmd "show-filters")) (pprint (get-filters cljnetpcap))
                   (or
                     (= cmd "rlf")
                     (= cmd "remove-last-filter")) (remove-last-filter cljnetpcap)

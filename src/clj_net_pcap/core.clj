@@ -81,26 +81,29 @@
           sniffer (create-and-start-sniffer pcap handler-fn)
           stat-fn (create-stat-fn pcap)
           stat-print-fn #(print-err-ln (str "pcap-stats," (stat-fn) ",queue_size," (.size queue)))]
-      (fn [k & opt-args]
-        (condp = k
-          :stat (stat-print-fn)
-          :stop (do
-                  (stop-sniffer sniffer)
-                  (stop-forwarder forwarder))
-          :get-filters @filter-expressions
-          :add-filter (let [new-filter-expr (first opt-args)]
-                        (when (and new-filter-expr (not= new-filter-expr ""))
+      (fn 
+        ([k]
+          (condp = k
+            :stat (stat-print-fn)
+            :stop (do
+                    (stop-sniffer sniffer)
+                    (stop-forwarder forwarder))
+            :get-filters @filter-expressions
+            :remove-last-filter (do
+                                  (dosync
+                                    (alter filter-expressions pop))
+                                  (create-and-set-filter pcap (join " " @filter-expressions)))
+            :default (throw (RuntimeException. (str "Unsupported operation: " k)))))
+        ([k arg]
+          (condp = k
+            :add-filter (when (and arg (not= arg ""))
                           (dosync
-                            (alter filter-expressions conj (first opt-args)))
-                          (create-and-set-filter pcap (join " " @filter-expressions))))
-          :remove-last-filter (do
-                                (dosync
-                                  (alter filter-expressions pop))
-                                (create-and-set-filter pcap (join " " @filter-expressions)))
-          :remove-filter (do (dosync
-                               (alter filter-expressions (fn [fe] (vec (filter #(not= (first opt-args) %) fe)))))
-                             (create-and-set-filter pcap (join " " @filter-expressions)))
-          :default (throw (RuntimeException. (str "Unsupported operation: " k))))))))
+                            (alter filter-expressions conj arg))
+                          (create-and-set-filter pcap (join " " @filter-expressions)))
+            :remove-filter (do (dosync
+                                 (alter filter-expressions (fn [fe] (vec (filter #(not= arg %) fe)))))
+                               (create-and-set-filter pcap (join " " @filter-expressions)))
+            :default (throw (RuntimeException. (str "Unsupported operation: " k)))))))))
 
 (defn print-stat-cljnetpcap
   "Given a handle as returned by, e.g., create-and-start-cljnetpcap,

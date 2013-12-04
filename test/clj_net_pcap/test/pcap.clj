@@ -54,9 +54,10 @@
 
 (deftest test-create-filter
   (let [filter-string "tcp[tcpflags] & tcp-syn != 0"
-        pcap (create-pcap lo)
+        pcap (create-and-activate-pcap lo)
         f (create-filter pcap filter-string)]
-    (is (= org.jnetpcap.PcapBpfProgram (type f)))))
+    (is (= org.jnetpcap.PcapBpfProgram (type f)))
+    (close-pcap pcap)))
 
 (deftest test-set-filter
   (let [filter-string "tcp[tcpflags] & tcp-syn != 0"

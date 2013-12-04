@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.native" errors="0" failures="0" tests="6" time="0.0314" timestamp="2013-07-04_23:33:14+0200">
-    <testcase name="extract-from-jar-to-file" classname="clj-net-pcap.test.native" time="0.0097">
+<testsuite name="clj-net-pcap.test.native" errors="0" failures="0" tests="6" time="0.0311" timestamp="2013-12-04_19:21:16+0100">
+    <testcase name="extract-from-jar-to-file" classname="clj-net-pcap.test.native" time="0.0070">
     </testcase>
-    <testcase name="extract-remove-native-libs" classname="clj-net-pcap.test.native" time="0.0106">
+    <testcase name="extract-remove-native-libs" classname="clj-net-pcap.test.native" time="0.0119">
     </testcase>
-    <testcase name="get-url-for-lib" classname="clj-net-pcap.test.native" time="0.0004">
+    <testcase name="get-url-for-lib" classname="clj-net-pcap.test.native" time="0.0006">
     </testcase>
-    <testcase name="mk-rm-native-lib-dir" classname="clj-net-pcap.test.native" time="0.0019">
+    <testcase name="mk-rm-native-lib-dir" classname="clj-net-pcap.test.native" time="0.0041">
     </testcase>
-    <testcase name="get-url-for-lib-error" classname="clj-net-pcap.test.native" time="0.0005">
+    <testcase name="get-url-for-lib-error" classname="clj-net-pcap.test.native" time="0.0006">
     </testcase>
     <testcase name="find-lib-in-jar" classname="clj-net-pcap.test.native" time="0.0009">
     </testcase>

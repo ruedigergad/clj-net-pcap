@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.sniffer" errors="0" failures="0" tests="3" time="6.4836" timestamp="2013-07-04_23:33:25+0200">
-    <testcase name="sniffer-forwarder-interaction" classname="clj-net-pcap.test.sniffer" time="2.7483">
+<testsuite name="clj-net-pcap.test.sniffer" errors="0" failures="0" tests="4" time="7.4740" timestamp="2013-12-04_19:21:25+0100">
+    <testcase name="sniffer-forwarder-interaction" classname="clj-net-pcap.test.sniffer" time="2.1530">
     </testcase>
-    <testcase name="test-forwarder" classname="clj-net-pcap.test.sniffer" time="0.0021">
+    <testcase name="sniffer-forwarder-interaction-cloned" classname="clj-net-pcap.test.sniffer" time="2.1629">
     </testcase>
-    <testcase name="test-sniffer" classname="clj-net-pcap.test.sniffer" time="3.7306">
+    <testcase name="test-forwarder" classname="clj-net-pcap.test.sniffer" time="1.0028">
+    </testcase>
+    <testcase name="test-sniffer" classname="clj-net-pcap.test.sniffer" time="2.1499">
     </testcase>
 </testsuite>

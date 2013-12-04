@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.core" errors="0" failures="0" tests="1" time="2.7385" timestamp="2013-07-04_23:33:14+0200">
-    <testcase name="cljnetpcap-test" classname="clj-net-pcap.test.core" time="2.7279">
+<testsuite name="clj-net-pcap.test.core" errors="0" failures="0" tests="7" time="3.2217" timestamp="2013-12-04_19:21:16+0100">
+    <testcase name="test-get-filter" classname="clj-net-pcap.test.core" time="0.2353">
+    </testcase>
+    <testcase name="test-add-filter" classname="clj-net-pcap.test.core" time="0.1658">
+    </testcase>
+    <testcase name="test-remove-filter" classname="clj-net-pcap.test.core" time="0.1704">
+    </testcase>
+    <testcase name="test-remove-last-filter" classname="clj-net-pcap.test.core" time="0.1581">
+    </testcase>
+    <testcase name="test-unsupported-operation-throws-exception" classname="clj-net-pcap.test.core" time="0.1559">
+    </testcase>
+    <testcase name="cljnetpcap-test" classname="clj-net-pcap.test.core" time="2.1598">
+    </testcase>
+    <testcase name="test-do-not-add-empty-filter" classname="clj-net-pcap.test.core" time="0.1476">
     </testcase>
 </testsuite>

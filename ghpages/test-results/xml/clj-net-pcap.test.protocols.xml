@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="clj-net-pcap.test.protocols" errors="0" failures="0" tests="4" time="0.0103" timestamp="2013-12-04_19:21:17+0100">
+    <testcase name="test-extract-udp-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.0016">
+    </testcase>
+    <testcase name="test-extract-tcp-beans-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.0017">
+    </testcase>
+    <testcase name="test-extract-tcp-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.0019">
+    </testcase>
+    <testcase name="test-extract-udp-beans-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.0016">
+    </testcase>
+</testsuite>

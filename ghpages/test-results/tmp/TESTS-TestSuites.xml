@@ -1,106 +1,153 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <testsuites>
-  <testsuite errors="0" failures="0" id="0" name="core" package="clj-net-pcap.test" tests="1" time="2.7385" timestamp="2013-07-04_23:33:14+0200">
-        <testcase classname="clj-net-pcap.test.core" name="cljnetpcap-test" time="2.7279">
+  <testsuite errors="0" failures="0" id="0" name="core" package="clj-net-pcap.test" tests="7" time="3.2217" timestamp="2013-12-04_19:21:16+0100">
+        <testcase classname="clj-net-pcap.test.core" name="test-get-filter" time="0.2353">
+    </testcase>
+
+        <testcase classname="clj-net-pcap.test.core" name="test-add-filter" time="0.1658">
+    </testcase>
+
+        <testcase classname="clj-net-pcap.test.core" name="test-remove-filter" time="0.1704">
+    </testcase>
+
+        <testcase classname="clj-net-pcap.test.core" name="test-remove-last-filter" time="0.1581">
+    </testcase>
+
+        <testcase classname="clj-net-pcap.test.core" name="test-unsupported-operation-throws-exception" time="0.1559">
+    </testcase>
+
+        <testcase classname="clj-net-pcap.test.core" name="cljnetpcap-test" time="2.1598">
+    </testcase>
+
+        <testcase classname="clj-net-pcap.test.core" name="test-do-not-add-empty-filter" time="0.1476">
     </testcase>
 
   </testsuite>
-  <testsuite errors="0" failures="0" id="1" name="java-interop" package="clj-net-pcap.test" tests="1" time="0.0194" timestamp="2013-07-04_23:33:14+0200">
-        <testcase classname="clj-net-pcap.test.java-interop" name="test-java-static-extract-maps-from-pcap-file" time="0.0167">
+  <testsuite errors="0" failures="0" id="1" name="java-interop" package="clj-net-pcap.test" tests="3" time="0.0436" timestamp="2013-12-04_19:21:16+0100">
+        <testcase classname="clj-net-pcap.test.java-interop" name="test-java-static-extract-beans-from-pcap-file" time="0.0128">
+    </testcase>
+
+        <testcase classname="clj-net-pcap.test.java-interop" name="test-java-static-extract-maps-from-pcap-file" time="0.0049">
+    </testcase>
+
+        <testcase classname="clj-net-pcap.test.java-interop" name="test-java-static-extract-nested-maps-from-pcap-file" time="0.0168">
     </testcase>
 
   </testsuite>
-  <testsuite errors="0" failures="0" id="2" name="native" package="clj-net-pcap.test" tests="6" time="0.0314" timestamp="2013-07-04_23:33:14+0200">
-        <testcase classname="clj-net-pcap.test.native" name="extract-from-jar-to-file" time="0.0097">
+  <testsuite errors="0" failures="0" id="2" name="native" package="clj-net-pcap.test" tests="6" time="0.0311" timestamp="2013-12-04_19:21:16+0100">
+        <testcase classname="clj-net-pcap.test.native" name="extract-from-jar-to-file" time="0.0070">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.native" name="extract-remove-native-libs" time="0.0106">
+        <testcase classname="clj-net-pcap.test.native" name="extract-remove-native-libs" time="0.0119">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.native" name="get-url-for-lib" time="0.0004">
+        <testcase classname="clj-net-pcap.test.native" name="get-url-for-lib" time="0.0006">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.native" name="mk-rm-native-lib-dir" time="0.0019">
+        <testcase classname="clj-net-pcap.test.native" name="mk-rm-native-lib-dir" time="0.0041">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.native" name="get-url-for-lib-error" time="0.0005">
+        <testcase classname="clj-net-pcap.test.native" name="get-url-for-lib-error" time="0.0006">
     </testcase>
 
         <testcase classname="clj-net-pcap.test.native" name="find-lib-in-jar" time="0.0009">
     </testcase>
 
   </testsuite>
-  <testsuite errors="0" failures="0" id="3" name="pcap-data" package="clj-net-pcap.test" tests="4" time="0.0120" timestamp="2013-07-04_23:33:18+0200">
-        <testcase classname="clj-net-pcap.test.pcap-data" name="test-guess-class-b-net-2" time="0.0024">
+  <testsuite errors="0" failures="0" id="3" name="pcap-data" package="clj-net-pcap.test" tests="4" time="0.0315" timestamp="2013-12-04_19:21:17+0100">
+        <testcase classname="clj-net-pcap.test.pcap-data" name="test-guess-class-b-net-2" time="0.0182">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-data" name="test-guess-class-c-net" time="0.0022">
+        <testcase classname="clj-net-pcap.test.pcap-data" name="test-guess-class-c-net" time="0.0023">
     </testcase>
 
         <testcase classname="clj-net-pcap.test.pcap-data" name="test-guess-class-a-net" time="0.0020">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-data" name="test-guess-class-b-net" time="0.0024">
+        <testcase classname="clj-net-pcap.test.pcap-data" name="test-guess-class-b-net" time="0.0022">
     </testcase>
 
   </testsuite>
-  <testsuite errors="0" failures="0" id="4" name="pcap-offline" package="clj-net-pcap.test" tests="6" time="0.2193" timestamp="2013-07-04_23:33:19+0200">
-        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-create-pcap-from-file-error" time="0.0022">
+  <testsuite errors="0" failures="0" id="4" name="pcap-offline" package="clj-net-pcap.test" tests="8" time="0.2323" timestamp="2013-12-04_19:21:17+0100">
+        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-extract-nested-maps-from-pcap-file" time="0.0020">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-process-pcap-file-as-maps" time="0.0039">
+        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-process-pcap-file" time="0.0026">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-create-pcap-from-file" time="0.0004">
+        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-extract-beans-from-pcap-file" time="0.0016">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-extract-maps-from-pcap-file" time="0.0027">
+        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-process-pcap-file-as-nested-maps" time="0.0067">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-create-pcap-from-file-and-dispatch" time="0.2038">
+        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-create-pcap-from-file-and-dispatch" time="0.2025">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-process-pcap-file" time="0.0018">
+        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-extract-maps-from-pcap-file" time="0.0040">
     </testcase>
 
-  </testsuite>
-  <testsuite errors="0" failures="0" id="5" name="pcap" package="clj-net-pcap.test" tests="9" time="4.7020" timestamp="2013-07-04_23:33:18+0200">
-        <testcase classname="clj-net-pcap.test.pcap" name="test-device-exists" time="0.1575">
+        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-create-pcap-from-file" time="0.0009">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap" name="test-create-and-activate-pcap" time="0.9804">
-    </testcase>
-
-        <testcase classname="clj-net-pcap.test.pcap" name="test-create-and-set-filter" time="0.6575">
-    </testcase>
-
-        <testcase classname="clj-net-pcap.test.pcap" name="test-create-filter" time="0.0009">
-    </testcase>
-
-        <testcase classname="clj-net-pcap.test.pcap" name="test-create-pcap" time="0.0004">
-    </testcase>
-
-        <testcase classname="clj-net-pcap.test.pcap" name="test-create-get-stat-fn" time="1.8919">
-    </testcase>
-
-        <testcase classname="clj-net-pcap.test.pcap" name="test-set-filter" time="0.7579">
-    </testcase>
-
-        <testcase classname="clj-net-pcap.test.pcap" name="test-get-devices" time="0.1670">
-    </testcase>
-
-        <testcase classname="clj-net-pcap.test.pcap" name="test-get-device" time="0.0799">
+        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-create-pcap-from-file-error" time="0.0025">
     </testcase>
 
   </testsuite>
-  <testsuite errors="0" failures="0" id="6" name="sniffer" package="clj-net-pcap.test" tests="3" time="6.4836" timestamp="2013-07-04_23:33:25+0200">
-        <testcase classname="clj-net-pcap.test.sniffer" name="sniffer-forwarder-interaction" time="2.7483">
+  <testsuite errors="0" failures="0" id="5" name="pcap" package="clj-net-pcap.test" tests="9" time="1.2134" timestamp="2013-12-04_19:21:17+0100">
+        <testcase classname="clj-net-pcap.test.pcap" name="test-device-exists" time="0.2155">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.sniffer" name="test-forwarder" time="0.0021">
+        <testcase classname="clj-net-pcap.test.pcap" name="test-create-and-activate-pcap" time="0.1311">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.sniffer" name="test-sniffer" time="3.7306">
+        <testcase classname="clj-net-pcap.test.pcap" name="test-create-and-set-filter" time="0.0880">
+    </testcase>
+
+        <testcase classname="clj-net-pcap.test.pcap" name="test-create-filter" time="0.1549">
+    </testcase>
+
+        <testcase classname="clj-net-pcap.test.pcap" name="test-create-pcap" time="0.0005">
+    </testcase>
+
+        <testcase classname="clj-net-pcap.test.pcap" name="test-create-get-stat-fn" time="0.1418">
+    </testcase>
+
+        <testcase classname="clj-net-pcap.test.pcap" name="test-set-filter" time="0.1750">
+    </testcase>
+
+        <testcase classname="clj-net-pcap.test.pcap" name="test-get-devices" time="0.1451">
+    </testcase>
+
+        <testcase classname="clj-net-pcap.test.pcap" name="test-get-device" time="0.1463">
+    </testcase>
+
+  </testsuite>
+  <testsuite errors="0" failures="0" id="6" name="protocols" package="clj-net-pcap.test" tests="4" time="0.0103" timestamp="2013-12-04_19:21:17+0100">
+        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-udp-maps-from-pcap-file" time="0.0016">
+    </testcase>
+
+        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-tcp-beans-from-pcap-file" time="0.0017">
+    </testcase>
+
+        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-tcp-maps-from-pcap-file" time="0.0019">
+    </testcase>
+
+        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-udp-beans-from-pcap-file" time="0.0016">
+    </testcase>
+
+  </testsuite>
+  <testsuite errors="0" failures="0" id="7" name="sniffer" package="clj-net-pcap.test" tests="4" time="7.4740" timestamp="2013-12-04_19:21:25+0100">
+        <testcase classname="clj-net-pcap.test.sniffer" name="sniffer-forwarder-interaction" time="2.1530">
+    </testcase>
+
+        <testcase classname="clj-net-pcap.test.sniffer" name="sniffer-forwarder-interaction-cloned" time="2.1629">
+    </testcase>
+
+        <testcase classname="clj-net-pcap.test.sniffer" name="test-forwarder" time="1.0028">
+    </testcase>
+
+        <testcase classname="clj-net-pcap.test.sniffer" name="test-sniffer" time="2.1499">
     </testcase>
 
   </testsuite>

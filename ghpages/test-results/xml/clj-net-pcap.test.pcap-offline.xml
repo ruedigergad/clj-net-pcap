@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.pcap-offline" errors="0" failures="0" tests="6" time="0.2193" timestamp="2013-07-04_23:33:19+0200">
-    <testcase name="test-create-pcap-from-file-error" classname="clj-net-pcap.test.pcap-offline" time="0.0022">
+<testsuite name="clj-net-pcap.test.pcap-offline" errors="0" failures="0" tests="8" time="0.2323" timestamp="2013-12-04_19:21:17+0100">
+    <testcase name="test-extract-nested-maps-from-pcap-file" classname="clj-net-pcap.test.pcap-offline" time="0.0020">
     </testcase>
-    <testcase name="test-process-pcap-file-as-maps" classname="clj-net-pcap.test.pcap-offline" time="0.0039">
+    <testcase name="test-process-pcap-file" classname="clj-net-pcap.test.pcap-offline" time="0.0026">
     </testcase>
-    <testcase name="test-create-pcap-from-file" classname="clj-net-pcap.test.pcap-offline" time="0.0004">
+    <testcase name="test-extract-beans-from-pcap-file" classname="clj-net-pcap.test.pcap-offline" time="0.0016">
     </testcase>
-    <testcase name="test-extract-maps-from-pcap-file" classname="clj-net-pcap.test.pcap-offline" time="0.0027">
+    <testcase name="test-process-pcap-file-as-nested-maps" classname="clj-net-pcap.test.pcap-offline" time="0.0067">
     </testcase>
-    <testcase name="test-create-pcap-from-file-and-dispatch" classname="clj-net-pcap.test.pcap-offline" time="0.2038">
+    <testcase name="test-create-pcap-from-file-and-dispatch" classname="clj-net-pcap.test.pcap-offline" time="0.2025">
     </testcase>
-    <testcase name="test-process-pcap-file" classname="clj-net-pcap.test.pcap-offline" time="0.0018">
+    <testcase name="test-extract-maps-from-pcap-file" classname="clj-net-pcap.test.pcap-offline" time="0.0040">
+    </testcase>
+    <testcase name="test-create-pcap-from-file" classname="clj-net-pcap.test.pcap-offline" time="0.0009">
+    </testcase>
+    <testcase name="test-create-pcap-from-file-error" classname="clj-net-pcap.test.pcap-offline" time="0.0025">
     </testcase>
 </testsuite>

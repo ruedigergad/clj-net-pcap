@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.java-interop" errors="0" failures="0" tests="3" time="0.0436" timestamp="2013-12-04_19:21:16+0100">
-    <testcase name="test-java-static-extract-beans-from-pcap-file" classname="clj-net-pcap.test.java-interop" time="0.0128">
+<testsuite name="clj-net-pcap.test.java-interop" errors="0" failures="0" tests="3" time="0.0301" timestamp="2013-12-04_19:32:42+0100">
+    <testcase name="test-java-static-extract-beans-from-pcap-file" classname="clj-net-pcap.test.java-interop" time="0.0117">
     </testcase>
-    <testcase name="test-java-static-extract-maps-from-pcap-file" classname="clj-net-pcap.test.java-interop" time="0.0049">
+    <testcase name="test-java-static-extract-maps-from-pcap-file" classname="clj-net-pcap.test.java-interop" time="0.0033">
     </testcase>
-    <testcase name="test-java-static-extract-nested-maps-from-pcap-file" classname="clj-net-pcap.test.java-interop" time="0.0168">
+    <testcase name="test-java-static-extract-nested-maps-from-pcap-file" classname="clj-net-pcap.test.java-interop" time="0.0091">
     </testcase>
 </testsuite>

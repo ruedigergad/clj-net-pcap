@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.core" errors="0" failures="0" tests="7" time="3.2217" timestamp="2013-12-04_19:21:16+0100">
-    <testcase name="test-get-filter" classname="clj-net-pcap.test.core" time="0.2353">
+<testsuite name="clj-net-pcap.test.core" errors="0" failures="0" tests="7" time="3.5375" timestamp="2013-12-04_19:32:42+0100">
+    <testcase name="test-get-filter" classname="clj-net-pcap.test.core" time="0.2895">
     </testcase>
-    <testcase name="test-add-filter" classname="clj-net-pcap.test.core" time="0.1658">
+    <testcase name="test-add-filter" classname="clj-net-pcap.test.core" time="0.2332">
     </testcase>
-    <testcase name="test-remove-filter" classname="clj-net-pcap.test.core" time="0.1704">
+    <testcase name="test-remove-filter" classname="clj-net-pcap.test.core" time="0.2319">
     </testcase>
-    <testcase name="test-remove-last-filter" classname="clj-net-pcap.test.core" time="0.1581">
+    <testcase name="test-remove-last-filter" classname="clj-net-pcap.test.core" time="0.1945">
     </testcase>
-    <testcase name="test-unsupported-operation-throws-exception" classname="clj-net-pcap.test.core" time="0.1559">
+    <testcase name="test-unsupported-operation-throws-exception" classname="clj-net-pcap.test.core" time="0.1874">
     </testcase>
-    <testcase name="cljnetpcap-test" classname="clj-net-pcap.test.core" time="2.1598">
+    <testcase name="cljnetpcap-test" classname="clj-net-pcap.test.core" time="2.1764">
     </testcase>
-    <testcase name="test-do-not-add-empty-filter" classname="clj-net-pcap.test.core" time="0.1476">
+    <testcase name="test-do-not-add-empty-filter" classname="clj-net-pcap.test.core" time="0.1931">
     </testcase>
 </testsuite>

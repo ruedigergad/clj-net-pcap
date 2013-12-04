@@ -1,7 +1,10 @@
 master
+
+1.6.0
   - Add functionality to get all filters.
   - Allow to add filters at runtime.
   - Allow to remove filters at runtime.
+  - Add more IP fields to default data structures.
 
 1.5.4
   - Add unit tests for problematic parsing tasks.

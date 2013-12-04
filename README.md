@@ -8,6 +8,7 @@ clj-net-pcap requires libpcap.
 Please note:
 clj-net-pcap expects the libpcap library to be named "libpcap.so".
 If this is not the case this can be fixed by adding a symlink like shown for Fedora below:
+
     sudo ln -s /usr/lib64/libpcap.so.1 /usr/lib64/libpcap.so
 
 ## API Docs

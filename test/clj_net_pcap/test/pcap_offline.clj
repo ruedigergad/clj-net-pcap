@@ -101,6 +101,7 @@
     (is (= {"ts" 1365516583196346000, "len" 98,
             "ethDst" "E0:CB:4E:E3:38:46", "ethSrc" "90:E6:BA:3C:9A:47",
             "ipDst" "173.194.69.94", "ipSrc" "192.168.20.126", "ipVer" 4,
+            "ipId" 0, "ipTtl" 64, "ipChecksum" 29282,
             "icmpType" "echo request", "icmpEchoSeq" 21}
             (first my-maps)))))
 
@@ -110,6 +111,7 @@
                    (.setTs 1365516583196346000) (.setLen 98)
                    (.setEthDst "E0:CB:4E:E3:38:46") (.setEthSrc "90:E6:BA:3C:9A:47")
                    (.setIpDst "173.194.69.94") (.setIpSrc "192.168.20.126")
+                   (.setIpId 0) (.setIpTtl 64) (.setIpChecksum 29282)
                    (.setIpVer 4) (.setIcmpType "echo request") (.setIcmpEchoSeq 21))]
     (is (= 1 (count my-beans)))
     (is (= expected

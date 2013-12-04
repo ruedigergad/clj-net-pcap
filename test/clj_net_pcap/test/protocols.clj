@@ -30,6 +30,7 @@
   (let [my-maps (extract-maps-from-pcap-file "test/clj_net_pcap/test/data/tcp-syn-ack.pcap")]
     (is (= 1 (count my-maps)))
     (is (= {"ipVer" 4, "ipDst" "192.168.0.51", 
+            "ipId" 0, "ipTtl" 48, "ipChecksum" 844,
             "ipSrc" "209.132.181.16", "ethDst" "74:DE:2B:08:78:09", 
             "ethSrc" "00:24:FE:B1:8F:DC", "ts" 1385804488699025000, "len" 74,
             "tcpSrc" 80, "tcpDst" 42229, "tcpFlags" 18,
@@ -42,6 +43,7 @@
                    (.setTs 1385804488699025000) (.setLen 74)
                    (.setEthDst "74:DE:2B:08:78:09") (.setEthSrc "00:24:FE:B1:8F:DC")
                    (.setIpDst "192.168.0.51") (.setIpSrc "209.132.181.16")
+                   (.setIpId 0) (.setIpTtl 48) (.setIpChecksum 844)
                    (.setIpVer 4) (.setTcpSrc 80) (.setTcpDst 42229) (.setTcpFlags 18)
                    (.setTcpAck 2657863316) (.setTcpSeq 1606436657))]
     (is (= 1 (count my-beans)))
@@ -53,6 +55,7 @@
     (is (= 2 (count my-maps)))
     (is (= {"ipVer" 4, "ipDst" "192.168.0.1", 
             "ipSrc" "192.168.0.51", "ethDst" "00:24:FE:B1:8F:DC", 
+            "ipId" 20831, "ipTtl" 64, "ipChecksum" 26570,
             "ethSrc" "74:DE:2B:08:78:09", "ts" 1385804494276477000, "len" 77,
             "udpSrc" 34904, "udpDst" 53}
            (first my-maps)))))
@@ -63,6 +66,7 @@
                    (.setTs 1385804494276477000) (.setLen 77)
                    (.setEthDst "00:24:FE:B1:8F:DC") (.setEthSrc "74:DE:2B:08:78:09")
                    (.setIpDst "192.168.0.1") (.setIpSrc "192.168.0.51")
+                   (.setIpId 20831) (.setIpTtl 64) (.setIpChecksum 26570)
                    (.setIpVer 4) (.setUdpSrc 34904) (.setUdpDst 53))]
     (is (= 2 (count my-beans)))
     (is (= expected

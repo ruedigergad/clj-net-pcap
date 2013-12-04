@@ -278,7 +278,10 @@
     (assoc m
            "ipSrc" (prettify-addr-array (.source ip4))
            "ipDst" (prettify-addr-array (.destination ip4))
-           "ipVer" 4)
+           "ipVer" 4
+           "ipId" (.id ip4)
+           "ipTtl" (.ttl ip4)
+           "ipChecksum" (.checksum ip4))
     m))
 
 (defn- add-ip6-fields
@@ -394,7 +397,10 @@
     (doto p
       (.setIpSrc (prettify-addr-array (.source ip4)))
       (.setIpDst (prettify-addr-array (.destination ip4)))
-      (.setIpVer 4))
+      (.setIpVer 4)
+      (.setIpId (.id ip4))
+      (.setIpTtl (.ttl ip4))
+      (.setIpChecksum (.checksum ip4)))
     p))
 
 (defn- add-ip6-fields-bean

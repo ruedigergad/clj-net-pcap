@@ -38,6 +38,9 @@ public class PacketHeaderDataBean {
 	private String ipSrc;
 	private String ipDst;
 	private int ipVer = 0;
+	private int ipId = -1;
+	private int ipTtl = -1;
+	private int ipChecksum = -1;
 
 	/*
 	 * ICMP
@@ -177,6 +180,30 @@ public class PacketHeaderDataBean {
 		this.ipVer = ipVer;
 	}
 
+	public int getIpId() {
+		return ipId;
+	}
+
+	public void setIpId(int ipId) {
+		this.ipId = ipId;
+	}
+
+	public int getIpTtl() {
+		return ipTtl;
+	}
+
+	public void setIpTtl(int ipTtl) {
+		this.ipTtl = ipTtl;
+	}
+
+	public int getIpChecksum() {
+		return ipChecksum;
+	}
+
+	public void setIpChecksum(int ipChecksum) {
+		this.ipChecksum = ipChecksum;
+	}
+
 	public String getIcmpType() {
 		return icmpType;
 	}
@@ -268,7 +295,7 @@ public class PacketHeaderDataBean {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("PacketHeaderDataBean");
+		builder.append("PacketHeaderDataBean: ");
 		if (ts > 0) {
 			builder.append("ts=");
 			builder.append(ts);
@@ -334,6 +361,21 @@ public class PacketHeaderDataBean {
 		if (ipVer > 0) {
 			builder.append("ipVer=");
 			builder.append(ipVer);
+			builder.append(", ");
+		}
+		if (ipId > -1) {
+			builder.append("ipId=");
+			builder.append(ipId);
+			builder.append(", ");
+		}
+		if (ipTtl > -1) {
+			builder.append("ipTtl=");
+			builder.append(ipTtl);
+			builder.append(", ");
+		}
+		if (ipChecksum > -1) {
+			builder.append("ipChecksum=");
+			builder.append(ipChecksum);
 			builder.append(", ");
 		}
 		if (icmpType != null) {
@@ -410,6 +452,9 @@ public class PacketHeaderDataBean {
 		result = prime * result + ((ipDst == null) ? 0 : ipDst.hashCode());
 		result = prime * result + ((ipSrc == null) ? 0 : ipSrc.hashCode());
 		result = prime * result + ipVer;
+		result = prime * result + ipId;
+		result = prime * result + ipTtl;
+		result = prime * result + ipChecksum;
 		result = prime * result + len;
 		result = prime * result + (int) (tcpAck ^ (tcpAck >>> 32));
 		result = prime * result + tcpDst;
@@ -490,6 +535,12 @@ public class PacketHeaderDataBean {
 		} else if (!ipSrc.equals(other.ipSrc))
 			return false;
 		if (ipVer != other.ipVer)
+			return false;
+		if (ipId != other.ipId)
+			return false;
+		if (ipTtl != other.ipTtl)
+			return false;
+		if (ipChecksum != other.ipChecksum)
 			return false;
 		if (len != other.len)
 			return false;

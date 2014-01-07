@@ -1,5 +1,7 @@
 package clj_net_pcap;
 
+import java.io.Serializable;
+
 /**
  * 
  * Simple POJO for storing header data.

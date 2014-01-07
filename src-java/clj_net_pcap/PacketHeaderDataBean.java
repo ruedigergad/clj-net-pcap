@@ -7,7 +7,9 @@ package clj_net_pcap;
  * @author Ruediger Gad
  * 
  */
-public class PacketHeaderDataBean {
+public class PacketHeaderDataBean implements Serializable {
+
+    public static final long serialVersionUID = 1L;
 
 	/*
 	 * General pcap information

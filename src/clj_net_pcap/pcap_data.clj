@@ -258,7 +258,7 @@
   (if (.hasHeader pkt eth)
     (assoc m
            "ethSrc" (prettify-addr-array (.source eth))
-	         "ethDst" (prettify-addr-array (.destination eth)))
+	       "ethDst" (prettify-addr-array (.destination eth)))
     m))
 
 (defn- add-arp-fields

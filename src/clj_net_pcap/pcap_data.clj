@@ -26,6 +26,7 @@
         clj-assorted-utils.util
         clj-net-pcap.native)
   (:import (java.net InetAddress)
+           (java.util HashMap)
            (java.util.concurrent ScheduledThreadPoolExecutor)
            (clj_net_pcap PacketHeaderDataBean)
            (org.jnetpcap PcapHeader)
@@ -256,54 +257,55 @@
 (defn- add-eth-fields
   [m ^PcapPacket pkt ^Ethernet eth]
   (if (.hasHeader pkt eth)
-    (assoc m
-           "ethSrc" (prettify-addr-array (.source eth))
-	       "ethDst" (prettify-addr-array (.destination eth)))
+    (doto m
+      (.put "ethSrc" (prettify-addr-array (.source eth)))
+	  (.put "ethDst" (prettify-addr-array (.destination eth))))
     m))
 
 (defn- add-arp-fields
   [m ^PcapPacket pkt ^Arp arp]
   (if (.hasHeader pkt arp)
-    (assoc m
-           "arpOpDesc" (.operationDescription arp)
-           "arpTargetMac" (prettify-addr-array (.tha arp))
-           "arpTargetIp" (prettify-addr-array (.tpa arp))
-           "arpSourceMac" (prettify-addr-array (.sha arp))
-           "arpSourceIp" (prettify-addr-array (.spa arp)))
+    (doto m
+      (.put "arpOpDesc" (.operationDescription arp))
+      (.put "arpTargetMac" (prettify-addr-array (.tha arp)))
+      (.put "arpTargetIp" (prettify-addr-array (.tpa arp)))
+      (.put "arpSourceMac" (prettify-addr-array (.sha arp)))
+      (.put "arpSourceIp" (prettify-addr-array (.spa arp))))
     m))
 
 (defn- add-ip4-fields
   [m ^PcapPacket pkt ^Ip4 ip4]
   (if (.hasHeader pkt ip4)
-    (assoc m
-           "ipSrc" (prettify-addr-array (.source ip4))
-           "ipDst" (prettify-addr-array (.destination ip4))
-           "ipVer" 4
-           "ipId" (.id ip4)
-           "ipTtl" (.ttl ip4)
-           "ipChecksum" (.checksum ip4))
+    (doto m
+      (.put "ipSrc" (prettify-addr-array (.source ip4)))
+      (.put "ipDst" (prettify-addr-array (.destination ip4)))
+      (.put "ipVer" 4)
+      (.put "ipId" (.id ip4))
+      (.put "ipTtl" (.ttl ip4))
+      (.put "ipChecksum" (.checksum ip4)))
     m))
 
 (defn- add-ip6-fields
   [m ^PcapPacket pkt ^Ip6 ip6]
   (if (.hasHeader pkt ip6)
-    (assoc m
-           "ipSrc" (prettify-addr-array (.source ip6))
-           "ipDst" (prettify-addr-array (.destination ip6))
-           "ipVer" 6)
+    (doto m
+      (.put "ipSrc" (prettify-addr-array (.source ip6)))
+      (.put "ipDst" (prettify-addr-array (.destination ip6)))
+      (.put "ipVer" 6))
     m))
 
 (defn- add-icmp-echo-fields
   [m ^Icmp icmp ^Icmp$Echo icmp-echo]
   (if (.hasSubHeader icmp icmp-echo)
-    (assoc m "icmpEchoSeq" (.sequence icmp-echo))
+    (doto
+      (.put m "icmpEchoSeq" (.sequence icmp-echo)))
     m))
 
 (defn- add-icmp-fields
   [m ^PcapPacket pkt ^Icmp icmp ^Icmp$EchoReply icmp-echo-reply ^Icmp$EchoRequest icmp-echo-request]
   (if (.hasHeader pkt icmp)
-    (-> m
-      (assoc "icmpType" (.typeDescription icmp))
+    (doto m
+      (.put "icmpType" (.typeDescription icmp))
       (add-icmp-echo-fields icmp icmp-echo-reply)
       (add-icmp-echo-fields icmp icmp-echo-request))
     m))
@@ -311,26 +313,26 @@
 (defn- add-tcp-fields
   [m ^PcapPacket pkt ^Tcp tcp]
   (if (.hasHeader pkt tcp)
-    (assoc m
-           "tcpSrc" (.source tcp)
-           "tcpDst" (.destination tcp)
-           "tcpAck" (.ack tcp)
-           "tcpSeq" (.seq tcp)
-           "tcpFlags" (.flags tcp))
+    (doto m
+      (.put "tcpSrc" (.source tcp))
+      (.put "tcpDst" (.destination tcp))
+      (.put "tcpAck" (.ack tcp))
+      (.put "tcpSeq" (.seq tcp))
+      (.put "tcpFlags" (.flags tcp)))
     m))
 
 (defn- add-tcp-timestamp-fields
   [m tcp-timestamp]
-  (assoc m
-         "tcpTsval" (.tsval tcp-timestamp)
-         "tcpTsecr" (.tsecr tcp-timestamp)))
+  (doto m
+    (.put "tcpTsval" (.tsval tcp-timestamp))
+    (.put "tcpTsecr" (.tsecr tcp-timestamp))))
 
 (defn- add-udp-fields
   [m ^PcapPacket pkt ^Udp udp]
   (if (.hasHeader pkt udp)
-    (assoc m
-           "udpSrc" (.source udp)
-           "udpDst" (.destination udp))
+    (doto m
+      (.put "udpSrc" (.source udp))
+      (.put "udpDst" (.destination udp)))
     m))
 
 (def pcap-packet-to-map
@@ -350,9 +352,10 @@
     (fn [^PcapPacket pkt]
 		  (try
 		    (let [hdr (.getCaptureHeader pkt)
-		          m {"ts" (.timestampInNanos hdr)
-		             "len" (.wirelen hdr)}]
-              (-> m
+                  m (doto (HashMap.)
+		              (.put "ts" (.timestampInNanos hdr))
+		              (.put "len" (.wirelen hdr)))]
+              (doto m
                 (add-eth-fields pkt eth)
                 (add-arp-fields pkt arp)
                 (add-ip4-fields pkt ip4)

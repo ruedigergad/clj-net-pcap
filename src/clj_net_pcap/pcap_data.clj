@@ -26,7 +26,7 @@
         clj-assorted-utils.util
         clj-net-pcap.native)
   (:import (java.net InetAddress)
-           (java.util HashMap)
+           (java.util HashMap Map)
            (java.util.concurrent ScheduledThreadPoolExecutor)
            (clj_net_pcap PacketHeaderDataBean)
            (org.jnetpcap PcapHeader)
@@ -255,7 +255,7 @@
       (stdout-byte-array-forwarder-fn packet))))
 
 (defn- add-eth-fields
-  [m ^PcapPacket pkt ^Ethernet eth]
+  [^Map m ^PcapPacket pkt ^Ethernet eth]
   (if (.hasHeader pkt eth)
     (doto m
       (.put "ethSrc" (prettify-addr-array (.source eth)))
@@ -263,7 +263,7 @@
     m))
 
 (defn- add-arp-fields
-  [m ^PcapPacket pkt ^Arp arp]
+  [^Map m ^PcapPacket pkt ^Arp arp]
   (if (.hasHeader pkt arp)
     (doto m
       (.put "arpOpDesc" (.operationDescription arp))
@@ -274,7 +274,7 @@
     m))
 
 (defn- add-ip4-fields
-  [m ^PcapPacket pkt ^Ip4 ip4]
+  [^Map m ^PcapPacket pkt ^Ip4 ip4]
   (if (.hasHeader pkt ip4)
     (doto m
       (.put "ipSrc" (prettify-addr-array (.source ip4)))
@@ -286,7 +286,7 @@
     m))
 
 (defn- add-ip6-fields
-  [m ^PcapPacket pkt ^Ip6 ip6]
+  [^Map m ^PcapPacket pkt ^Ip6 ip6]
   (if (.hasHeader pkt ip6)
     (doto m
       (.put "ipSrc" (prettify-addr-array (.source ip6)))
@@ -295,14 +295,14 @@
     m))
 
 (defn- add-icmp-echo-fields
-  [m ^Icmp icmp ^Icmp$Echo icmp-echo]
+  [^Map m ^Icmp icmp ^Icmp$Echo icmp-echo]
   (if (.hasSubHeader icmp icmp-echo)
     (doto
       (.put m "icmpEchoSeq" (.sequence icmp-echo)))
     m))
 
 (defn- add-icmp-fields
-  [m ^PcapPacket pkt ^Icmp icmp ^Icmp$EchoReply icmp-echo-reply ^Icmp$EchoRequest icmp-echo-request]
+  [^Map m ^PcapPacket pkt ^Icmp icmp ^Icmp$EchoReply icmp-echo-reply ^Icmp$EchoRequest icmp-echo-request]
   (if (.hasHeader pkt icmp)
     (doto m
       (.put "icmpType" (.typeDescription icmp))
@@ -311,7 +311,7 @@
     m))
 
 (defn- add-tcp-fields
-  [m ^PcapPacket pkt ^Tcp tcp]
+  [^Map m ^PcapPacket pkt ^Tcp tcp]
   (if (.hasHeader pkt tcp)
     (doto m
       (.put "tcpSrc" (.source tcp))
@@ -322,13 +322,13 @@
     m))
 
 (defn- add-tcp-timestamp-fields
-  [m tcp-timestamp]
+  [^Map m tcp-timestamp]
   (doto m
     (.put "tcpTsval" (.tsval tcp-timestamp))
     (.put "tcpTsecr" (.tsecr tcp-timestamp))))
 
 (defn- add-udp-fields
-  [m ^PcapPacket pkt ^Udp udp]
+  [^Map m ^PcapPacket pkt ^Udp udp]
   (if (.hasHeader pkt udp)
     (doto m
       (.put "udpSrc" (.source udp))

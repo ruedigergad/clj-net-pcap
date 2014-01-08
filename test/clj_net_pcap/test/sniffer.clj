@@ -37,7 +37,7 @@
     (is (not (flag-set? was-run)))
     (Thread/sleep receive-delay)
     (.inject pcap (byte-array 1 (byte 0)))
-    (Thread/sleep receive-delay)
+    (await-flag was-run)
     (is (flag-set? was-run))
     (stop-sniffer sniffer)))
 
@@ -48,7 +48,7 @@
         forwarder (create-and-start-forwarder queue forwarder-fn)]
     (is (not (flag-set? was-run)))
     (.offer queue "foo")
-    (Thread/sleep receive-delay)
+    (await-flag was-run)
     (is (flag-set? was-run))
     (stop-forwarder forwarder)))
 
@@ -62,7 +62,7 @@
         sniffer (create-and-start-sniffer pcap handler-fn)]
     (Thread/sleep receive-delay)
     (exec-blocking "ping -c 1 localhost")
-    (Thread/sleep receive-delay)
+    (await-flag was-run)
     (is (flag-set? was-run))
     (stop-sniffer sniffer)
     (stop-forwarder forwarder)))
@@ -77,7 +77,7 @@
         sniffer (create-and-start-sniffer pcap handler-fn)]
     (Thread/sleep receive-delay)
     (exec-blocking "ping -c 1 localhost")
-    (Thread/sleep receive-delay)
+    (await-flag was-run)
     (is (flag-set? was-run))
     (stop-sniffer sniffer)
     (stop-forwarder forwarder)))

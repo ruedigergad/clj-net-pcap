@@ -35,7 +35,7 @@
         cljnetpcap (create-and-start-cljnetpcap forwarder-fn device filter-expression)]
     (Thread/sleep receive-delay)
     (exec-blocking "ping -c 1 localhost")
-    (Thread/sleep receive-delay)
+    (await-flag was-run)
     (is (flag-set? was-run))
     (stop-cljnetpcap cljnetpcap)))
 

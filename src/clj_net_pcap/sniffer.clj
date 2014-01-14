@@ -100,15 +100,18 @@
    new packets are available for being processed."
   [^BlockingQueue queue forwarder-fn]
   (let [running (ref true)
-        run-fn (fn [] (while true
-                        (let [^PcapPacket packet (try (.take queue)
-                                                   (catch Exception e
+        run-fn (fn [] (try
+                        (loop []
+                          (let [^PcapPacket packet (.take queue)]
+                            (if packet
+                              (forwarder-fn packet))
+                            (recur)))
+                        (catch Exception e
                         ;;; Only throw exception if we still should be running. 
                         ;;; If we get this exception when @running is already
                         ;;; false then we ignore the exception.
-                                                     (if @running (throw e))))]
-                          (if packet
-                            (forwarder-fn packet)))))
+                          (if @running 
+                            (throw e)))))
         forwarder-thread (doto (Thread. run-fn) (.setDaemon true) (.start))]
     (fn [k]
       (cond

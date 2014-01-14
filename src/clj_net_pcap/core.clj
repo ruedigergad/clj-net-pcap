@@ -71,13 +71,9 @@
           _ (create-and-set-filter pcap filter-expr)
           handler-fn-invocation-counter (counter)
           handler-fn-packet-counter (counter)
-          handler-fn (fn [p _]
-                       (insert-counter-tracing handler-fn-invocation-counter 
-                                               "handler-fn-invocations:")
+          handler-fn (fn [^PcapPacket p ^Object _]
                        (when-not (nil? p)
-                         (insert-counter-tracing handler-fn-packet-counter 
-                                               "handler-fn-packets:")
-                         (.offer queue (clone-packet p))))
+                         (.offer queue (PcapPacket. p))))
           sniffer (create-and-start-sniffer pcap handler-fn)
           stat-fn (create-stat-fn pcap)
           stat-print-fn #(print-err-ln (str "pcap-stats," (stat-fn) ",queue_size," (.size queue)))]
@@ -146,7 +142,7 @@
   ([file-name handler-fn user-data]
     (let [^Pcap pcap (create-pcap-from-file file-name)
           packet-handler (proxy [PcapPacketHandler] []
-                           (nextPacket [p u] (handler-fn p u)))]
+                           (nextPacket [^PcapPacket p ^Object u] (handler-fn p u)))]
       (.dispatch pcap -1 packet-handler user-data))))
 
 (defn process-pcap-file-with-extraction-fn

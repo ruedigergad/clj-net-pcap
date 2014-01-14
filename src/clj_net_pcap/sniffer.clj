@@ -100,7 +100,7 @@
    new packets are available for being processed."
   [^BlockingQueue queue forwarder-fn]
   (let [running (ref true)
-        run-fn (fn [] (while @running 
+        run-fn (fn [] (while true
                         (let [^PcapPacket packet (try (.take queue)
                                                    (catch Exception e
                         ;;; Only throw exception if we still should be running. 

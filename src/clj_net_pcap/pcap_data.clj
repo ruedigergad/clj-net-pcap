@@ -551,30 +551,33 @@ user=>
 (defn no-op-converter-forwarder-fn
   "Forwarder that converts the packets but doesn't do anything else.
    This is used for testing purposes."
-  [^PcapPacket packet]
-  (pcap-packet-to-bean packet))
+  [f]
+  (fn [^PcapPacket packet]
+    (f packet)))
 
-(def counting-converter-forwarder-fn
+(defn counting-converter-forwarder-fn
   "Forwarder that converts the packets and counts how many times it was called.
    This is used for testing purposes."
+  [f]
   (let [cntr (counter)]
     (fn
       [^PcapPacket packet]
       (do
-        (pcap-packet-to-bean packet)
+        (f packet)
         (cntr inc)
         (if (= 0 (mod (cntr) 1000))
           (println (cntr)))))))
 
-(def calls-per-second-converter-forwarder-fn
+(defn calls-per-second-converter-forwarder-fn
   "Forwarder that converts the packets and periodically prints how many times it was called per second.
    This is used for testing purposes."
+  [f]
   (let [cntr (counter)
         time-tmp (ref (System/currentTimeMillis))]
     (fn
       [^PcapPacket packet]
       (do
-        (pcap-packet-to-bean packet)
+        (f packet)
         (cntr inc)
         (if (> (cntr) 1000)
           (let [time-delta (- (System/currentTimeMillis) @time-tmp )]

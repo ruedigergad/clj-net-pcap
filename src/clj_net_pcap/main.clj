@@ -42,7 +42,7 @@
                             "Defaults to the empty String which means that all "
                             "packets are captured.")
                        :default ""]
-                      ["-S" "--stats"
+                      ["-s" "--stats"
                        (str "Print stats to stderr in a regular interval."
                             "The interval is given as parameter in milliseconds."
                             "Values smaller equal 0 mean that no stats are printed."
@@ -57,6 +57,12 @@
                             "stdout-forwarder-fn, no-op-converter-forwarder-fn, "
                             "counting-converter-forwarder-fn, calls-per-second-converter-forwarder-fn")
                        :default "stdout-forwarder-fn"]
+                      ["-T" "--transformation-fn"
+                       (str "Use the specified function for transforming the raw packets."
+                            "Available function names are:\n"
+                            "pcap-packet-to-bean, pcap-packet-to-map, "
+                            "pcap-packet-to-nested-maps, pcap-packet-to-no-op")
+                       :default "pcap-packet-to-bean"]
                       ["-h" "--help" "Print this help." :flag true])
         arg-map (cli-args 0)
         help-string (cli-args 2)]
@@ -66,7 +72,11 @@
         (println "Starting clj-net-pcap using the following options:")
         (pprint arg-map)
         (let [cljnetpcap (create-and-start-cljnetpcap
-                           (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
+                           (let [f (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
+                                 t (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))]
+                             (if (= 'packet (first (first (:arglists (meta f)))))
+                               f
+                               (f t)))
                            (arg-map :interface)
                            (arg-map :filter))
               stat-interval (arg-map :stats)

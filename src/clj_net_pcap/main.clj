@@ -49,6 +49,14 @@
                             "Defaults to 0.")
                        :default 0
                        :parse-fn #(Integer. %)]
+                      ["-F" "--forwarder-fn"
+                       (str "Use the specified function as forwarder function for "
+                            "processing packets.\n"
+                            "Available function names are:\n"
+                            "stdout-combined-forwarder-fn, stdout-byte-array-forwarder-fn, "
+                            "stdout-forwarder-fn, no-op-converter-forwarder-fn, "
+                            "counting-converter-forwarder-fn, calls-per-second-converter-forwarder-fn")
+                       :default "stdout-forwarder-fn"]
                       ["-h" "--help" "Print this help." :flag true])
         arg-map (cli-args 0)
         help-string (cli-args 2)]
@@ -58,12 +66,7 @@
         (println "Starting clj-net-pcap using the following options:")
         (pprint arg-map)
         (let [cljnetpcap (create-and-start-cljnetpcap
-;                           stdout-combined-forwarder-fn
-;                           stdout-byte-array-forwarder-fn
-                           stdout-forwarder-fn
-;                           no-op-converter-forwarder-fn
-;                           counting-converter-forwarder-fn
-;                           calls-per-second-converter-forwarder-fn
+                           (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
                            (arg-map :interface)
                            (arg-map :filter))
               stat-interval (arg-map :stats)

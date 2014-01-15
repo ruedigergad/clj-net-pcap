@@ -16,58 +16,58 @@ public class PacketHeaderDataBean implements Serializable {
 	/*
 	 * General pcap information
 	 */
-	private long ts = 0;
-	private int len = 0;
-	private int hdrLen = 0;
-	private int capLen = 0;
+	public long ts = 0;
+	public int len = 0;
+	public int hdrLen = 0;
+	public int capLen = 0;
 
 	/*
 	 * Ethernet
 	 */
-	private String ethSrc;
-	private String ethDst;
+	public String ethSrc;
+	public String ethDst;
 
 	/*
 	 * ARP
 	 */
-	private String arpOpDesc;
-	private String arpTargetMac;
-	private String arpTargetIp;
-	private String arpSourceMac;
-	private String arpSourceIp;
+	public String arpOpDesc;
+	public String arpTargetMac;
+	public String arpTargetIp;
+	public String arpSourceMac;
+	public String arpSourceIp;
 
 	/*
 	 * IP
 	 */
-	private String ipSrc;
-	private String ipDst;
-	private int ipVer = 0;
-	private int ipId = -1;
-	private int ipTtl = -1;
-	private int ipChecksum = -1;
+	public String ipSrc;
+	public String ipDst;
+	public int ipVer = 0;
+	public int ipId = -1;
+	public int ipTtl = -1;
+	public int ipChecksum = -1;
 
 	/*
 	 * ICMP
 	 */
-	private String icmpType;
-	private int icmpEchoSeq = -1;
+	public String icmpType;
+	public int icmpEchoSeq = -1;
 
 	/*
 	 * TCP
 	 */
-	private int tcpSrc = 0;
-	private int tcpDst = 0;
-	private long tcpAck = -1;
-	private long tcpSeq = -1;
-	private int tcpFlags = -1;
-	private long tcpTsval = 0;
-	private long tcpTsecr = 0;
+	public int tcpSrc = 0;
+	public int tcpDst = 0;
+	public long tcpAck = -1;
+	public long tcpSeq = -1;
+	public int tcpFlags = -1;
+	public long tcpTsval = 0;
+	public long tcpTsecr = 0;
 
 	/*
 	 * UDP
 	 */
-	private int udpSrc = 0;
-	private int udpDst = 0;
+	public int udpSrc = 0;
+	public int udpDst = 0;
 
 	/*
 	 * Getter and setter

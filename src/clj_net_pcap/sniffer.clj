@@ -25,6 +25,7 @@
   clj-net-pcap.sniffer
   (:use clj-net-pcap.pcap)
   (:import (clj_net_pcap InfiniteLoop)
+           (java.util ArrayList)
            (java.util.concurrent BlockingQueue)
            (org.jnetpcap Pcap)
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
@@ -114,10 +115,15 @@
 ;                          (if @running 
 ;                            (throw e)))))
 ;        forwarder-thread (doto (Thread. run-fn) (.setDaemon true) (.start))
+        bulk-size 100
+        ^ArrayList tmp-list (ArrayList. bulk-size)
         run-fn (fn [] (try
-                        (let [^PcapPacket packet (.take queue)]
+                        (.drainTo queue tmp-list bulk-size)
+;                        (let [^PcapPacket packet (.take queue)]
+                        (doseq [^PcapPacket packet tmp-list]
                           (if packet
                             (forwarder-fn packet)))
+                        (.clear tmp-list)
                         (catch Exception e
                           (if @running
                             (println "Caugh exception in forwarder run-fn:" e)))))

@@ -30,6 +30,8 @@
            (org.jnetpcap Pcap)
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
 
+(def ^:dynamic *forwarder-bulk-size* 100)
+
 (defrecord Packet 
   ^{:doc "Holds a PcapPacket and the optional user data. 
           This is not intended to be created directly 
@@ -115,10 +117,9 @@
 ;                          (if @running 
 ;                            (throw e)))))
 ;        forwarder-thread (doto (Thread. run-fn) (.setDaemon true) (.start))
-        bulk-size 100
-        ^ArrayList tmp-list (ArrayList. bulk-size)
+        ^ArrayList tmp-list (ArrayList. *forwarder-bulk-size*)
         run-fn (fn [] (try
-                        (.drainTo queue tmp-list bulk-size)
+                        (.drainTo queue tmp-list *forwarder-bulk-size*)
 ;                        (let [^PcapPacket packet (.take queue)]
                         (doseq [^PcapPacket packet tmp-list]
                           (if packet

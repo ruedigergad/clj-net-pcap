@@ -104,33 +104,34 @@
    new packets are available for being processed."
   [^BlockingQueue queue forwarder-fn]
   (let [running (ref true)
-;        run-fn (fn [] (try
-;                        (loop []
-;                          (let [^PcapPacket packet (.take queue)]
-;                            (if packet
-;                              (forwarder-fn packet))
-;                            (recur)))
-;                        (catch Exception e
-;                        ;;; Only throw exception if we still should be running. 
-;                        ;;; If we get this exception when @running is already
-;                        ;;; false then we ignore the exception.
-;                          (if @running 
-;                            (throw e)))))
-;        forwarder-thread (doto (Thread. run-fn) (.setDaemon true) (.start))
         ^ArrayList tmp-list (ArrayList. *forwarder-bulk-size*)
         run-fn (fn [] (try
-                        (.drainTo queue tmp-list *forwarder-bulk-size*)
-                        (doseq [^PcapPacket packet tmp-list]
-                          (if packet
-                            (forwarder-fn packet)))
-                        (.clear tmp-list)
+                        (while @running
+                          (.drainTo queue tmp-list *forwarder-bulk-size*)
+                          (doseq [^PcapPacket packet tmp-list]
+                            (if packet
+                              (forwarder-fn packet)))
+                          (.clear tmp-list))
                         (catch Exception e
                         ;;; Only print the exception if we still should be running. 
                         ;;; If we get this exception when @running is already
                         ;;; false then we ignore it.
-                          (if @running
-                            (println "Caugh exception in forwarder run-fn:" e)))))
-        forwarder-thread (doto (InfiniteLoop. run-fn) (.setDaemon true) (.start))]
+                          (if @running 
+                            (throw e)))))
+        forwarder-thread (doto (Thread. run-fn) (.setDaemon true) (.start))]
+;        run-fn (fn [] (try
+;                        (.drainTo queue tmp-list *forwarder-bulk-size*)
+;                        (doseq [^PcapPacket packet tmp-list]
+;                          (if packet
+;                            (forwarder-fn packet)))
+;                        (.clear tmp-list)
+;                        (catch Exception e
+                        ;;; Only print the exception if we still should be running. 
+                        ;;; If we get this exception when @running is already
+                        ;;; false then we ignore it.
+;                          (if @running
+;                            (println "Caugh exception in forwarder run-fn:" e)))))
+;        forwarder-thread (doto (InfiniteLoop. run-fn) (.setDaemon true) (.start))
     (fn [k]
       (cond
         (= k :stop) (do

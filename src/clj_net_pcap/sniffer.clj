@@ -120,7 +120,6 @@
         ^ArrayList tmp-list (ArrayList. *forwarder-bulk-size*)
         run-fn (fn [] (try
                         (.drainTo queue tmp-list *forwarder-bulk-size*)
-;                        (let [^PcapPacket packet (.take queue)]
                         (doseq [^PcapPacket packet tmp-list]
                           (if packet
                             (forwarder-fn packet)))

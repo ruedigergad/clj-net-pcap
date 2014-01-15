@@ -126,6 +126,9 @@
                             (forwarder-fn packet)))
                         (.clear tmp-list)
                         (catch Exception e
+                        ;;; Only print the exception if we still should be running. 
+                        ;;; If we get this exception when @running is already
+                        ;;; false then we ignore it.
                           (if @running
                             (println "Caugh exception in forwarder run-fn:" e)))))
         forwarder-thread (doto (InfiniteLoop. run-fn) (.setDaemon true) (.start))]

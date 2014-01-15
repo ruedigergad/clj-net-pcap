@@ -24,7 +24,8 @@
           for more details about the data flow and interaction."}
   clj-net-pcap.sniffer
   (:use clj-net-pcap.pcap)
-  (:import (java.util.concurrent BlockingQueue)
+  (:import (clj_net_pcap InfiniteLoop)
+           (java.util.concurrent BlockingQueue)
            (org.jnetpcap Pcap)
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
 
@@ -100,19 +101,27 @@
    new packets are available for being processed."
   [^BlockingQueue queue forwarder-fn]
   (let [running (ref true)
+;        run-fn (fn [] (try
+;                        (loop []
+;                          (let [^PcapPacket packet (.take queue)]
+;                            (if packet
+;                              (forwarder-fn packet))
+;                            (recur)))
+;                        (catch Exception e
+;                        ;;; Only throw exception if we still should be running. 
+;                        ;;; If we get this exception when @running is already
+;                        ;;; false then we ignore the exception.
+;                          (if @running 
+;                            (throw e)))))
+;        forwarder-thread (doto (Thread. run-fn) (.setDaemon true) (.start))
         run-fn (fn [] (try
-                        (loop []
-                          (let [^PcapPacket packet (.take queue)]
-                            (if packet
-                              (forwarder-fn packet))
-                            (recur)))
+                        (let [^PcapPacket packet (.take queue)]
+                          (if packet
+                            (forwarder-fn packet)))
                         (catch Exception e
-                        ;;; Only throw exception if we still should be running. 
-                        ;;; If we get this exception when @running is already
-                        ;;; false then we ignore the exception.
-                          (if @running 
-                            (throw e)))))
-        forwarder-thread (doto (Thread. run-fn) (.setDaemon true) (.start))]
+                          (if @running
+                            (println "Caugh exception in forwarder run-fn:" e)))))
+        forwarder-thread (doto (InfiniteLoop. run-fn) (.setDaemon true) (.start))]
     (fn [k]
       (cond
         (= k :stop) (do

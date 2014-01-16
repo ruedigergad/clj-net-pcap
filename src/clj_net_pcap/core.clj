@@ -69,8 +69,6 @@
                   (not= "" filter-expr))
               (dosync (alter filter-expressions conj filter-expr)))
           _ (create-and-set-filter pcap filter-expr)
-          handler-fn-invocation-counter (counter)
-          handler-fn-packet-counter (counter)
           handler-fn (fn [p _]
                        (when-not (nil? p)
                          (.offer packet-queue (clone-packet p))))

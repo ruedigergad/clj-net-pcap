@@ -60,8 +60,8 @@
   ([forwarder-fn device]
     (create-and-start-cljnetpcap forwarder-fn device ""))
   ([forwarder-fn device filter-expr]
-    (let [queue (LinkedBlockingQueue.)
-          forwarder (create-and-start-forwarder queue forwarder-fn)
+    (let [packet-queue (LinkedBlockingQueue.)
+          forwarder (create-and-start-forwarder packet-queue forwarder-fn)
           pcap (create-and-activate-pcap device)
           filter-expressions (ref [])
           _ (if (and 
@@ -77,10 +77,10 @@
                        (when-not (nil? p)
                          (insert-counter-tracing handler-fn-packet-counter 
                                                "handler-fn-packets:")
-                         (.offer queue (clone-packet p))))
+                         (.offer packet-queue (clone-packet p))))
           sniffer (create-and-start-sniffer pcap handler-fn)
           stat-fn (create-stat-fn pcap)
-          stat-print-fn #(print-err-ln (str "pcap-stats," (stat-fn) ",queue_size," (.size queue)))]
+          stat-print-fn #(print-err-ln (str "pcap-stats," (stat-fn) ",packet_queue_size," (.size packet-queue)))]
       (fn 
         ([k]
           (condp = k

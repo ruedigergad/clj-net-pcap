@@ -72,11 +72,7 @@
           handler-fn-invocation-counter (counter)
           handler-fn-packet-counter (counter)
           handler-fn (fn [p _]
-                       (insert-counter-tracing handler-fn-invocation-counter 
-                                               "handler-fn-invocations:")
                        (when-not (nil? p)
-                         (insert-counter-tracing handler-fn-packet-counter 
-                                               "handler-fn-packets:")
                          (.offer packet-queue (clone-packet p))))
           sniffer (create-and-start-sniffer pcap handler-fn)
           stat-fn (create-stat-fn pcap)

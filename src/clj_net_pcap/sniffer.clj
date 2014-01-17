@@ -69,7 +69,7 @@
     (create-and-start-sniffer pcap handler-fn nil))
   ([^Pcap pcap handler-fn user-data]
     (let [packet-handler (proxy [ByteBufferHandler] []
-                           (nextPacket [^PcapHeader ph ^ByteBuffer bb ^Object u] (handler-fn ph bb u)))
+                           (nextPacket [ph bb u] (handler-fn ph bb u)))
 ;          packet-handler (proxy [PcapPacketHandler] []
 ;                           (nextPacket [^PcapPacket p ^Object u] (handler-fn p u)))
           run-fn (fn [] 
@@ -112,7 +112,6 @@
                         (loop []
                           (.drainTo queue tmp-list *forwarder-bulk-size*)
                           (doseq [obj tmp-list]
-;                          (let [obj (.take queue)]
                             (if obj
                               (forwarder-fn obj)))
                           (.clear tmp-list)

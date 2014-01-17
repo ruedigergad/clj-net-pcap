@@ -109,13 +109,12 @@
   (let [running (ref true)
         ^ArrayList tmp-list (ArrayList. *forwarder-bulk-size*)
         run-fn (fn [] (try
-                        (loop []
+                        (while @running
                           (.drainTo queue tmp-list *forwarder-bulk-size*)
                           (doseq [obj tmp-list]
                             (if obj
                               (forwarder-fn obj)))
-                          (.clear tmp-list)
-                          (recur))
+                          (.clear tmp-list))
                         (catch Exception e
                         ;;; Only print the exception if we still should be running. 
                         ;;; If we get this exception when @running is already

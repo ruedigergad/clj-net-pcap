@@ -83,7 +83,7 @@
           ^ArrayList tmp-list (ArrayList. 100)
           byte-buffer-processor (fn [] 
                                   (try
-                                    (loop []
+                                    (while @running
                                       (.drainTo byte-buffer-queue tmp-list 100)
                                       (doseq [^ByteBufferRecord bbrec tmp-list]
                                         (if (and
@@ -98,8 +98,7 @@
                                             (.scan pkt (.value (PcapDLT/EN10MB)))
                                             (.offer packet-queue (PcapPacket. pkt)))
                                           (packet-drop-counter inc)))
-                                      (.clear tmp-list)
-                                      (recur))
+                                      (.clear tmp-list))
                                     (catch Exception e
                                       (if @running
                                         (throw e)))))

@@ -10,6 +10,7 @@
   :global-vars {*warn-on-reflection* true}
   :main clj-net-pcap.main
   :java-source-paths ["src-java"]
+  :jvm-opts ["-Dnio.blocksize=1048576"]
   :omit-source true
   :html5-docs-docs-dir "ghpages/doc"
   :html5-docs-ns-includes #"^clj-net-pcap.*"

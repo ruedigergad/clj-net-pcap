@@ -32,8 +32,11 @@
         clj-net-pcap.pcap-data
         clj-net-pcap.sniffer
         clj-assorted-utils.util)
-  (:import (java.util.concurrent LinkedBlockingQueue)
-           (org.jnetpcap Pcap)
+  (:import (java.nio ByteBuffer)
+           (java.util ArrayList)
+           (java.util.concurrent ArrayBlockingQueue LinkedBlockingQueue LinkedTransferQueue)
+           (org.jnetpcap Pcap PcapDLT PcapHeader)
+           (org.jnetpcap.nio JBuffer JMemory JMemory$Type)
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
 
 
@@ -49,6 +52,9 @@
 	       (println ~txt 
 	                (~cntr))))))
 
+(defrecord ByteBufferRecord
+  [wl bb])
+
 (defn create-and-start-cljnetpcap
   "Convenience function for creating and starting packet capturing.
    forwarder-fn will be called for each captured packet.
@@ -60,8 +66,58 @@
   ([forwarder-fn device]
     (create-and-start-cljnetpcap forwarder-fn device ""))
   ([forwarder-fn device filter-expr]
-    (let [packet-queue (LinkedBlockingQueue.)
-          forwarder (create-and-start-forwarder packet-queue forwarder-fn)
+    (let [buffer-queue-size 3000
+          queue-size 300000
+          running (ref true)
+          byte-buffer-queue (ArrayBlockingQueue. buffer-queue-size)
+          handler-fn (fn [^PcapHeader ph ^ByteBuffer bb ^Object _]
+                       (if (and 
+                             (< (.size byte-buffer-queue) (- buffer-queue-size 1))
+                             (not (nil? bb)))
+                         (.offer byte-buffer-queue 
+                                 (ByteBufferRecord. (.wirelen ph) bb))))
+                                                    ;(doto (ByteBuffer/allocateDirect (.remaining bb)) (.put bb) (.flip))))))
+;                         (let [ph-buf (JBuffer. (PcapHeader/sizeof))
+;                               ph-array (byte-array (PcapHeader/sizeof))]
+;                           (.transferTo ph ph-buf 0)
+;                           (.getByteArray ph-buf 0 ph-array)
+;                           (if (and
+;                                 (not= 0 (aget ph-array 0))
+;                                 (not= 0 (aget ph-array 1)))
+;                             (let [bb-array (byte-array (.remaining bb))]
+;                               (.get bb bb-array)
+;                               (.offer 
+;                                 byte-buffer-queue 
+;                                 (PacketHeaderAndByteBuffer. ph-array bb-array)))))))
+;                                   (doto (ByteBuffer/allocateDirect (.capacity bb)) (.put bb) (.flip))))))
+          packet-queue (ArrayBlockingQueue. queue-size)
+          ^ArrayList tmp-list (ArrayList. 100)
+          byte-buffer-processor (fn [] 
+                                  (try
+                                    (loop []
+                                      (.drainTo byte-buffer-queue tmp-list 100)
+                                      (doseq [^ByteBufferRecord bbrec tmp-list]
+                                        (if (and
+                                              (< (.size packet-queue) (- queue-size 1))
+                                              (not (nil? bbrec))
+                                              (> (:wl bbrec) 0))
+                                          (let [^ByteBuffer bb (:bb bbrec)
+                                                ^PcapHeader ph (PcapHeader. *snap-len* (:wl bbrec))
+                                                bb-buf (JBuffer. bb)
+                                                ^PcapPacket pkt (PcapPacket. JMemory$Type/POINTER)]
+                                            (.peer pkt ph bb-buf)
+                                            (.scan pkt (.value (PcapDLT/EN10MB)))
+                                            (.offer packet-queue (PcapPacket. pkt)))))
+                                      (.clear tmp-list)
+                                      (recur))
+                                    (catch Exception e
+                                      (if @running
+                                        (throw e)))))
+          byte-buffer-processor-thread (doto 
+                                         (Thread. byte-buffer-processor)
+                                         (.setName "ByteBufferProcessor")
+                                         (.setDaemon true)
+                                         (.start))
           pcap (create-and-activate-pcap device)
           filter-expressions (ref [])
           _ (if (and 
@@ -69,17 +125,17 @@
                   (not= "" filter-expr))
               (dosync (alter filter-expressions conj filter-expr)))
           _ (create-and-set-filter pcap filter-expr)
-          handler-fn (fn [p _]
-                       (when-not (nil? p)
-                         (.offer packet-queue (clone-packet p))))
+          forwarder (create-and-start-forwarder packet-queue forwarder-fn)
           sniffer (create-and-start-sniffer pcap handler-fn)
           stat-fn (create-stat-fn pcap)
-          stat-print-fn #(print-err-ln (str "pcap-stats," (stat-fn) ",packet_queue_size," (.size packet-queue)))]
+          stat-print-fn #(print-err-ln (str "pcap_stats," (stat-fn) ",byte_buffer_queue_size," (.size byte-buffer-queue) ",packet_queue_size," (.size packet-queue)))]
       (fn 
         ([k]
           (condp = k
             :stat (stat-print-fn)
             :stop (do
+                    (dosync (ref-set running false))
+                    (.stop byte-buffer-processor-thread)
                     (stop-sniffer sniffer)
                     (stop-forwarder forwarder))
             :get-filters @filter-expressions

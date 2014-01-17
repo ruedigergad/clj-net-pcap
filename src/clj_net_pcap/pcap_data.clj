@@ -579,8 +579,8 @@ user=>
       (do
         (f packet)
         (cntr inc)
-        (if (> (cntr) 1000)
-          (let [time-delta (- (System/currentTimeMillis) @time-tmp )]
+        (if (> (cntr) 10000)
+          (let [time-delta (- (System/currentTimeMillis) @time-tmp)]
             (when (> time-delta 1000)
               (println "pps" (float (/ (cntr) (/ time-delta 1000))))
               (cntr (fn [_] 0))

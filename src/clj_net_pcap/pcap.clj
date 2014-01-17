@@ -29,7 +29,7 @@
            (org.jnetpcap Pcap PcapBpfProgram PcapIf PcapStat)))
 
 
-(def ^:dynamic *buffer-size* (int (Math/pow 2 20)))
+(def ^:dynamic *buffer-size* (int (Math/pow 2 26)))
 (def ^:dynamic *flags* Pcap/MODE_PROMISCUOUS)
 (def ^:dynamic *snap-len* 0x00080)
 

@@ -25,9 +25,10 @@
   clj-net-pcap.sniffer
   (:use clj-net-pcap.pcap)
   (:import (clj_net_pcap InfiniteLoop)
+           (java.nio ByteBuffer)
            (java.util ArrayList)
-           (java.util.concurrent BlockingQueue)
-           (org.jnetpcap Pcap)
+           (java.util.concurrent BlockingQueue TransferQueue)
+           (org.jnetpcap ByteBufferHandler Pcap PcapHeader)
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
 
 (def ^:dynamic *forwarder-bulk-size* 100)
@@ -67,11 +68,13 @@
   ([pcap handler-fn]
     (create-and-start-sniffer pcap handler-fn nil))
   ([^Pcap pcap handler-fn user-data]
-    (let [packet-handler (proxy [PcapPacketHandler] []
-                           (nextPacket [^PcapPacket p ^Object u] (handler-fn p u)))
+    (let [packet-handler (proxy [ByteBufferHandler] []
+                           (nextPacket [^PcapHeader ph ^ByteBuffer bb ^Object u] (handler-fn ph bb u)))
+;          packet-handler (proxy [PcapPacketHandler] []
+;                           (nextPacket [^PcapPacket p ^Object u] (handler-fn p u)))
           run-fn (fn [] 
                    (.loop pcap Pcap/LOOP_INFINITE packet-handler user-data)) 
-          sniffer-thread (doto (Thread. run-fn) (.start))]
+          sniffer-thread (doto (Thread. run-fn) (.setName "SnifferThread") (.start))]
       (fn [k]
         (cond
           (= k :stop) (do 
@@ -106,19 +109,21 @@
   (let [running (ref true)
         ^ArrayList tmp-list (ArrayList. *forwarder-bulk-size*)
         run-fn (fn [] (try
-                        (while @running
+                        (loop []
                           (.drainTo queue tmp-list *forwarder-bulk-size*)
-                          (doseq [^PcapPacket packet tmp-list]
-                            (if packet
-                              (forwarder-fn packet)))
-                          (.clear tmp-list))
+                          (doseq [obj tmp-list]
+;                          (let [obj (.take queue)]
+                            (if obj
+                              (forwarder-fn obj)))
+                          (.clear tmp-list)
+                          (recur))
                         (catch Exception e
                         ;;; Only print the exception if we still should be running. 
                         ;;; If we get this exception when @running is already
                         ;;; false then we ignore it.
                           (if @running 
                             (throw e)))))
-        forwarder-thread (doto (Thread. run-fn) (.setDaemon true) (.start))]
+        forwarder-thread (doto (Thread. run-fn) (.setName "ForwarderThread") (.setDaemon true) (.start))]
 ;        run-fn (fn [] (try
 ;                        (.drainTo queue tmp-list *forwarder-bulk-size*)
 ;                        (doseq [^PcapPacket packet tmp-list]

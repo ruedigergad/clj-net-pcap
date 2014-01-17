@@ -78,20 +78,6 @@
                          (.offer byte-buffer-queue 
                                  (ByteBufferRecord. (.wirelen ph) bb))
                          (byte-buffer-drop-counter inc)))
-                                                    ;(doto (ByteBuffer/allocateDirect (.remaining bb)) (.put bb) (.flip))))))
-;                         (let [ph-buf (JBuffer. (PcapHeader/sizeof))
-;                               ph-array (byte-array (PcapHeader/sizeof))]
-;                           (.transferTo ph ph-buf 0)
-;                           (.getByteArray ph-buf 0 ph-array)
-;                           (if (and
-;                                 (not= 0 (aget ph-array 0))
-;                                 (not= 0 (aget ph-array 1)))
-;                             (let [bb-array (byte-array (.remaining bb))]
-;                               (.get bb bb-array)
-;                               (.offer 
-;                                 byte-buffer-queue 
-;                                 (PacketHeaderAndByteBuffer. ph-array bb-array)))))))
-;                                   (doto (ByteBuffer/allocateDirect (.capacity bb)) (.put bb) (.flip))))))
           packet-drop-counter (counter)
           packet-queue (ArrayBlockingQueue. packet-queue-size)
           ^ArrayList tmp-list (ArrayList. 100)

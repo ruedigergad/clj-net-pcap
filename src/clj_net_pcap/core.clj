@@ -196,7 +196,7 @@
   ([file-name handler-fn user-data]
     (let [^Pcap pcap (create-pcap-from-file file-name)
           packet-handler (proxy [PcapPacketHandler] []
-                           (nextPacket [p u] (handler-fn p u)))]
+                           (nextPacket [^PcapPacket p ^Object u] (handler-fn p u)))]
       (.dispatch pcap -1 packet-handler user-data))))
 
 (defn process-pcap-file-with-extraction-fn

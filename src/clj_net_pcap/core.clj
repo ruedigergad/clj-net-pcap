@@ -67,15 +67,17 @@
     (create-and-start-cljnetpcap forwarder-fn device ""))
   ([forwarder-fn device filter-expr]
     (let [buffer-queue-size 3000
-          queue-size 300000
+          packet-queue-size 300000
           running (ref true)
+          byte-buffer-drop-counter (counter)
           byte-buffer-queue (ArrayBlockingQueue. buffer-queue-size)
           handler-fn (fn [^PcapHeader ph ^ByteBuffer bb ^Object _]
                        (if (and 
                              (< (.size byte-buffer-queue) (- buffer-queue-size 1))
                              (not (nil? bb)))
                          (.offer byte-buffer-queue 
-                                 (ByteBufferRecord. (.wirelen ph) bb))))
+                                 (ByteBufferRecord. (.wirelen ph) bb))
+                         (byte-buffer-drop-counter inc)))
                                                     ;(doto (ByteBuffer/allocateDirect (.remaining bb)) (.put bb) (.flip))))))
 ;                         (let [ph-buf (JBuffer. (PcapHeader/sizeof))
 ;                               ph-array (byte-array (PcapHeader/sizeof))]
@@ -90,7 +92,8 @@
 ;                                 byte-buffer-queue 
 ;                                 (PacketHeaderAndByteBuffer. ph-array bb-array)))))))
 ;                                   (doto (ByteBuffer/allocateDirect (.capacity bb)) (.put bb) (.flip))))))
-          packet-queue (ArrayBlockingQueue. queue-size)
+          packet-drop-counter (counter)
+          packet-queue (ArrayBlockingQueue. packet-queue-size)
           ^ArrayList tmp-list (ArrayList. 100)
           byte-buffer-processor (fn [] 
                                   (try
@@ -98,7 +101,7 @@
                                       (.drainTo byte-buffer-queue tmp-list 100)
                                       (doseq [^ByteBufferRecord bbrec tmp-list]
                                         (if (and
-                                              (< (.size packet-queue) (- queue-size 1))
+                                              (< (.size packet-queue) (- packet-queue-size 1))
                                               (not (nil? bbrec))
                                               (> (:wl bbrec) 0))
                                           (let [^ByteBuffer bb (:bb bbrec)
@@ -107,7 +110,8 @@
                                                 ^PcapPacket pkt (PcapPacket. JMemory$Type/POINTER)]
                                             (.peer pkt ph bb-buf)
                                             (.scan pkt (.value (PcapDLT/EN10MB)))
-                                            (.offer packet-queue (PcapPacket. pkt)))))
+                                            (.offer packet-queue (PcapPacket. pkt)))
+                                          (packet-drop-counter inc)))
                                       (.clear tmp-list)
                                       (recur))
                                     (catch Exception e
@@ -128,7 +132,12 @@
           forwarder (create-and-start-forwarder packet-queue forwarder-fn)
           sniffer (create-and-start-sniffer pcap handler-fn)
           stat-fn (create-stat-fn pcap)
-          stat-print-fn #(print-err-ln (str "pcap_stats," (stat-fn) ",byte_buffer_queue_size," (.size byte-buffer-queue) ",packet_queue_size," (.size packet-queue)))]
+          stat-print-fn #(print-err-ln
+                           (str "pcap_stats," (stat-fn)
+                                ",byte_buffer_queue_size," (.size byte-buffer-queue)
+                                ",byte_buffer_drop," (byte-buffer-drop-counter)
+                                ",packet_queue_size," (.size packet-queue)
+                                ",packet_drop," (packet-drop-counter)))]
       (fn 
         ([k]
           (condp = k

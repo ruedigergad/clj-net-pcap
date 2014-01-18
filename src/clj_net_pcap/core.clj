@@ -41,17 +41,9 @@
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
 
 
-(def ^:dynamic *trace-handler-fn* false)
+(def ^:dynamic *emit-raw-data* true)
 
 
-(defmacro insert-counter-tracing
-  [cntr txt]
-  (if *trace-handler-fn*
-	  `(do
-	     (~cntr inc)
-	     (if (= 0 (mod (~cntr) 1000))
-	       (println ~txt 
-	                (~cntr))))))
 
 (defrecord ByteBufferRecord
   [cl wl s us bb])
@@ -96,12 +88,20 @@
                                             (> (:cl bbrec) 0)
                                             (> (:wl bbrec) 0))
                                         (let [^ByteBuffer bb (:bb bbrec)
-                                              ^PcapHeader ph (PcapHeader. (:cl bbrec) (:wl bbrec) (:s bbrec) (:us bbrec))
-                                              bb-buf (JBuffer. bb)
-                                              ^PcapPacket pkt (PcapPacket. JMemory$Type/POINTER)]
-                                          (.peer pkt ph bb-buf)
-                                          (.scan pkt (.value (PcapDLT/EN10MB)))
-                                          (if (.offer packet-queue (PcapPacket. pkt))
+                                              data (if *emit-raw-data*
+                                                     (doto (ByteBuffer/allocate (+ (.remaining bb) 20))
+                                                       (.putInt (:cl bbrec))
+                                                       (.putInt (:wl bbrec))
+                                                       (.putLong (:s bbrec))
+                                                       (.putInt (:us bbrec))
+                                                       (.put ^ByteBuffer (:bb bbrec)))
+                                                     (let [^PcapHeader ph (PcapHeader. (:cl bbrec) (:wl bbrec) (:s bbrec) (:us bbrec))
+                                                           ^JBuffer pkt-buf (JBuffer. ^ByteBuffer (:bb bbrec))]
+                                                       (PcapPacket.
+                                                         ^PcapPacket (doto (PcapPacket. JMemory$Type/POINTER)
+                                                                       (.peer ph pkt-buf)
+                                                                       (.scan (.value (PcapDLT/EN10MB)))))))]
+                                          (if (.offer packet-queue data)
                                             (.inc packet-queued-counter)
                                             (.inc packet-drop-counter)))
                                         (.inc packet-drop-counter)))

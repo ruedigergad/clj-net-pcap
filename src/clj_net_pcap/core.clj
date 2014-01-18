@@ -54,7 +54,7 @@
 	                (~cntr))))))
 
 (defrecord ByteBufferRecord
-  [wl bb])
+  [wl s us bb])
 
 (defn create-and-start-cljnetpcap
   "Convenience function for creating and starting packet capturing.
@@ -76,7 +76,7 @@
                        (if (and 
                              (< (.size byte-buffer-queue) (- buffer-queue-size 1))
                              (not (nil? bb)))
-                         (if-not (.offer byte-buffer-queue (ByteBufferRecord. (.wirelen ph) bb))
+                         (if-not (.offer byte-buffer-queue (ByteBufferRecord. (.wirelen ph) (.hdr_sec ph) (.hdr_usec ph) bb))
                            (.inc byte-buffer-drop-counter))
                          (.inc byte-buffer-drop-counter)))
           packet-drop-counter (Counter.)
@@ -91,7 +91,7 @@
                                             (not (nil? bbrec))
                                             (> (:wl bbrec) 0))
                                         (let [^ByteBuffer bb (:bb bbrec)
-                                              ^PcapHeader ph (PcapHeader. *snap-len* (:wl bbrec))
+                                              ^PcapHeader ph (PcapHeader. *snap-len* (:wl bbrec) (:s bbrec) (:us bbrec))
                                               bb-buf (JBuffer. bb)
                                               ^PcapPacket pkt (PcapPacket. JMemory$Type/POINTER)]
                                           (.peer pkt ph bb-buf)

@@ -31,7 +31,7 @@
 
 (deftest test-sniffer
   (let [was-run (prepare-flag)
-        handler-fn (fn [_ _] (set-flag was-run))
+        handler-fn (fn [_ _ _] (set-flag was-run))
         pcap (create-and-activate-pcap lo)
         sniffer (create-and-start-sniffer pcap handler-fn nil)]
     (is (not (flag-set? was-run)))
@@ -47,7 +47,7 @@
         queue (LinkedBlockingQueue.)
         forwarder (create-and-start-forwarder queue forwarder-fn)]
     (is (not (flag-set? was-run)))
-    (.offer queue "foo")
+    (.offer queue 12345)
     (await-flag was-run)
     (is (flag-set? was-run))
     (stop-forwarder forwarder)))
@@ -55,7 +55,7 @@
 (deftest sniffer-forwarder-interaction
   (let [was-run (prepare-flag)
         queue (LinkedBlockingQueue.)
-        handler-fn (fn [p u] (.offer queue (create-packet p u)))
+        handler-fn (fn [ph bb u] (.offer queue 12345))
         forwarder-fn (fn [_] (set-flag was-run))
         forwarder (create-and-start-forwarder queue forwarder-fn)
         pcap (create-and-activate-pcap lo)
@@ -67,17 +67,3 @@
     (stop-sniffer sniffer)
     (stop-forwarder forwarder)))
 
-(deftest sniffer-forwarder-interaction-cloned
-  (let [was-run (prepare-flag)
-        queue (LinkedBlockingQueue.)
-        handler-fn (fn [p _] (.offer queue (clone-packet p)))
-        forwarder-fn (fn [_] (set-flag was-run))
-        forwarder (create-and-start-forwarder queue forwarder-fn)
-        pcap (create-and-activate-pcap lo)
-        sniffer (create-and-start-sniffer pcap handler-fn)]
-    (Thread/sleep receive-delay)
-    (exec-blocking "ping -c 1 localhost")
-    (await-flag was-run)
-    (is (flag-set? was-run))
-    (stop-sniffer sniffer)
-    (stop-forwarder forwarder)))

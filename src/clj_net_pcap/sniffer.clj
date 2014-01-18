@@ -119,7 +119,7 @@
                           ;;; If we get this exception when @running is already
                           ;;; false then we ignore it.
                           (if @running 
-                            (println e)))))
+                            (.printStackTrace e)))))
         forwarder-thread (doto 
                            (InfiniteLoop. run-fn) 
                            (.setName "ForwarderThread") 

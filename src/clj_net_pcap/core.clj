@@ -108,7 +108,7 @@
                                     (.clear tmp-list)
                                     (catch Exception e
                                       (if @running
-                                        (println e)))))
+                                        (.printStackTrace e)))))
           byte-buffer-processor-thread (doto 
                                          (InfiniteLoop. byte-buffer-processor)
                                          (.setName "ByteBufferProcessor")

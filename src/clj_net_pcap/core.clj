@@ -32,7 +32,7 @@
         clj-net-pcap.pcap-data
         clj-net-pcap.sniffer
         clj-assorted-utils.util)
-  (:import (clj_net_pcap InfiniteLoop)
+  (:import (clj_net_pcap Counter InfiniteLoop)
            (java.nio ByteBuffer)
            (java.util ArrayList)
            (java.util.concurrent ArrayBlockingQueue LinkedBlockingQueue LinkedTransferQueue)
@@ -70,7 +70,7 @@
     (let [buffer-queue-size 3000
           packet-queue-size 300000
           running (ref true)
-          byte-buffer-drop-counter (counter)
+          byte-buffer-drop-counter (Counter.)
           byte-buffer-queue (ArrayBlockingQueue. buffer-queue-size)
           handler-fn (fn [^PcapHeader ph ^ByteBuffer bb ^Object _]
                        (if (and 
@@ -78,8 +78,8 @@
                              (not (nil? bb)))
                          (.offer byte-buffer-queue 
                                  (ByteBufferRecord. (.wirelen ph) bb))
-                         (byte-buffer-drop-counter inc)))
-          packet-drop-counter (counter)
+                         (.inc byte-buffer-drop-counter)))
+          packet-drop-counter (Counter.)
           packet-queue (ArrayBlockingQueue. packet-queue-size)
           ^ArrayList tmp-list (ArrayList. 100)
           byte-buffer-processor (fn [] 
@@ -97,11 +97,11 @@
                                           (.peer pkt ph bb-buf)
                                           (.scan pkt (.value (PcapDLT/EN10MB)))
                                           (.offer packet-queue (PcapPacket. pkt)))
-                                        (packet-drop-counter inc)))
+                                        (.inc packet-drop-counter)))
                                     (.clear tmp-list)
-                                  (catch Exception e
-                                    (if @running
-                                      (println e)))))
+                                    (catch Exception e
+                                      (if @running
+                                        (println e)))))
           byte-buffer-processor-thread (doto 
                                          (InfiniteLoop. byte-buffer-processor)
                                          (.setName "ByteBufferProcessor")
@@ -120,9 +120,9 @@
           stat-print-fn #(print-err-ln
                            (str "pcap_stats," (stat-fn)
                                 ",byte_buffer_queue_size," (.size byte-buffer-queue)
-                                ",byte_buffer_drop," (byte-buffer-drop-counter)
+                                ",byte_buffer_drop," (.value byte-buffer-drop-counter)
                                 ",packet_queue_size," (.size packet-queue)
-                                ",packet_drop," (packet-drop-counter)))]
+                                ",packet_drop," (.value packet-drop-counter)))]
       (fn 
         ([k]
           (condp = k

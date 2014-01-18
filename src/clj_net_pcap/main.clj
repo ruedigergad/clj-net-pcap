@@ -63,6 +63,10 @@
                             "pcap-packet-to-bean, pcap-packet-to-map, "
                             "pcap-packet-to-nested-maps, pcap-packet-to-no-op")
                        :default "pcap-packet-to-bean"]
+                      ["-r" "--raw"
+                       (str "Emit raw data instead of decoded packets. "
+                            "Be careful, not all transformation and forwarder functions support this.")
+                       :flag true]
                       ["-h" "--help" "Print this help." :flag true])
         arg-map (cli-args 0)
         help-string (cli-args 2)]
@@ -78,7 +82,8 @@
                                f
                                (f t)))
                            (arg-map :interface)
-                           (arg-map :filter))
+                           (arg-map :filter)
+                           (arg-map :raw))
               stat-interval (arg-map :stats)
               executor (executor)
               shutdown-fn (fn [] (do

@@ -41,9 +41,6 @@
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
 
 
-(def ^:dynamic *emit-raw-data* true)
-
-
 
 (defrecord ByteBufferRecord
   [cl wl s us bb])
@@ -59,6 +56,8 @@
   ([forwarder-fn device]
     (create-and-start-cljnetpcap forwarder-fn device ""))
   ([forwarder-fn device filter-expr]
+    (create-and-start-cljnetpcap forwarder-fn device filter-expr false))
+  ([forwarder-fn device filter-expr emit-raw-data]
     (let [buffer-queue-size 3000
           packet-queue-size 300000
           running (ref true)
@@ -88,7 +87,7 @@
                                             (> (:cl bbrec) 0)
                                             (> (:wl bbrec) 0))
                                         (let [^ByteBuffer bb (:bb bbrec)
-                                              data (if *emit-raw-data*
+                                              data (if emit-raw-data
                                                      (doto (ByteBuffer/allocate (+ (.remaining bb) 20))
                                                        (.putInt (:cl bbrec))
                                                        (.putInt (:wl bbrec))

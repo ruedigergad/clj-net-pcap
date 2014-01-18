@@ -76,8 +76,8 @@
                        (if (and 
                              (< (.size byte-buffer-queue) (- buffer-queue-size 1))
                              (not (nil? bb)))
-                         (.offer byte-buffer-queue 
-                                 (ByteBufferRecord. (.wirelen ph) bb))
+                         (if-not (.offer byte-buffer-queue (ByteBufferRecord. (.wirelen ph) bb))
+                           (.inc byte-buffer-drop-counter))
                          (.inc byte-buffer-drop-counter)))
           packet-drop-counter (Counter.)
           packet-queue (ArrayBlockingQueue. packet-queue-size)
@@ -96,7 +96,8 @@
                                               ^PcapPacket pkt (PcapPacket. JMemory$Type/POINTER)]
                                           (.peer pkt ph bb-buf)
                                           (.scan pkt (.value (PcapDLT/EN10MB)))
-                                          (.offer packet-queue (PcapPacket. pkt)))
+                                          (if-not (.offer packet-queue (PcapPacket. pkt))
+                                            (.inc packet-drop-counter)))
                                         (.inc packet-drop-counter)))
                                     (.clear tmp-list)
                                     (catch Exception e

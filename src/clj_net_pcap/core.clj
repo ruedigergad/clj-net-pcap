@@ -71,16 +71,19 @@
           packet-queue-size 300000
           running (ref true)
           byte-buffer-drop-counter (Counter.)
+          byte-buffer-queued-counter (Counter.)
           byte-buffer-queue (ArrayBlockingQueue. buffer-queue-size)
           handler-fn (fn [^PcapHeader ph ^ByteBuffer bb ^Object _]
                        (if (and 
                              (< (.size byte-buffer-queue) (- buffer-queue-size 1))
                              (not (nil? bb)))
-                         (if-not (.offer byte-buffer-queue
+                         (if (.offer byte-buffer-queue
                                          (ByteBufferRecord. (.caplen ph) (.wirelen ph) (.hdr_sec ph) (.hdr_usec ph) bb))
+                           (.inc byte-buffer-queued-counter)
                            (.inc byte-buffer-drop-counter))
                          (.inc byte-buffer-drop-counter)))
           packet-drop-counter (Counter.)
+          packet-queued-counter (Counter.)
           packet-queue (ArrayBlockingQueue. packet-queue-size)
           ^ArrayList tmp-list (ArrayList. 100)
           byte-buffer-processor (fn [] 
@@ -98,7 +101,8 @@
                                               ^PcapPacket pkt (PcapPacket. JMemory$Type/POINTER)]
                                           (.peer pkt ph bb-buf)
                                           (.scan pkt (.value (PcapDLT/EN10MB)))
-                                          (if-not (.offer packet-queue (PcapPacket. pkt))
+                                          (if (.offer packet-queue (PcapPacket. pkt))
+                                            (.inc packet-queued-counter)
                                             (.inc packet-drop-counter)))
                                         (.inc packet-drop-counter)))
                                     (.clear tmp-list)
@@ -123,8 +127,10 @@
           stat-print-fn #(print-err-ln
                            (str "pcap_stats," (stat-fn)
                                 ",byte_buffer_queue_size," (.size byte-buffer-queue)
+                                ",byte_buffer_queued," (.value byte-buffer-queued-counter)
                                 ",byte_buffer_drop," (.value byte-buffer-drop-counter)
                                 ",packet_queue_size," (.size packet-queue)
+                                ",packet_queued," (.value packet-queued-counter)
                                 ",packet_drop," (.value packet-drop-counter)))]
       (fn 
         ([k]

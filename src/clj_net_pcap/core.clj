@@ -35,7 +35,7 @@
   (:import (clj_net_pcap Counter InfiniteLoop)
            (java.nio ByteBuffer)
            (java.util ArrayList)
-           (java.util.concurrent ArrayBlockingQueue LinkedBlockingQueue LinkedTransferQueue)
+           (java.util.concurrent ArrayBlockingQueue LinkedBlockingQueue)
            (org.jnetpcap Pcap PcapDLT PcapHeader)
            (org.jnetpcap.nio JBuffer JMemory JMemory$Type)
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))

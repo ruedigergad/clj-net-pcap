@@ -93,7 +93,8 @@
                                                        (.putInt (:wl bbrec))
                                                        (.putLong (:s bbrec))
                                                        (.putInt (:us bbrec))
-                                                       (.put ^ByteBuffer (:bb bbrec)))
+                                                       (.put ^ByteBuffer (:bb bbrec))
+                                                       (.flip))
                                                      (let [^PcapHeader ph (PcapHeader. (:cl bbrec) (:wl bbrec) (:s bbrec) (:us bbrec))
                                                            ^JBuffer pkt-buf (JBuffer. ^ByteBuffer (:bb bbrec))]
                                                        (PcapPacket.

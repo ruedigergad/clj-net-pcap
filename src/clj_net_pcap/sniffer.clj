@@ -109,32 +109,22 @@
   (let [running (ref true)
         ^ArrayList tmp-list (ArrayList. *forwarder-bulk-size*)
         run-fn (fn [] (try
-                        (while @running
-                          (.drainTo queue tmp-list *forwarder-bulk-size*)
-                          (doseq [obj tmp-list]
-                            (if obj
-                              (forwarder-fn obj)))
-                          (.clear tmp-list))
+                        (.drainTo queue tmp-list *forwarder-bulk-size*)
+                        (doseq [obj tmp-list]
+                          (if obj
+                            (forwarder-fn obj)))
+                        (.clear tmp-list)
                         (catch Exception e
-                        ;;; Only print the exception if we still should be running. 
-                        ;;; If we get this exception when @running is already
-                        ;;; false then we ignore it.
+                          ;;; Only print the exception if we still should be running. 
+                          ;;; If we get this exception when @running is already
+                          ;;; false then we ignore it.
                           (if @running 
-                            (throw e)))))
-        forwarder-thread (doto (Thread. run-fn) (.setName "ForwarderThread") (.setDaemon true) (.start))]
-;        run-fn (fn [] (try
-;                        (.drainTo queue tmp-list *forwarder-bulk-size*)
-;                        (doseq [^PcapPacket packet tmp-list]
-;                          (if packet
-;                            (forwarder-fn packet)))
-;                        (.clear tmp-list)
-;                        (catch Exception e
-                        ;;; Only print the exception if we still should be running. 
-                        ;;; If we get this exception when @running is already
-                        ;;; false then we ignore it.
-;                          (if @running
-;                            (println "Caugh exception in forwarder run-fn:" e)))))
-;        forwarder-thread (doto (InfiniteLoop. run-fn) (.setDaemon true) (.start))
+                            (println e)))))
+        forwarder-thread (doto 
+                           (InfiniteLoop. run-fn) 
+                           (.setName "ForwarderThread") 
+                           (.setDaemon true) 
+                           (.start))]
     (fn [k]
       (cond
         (= k :stop) (do

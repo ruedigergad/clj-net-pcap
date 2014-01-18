@@ -8,6 +8,7 @@ package clj_net_pcap;
 public class InfiniteLoop extends Thread {
     
     private Runnable runnable;
+    private boolean running;
 
     public InfiniteLoop (Runnable runnable) {
         this.runnable = runnable;
@@ -15,9 +16,21 @@ public class InfiniteLoop extends Thread {
 
     @Override
     public void run () {
-        while (true) {
+        while (running) {
             runnable.run();
         }
+    }
+
+    @Override
+    public void start () {
+        running = true;
+        super.start();
+    }
+
+    @Override
+    public void interrupt () {
+        running = false;
+        super.interrupt();
     }
 
 }

@@ -32,7 +32,8 @@
         clj-net-pcap.pcap-data
         clj-net-pcap.sniffer
         clj-assorted-utils.util)
-  (:import (java.nio ByteBuffer)
+  (:import (clj_net_pcap InfiniteLoop)
+           (java.nio ByteBuffer)
            (java.util ArrayList)
            (java.util.concurrent ArrayBlockingQueue LinkedBlockingQueue LinkedTransferQueue)
            (org.jnetpcap Pcap PcapDLT PcapHeader)
@@ -83,27 +84,26 @@
           ^ArrayList tmp-list (ArrayList. 100)
           byte-buffer-processor (fn [] 
                                   (try
-                                    (while @running
-                                      (.drainTo byte-buffer-queue tmp-list 100)
-                                      (doseq [^ByteBufferRecord bbrec tmp-list]
-                                        (if (and
-                                              (< (.size packet-queue) (- packet-queue-size 1))
-                                              (not (nil? bbrec))
-                                              (> (:wl bbrec) 0))
-                                          (let [^ByteBuffer bb (:bb bbrec)
-                                                ^PcapHeader ph (PcapHeader. *snap-len* (:wl bbrec))
-                                                bb-buf (JBuffer. bb)
-                                                ^PcapPacket pkt (PcapPacket. JMemory$Type/POINTER)]
-                                            (.peer pkt ph bb-buf)
-                                            (.scan pkt (.value (PcapDLT/EN10MB)))
-                                            (.offer packet-queue (PcapPacket. pkt)))
-                                          (packet-drop-counter inc)))
-                                      (.clear tmp-list))
-                                    (catch Exception e
-                                      (if @running
-                                        (throw e)))))
+                                    (.drainTo byte-buffer-queue tmp-list 100)
+                                    (doseq [^ByteBufferRecord bbrec tmp-list]
+                                      (if (and
+                                            (< (.size packet-queue) (- packet-queue-size 1))
+                                            (not (nil? bbrec))
+                                            (> (:wl bbrec) 0))
+                                        (let [^ByteBuffer bb (:bb bbrec)
+                                              ^PcapHeader ph (PcapHeader. *snap-len* (:wl bbrec))
+                                              bb-buf (JBuffer. bb)
+                                              ^PcapPacket pkt (PcapPacket. JMemory$Type/POINTER)]
+                                          (.peer pkt ph bb-buf)
+                                          (.scan pkt (.value (PcapDLT/EN10MB)))
+                                          (.offer packet-queue (PcapPacket. pkt)))
+                                        (packet-drop-counter inc)))
+                                    (.clear tmp-list)
+                                  (catch Exception e
+                                    (if @running
+                                      (println e)))))
           byte-buffer-processor-thread (doto 
-                                         (Thread. byte-buffer-processor)
+                                         (InfiniteLoop. byte-buffer-processor)
                                          (.setName "ByteBufferProcessor")
                                          (.setDaemon true)
                                          (.start))

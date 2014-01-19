@@ -58,7 +58,7 @@
   ([forwarder-fn device filter-expr]
     (create-and-start-cljnetpcap forwarder-fn device filter-expr false))
   ([forwarder-fn device filter-expr emit-raw-data]
-    (let [buffer-queue-size 3000
+    (let [buffer-queue-size 300000
           packet-queue-size 300000
           running (ref true)
           byte-buffer-drop-counter (Counter.)
@@ -76,10 +76,10 @@
           packet-drop-counter (Counter.)
           packet-queued-counter (Counter.)
           packet-queue (ArrayBlockingQueue. packet-queue-size)
-          ^ArrayList tmp-list (ArrayList. 100)
+          ^ArrayList tmp-list (ArrayList. 10000)
           byte-buffer-processor (fn [] 
                                   (try
-                                    (.drainTo byte-buffer-queue tmp-list 100)
+                                    (.drainTo byte-buffer-queue tmp-list 10000)
                                     (doseq [^BufferRecord bufrec tmp-list]
                                       (if (and
                                             (< (.size packet-queue) (- packet-queue-size 1))

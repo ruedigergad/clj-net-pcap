@@ -31,7 +31,7 @@
            (org.jnetpcap ByteBufferHandler Pcap PcapHeader)
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
 
-(def ^:dynamic *forwarder-bulk-size* 100)
+(def ^:dynamic *forwarder-bulk-size* 10000)
 
 (defrecord Packet 
   ^{:doc "Holds a PcapPacket and the optional user data. 

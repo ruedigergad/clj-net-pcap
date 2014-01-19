@@ -28,7 +28,7 @@
            (java.nio ByteBuffer)
            (java.util ArrayList)
            (java.util.concurrent BlockingQueue)
-           (org.jnetpcap ByteBufferHandler JBufferHandler Pcap PcapHeader)
+           (org.jnetpcap ByteBufferHandler Pcap PcapHeader)
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
 
 (def ^:dynamic *forwarder-bulk-size* 100)
@@ -68,10 +68,7 @@
   ([pcap handler-fn]
     (create-and-start-sniffer pcap handler-fn nil))
   ([^Pcap pcap handler-fn user-data]
-    (let [
-;          packet-handler (proxy [JBufferHandler] []
-;                           (nextPacket [ph buf u] (handler-fn ph buf u)))
-          packet-handler (proxy [ByteBufferHandler] []
+    (let [packet-handler (proxy [ByteBufferHandler] []
                            (nextPacket [ph buf u] (handler-fn ph buf u)))
 ;          packet-handler (proxy [PcapPacketHandler] []
 ;                           (nextPacket [^PcapPacket p ^Object u] (handler-fn p u)))

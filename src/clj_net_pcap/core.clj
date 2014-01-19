@@ -42,8 +42,8 @@
 
 
 
-(defrecord ByteBufferRecord
-  [cl wl s us bb])
+(defrecord BufferRecord
+  [cl wl s us buf])
 
 (defn create-and-start-cljnetpcap
   "Convenience function for creating and starting packet capturing.
@@ -64,12 +64,12 @@
           byte-buffer-drop-counter (Counter.)
           byte-buffer-queued-counter (Counter.)
           byte-buffer-queue (ArrayBlockingQueue. buffer-queue-size)
-          handler-fn (fn [^PcapHeader ph ^ByteBuffer bb ^Object _]
+          handler-fn (fn [^PcapHeader ph ^ByteBuffer buf ^Object _]
                        (if (and 
                              (< (.size byte-buffer-queue) (- buffer-queue-size 1))
-                             (not (nil? bb)))
+                             (not (nil? buf)))
                          (if (.offer byte-buffer-queue
-                                         (ByteBufferRecord. (.caplen ph) (.wirelen ph) (.hdr_sec ph) (.hdr_usec ph) bb))
+                                         (BufferRecord. (.caplen ph) (.wirelen ph) (.hdr_sec ph) (.hdr_usec ph) buf))
                            (.inc byte-buffer-queued-counter)
                            (.inc byte-buffer-drop-counter))
                          (.inc byte-buffer-drop-counter)))
@@ -80,23 +80,25 @@
           byte-buffer-processor (fn [] 
                                   (try
                                     (.drainTo byte-buffer-queue tmp-list 100)
-                                    (doseq [^ByteBufferRecord bbrec tmp-list]
+                                    (doseq [^BufferRecord bufrec tmp-list]
                                       (if (and
                                             (< (.size packet-queue) (- packet-queue-size 1))
-                                            (not (nil? bbrec))
-                                            (> (:cl bbrec) 0)
-                                            (> (:wl bbrec) 0))
-                                        (let [^ByteBuffer bb (:bb bbrec)
+                                            (not (nil? bufrec))
+                                            (> (:cl bufrec) 0)
+                                            (> (:wl bufrec) 0))
+                                        (let [^ByteBuffer buf (:buf bufrec)
                                               data (if emit-raw-data
-                                                     (doto (ByteBuffer/allocate (+ (.remaining bb) 20))
-                                                       (.putInt (:cl bbrec))
-                                                       (.putInt (:wl bbrec))
-                                                       (.putLong (:s bbrec))
-                                                       (.putInt (:us bbrec))
-                                                       (.put ^ByteBuffer (:bb bbrec))
+                                                     (doto (ByteBuffer/allocate (+ (.remaining buf) 20))
+                                                       (.putInt (:cl bufrec))
+                                                       (.putInt (:wl bufrec))
+                                                       (.putLong (:s bufrec))
+                                                       (.putInt (:us bufrec))
+                                                       (.put ^ByteBuffer (:buf bufrec))
                                                        (.flip))
-                                                     (let [^PcapHeader ph (PcapHeader. (:cl bbrec) (:wl bbrec) (:s bbrec) (:us bbrec))
-                                                           ^JBuffer pkt-buf (JBuffer. ^ByteBuffer (:bb bbrec))]
+                                                     (let [^PcapHeader ph (PcapHeader. (:cl bufrec) (:wl bufrec) (:s bufrec) (:us bufrec))
+                                                           ^ByteBuffer bb (:buf bufrec)
+                                                           ^JBuffer pkt-buf (JBuffer. (.remaining bb))
+                                                           _ (.peer pkt-buf bb)]
                                                        (PcapPacket.
                                                          ^PcapPacket (doto (PcapPacket. JMemory$Type/POINTER)
                                                                        (.peer ph pkt-buf)

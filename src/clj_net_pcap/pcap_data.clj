@@ -28,7 +28,7 @@
   (:import (java.net InetAddress)
            (java.util HashMap Map)
            (java.util.concurrent ScheduledThreadPoolExecutor)
-           (clj_net_pcap PacketHeaderDataBean)
+           (clj_net_pcap Counter PacketHeaderDataBean)
            (org.jnetpcap PcapHeader)
            (org.jnetpcap.packet PcapPacket)
            (org.jnetpcap.packet.format FormatUtils)
@@ -559,31 +559,30 @@ user=>
   "Forwarder that converts the packets and counts how many times it was called.
    This is used for testing purposes."
   [f]
-  (let [cntr (counter)]
+  (let [cntr (Counter.)]
     (fn
       [^PcapPacket packet]
       (do
         (f packet)
-        (cntr inc)
-        (if (= 0 (mod (cntr) 1000))
-          (println (cntr)))))))
+        (.inc cntr)
+        (if (= 0 (mod (.value cntr) 1000))
+          (println (.value cntr)))))))
 
 (defn calls-per-second-converter-forwarder-fn
   "Forwarder that converts the packets and periodically prints how many times it was called per second.
    This is used for testing purposes."
   [f]
-  (let [cntr (counter)
+  (let [cntr (Counter.)
         time-tmp (ref (System/currentTimeMillis))]
     (fn
       [^PcapPacket packet]
       (do
         (f packet)
-        (cntr inc)
-        (if (> (cntr) 10000)
+        (.inc cntr)
+        (if (> (.value cntr) 100000)
           (let [time-delta (- (System/currentTimeMillis) @time-tmp)]
-            (when (> time-delta 1000)
-              (println "pps" (float (/ (cntr) (/ time-delta 1000))))
-              (cntr (fn [_] 0))
-              (dosync
-                (alter time-tmp (fn [_] (System/currentTimeMillis)))))))))))
+            (println "pps" (float (/ (.value cntr) (/ time-delta 1000))))
+            (.reset cntr)
+            (dosync
+              (alter time-tmp (fn [_] (System/currentTimeMillis))))))))))
 

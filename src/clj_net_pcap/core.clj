@@ -128,13 +128,13 @@
           sniffer (create-and-start-sniffer pcap handler-fn)
           stat-fn (create-stat-fn pcap)
           stat-print-fn #(print-err-ln
-                           (str "pcap_stats," (stat-fn)
-                                ",byte_buffer_queue_size," (.size byte-buffer-queue)
-                                ",byte_buffer_queued," (.value byte-buffer-queued-counter)
-                                ",byte_buffer_drop," (.value byte-buffer-drop-counter)
-                                ",packet_queue_size," (.size packet-queue)
-                                ",packet_queued," (.value packet-queued-counter)
-                                ",packet_drop," (.value packet-drop-counter)))]
+                           (str (stat-fn)
+                                ",buf_qsize," (.size byte-buffer-queue)
+                                ",buf_queued," (.value byte-buffer-queued-counter)
+                                ",buf_droped," (.value byte-buffer-drop-counter)
+                                ",pkt_qsize," (.size packet-queue)
+                                ",pkt_queued," (.value packet-queued-counter)
+                                ",pkt_droped," (.value packet-drop-counter)))]
       (fn 
         ([k]
           (condp = k

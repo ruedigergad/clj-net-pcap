@@ -573,16 +573,20 @@ user=>
    This is used for testing purposes."
   [f]
   (let [cntr (Counter.)
-        time-tmp (ref (System/currentTimeMillis))]
+        time-tmp (ref (System/currentTimeMillis))
+        pps-printer #(let [val (.value cntr)]
+                       (if (>= val 0)
+                         (let [cur-time (System/currentTimeMillis)
+                               time-delta (- cur-time @time-tmp)]
+                           (when (> time-delta 0)
+                             (println "pps" (float (/ val (/ time-delta 1000))))
+                             (.reset cntr)
+                             (dosync
+                               (ref-set time-tmp cur-time))))))
+        _ (run-repeat (executor) pps-printer 1000)]
     (fn
-      [^PcapPacket packet]
+      [obj]
       (do
-        (f packet)
-        (.inc cntr)
-        (if (> (.value cntr) 100000)
-          (let [time-delta (- (System/currentTimeMillis) @time-tmp)]
-            (println "pps" (float (/ (.value cntr) (/ time-delta 1000))))
-            (.reset cntr)
-            (dosync
-              (alter time-tmp (fn [_] (System/currentTimeMillis))))))))))
+        (f obj)
+        (.inc cntr)))))
 

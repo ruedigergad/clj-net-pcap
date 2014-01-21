@@ -67,7 +67,7 @@
           byte-buffer-queue (ArrayBlockingQueue. *buffer-queue-size*)
           handler-fn (fn [^PcapHeader ph ^ByteBuffer buf ^Object _]
                        (if (and 
-                             (< (.size byte-buffer-queue) (- buffer-queue-size 1))
+                             (< (.size byte-buffer-queue) (- *buffer-queue-size* 1))
                              (not (nil? buf)))
                          (if (.offer byte-buffer-queue
                                          (BufferRecord. (.caplen ph) (.wirelen ph) (.hdr_sec ph) (.hdr_usec ph) buf))
@@ -83,7 +83,7 @@
                                     (.drainTo byte-buffer-queue buffer-bulk-list *buffer-bulk-size*)
                                     (doseq [^BufferRecord bufrec buffer-bulk-list]
                                       (if (and
-                                            (< (.size packet-queue) (- packet-queue-size 1))
+                                            (< (.size packet-queue) (- *packet-queue-size* 1))
                                             (not (nil? bufrec))
                                             (> (:cl bufrec) 0)
                                             (> (:wl bufrec) 0))

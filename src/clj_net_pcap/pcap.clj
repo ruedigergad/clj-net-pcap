@@ -68,6 +68,9 @@
    Please note: *flags* is currently only passed to Pcap.setPromisc()."
   [dev-name]
   (let [err (StringBuilder.)
+        _ (println-err "Creating pcap with: buffer size =" *buffer-size*
+                       "; snaplen =" *snap-len*
+                       "; and promiscuous mode (flags) = " *flags*)
         pcap (doto (Pcap/create dev-name err)
                (.setBufferSize *buffer-size*)
                (.setPromisc *flags*)

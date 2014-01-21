@@ -49,6 +49,11 @@
                             "Defaults to 0.")
                        :default 0
                        :parse-fn #(Integer. %)]
+                      ["-S" "--snap-len"
+                       (str "The snaplen to use."
+                            "This determines how many bytes of data will be captured from each packet.")
+                       :default 128
+                       :parse-fn #(Integer. %)]
                       ["-F" "--forwarder-fn"
                        (str "Use the specified function as forwarder function for "
                             "processing packets.\n"
@@ -75,15 +80,16 @@
       (do
         (println "Starting clj-net-pcap using the following options:")
         (pprint arg-map)
-        (let [cljnetpcap (create-and-start-cljnetpcap
-                           (let [f (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
-                                 t (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))]
-                             (if (= 'packet (first (first (:arglists (meta f)))))
-                               f
-                               (f t)))
-                           (arg-map :interface)
-                           (arg-map :filter)
-                           (arg-map :raw))
+        (let [cljnetpcap (binding [clj-net-pcap.pcap/*snap-len* (:snap-len arg-map)]
+                           (create-and-start-cljnetpcap
+                             (let [f (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
+                                   t (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))]
+                               (if (= 'packet (first (first (:arglists (meta f)))))
+                                 f
+                                 (f t)))
+                             (arg-map :interface)
+                             (arg-map :filter)
+                             (arg-map :raw)))
               stat-interval (arg-map :stats)
               executor (executor)
               shutdown-fn (fn [] (do

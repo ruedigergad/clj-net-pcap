@@ -41,6 +41,9 @@
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
 
 
+(def ^:dynamic *buffer-queue-size* 300000)
+(def ^:dynamic *buffer-bulk-size* 10000)
+(def ^:dynamic *packet-queue-size* 300000)
 
 (defrecord BufferRecord
   [cl wl s us buf])
@@ -58,12 +61,10 @@
   ([forwarder-fn device filter-expr]
     (create-and-start-cljnetpcap forwarder-fn device filter-expr false))
   ([forwarder-fn device filter-expr emit-raw-data]
-    (let [buffer-queue-size 300000
-          packet-queue-size 300000
-          running (ref true)
+    (let [ running (ref true)
           byte-buffer-drop-counter (Counter.)
           byte-buffer-queued-counter (Counter.)
-          byte-buffer-queue (ArrayBlockingQueue. buffer-queue-size)
+          byte-buffer-queue (ArrayBlockingQueue. *buffer-queue-size*)
           handler-fn (fn [^PcapHeader ph ^ByteBuffer buf ^Object _]
                        (if (and 
                              (< (.size byte-buffer-queue) (- buffer-queue-size 1))
@@ -75,12 +76,12 @@
                          (.inc byte-buffer-drop-counter)))
           packet-drop-counter (Counter.)
           packet-queued-counter (Counter.)
-          packet-queue (ArrayBlockingQueue. packet-queue-size)
-          ^ArrayList tmp-list (ArrayList. 10000)
+          packet-queue (ArrayBlockingQueue. *packet-queue-size*)
+          ^ArrayList buffer-bulk-list (ArrayList. *buffer-bulk-size*)
           byte-buffer-processor (fn [] 
                                   (try
-                                    (.drainTo byte-buffer-queue tmp-list 10000)
-                                    (doseq [^BufferRecord bufrec tmp-list]
+                                    (.drainTo byte-buffer-queue buffer-bulk-list *buffer-bulk-size*)
+                                    (doseq [^BufferRecord bufrec buffer-bulk-list]
                                       (if (and
                                             (< (.size packet-queue) (- packet-queue-size 1))
                                             (not (nil? bufrec))
@@ -107,7 +108,7 @@
                                             (.inc packet-queued-counter)
                                             (.inc packet-drop-counter)))
                                         (.inc packet-drop-counter)))
-                                    (.clear tmp-list)
+                                    (.clear buffer-bulk-list)
                                     (catch Exception e
                                       (if @running
                                         (.printStackTrace e)))))

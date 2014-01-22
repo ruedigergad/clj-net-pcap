@@ -32,7 +32,7 @@
         clj-net-pcap.pcap-data
         clj-net-pcap.sniffer
         clj-assorted-utils.util)
-  (:import (clj_net_pcap Counter InfiniteLoop)
+  (:import (clj_net_pcap Counter InfiniteLoop PcapPacketWrapper)
            (java.nio ByteBuffer)
            (java.util ArrayList)
            (java.util.concurrent ArrayBlockingQueue LinkedBlockingQueue)
@@ -100,7 +100,7 @@
                                                            ^ByteBuffer bb (:buf bufrec)
                                                            ^JBuffer pkt-buf (JBuffer. (.remaining bb))
                                                            _ (.peer pkt-buf bb)]
-                                                       (PcapPacket.
+                                                       (PcapPacketWrapper.
                                                          ^PcapPacket (doto (PcapPacket. JMemory$Type/POINTER)
                                                                        (.peer ph pkt-buf)
                                                                        (.scan (.value (PcapDLT/EN10MB)))))))]

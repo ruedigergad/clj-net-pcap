@@ -24,7 +24,7 @@
           for more details about the data flow and interaction."}
   clj-net-pcap.sniffer
   (:use clj-net-pcap.pcap)
-  (:import (clj_net_pcap InfiniteLoop)
+  (:import (clj_net_pcap InfiniteLoop PcapPacketWrapper)
            (java.nio ByteBuffer)
            (java.util ArrayList)
            (java.util.concurrent BlockingQueue)
@@ -111,8 +111,10 @@
         run-fn (fn [] (try
                         (.drainTo queue tmp-list *forwarder-bulk-size*)
                         (doseq [obj tmp-list]
-                          (if obj
-                            (forwarder-fn obj)))
+                          (when obj
+                            (forwarder-fn obj)
+                            (if (= PcapPacketWrapper (type obj))
+                              (.free ^PcapPacketWrapper obj))))
                         (.clear tmp-list)
                         (catch Exception e
                           ;;; Only print the exception if we still should be running. 

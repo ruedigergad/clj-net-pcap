@@ -32,7 +32,7 @@
         clj-net-pcap.pcap-data
         clj-net-pcap.sniffer
         clj-assorted-utils.util)
-  (:import (clj_net_pcap Counter InfiniteLoop PcapPacketWrapper)
+  (:import (clj_net_pcap Counter InfiniteLoop JBufferWrapper PcapPacketWrapper)
            (java.nio ByteBuffer)
            (java.util ArrayList)
            (java.util.concurrent ArrayBlockingQueue LinkedBlockingQueue)
@@ -98,12 +98,14 @@
                                                        (.flip))
                                                      (let [^PcapHeader ph (PcapHeader. (:cl bufrec) (:wl bufrec) (:s bufrec) (:us bufrec))
                                                            ^ByteBuffer bb (:buf bufrec)
-                                                           ^JBuffer pkt-buf (JBuffer. (.remaining bb))
-                                                           _ (.peer pkt-buf bb)]
-                                                       (PcapPacketWrapper.
-                                                         ^PcapPacket (doto (PcapPacket. JMemory$Type/POINTER)
-                                                                       (.peer ph pkt-buf)
-                                                                       (.scan (.value (PcapDLT/EN10MB)))))))]
+                                                           ^JBufferWrapper pkt-buf (JBufferWrapper. bb)
+                                                           ^PcapPacketWrapper tmp-pkt (doto (PcapPacketWrapper. JMemory$Type/POINTER)
+                                                                                        (.peer ph pkt-buf)
+                                                                                        (.scan (.value (PcapDLT/EN10MB))))
+                                                           pkt (PcapPacketWrapper. tmp-pkt)]
+                                                       (.free pkt-buf)
+                                                       (.free tmp-pkt)
+                                                       pkt))]
                                           (if (.offer packet-queue data)
                                             (.inc packet-queued-counter)
                                             (.inc packet-drop-counter)))

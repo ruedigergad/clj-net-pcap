@@ -54,6 +54,10 @@
                             "This determines how many bytes of data will be captured from each packet.")
                        :default 128
                        :parse-fn #(Integer. %)]
+                      ["-B" "--buffer-size"
+                       "The buffer size to use."
+                       :default (int (Math/pow 2 26))
+                       :parse-fn #(Integer. %)]
                       ["-F" "--forwarder-fn"
                        (str "Use the specified function as forwarder function for "
                             "processing packets.\n"
@@ -80,7 +84,8 @@
       (do
         (println "Starting clj-net-pcap using the following options:")
         (pprint arg-map)
-        (let [cljnetpcap (binding [clj-net-pcap.pcap/*snap-len* (:snap-len arg-map)]
+        (let [cljnetpcap (binding [clj-net-pcap.pcap/*snap-len* (:snap-len arg-map)
+                                   clj-net-pcap.pcap/*buffer-size* (:buffer-size arg-map)]
                            (create-and-start-cljnetpcap
                              (let [f (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
                                    t (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))]

@@ -91,7 +91,7 @@
                                    t (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))]
                                (if (= 'packet (first (first (:arglists (meta f)))))
                                  f
-                                 (f t)))
+                                 #(f (t %))))
                              (arg-map :interface)
                              (arg-map :filter)
                              (arg-map :raw)))

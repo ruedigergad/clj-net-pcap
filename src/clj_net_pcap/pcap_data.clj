@@ -531,8 +531,8 @@ user=>
 (defn stdout-forwarder-fn
   "Pre-defined forwarder function which outputs information about org.jnetpcap.packet.PcapPacket to *out*.
    The information is in form of a map. The is pretty printed with pprint."
-  [^PcapPacket packet]
-  (pprint (pcap-packet-to-map packet))
+  [obj]
+  (pprint obj)
   (println "---"))
 
 (defn stdout-byte-array-forwarder-fn
@@ -568,10 +568,9 @@ user=>
         (if (= 0 (mod (.value cntr) 1000))
           (println (.value cntr)))))))
 
-(defn calls-per-second-converter-forwarder-fn
+(def calls-per-second-converter-forwarder-fn
   "Forwarder that converts the packets and periodically prints how many times it was called per second.
    This is used for testing purposes."
-  [f]
   (let [cntr (Counter.)
         time-tmp (ref (System/currentTimeMillis))
         pps-printer #(let [val (.value cntr)]
@@ -585,8 +584,6 @@ user=>
                                (ref-set time-tmp cur-time))))))
         _ (run-repeat (executor) pps-printer 1000)]
     (fn
-      [obj]
-      (do
-        (f obj)
-        (.inc cntr)))))
+      [_]
+      (.inc cntr))))
 

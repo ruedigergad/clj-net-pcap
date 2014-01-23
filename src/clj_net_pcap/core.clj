@@ -157,7 +157,7 @@
                               counters (reduce into {} (map (fn [n] {n (counter)}) counter-names))]
                           (fn [k new-val]
                             (let [cntr (counters k)]
-                              (if (fn? cntr)
+                              (if (and (fn? cntr) (>= new-val 0))
                                 (let [delta (- new-val (cntr))]
                                   (cntr (fn [_] new-val))
                                   delta)

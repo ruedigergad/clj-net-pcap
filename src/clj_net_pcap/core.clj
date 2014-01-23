@@ -41,9 +41,9 @@
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
 
 
-(def ^:dynamic *buffer-queue-size* 300000)
+(def ^:dynamic *buffer-queue-size* 50000)
 (def ^:dynamic *buffer-bulk-size* 10000)
-(def ^:dynamic *packet-queue-size* 300000)
+(def ^:dynamic *packet-queue-size* 50000)
 
 (defrecord BufferRecord
   [cl wl s us buf])
@@ -80,8 +80,8 @@
           ^ArrayList buffer-bulk-list (ArrayList. *buffer-bulk-size*)
           byte-buffer-processor (fn [] 
                                   (try
-                                    (.drainTo byte-buffer-queue buffer-bulk-list *buffer-bulk-size*)
-                                    (doseq [^BufferRecord bufrec buffer-bulk-list]
+;                                    (.drainTo byte-buffer-queue buffer-bulk-list *buffer-bulk-size*)
+                                    (let [^BufferRecord bufrec (.take byte-buffer-queue)]
                                       (if (and
                                             (< (.size packet-queue) (- *packet-queue-size* 1))
                                             (not (nil? bufrec))
@@ -98,13 +98,13 @@
                                                        (.flip))
                                                      (let [^PcapHeader ph (PcapHeader. (:cl bufrec) (:wl bufrec) (:s bufrec) (:us bufrec))
                                                            ^ByteBuffer bb (:buf bufrec)
-                                                           ^JBufferWrapper pkt-buf (JBufferWrapper. bb)
-                                                           ^PcapPacketWrapper tmp-pkt (doto (PcapPacketWrapper. JMemory$Type/POINTER)
+                                                           ^JBuffer pkt-buf (JBuffer. bb)
+                                                           ^PcapPacket tmp-pkt (doto (PcapPacket. JMemory$Type/POINTER)
                                                                                         (.peer ph pkt-buf)
                                                                                         (.scan (.value (PcapDLT/EN10MB))))
                                                            pkt (PcapPacketWrapper. tmp-pkt)]
-                                                       (.free pkt-buf)
-                                                       (.free tmp-pkt)
+;                                                       (.free pkt-buf)
+;                                                       (.free tmp-pkt)
                                                        pkt))]
                                           (if (.offer packet-queue data)
                                             (.inc packet-queued-counter)

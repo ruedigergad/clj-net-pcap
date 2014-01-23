@@ -109,12 +109,12 @@
   (let [running (ref true)
         ^ArrayList tmp-list (ArrayList. *forwarder-bulk-size*)
         run-fn (fn [] (try
-                        (.drainTo queue tmp-list *forwarder-bulk-size*)
-                        (doseq [obj tmp-list]
+;                        (.drainTo queue tmp-list *forwarder-bulk-size*)
+                        (let [obj (.take queue)]
                           (when obj
-                            (forwarder-fn obj)
-                            (if (= PcapPacketWrapper (type obj))
-                              (.free ^PcapPacketWrapper obj))))
+                            (forwarder-fn obj)))
+;                            (if (= PcapPacketWrapper (type obj))
+;                              (.free ^PcapPacketWrapper obj))))
                         (.clear tmp-list)
                         (catch Exception e
                           ;;; Only print the exception if we still should be running. 

@@ -84,8 +84,7 @@
                             (if (< (.size buffer-queue) (- *queue-size* 1))
                               (let [
                                     bb-copy (doto (ByteBuffer/allocateDirect (.remaining buf))
-                                              (.put buf)
-                                              (.flip))
+                                              (.put buf))
                                     bufrec (BufferRecord.
                                              (.caplen ph)
                                              (.wirelen ph)

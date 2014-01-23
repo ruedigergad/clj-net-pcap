@@ -41,7 +41,6 @@
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
 
 
-(def ^:dynamic *copy-queue-size* 200000)
 (def ^:dynamic *queue-size* 100000)
 
 (defrecord BufferRecord
@@ -130,10 +129,10 @@
           packet-cloner-queue (ArrayBlockingQueue. *queue-size*)
           packet-scanner (fn []
                           (try
-                            (let [^PcapPacket tmp-pkt (.take packet-scanner-queue)]
+                            (let [^PcapPacket pkt (.take packet-scanner-queue)]
                               (if (< (.size packet-cloner-queue) (- *queue-size* 1))
-                                (let [_ (.scan tmp-pkt (.value (PcapDLT/EN10MB)))]
-                                  (if (.offer out-queue tmp-pkt)
+                                (let [_ (.scan pkt (.value (PcapDLT/EN10MB)))]
+                                  (if (.offer out-queue pkt)
                                             (.inc out-queued-counter)
                                             (.inc out-drop-counter)))
                                 (.inc out-drop-counter)))

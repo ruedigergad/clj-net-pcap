@@ -76,9 +76,9 @@
           out-drop-counter (Counter.)
           out-queued-counter (Counter.)
           out-queue (ArrayBlockingQueue. *packet-queue-size*)
-          byte-buffer-drop-counter (Counter.)
-          byte-buffer-queued-counter (Counter.)
-          byte-buffer-queue (ArrayBlockingQueue. *packet-queue-size*)
+          buffer-drop-counter (Counter.)
+          buffer-queued-counter (Counter.)
+          buffer-queue (ArrayBlockingQueue. *packet-queue-size*)
           copy-fn (fn []
                     (try
                       (let [^BufferRecord bufrec (.take copy-queue)
@@ -88,7 +88,7 @@
                               (> (:cl bufrec) 0)
                               (> (:wl bufrec) 0))
                           (if (not emit-raw-data)
-                            (if (< (.size byte-buffer-queue) (- *packet-queue-size* 1))
+                            (if (< (.size buffer-queue) (- *packet-queue-size* 1))
                               (let [
                                     bb-copy (doto (ByteBuffer/allocate (+ (.remaining buf) 20))
                                               (.put buf)
@@ -99,10 +99,10 @@
                                                (:s bufrec)
                                                (:us bufrec)
                                                bb-copy)]
-                                (if (.offer byte-buffer-queue buf-copy)
-                                  (.inc byte-buffer-queued-counter)
-                                  (.inc byte-buffer-drop-counter)))
-                              (.inc byte-buffer-drop-counter))
+                                (if (.offer buffer-queue buf-copy)
+                                  (.inc buffer-queued-counter)
+                                  (.inc buffer-drop-counter)))
+                              (.inc buffer-drop-counter))
                             (if (< (.size out-queue) (- *packet-queue-size* 1))
                               (let [data (doto (ByteBuffer/allocate (+ (.remaining buf) 20))
                                            (.putInt (:cl bufrec))
@@ -126,10 +126,10 @@
           packet-scanner-drop-counter (Counter.)
           packet-scanner-queued-counter (Counter.)
           packet-scanner-queue (ArrayBlockingQueue. *packet-queue-size*)
-          byte-buffer-processor (fn [] 
+          buffer-processor (fn [] 
                                   (try
                                     (if (< (.size packet-scanner-queue) (- *packet-queue-size* 1))
-                                      (let [bufrec (.take byte-buffer-queue)]
+                                      (let [bufrec (.take buffer-queue)]
                                         (if (and
                                               (not (nil? bufrec))
                                               (> (:cl bufrec) 0)
@@ -146,8 +146,8 @@
                                     (catch Exception e
                                       (if @running
                                         (.printStackTrace e)))))
-          byte-buffer-processor-thread (doto 
-                                         (InfiniteLoop. byte-buffer-processor)
+          buffer-processor-thread (doto 
+                                         (InfiniteLoop. buffer-processor)
                                          (.setName "ByteBufferProcessor")
                                          (.setDaemon true)
                                          (.start))
@@ -203,9 +203,9 @@
                                 ",cpy_qsize," (.size copy-queue)
                                 ",cpy_queued," (.value copy-queued-counter)
                                 ",cpy_droped," (.value copy-drop-counter)
-                                ",buf_qsize," (.size byte-buffer-queue)
-                                ",buf_queued," (.value byte-buffer-queued-counter)
-                                ",buf_droped," (.value byte-buffer-drop-counter)
+                                ",buf_qsize," (.size buffer-queue)
+                                ",buf_queued," (.value buffer-queued-counter)
+                                ",buf_droped," (.value buffer-drop-counter)
                                 ",scanner_qsize," (.size packet-scanner-queue)
                                 ",scanner_queued," (.value packet-scanner-queued-counter)
                                 ",scanner_droped," (.value packet-scanner-drop-counter)
@@ -222,7 +222,7 @@
             :stop (do
                     (dosync (ref-set running false))
                     (.stop copy-thread)
-                    (.stop byte-buffer-processor-thread)
+                    (.stop buffer-processor-thread)
                     (.stop packet-scanner-thread)
                     (stop-sniffer sniffer)
                     (stop-forwarder forwarder))

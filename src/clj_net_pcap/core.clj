@@ -150,22 +150,46 @@
           sniffer (create-and-start-sniffer pcap handler-fn)
           stat-fn (create-stat-fn pcap)
           header-output-counter (counter)
+          delta-counter (let [counter-names [:recv :drop :ifdrop
+                                             :buf-qd :buf-drop
+                                             :sc-qd :sc-drop
+                                             :out-qd :out-drop]
+                              counters (reduce into {} (map (fn [n] {n (counter)}) counter-names))]
+                          (fn [k new-val]
+                            (let [cntr (counters k)]
+                              (if (fn? cntr)
+                                (let [delta (- new-val (cntr))]
+                                  (cntr (fn [_] new-val))
+                                  delta)
+                                -1))))
           stat-print-fn (fn []
-                          (when (>= (header-output-counter) 20)
+                          (when (= (header-output-counter) 0)
                             (print-err-ln
-                              (str "recv,drop,ifdrop,"
-                                   "buf_qsize,buf_queued,buf_drop,"
-                                   "sc_qsize,sc_queued,sc_drop,"
-                                   "out_qsize,out_queued,out_drop"))
+                              (str "recv,drop,ifdrop,rrecv,rdrop,rifdrop, ,"
+                                   "buf_qsize,buf_qd,buf_drop,buf_rqd,buf_rdrop, ,"
+                                   "sc_qsize,sc_qd,sc_drop,sc_rqd,sc_rdrop, ,"
+                                   "out_qsize,out_qd,out_drop,out_rqd,out_rdrop"))
                             (header-output-counter (fn [_] 0)))
-                          (let [pcap-stats (stat-fn)]
+                          (let [pcap-stats (stat-fn)
+                                recv (pcap-stats "recv")
+                                pdrop (pcap-stats "drop")
+                                ifdrop (pcap-stats "ifdrop")
+                                buf-qd (.value buffer-queued-counter)
+                                buf-drop (.value buffer-drop-counter)
+                                sc-qd (.value scanner-queued-counter)
+                                sc-drop (.value scanner-drop-counter)
+                                out-qd (.value out-queued-counter)
+                                out-drop (.value out-drop-counter)]
                             (print-err-ln
-                              (reduce #(str %1 "," %2)
-                                      [(pcap-stats "recv") (pcap-stats "drop") (pcap-stats "ifdrop")
-                                       (.size buffer-queue) (.value buffer-queued-counter) (.value buffer-drop-counter)
-                                       (.size scanner-queue) (.value scanner-queued-counter) (.value scanner-drop-counter)
-                                       (.size out-queue) (.value out-queued-counter) (.value out-drop-counter)]))
-                            (header-output-counter inc)))]
+                              (reduce
+                                #(str %1 "," %2)
+                                [recv pdrop ifdrop (delta-counter :recv recv) (delta-counter :drop pdrop) (delta-counter :ifdrop ifdrop)" "
+                                 (.size buffer-queue) buf-qd buf-drop (delta-counter :buf-qd buf-qd) (delta-counter :buf-drop buf-drop) " "
+                                 (.size scanner-queue) sc-qd sc-drop (delta-counter :sc-qd sc-qd) (delta-counter :sc-drop sc-drop)" "
+                                 (.size out-queue) out-qd out-drop (delta-counter :out-qd out-qd) (delta-counter :out-drop out-drop)]))
+                            (if (>= (header-output-counter) 20)
+                              (header-output-counter (fn [_] 0))
+                              (header-output-counter inc))))]
       (fn 
         ([k]
           (condp = k

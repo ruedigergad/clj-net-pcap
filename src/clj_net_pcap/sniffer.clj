@@ -31,7 +31,6 @@
            (org.jnetpcap ByteBufferHandler Pcap PcapHeader)
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
 
-(def ^:dynamic *forwarder-bulk-size* 10000)
 
 (defrecord Packet 
   ^{:doc "Holds a PcapPacket and the optional user data. 
@@ -107,14 +106,10 @@
    new packets are available for being processed."
   [^BlockingQueue queue forwarder-fn]
   (let [running (ref true)
-        ^ArrayList tmp-list (ArrayList. *forwarder-bulk-size*)
         run-fn (fn [] (try
-;                        (.drainTo queue tmp-list *forwarder-bulk-size*)
                         (let [obj (.take queue)]
                           (when obj
                             (forwarder-fn obj)))
-;                            (if (= PcapPacketWrapper (type obj))
-;                              (.free ^PcapPacketWrapper obj))))
                         (catch Exception e
                           ;;; Only print the exception if we still should be running. 
                           ;;; If we get this exception when @running is already

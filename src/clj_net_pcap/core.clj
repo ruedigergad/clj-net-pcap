@@ -42,7 +42,6 @@
 
 
 (def ^:dynamic *buffer-queue-size* 50000)
-(def ^:dynamic *buffer-bulk-size* 10000)
 (def ^:dynamic *packet-queue-size* 50000)
 
 (defrecord BufferRecord
@@ -77,10 +76,8 @@
           packet-drop-counter (Counter.)
           packet-queued-counter (Counter.)
           packet-queue (ArrayBlockingQueue. *packet-queue-size*)
-          ^ArrayList buffer-bulk-list (ArrayList. *buffer-bulk-size*)
           byte-buffer-processor (fn [] 
                                   (try
-;                                    (.drainTo byte-buffer-queue buffer-bulk-list *buffer-bulk-size*)
                                     (let [^BufferRecord bufrec (.take byte-buffer-queue)]
                                       (if (and
                                             (< (.size packet-queue) (- *packet-queue-size* 1))

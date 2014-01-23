@@ -159,10 +159,10 @@
                             (let [^PcapPacket tmp-pkt (.take packet-scanner-queue)]
                               (if (< (.size packet-cloner-queue) (- *packet-queue-size* 1))
                                 (let [_ (.scan tmp-pkt (.value (PcapDLT/EN10MB)))]
-                                  (if (.offer packet-cloner-queue tmp-pkt)
-                                            (.inc packet-cloner-queued-counter)
-                                            (.inc packet-cloner-drop-counter)))
-                                (.inc packet-cloner-drop-counter)))
+                                  (if (.offer out-queue tmp-pkt)
+                                            (.inc out-queued-counter)
+                                            (.inc out-drop-counter)))
+                                (.inc out-drop-counter)))
                              (catch Exception e
                                       (if @running
                                         (.printStackTrace e)))))
@@ -171,23 +171,23 @@
                                  (.setName "PackerScanner")
                                  (.setDaemon true)
                                  (.start))
-          packet-cloner (fn []
-                          (try
-                            (let [^PcapPacket tmp-pkt (.take packet-cloner-queue)]
-                              (if (< (.size out-queue) (- *packet-queue-size* 1))
-                                (let [^PcapPacket pkt (PcapPacket. tmp-pkt)]
-                                  (if (.offer out-queue pkt)
-                                            (.inc out-queued-counter)
-                                            (.inc out-drop-counter)))
-                                (.inc out-drop-counter)))
-                             (catch Exception e
-                                      (if @running
-                                        (.printStackTrace e)))))
-          packet-cloner-thread (doto 
-                                 (InfiniteLoop. packet-cloner)
-                                 (.setName "PackerCloner")
-                                 (.setDaemon true)
-                                 (.start))
+;          packet-cloner (fn []
+;                          (try
+;                            (let [^PcapPacket tmp-pkt (.take packet-cloner-queue)]
+;                              (if (< (.size out-queue) (- *packet-queue-size* 1))
+;                                (let [^PcapPacket pkt (PcapPacket. tmp-pkt)]
+;                                  (if (.offer out-queue pkt)
+;                                            (.inc out-queued-counter)
+;                                            (.inc out-drop-counter)))
+;                                (.inc out-drop-counter)))
+;                             (catch Exception e
+;                                      (if @running
+;                                        (.printStackTrace e)))))
+;          packet-cloner-thread (doto 
+;                                 (InfiniteLoop. packet-cloner)
+;                                 (.setName "PackerCloner")
+;                                 (.setDaemon true)
+;                                 (.start))
           pcap (create-and-activate-pcap device)
           filter-expressions (ref [])
           _ (if (and 
@@ -209,9 +209,9 @@
                                 ",scanner_qsize," (.size packet-scanner-queue)
                                 ",scanner_queued," (.value packet-scanner-queued-counter)
                                 ",scanner_droped," (.value packet-scanner-drop-counter)
-                                ",cloner_qsize," (.size packet-cloner-queue)
-                                ",cloner_queued," (.value packet-cloner-queued-counter)
-                                ",cloner_droped," (.value packet-cloner-drop-counter)
+;                                ",cloner_qsize," (.size packet-cloner-queue)
+;                                ",cloner_queued," (.value packet-cloner-queued-counter)
+;                                ",cloner_droped," (.value packet-cloner-drop-counter)
                                 ",out_qsize," (.size out-queue)
                                 ",out_queued," (.value out-queued-counter)
                                 ",out_droped," (.value out-drop-counter)))]
@@ -221,7 +221,9 @@
             :stat (stat-print-fn)
             :stop (do
                     (dosync (ref-set running false))
+                    (.stop copy-thread)
                     (.stop byte-buffer-processor-thread)
+                    (.stop packet-scanner-thread)
                     (stop-sniffer sniffer)
                     (stop-forwarder forwarder))
             :get-filters @filter-expressions

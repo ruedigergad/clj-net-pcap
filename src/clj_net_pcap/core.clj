@@ -41,8 +41,8 @@
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
 
 
-(def ^:dynamic *buffer-queue-size* 50000)
-(def ^:dynamic *packet-queue-size* 50000)
+(def ^:dynamic *copy-queue-size* 200000)
+(def ^:dynamic *packet-queue-size* 100000)
 
 (defrecord BufferRecord
   [cl wl s us buf])
@@ -60,51 +60,89 @@
   ([forwarder-fn device filter-expr]
     (create-and-start-cljnetpcap forwarder-fn device filter-expr false))
   ([forwarder-fn device filter-expr emit-raw-data]
-    (let [ running (ref true)
-          byte-buffer-drop-counter (Counter.)
-          byte-buffer-queued-counter (Counter.)
-          byte-buffer-queue (ArrayBlockingQueue. *buffer-queue-size*)
+    (let [running (ref true)
+          copy-drop-counter (Counter.)
+          copy-queued-counter (Counter.)
+          copy-queue (ArrayBlockingQueue. *copy-queue-size*)
           handler-fn (fn [^PcapHeader ph ^ByteBuffer buf ^Object _]
                        (if (and 
-                             (< (.size byte-buffer-queue) (- *buffer-queue-size* 1))
+                             (< (.size copy-queue) (- *copy-queue-size* 1))
                              (not (nil? buf)))
-                         (if (.offer byte-buffer-queue
-                                         (BufferRecord. (.caplen ph) (.wirelen ph) (.hdr_sec ph) (.hdr_usec ph) buf))
-                           (.inc byte-buffer-queued-counter)
-                           (.inc byte-buffer-drop-counter))
-                         (.inc byte-buffer-drop-counter)))
-          packet-drop-counter (Counter.)
-          packet-queued-counter (Counter.)
-          packet-queue (ArrayBlockingQueue. *packet-queue-size*)
+                         (if (.offer copy-queue
+                               (BufferRecord. (.caplen ph) (.wirelen ph) (.hdr_sec ph) (.hdr_usec ph) buf))
+                           (.inc copy-queued-counter)
+                           (.inc copy-drop-counter))
+                         (.inc copy-drop-counter)))
+          out-drop-counter (Counter.)
+          out-queued-counter (Counter.)
+          out-queue (ArrayBlockingQueue. *packet-queue-size*)
+          byte-buffer-drop-counter (Counter.)
+          byte-buffer-queued-counter (Counter.)
+          byte-buffer-queue (ArrayBlockingQueue. *packet-queue-size*)
+          copy-fn (fn []
+                    (try
+                      (let [^BufferRecord bufrec (.take copy-queue)
+                            ^ByteBuffer buf (:buf bufrec)]
+                        (if (and
+                              (not (nil? bufrec))
+                              (> (:cl bufrec) 0)
+                              (> (:wl bufrec) 0))
+                          (if (not emit-raw-data)
+                            (if (< (.size byte-buffer-queue) (- *packet-queue-size* 1))
+                              (let [
+                                    bb-copy (doto (ByteBuffer/allocate (+ (.remaining buf) 20))
+                                              (.put buf)
+                                              (.flip))
+                                    buf-copy (BufferRecord.
+                                               (:cl bufrec)
+                                               (:wl bufrec)
+                                               (:s bufrec)
+                                               (:us bufrec)
+                                               bb-copy)]
+                                (if (.offer byte-buffer-queue buf-copy)
+                                  (.inc byte-buffer-queued-counter)
+                                  (.inc byte-buffer-drop-counter)))
+                              (.inc byte-buffer-drop-counter))
+                            (if (< (.size out-queue) (- *packet-queue-size* 1))
+                              (let [data (doto (ByteBuffer/allocate (+ (.remaining buf) 20))
+                                           (.putInt (:cl bufrec))
+                                           (.putInt (:wl bufrec))
+                                           (.putLong (:s bufrec))
+                                           (.putInt (:us bufrec))
+                                           (.put ^ByteBuffer (:buf bufrec))
+                                           (.flip))]
+                                (if (.offer out-queue data)
+                                  (.inc out-queued-counter)
+                                  (.inc out-drop-counter)))
+                              (.inc out-drop-counter)))))
+                      (catch Exception e
+                        (if @running
+                          (.printStackTrace e)))))
+          copy-thread (doto 
+                        (InfiniteLoop. copy-fn)
+                          (.setName "CopyThread")
+                          (.setDaemon true)
+                          (.start))
+          packet-scanner-drop-counter (Counter.)
+          packet-scanner-queued-counter (Counter.)
+          packet-scanner-queue (ArrayBlockingQueue. *packet-queue-size*)
           byte-buffer-processor (fn [] 
                                   (try
-                                    (let [^BufferRecord bufrec (.take byte-buffer-queue)]
-                                      (if (and
-                                            (< (.size packet-queue) (- *packet-queue-size* 1))
-                                            (not (nil? bufrec))
-                                            (> (:cl bufrec) 0)
-                                            (> (:wl bufrec) 0))
-                                        (let [^ByteBuffer buf (:buf bufrec)
-                                              data (if emit-raw-data
-                                                     (doto (ByteBuffer/allocate (+ (.remaining buf) 20))
-                                                       (.putInt (:cl bufrec))
-                                                       (.putInt (:wl bufrec))
-                                                       (.putLong (:s bufrec))
-                                                       (.putInt (:us bufrec))
-                                                       (.put ^ByteBuffer (:buf bufrec))
-                                                       (.flip))
-                                                     (let [^PcapHeader ph (PcapHeader. (:cl bufrec) (:wl bufrec) (:s bufrec) (:us bufrec))
-                                                           ^ByteBuffer bb (:buf bufrec)
-                                                           ^JBuffer pkt-buf (JBuffer. bb)
-                                                           ^PcapPacket tmp-pkt (doto (PcapPacket. JMemory$Type/POINTER)
-                                                                                        (.peer ph pkt-buf)
-                                                                                        (.scan (.value (PcapDLT/EN10MB))))
-                                                           pkt (PcapPacketWrapper. tmp-pkt)]
-                                                       pkt))]
-                                          (if (.offer packet-queue data)
-                                            (.inc packet-queued-counter)
-                                            (.inc packet-drop-counter)))
-                                        (.inc packet-drop-counter)))
+                                    (if (< (.size packet-scanner-queue) (- *packet-queue-size* 1))
+                                      (let [bufrec (.take byte-buffer-queue)]
+                                        (if (and
+                                              (not (nil? bufrec))
+                                              (> (:cl bufrec) 0)
+                                              (> (:wl bufrec) 0))
+                                          (let [^ByteBuffer buf (:buf bufrec)
+                                                ^PcapHeader ph (PcapHeader. (:cl bufrec) (:wl bufrec) (:s bufrec) (:us bufrec))
+                                                ^JBuffer pkt-buf (JBuffer. buf)
+                                                ^PcapPacket pkt (doto (PcapPacket. JMemory$Type/POINTER)
+                                                                  (.peer ph pkt-buf))]
+                                            (if (.offer packet-scanner-queue pkt)
+                                              (.inc packet-scanner-queued-counter)
+                                              (.inc packet-scanner-drop-counter)))))
+                                        (.inc packet-scanner-drop-counter))
                                     (catch Exception e
                                       (if @running
                                         (.printStackTrace e)))))
@@ -113,6 +151,43 @@
                                          (.setName "ByteBufferProcessor")
                                          (.setDaemon true)
                                          (.start))
+          packet-cloner-drop-counter (Counter.)
+          packet-cloner-queued-counter (Counter.)
+          packet-cloner-queue (ArrayBlockingQueue. *packet-queue-size*)
+          packet-scanner (fn []
+                          (try
+                            (let [^PcapPacket tmp-pkt (.take packet-scanner-queue)]
+                              (if (< (.size packet-cloner-queue) (- *packet-queue-size* 1))
+                                (let [_ (.scan tmp-pkt (.value (PcapDLT/EN10MB)))]
+                                  (if (.offer packet-cloner-queue tmp-pkt)
+                                            (.inc packet-cloner-queued-counter)
+                                            (.inc packet-cloner-drop-counter)))
+                                (.inc packet-cloner-drop-counter)))
+                             (catch Exception e
+                                      (if @running
+                                        (.printStackTrace e)))))
+          packet-scanner-thread (doto 
+                                 (InfiniteLoop. packet-scanner)
+                                 (.setName "PackerScanner")
+                                 (.setDaemon true)
+                                 (.start))
+          packet-cloner (fn []
+                          (try
+                            (let [^PcapPacket tmp-pkt (.take packet-cloner-queue)]
+                              (if (< (.size out-queue) (- *packet-queue-size* 1))
+                                (let [^PcapPacket pkt (PcapPacket. tmp-pkt)]
+                                  (if (.offer out-queue pkt)
+                                            (.inc out-queued-counter)
+                                            (.inc out-drop-counter)))
+                                (.inc out-drop-counter)))
+                             (catch Exception e
+                                      (if @running
+                                        (.printStackTrace e)))))
+          packet-cloner-thread (doto 
+                                 (InfiniteLoop. packet-cloner)
+                                 (.setName "PackerCloner")
+                                 (.setDaemon true)
+                                 (.start))
           pcap (create-and-activate-pcap device)
           filter-expressions (ref [])
           _ (if (and 
@@ -120,17 +195,26 @@
                   (not= "" filter-expr))
               (dosync (alter filter-expressions conj filter-expr)))
           _ (create-and-set-filter pcap filter-expr)
-          forwarder (create-and-start-forwarder packet-queue forwarder-fn)
+          forwarder (create-and-start-forwarder out-queue forwarder-fn)
           sniffer (create-and-start-sniffer pcap handler-fn)
           stat-fn (create-stat-fn pcap)
           stat-print-fn #(print-err-ln
                            (str (stat-fn)
+                                ",cpy_qsize," (.size copy-queue)
+                                ",cpy_queued," (.value copy-queued-counter)
+                                ",cpy_droped," (.value copy-drop-counter)
                                 ",buf_qsize," (.size byte-buffer-queue)
                                 ",buf_queued," (.value byte-buffer-queued-counter)
                                 ",buf_droped," (.value byte-buffer-drop-counter)
-                                ",pkt_qsize," (.size packet-queue)
-                                ",pkt_queued," (.value packet-queued-counter)
-                                ",pkt_droped," (.value packet-drop-counter)))]
+                                ",scanner_qsize," (.size packet-scanner-queue)
+                                ",scanner_queued," (.value packet-scanner-queued-counter)
+                                ",scanner_droped," (.value packet-scanner-drop-counter)
+                                ",cloner_qsize," (.size packet-cloner-queue)
+                                ",cloner_queued," (.value packet-cloner-queued-counter)
+                                ",cloner_droped," (.value packet-cloner-drop-counter)
+                                ",out_qsize," (.size out-queue)
+                                ",out_queued," (.value out-queued-counter)
+                                ",out_droped," (.value out-drop-counter)))]
       (fn 
         ([k]
           (condp = k

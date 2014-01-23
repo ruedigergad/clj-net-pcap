@@ -115,7 +115,6 @@
                             (forwarder-fn obj)))
 ;                            (if (= PcapPacketWrapper (type obj))
 ;                              (.free ^PcapPacketWrapper obj))))
-                        (.clear tmp-list)
                         (catch Exception e
                           ;;; Only print the exception if we still should be running. 
                           ;;; If we get this exception when @running is already

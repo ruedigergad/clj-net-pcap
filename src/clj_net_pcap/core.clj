@@ -103,14 +103,11 @@
                                                                                         (.peer ph pkt-buf)
                                                                                         (.scan (.value (PcapDLT/EN10MB))))
                                                            pkt (PcapPacketWrapper. tmp-pkt)]
-;                                                       (.free pkt-buf)
-;                                                       (.free tmp-pkt)
                                                        pkt))]
                                           (if (.offer packet-queue data)
                                             (.inc packet-queued-counter)
                                             (.inc packet-drop-counter)))
                                         (.inc packet-drop-counter)))
-                                    (.clear buffer-bulk-list)
                                     (catch Exception e
                                       (if @running
                                         (.printStackTrace e)))))

@@ -95,12 +95,12 @@
                                   (.inc buffer-queued-counter)
                                   (.inc buffer-drop-counter)))
                               (.inc buffer-drop-counter)))))
-          packet-scanner-drop-counter (Counter.)
-          packet-scanner-queued-counter (Counter.)
-          packet-scanner-queue (ArrayBlockingQueue. *queue-size*)
+          scanner-drop-counter (Counter.)
+          scanner-queued-counter (Counter.)
+          scanner-queue (ArrayBlockingQueue. *queue-size*)
           buffer-processor (fn [] 
                                   (try
-                                    (if (< (.size packet-scanner-queue) (- *queue-size* 1))
+                                    (if (< (.size scanner-queue) (- *queue-size* 1))
                                       (let [bufrec (.take buffer-queue)]
                                         (if (and
                                               (not (nil? bufrec))
@@ -110,10 +110,10 @@
                                                 ^PcapHeader ph (PcapHeader. (:cl bufrec) (:wl bufrec) (:s bufrec) (:us bufrec))
                                                 ^PcapPacket pkt (doto (PcapPacket. JMemory$Type/POINTER)
                                                                   (.peerHeaderAndData ph buf))]
-                                            (if (.offer packet-scanner-queue pkt)
-                                              (.inc packet-scanner-queued-counter)
-                                              (.inc packet-scanner-drop-counter)))))
-                                        (.inc packet-scanner-drop-counter))
+                                            (if (.offer scanner-queue pkt)
+                                              (.inc scanner-queued-counter)
+                                              (.inc scanner-drop-counter)))))
+                                        (.inc scanner-drop-counter))
                                     (catch Exception e
                                       (if @running
                                         (.printStackTrace e)))))
@@ -122,9 +122,9 @@
                                          (.setName "ByteBufferProcessor")
                                          (.setDaemon true)
                                          (.start))
-          packet-scanner (fn []
+          scanner (fn []
                           (try
-                            (let [^PcapPacket pkt (.take packet-scanner-queue)]
+                            (let [^PcapPacket pkt (.take scanner-queue)]
                               (if (< (.size out-queue) (- *queue-size* 1))
                                 (let [_ (.scan pkt (.value (PcapDLT/EN10MB)))]
                                   (if (.offer out-queue pkt)
@@ -134,8 +134,8 @@
                              (catch Exception e
                                       (if @running
                                         (.printStackTrace e)))))
-          packet-scanner-thread (doto 
-                                 (InfiniteLoop. packet-scanner)
+          scanner-thread (doto 
+                                 (InfiniteLoop. scanner)
                                  (.setName "PackerScanner")
                                  (.setDaemon true)
                                  (.start))
@@ -149,17 +149,23 @@
           forwarder (create-and-start-forwarder out-queue forwarder-fn)
           sniffer (create-and-start-sniffer pcap handler-fn)
           stat-fn (create-stat-fn pcap)
-          stat-print-fn #(print-err-ln
-                           (str (stat-fn)
-                                ",buf_qsize," (.size buffer-queue)
-                                ",buf_queued," (.value buffer-queued-counter)
-                                ",buf_drop," (.value buffer-drop-counter)
-                                ",sc_qsize," (.size packet-scanner-queue)
-                                ",sc_queued," (.value packet-scanner-queued-counter)
-                                ",sc_drop," (.value packet-scanner-drop-counter)
-                                ",out_qsize," (.size out-queue)
-                                ",out_queued," (.value out-queued-counter)
-                                ",out_drop," (.value out-drop-counter)))]
+          header-output-counter (counter)
+          stat-print-fn (fn []
+                          (when (>= (header-output-counter) 20)
+                            (print-err-ln
+                              (str "recv,drop,ifdrop,"
+                                   "buf_qsize,buf_queued,buf_drop,"
+                                   "sc_qsize,sc_queued,sc_drop,"
+                                   "out_qsize,out_queued,out_drop"))
+                            (header-output-counter (fn [_] 0)))
+                          (let [pcap-stats (stat-fn)]
+                            (print-err-ln
+                              (reduce #(str %1 "," %2)
+                                      [(pcap-stats "recv") (pcap-stats "drop") (pcap-stats "ifdrop")
+                                       (.size buffer-queue) (.value buffer-queued-counter) (.value buffer-drop-counter)
+                                       (.size scanner-queue) (.value scanner-queued-counter) (.value scanner-drop-counter)
+                                       (.size out-queue) (.value out-queued-counter) (.value out-drop-counter)]))
+                            (header-output-counter inc)))]
       (fn 
         ([k]
           (condp = k
@@ -167,7 +173,7 @@
             :stop (do
                     (dosync (ref-set running false))
                     (.stop buffer-processor-thread)
-                    (.stop packet-scanner-thread)
+                    (.stop scanner-thread)
                     (stop-sniffer sniffer)
                     (stop-forwarder forwarder))
             :get-filters @filter-expressions

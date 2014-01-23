@@ -99,46 +99,46 @@
           scanner-queued-counter (Counter.)
           scanner-queue (ArrayBlockingQueue. *queue-size*)
           buffer-processor (fn [] 
-                                  (try
-                                    (if (< (.size scanner-queue) (- *queue-size* 1))
-                                      (let [bufrec (.take buffer-queue)]
-                                        (if (and
-                                              (not (nil? bufrec))
-                                              (> (:cl bufrec) 0)
-                                              (> (:wl bufrec) 0))
-                                          (let [^ByteBuffer buf (:buf bufrec)
-                                                ^PcapHeader ph (PcapHeader. (:cl bufrec) (:wl bufrec) (:s bufrec) (:us bufrec))
-                                                ^PcapPacket pkt (doto (PcapPacket. JMemory$Type/POINTER)
-                                                                  (.peerHeaderAndData ph buf))]
-                                            (if (.offer scanner-queue pkt)
-                                              (.inc scanner-queued-counter)
-                                              (.inc scanner-drop-counter)))))
-                                        (.inc scanner-drop-counter))
-                                    (catch Exception e
-                                      (if @running
-                                        (.printStackTrace e)))))
+                             (try
+                               (if (< (.size scanner-queue) (- *queue-size* 1))
+                                 (let [bufrec (.take buffer-queue)]
+                                   (if (and
+                                         (not (nil? bufrec))
+                                         (> (:cl bufrec) 0)
+                                         (> (:wl bufrec) 0))
+                                     (let [^ByteBuffer buf (:buf bufrec)
+                                           ^PcapHeader ph (PcapHeader. (:cl bufrec) (:wl bufrec) (:s bufrec) (:us bufrec))
+                                           ^PcapPacket pkt (doto (PcapPacket. JMemory$Type/POINTER)
+                                                             (.peerHeaderAndData ph buf))]
+                                       (if (.offer scanner-queue pkt)
+                                         (.inc scanner-queued-counter)
+                                         (.inc scanner-drop-counter)))))
+                                   (.inc scanner-drop-counter))
+                               (catch Exception e
+                                 (if @running
+                                   (.printStackTrace e)))))
           buffer-processor-thread (doto 
-                                         (InfiniteLoop. buffer-processor)
-                                         (.setName "ByteBufferProcessor")
-                                         (.setDaemon true)
-                                         (.start))
+                                    (InfiniteLoop. buffer-processor)
+                                    (.setName "ByteBufferProcessor")
+                                    (.setDaemon true)
+                                    (.start))
           scanner (fn []
-                          (try
-                            (let [^PcapPacket pkt (.take scanner-queue)]
-                              (if (< (.size out-queue) (- *queue-size* 1))
-                                (let [_ (.scan pkt (.value (PcapDLT/EN10MB)))]
-                                  (if (.offer out-queue pkt)
-                                            (.inc out-queued-counter)
-                                            (.inc out-drop-counter)))
-                                (.inc out-drop-counter)))
-                             (catch Exception e
-                                      (if @running
-                                        (.printStackTrace e)))))
-          scanner-thread (doto 
-                                 (InfiniteLoop. scanner)
-                                 (.setName "PackerScanner")
-                                 (.setDaemon true)
-                                 (.start))
+                    (try
+                      (let [^PcapPacket pkt (.take scanner-queue)]
+                        (if (< (.size out-queue) (- *queue-size* 1))
+                          (let [_ (.scan pkt (.value (PcapDLT/EN10MB)))]
+                            (if (.offer out-queue pkt)
+                              (.inc out-queued-counter)
+                              (.inc out-drop-counter)))
+                          (.inc out-drop-counter)))
+                      (catch Exception e
+                        (if @running
+                          (.printStackTrace e)))))
+          scanner-thread (doto
+                           (InfiniteLoop. scanner)
+                           (.setName "PackerScanner")
+                           (.setDaemon true)
+                           (.start))
           pcap (create-and-activate-pcap device)
           filter-expressions (ref [])
           _ (if (and 

@@ -83,7 +83,7 @@
                               (.inc out-drop-counter))
                             (if (< (.size buffer-queue) (- *queue-size* 1))
                               (let [
-                                    bb-copy (doto (ByteBuffer/allocate (.remaining buf))
+                                    bb-copy (doto (ByteBuffer/allocateDirect (.remaining buf))
                                               (.put buf)
                                               (.flip))
                                     bufrec (BufferRecord.
@@ -111,7 +111,7 @@
                                                 ^PcapHeader ph (PcapHeader. (:cl bufrec) (:wl bufrec) (:s bufrec) (:us bufrec))
                                                 ^JBuffer pkt-buf (JBuffer. buf)
                                                 ^PcapPacket pkt (doto (PcapPacket. JMemory$Type/POINTER)
-                                                                  (.peer ph pkt-buf))]
+                                                                  (.peerHeaderAndData ph buf))]
                                             (if (.offer packet-scanner-queue pkt)
                                               (.inc packet-scanner-queued-counter)
                                               (.inc packet-scanner-drop-counter)))))
@@ -124,13 +124,13 @@
                                          (.setName "ByteBufferProcessor")
                                          (.setDaemon true)
                                          (.start))
-          packet-cloner-drop-counter (Counter.)
-          packet-cloner-queued-counter (Counter.)
-          packet-cloner-queue (ArrayBlockingQueue. *queue-size*)
+;          packet-cloner-drop-counter (Counter.)
+;          packet-cloner-queued-counter (Counter.)
+;          packet-cloner-queue (ArrayBlockingQueue. *queue-size*)
           packet-scanner (fn []
                           (try
                             (let [^PcapPacket pkt (.take packet-scanner-queue)]
-                              (if (< (.size packet-cloner-queue) (- *queue-size* 1))
+                              (if (< (.size out-queue) (- *queue-size* 1))
                                 (let [_ (.scan pkt (.value (PcapDLT/EN10MB)))]
                                   (if (.offer out-queue pkt)
                                             (.inc out-queued-counter)

@@ -124,9 +124,6 @@
                                          (.setName "ByteBufferProcessor")
                                          (.setDaemon true)
                                          (.start))
-;          packet-cloner-drop-counter (Counter.)
-;          packet-cloner-queued-counter (Counter.)
-;          packet-cloner-queue (ArrayBlockingQueue. *queue-size*)
           packet-scanner (fn []
                           (try
                             (let [^PcapPacket pkt (.take packet-scanner-queue)]
@@ -144,23 +141,6 @@
                                  (.setName "PackerScanner")
                                  (.setDaemon true)
                                  (.start))
-;          packet-cloner (fn []
-;                          (try
-;                            (let [^PcapPacket tmp-pkt (.take packet-cloner-queue)]
-;                              (if (< (.size out-queue) (- *queue-size* 1))
-;                                (let [^PcapPacket pkt (PcapPacket. tmp-pkt)]
-;                                  (if (.offer out-queue pkt)
-;                                            (.inc out-queued-counter)
-;                                            (.inc out-drop-counter)))
-;                                (.inc out-drop-counter)))
-;                             (catch Exception e
-;                                      (if @running
-;                                        (.printStackTrace e)))))
-;          packet-cloner-thread (doto 
-;                                 (InfiniteLoop. packet-cloner)
-;                                 (.setName "PackerCloner")
-;                                 (.setDaemon true)
-;                                 (.start))
           pcap (create-and-activate-pcap device)
           filter-expressions (ref [])
           _ (if (and 
@@ -179,9 +159,6 @@
                                 ",scanner_qsize," (.size packet-scanner-queue)
                                 ",scanner_queued," (.value packet-scanner-queued-counter)
                                 ",scanner_drop," (.value packet-scanner-drop-counter)
-;                                ",cloner_qsize," (.size packet-cloner-queue)
-;                                ",cloner_queued," (.value packet-cloner-queued-counter)
-;                                ",cloner_drop," (.value packet-cloner-drop-counter)
                                 ",out_qsize," (.size out-queue)
                                 ",out_queued," (.value out-queued-counter)
                                 ",out_drop," (.value out-drop-counter)))]

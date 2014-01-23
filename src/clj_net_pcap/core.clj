@@ -156,9 +156,9 @@
                                 ",buf_qsize," (.size buffer-queue)
                                 ",buf_queued," (.value buffer-queued-counter)
                                 ",buf_drop," (.value buffer-drop-counter)
-                                ",scanner_qsize," (.size packet-scanner-queue)
-                                ",scanner_queued," (.value packet-scanner-queued-counter)
-                                ",scanner_drop," (.value packet-scanner-drop-counter)
+                                ",sc_qsize," (.size packet-scanner-queue)
+                                ",sc_queued," (.value packet-scanner-queued-counter)
+                                ",sc_drop," (.value packet-scanner-drop-counter)
                                 ",out_qsize," (.size out-queue)
                                 ",out_queued," (.value out-queued-counter)
                                 ",out_drop," (.value out-drop-counter)))]

@@ -109,7 +109,6 @@
                                               (> (:wl bufrec) 0))
                                           (let [^ByteBuffer buf (:buf bufrec)
                                                 ^PcapHeader ph (PcapHeader. (:cl bufrec) (:wl bufrec) (:s bufrec) (:us bufrec))
-                                                ^JBuffer pkt-buf (JBuffer. buf)
                                                 ^PcapPacket pkt (doto (PcapPacket. JMemory$Type/POINTER)
                                                                   (.peerHeaderAndData ph buf))]
                                             (if (.offer packet-scanner-queue pkt)

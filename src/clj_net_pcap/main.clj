@@ -91,13 +91,9 @@
                                    t (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))]
                                (if (= 'packet (first (first (:arglists (meta f)))))
                                  f
-                                 #(try
-                                    (let [o (t %)]
-                                      (if o
-                                        (f o)))
-                                    (catch Exception e
-                                      ;FIXME: Handle Eceptions
-                                      ))))
+                                 #(let [o (t %)]
+                                    (if o
+                                      (f o)))))
                              (arg-map :interface)
                              (arg-map :filter)
                              (arg-map :raw)))

@@ -33,7 +33,7 @@
         clj-net-pcap.sniffer
         clj-assorted-utils.util)
   (:import (clj_net_pcap Counter InfiniteLoop JBufferWrapper PcapPacketWrapper)
-           (java.nio ByteBuffer)
+           (java.nio BufferUnderflowException ByteBuffer)
            (java.util ArrayList)
            (java.util.concurrent ArrayBlockingQueue LinkedBlockingQueue)
            (org.jnetpcap Pcap PcapDLT PcapHeader)
@@ -147,14 +147,21 @@
                   (not= "" filter-expr))
               (dosync (alter filter-expressions conj filter-expr)))
           _ (create-and-set-filter pcap filter-expr)
-          forwarder (create-and-start-forwarder out-queue forwarder-fn)
+          failed-packet-counter (Counter.)
+          forwarder (create-and-start-forwarder
+                      out-queue
+                      #(try
+                         (forwarder-fn %)
+                         (catch Exception e
+                           (.inc failed-packet-counter))))
           sniffer (create-and-start-sniffer pcap handler-fn)
           stat-fn (create-stat-fn pcap)
           header-output-counter (counter)
           delta-counter (let [counter-names [:recv :drop :ifdrop
                                              :buf-qd :buf-drop
                                              :sc-qd :sc-drop
-                                             :out-qd :out-drop]
+                                             :out-qd :out-drop
+                                             :failed]
                               counters (reduce into {} (map (fn [n] {n (counter)}) counter-names))]
                           (fn [k new-val]
                             (let [cntr (counters k)]
@@ -169,7 +176,8 @@
                               (str "recv,drop,ifdrop,rrecv,rdrop,rifdrop, ,"
                                    "buf_qsize,buf_qd,buf_drop,buf_rqd,buf_rdrop, ,"
                                    "sc_qsize,sc_qd,sc_drop,sc_rqd,sc_rdrop, ,"
-                                   "out_qsize,out_qd,out_drop,out_rqd,out_rdrop"))
+                                   "out_qsize,out_qd,out_drop,out_rqd,out_rdrop, ,"
+                                   "failed,rfailed"))
                             (header-output-counter (fn [_] 0)))
                           (let [pcap-stats (stat-fn)
                                 recv (pcap-stats "recv")
@@ -180,14 +188,16 @@
                                 sc-qd (.value scanner-queued-counter)
                                 sc-drop (.value scanner-drop-counter)
                                 out-qd (.value out-queued-counter)
-                                out-drop (.value out-drop-counter)]
+                                out-drop (.value out-drop-counter)
+                                failed (.value failed-packet-counter)]
                             (print-err-ln
                               (reduce
                                 #(str %1 "," %2)
-                                [recv pdrop ifdrop (delta-counter :recv recv) (delta-counter :drop pdrop) (delta-counter :ifdrop ifdrop)" "
+                                [recv pdrop ifdrop (delta-counter :recv recv) (delta-counter :drop pdrop) (delta-counter :ifdrop ifdrop) " "
                                  (.size buffer-queue) buf-qd buf-drop (delta-counter :buf-qd buf-qd) (delta-counter :buf-drop buf-drop) " "
-                                 (.size scanner-queue) sc-qd sc-drop (delta-counter :sc-qd sc-qd) (delta-counter :sc-drop sc-drop)" "
-                                 (.size out-queue) out-qd out-drop (delta-counter :out-qd out-qd) (delta-counter :out-drop out-drop)]))
+                                 (.size scanner-queue) sc-qd sc-drop (delta-counter :sc-qd sc-qd) (delta-counter :sc-drop sc-drop) " "
+                                 (.size out-queue) out-qd out-drop (delta-counter :out-qd out-qd) (delta-counter :out-drop out-drop) " "
+                                 failed (delta-counter :failed failed)]))
                             (if (>= (header-output-counter) 20)
                               (header-output-counter (fn [_] 0))
                               (header-output-counter inc))))]

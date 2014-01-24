@@ -247,12 +247,7 @@
   (try
     (reduce into [{}
                   (parse-pcap-header-to-nested-map packet)
-                  (parse-protocol-headers-to-nested-maps packet)])
-    (catch Exception e
-      (println "Error parsing the pcap packet!")
-      (.printStackTrace e)
-      (println "Packet raw data was:")
-      (stdout-byte-array-forwarder-fn packet))))
+                  (parse-protocol-headers-to-nested-maps packet)])))
 
 (defn- add-eth-fields
   [^Map m ^PcapPacket pkt ^Ethernet eth]
@@ -350,24 +345,19 @@
         udp (Udp.)
         http (Http.)]
     (fn [^PcapPacket pkt]
-		  (try
-		    (let [hdr (.getCaptureHeader pkt)
-                  m (doto (HashMap.)
-		              (.put "ts" (.timestampInNanos hdr))
-		              (.put "len" (.wirelen hdr)))]
-              (doto m
-                (add-eth-fields pkt eth)
-                (add-arp-fields pkt arp)
-                (add-ip4-fields pkt ip4)
-                (add-ip6-fields pkt ip6)
-                (add-tcp-fields pkt tcp)
-                (add-udp-fields pkt udp)
-                (add-icmp-fields pkt icmp icmp-echo-reply icmp-echo-request)))
-		    (catch Exception e
-		      (println "Error parsing the pcap packet!")
-		      (.printStackTrace e)
-		      (println "Packet raw data was:")
-		      (stdout-byte-array-forwarder-fn pkt))))))
+      (let [hdr (.getCaptureHeader pkt)
+            m (doto (HashMap.)
+                (.put "ts" (.timestampInNanos hdr))
+                (.put "len" (.wirelen hdr)))]
+        (doto m
+          (add-eth-fields pkt eth)
+          (add-arp-fields pkt arp)
+          (add-ip4-fields pkt ip4)
+          (add-ip6-fields pkt ip6)
+          (add-tcp-fields pkt tcp)
+          (add-udp-fields pkt udp)
+          (add-icmp-fields pkt icmp icmp-echo-reply icmp-echo-request)))
+        )))
 
 (defn- add-pcap-header-data-bean
   [^PacketHeaderDataBean p ^PcapHeader hdr]
@@ -463,23 +453,17 @@
         udp (Udp.)
         http (Http.)]
     (fn [^PcapPacket pkt]
-		  (try
-		    (let [hdr (.getCaptureHeader pkt)
-              p (PacketHeaderDataBean.)]
-          (-> p
-            (add-pcap-header-data-bean hdr)
-            (add-eth-fields-bean pkt eth)
-            (add-arp-fields-bean pkt arp)
-            (add-ip4-fields-bean pkt ip4)
-            (add-ip6-fields-bean pkt ip6)
-            (add-icmp-fields-bean pkt icmp icmp-echo-reply icmp-echo-request)
-            (add-tcp-fields-bean pkt tcp)
-            (add-udp-fields-bean pkt udp)))
-		    (catch Exception e
-		      (println "Error parsing the pcap packet!")
-		      (.printStackTrace e)
-		      (println "Packet raw data was:")
-		      (stdout-byte-array-forwarder-fn pkt))))))
+      (let [hdr (.getCaptureHeader pkt)
+        p (PacketHeaderDataBean.)]
+        (-> p
+          (add-pcap-header-data-bean hdr)
+          (add-eth-fields-bean pkt eth)
+          (add-arp-fields-bean pkt arp)
+          (add-ip4-fields-bean pkt ip4)
+          (add-ip6-fields-bean pkt ip6)
+          (add-icmp-fields-bean pkt icmp icmp-echo-reply icmp-echo-request)
+          (add-tcp-fields-bean pkt tcp)
+          (add-udp-fields-bean pkt udp))))))
 
 (defn pcap-packet-to-byte-vector
   "Convert the given org.jnetpcap.packet.PcapPacket to its byte array representation and return it as vector.

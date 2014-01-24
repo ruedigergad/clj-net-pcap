@@ -108,7 +108,7 @@
   (let [running (ref true)
         run-fn (fn [] (try
                         (let [obj (.take queue)]
-                          (when obj
+                          (if obj
                             (forwarder-fn obj)))
                         (catch Exception e
                           ;;; Only print the exception if we still should be running. 

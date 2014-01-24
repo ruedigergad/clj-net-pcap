@@ -91,7 +91,13 @@
                                    t (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))]
                                (if (= 'packet (first (first (:arglists (meta f)))))
                                  f
-                                 #(f (t %))))
+                                 #(try
+                                    (let [o (t %)]
+                                      (if o
+                                        (f o)))
+                                    (catch Exception e
+                                      ;FIXME: Handle Eceptions
+                                      ))))
                              (arg-map :interface)
                              (arg-map :filter)
                              (arg-map :raw)))
@@ -138,7 +144,6 @@
                 (print "cljnetpcap=> ")
                 (flush)
                 (recur (read-line)))))
-          
           (shutdown-fn)
           (println "Leaving (-main [& args] ...)."))))))
 

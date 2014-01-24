@@ -72,6 +72,10 @@
                             "pcap-packet-to-bean, pcap-packet-to-map, "
                             "pcap-packet-to-nested-maps, pcap-packet-to-no-op")
                        :default "pcap-packet-to-bean"]
+                      ["-d" "--duration"
+                       "The duration in seconds how long clj-net-pcap is run."
+                       :default -1
+                       :parse-fn #(Integer. %)]
                       ["-r" "--raw"
                        (str "Emit raw data instead of decoded packets. "
                             "Be careful, not all transformation and forwarder functions support this.")
@@ -98,48 +102,55 @@
                              (arg-map :filter)
                              (arg-map :raw)))
               stat-interval (arg-map :stats)
-              executor (executor)
+              stat-out-executor (executor)
               shutdown-fn (fn [] (do
                                    (println "clj-net-pcap is shuting down...")
                                    (when (> stat-interval 0)
                                      (println "Stopping stat output.")
-                                     (shutdown executor))
+                                     (shutdown stat-out-executor))
                                    (print-stat-cljnetpcap cljnetpcap)
                                    (stop-cljnetpcap cljnetpcap)
                                    (println "Removing temporarily extracted native libs...")
-                                   (remove-native-libs)))]
+                                   (remove-native-libs)))
+              run-duration (arg-map :duration)
+              shutdown-timer-executor (executor)]
           (println "clj-net-pcap standalone executable started.\n")
           (when (> stat-interval 0)
             (println "Printing stats to stderr in intervalls of" stat-interval "ms.")
-            (run-repeat executor #(print-stat-cljnetpcap cljnetpcap) stat-interval))
+            (run-repeat stat-out-executor #(print-stat-cljnetpcap cljnetpcap) stat-interval))
+          (if (> run-duration 0)
+            (do
+              (println "Will automatically shut down in" run-duration "seconds.")
+              (run-once shutdown-timer-executor shutdown-fn (* 1000 run-duration)))
           ;;; Running the main from, e.g., leiningen results in stdout not being properly accessible.
           ;;; Hence, this will not work when run this way but works when run from a jar via "java -jar ...".
-          (println "Type \"quit\" or \"q\" to quit: ")
-          (loop [line ""]
-            (if (or (= line "q") (= line "quit"))
-              nil
-              (let [split-input (split line #"\s")
-                    cmd (first split-input)
-                    args (join " " (rest split-input))]
-                (cond
-                  (or
-                    (= cmd "af")
-                    (= cmd "add-filter")) (try 
-                                            (add-filter cljnetpcap args)
-                                            (catch Exception e
-                                              (println "Error adding filter:" e)))
-                  (or
-                    (= cmd "sf")
-                    (= cmd "show-filters")) (pprint (get-filters cljnetpcap))
-                  (or
-                    (= cmd "rlf")
-                    (= cmd "remove-last-filter")) (remove-last-filter cljnetpcap)
-                  :default (when (not= cmd "")
-                             (println "Unknown command:" cmd)
-                             (println "Valid commands are: add-filter (af), show-filters (sf), remove-last-filter (rlf)")))
-                (print "cljnetpcap=> ")
-                (flush)
-                (recur (read-line)))))
-          (shutdown-fn)
+            (do
+              (println "Type \"quit\" or \"q\" to quit: ")
+              (loop [line ""]
+                (if (or (= line "q") (= line "quit"))
+                  nil
+                  (let [split-input (split line #"\s")
+                        cmd (first split-input)
+                        args (join " " (rest split-input))]
+                    (cond
+                      (or
+                        (= cmd "af")
+                        (= cmd "add-filter")) (try 
+                                                (add-filter cljnetpcap args)
+                                                (catch Exception e
+                                                  (println "Error adding filter:" e)))
+                      (or
+                        (= cmd "sf")
+                        (= cmd "show-filters")) (pprint (get-filters cljnetpcap))
+                      (or
+                        (= cmd "rlf")
+                        (= cmd "remove-last-filter")) (remove-last-filter cljnetpcap)
+                      :default (when (not= cmd "")
+                                 (println "Unknown command:" cmd)
+                                 (println "Valid commands are: add-filter (af), show-filters (sf), remove-last-filter (rlf)")))
+                    (print "cljnetpcap=> ")
+                    (flush)
+                    (recur (read-line)))))
+              (shutdown-fn)))
           (println "Leaving (-main [& args] ...)."))))))
 

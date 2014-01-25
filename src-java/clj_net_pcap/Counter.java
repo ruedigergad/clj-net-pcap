@@ -5,7 +5,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  *  This is an experiment.
- *  The primary purpose is to compare this to the Clojure counter implementation.
+ *  The primary purpose is to compare this to our counter implementation in Clojure.
  */
 public class Counter {
 
@@ -23,24 +23,15 @@ public class Counter {
     }
 
     public void reset() {
-        /*
-         * A reset has to allways succeed.
-         */
         lock.lock();
         val = 0;
         lock.unlock();
     }
 
     public long value() {
-        /*
-         * We prefer to return an invalid value in favor of performance.
-         * Invalid values are handled in the calling code.
-         */
-        long ret = -1;
-        if (lock.tryLock()) {
-            ret = val;
-            lock.unlock();
-        }
+        lock.lock();
+        long ret = val;
+        lock.unlock();
         return ret;
     }
 

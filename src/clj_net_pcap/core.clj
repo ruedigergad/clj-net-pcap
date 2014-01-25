@@ -157,19 +157,7 @@
           sniffer (create-and-start-sniffer pcap handler-fn)
           stat-fn (create-stat-fn pcap)
           header-output-counter (counter)
-          delta-counter (let [counter-names [:recv :drop :ifdrop
-                                             :buf-qd :buf-drop
-                                             :sc-qd :sc-drop
-                                             :out-qd :out-drop
-                                             :failed]
-                              counters (reduce into {} (map (fn [n] {n (counter)}) counter-names))]
-                          (fn [k new-val]
-                            (let [cntr (counters k)]
-                              (if (and (fn? cntr) (>= new-val 0))
-                                (let [delta (- new-val (cntr))]
-                                  (cntr (fn [_] new-val))
-                                  delta)
-                                -1))))
+          delta-cntr (delta-counter)
           stat-print-fn (fn []
                           (when (= (header-output-counter) 0)
                             (print-err-ln
@@ -193,11 +181,11 @@
                             (print-err-ln
                               (reduce
                                 #(str %1 "," %2)
-                                [recv pdrop ifdrop (delta-counter :recv recv) (delta-counter :drop pdrop) (delta-counter :ifdrop ifdrop) " "
-                                 (.size buffer-queue) buf-qd buf-drop (delta-counter :buf-qd buf-qd) (delta-counter :buf-drop buf-drop) " "
-                                 (.size scanner-queue) sc-qd sc-drop (delta-counter :sc-qd sc-qd) (delta-counter :sc-drop sc-drop) " "
-                                 (.size out-queue) out-qd out-drop (delta-counter :out-qd out-qd) (delta-counter :out-drop out-drop) " "
-                                 failed (delta-counter :failed failed)]))
+                                [recv pdrop ifdrop (delta-cntr :recv recv) (delta-cntr :drop pdrop) (delta-cntr :ifdrop ifdrop) " "
+                                 (.size buffer-queue) buf-qd buf-drop (delta-cntr :buf-qd buf-qd) (delta-cntr :buf-drop buf-drop) " "
+                                 (.size scanner-queue) sc-qd sc-drop (delta-cntr :sc-qd sc-qd) (delta-cntr :sc-drop sc-drop) " "
+                                 (.size out-queue) out-qd out-drop (delta-cntr :out-qd out-qd) (delta-cntr :out-drop out-drop) " "
+                                 failed (delta-cntr :failed failed)]))
                             (if (>= (header-output-counter) 20)
                               (header-output-counter (fn [_] 0))
                               (header-output-counter inc))))]

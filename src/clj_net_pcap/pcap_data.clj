@@ -543,28 +543,28 @@ user=>
 (defn counting-converter-forwarder-fn
   "Forwarder that converts the packets and counts how many times it was called.
    This is used for testing purposes."
-  [f]
+  []
   (let [cntr (Counter.)]
     (fn
-      [^PcapPacket packet]
+      [_]
       (do
-        (f packet)
         (.inc cntr)
         (if (= 0 (mod (.value cntr) 1000))
           (println (.value cntr)))))))
 
-(def calls-per-second-converter-forwarder-fn
+(defn calls-per-second-converter-forwarder-fn
   "Forwarder that converts the packets and periodically prints how many times it was called per second.
    This is used for testing purposes."
+  []
   (let [cntr (Counter.)
+        delta-cntr (delta-counter)
         time-tmp (ref (System/currentTimeMillis))
         pps-printer #(let [val (.value cntr)]
                        (if (>= val 0)
                          (let [cur-time (System/currentTimeMillis)
                                time-delta (- cur-time @time-tmp)]
                            (when (> time-delta 0)
-                             (println "pps" (float (/ val (/ time-delta 1000))))
-                             (.reset cntr)
+                             (println "pps" (float (/ (delta-cntr :val val) (/ time-delta 1000))) "total" val)
                              (dosync
                                (ref-set time-tmp cur-time))))))
         _ (run-repeat (executor) pps-printer 1000)]

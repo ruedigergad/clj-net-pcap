@@ -4,7 +4,7 @@
                   around jNetPcap that enables and eases packet capturing with Clojure."
   :dependencies [[org.clojure/clojure "1.5.1"]
                   [org.clojure/tools.cli "0.2.4"]
-                  [clj-assorted-utils "1.4.4"]
+                  [clj-assorted-utils "1.5.1"]
                   [jnetpcap "1.4.r1425-1c"]]
   :aot [#"^clj-net-pcap.*"]
   :global-vars {*warn-on-reflection* true}

@@ -510,7 +510,7 @@ user=>
 (defn pcap-packet-to-no-op
   "Function that takes a PcapPacket as argument and does nothing.
    This is used for testing purposes."
-  [^PcapPacket packet]
+  [_]
   -1)
 
 (defn stdout-forwarder-fn
@@ -536,21 +536,21 @@ user=>
 (defn no-op-converter-forwarder-fn
   "Forwarder that converts the packets but doesn't do anything else.
    This is used for testing purposes."
-  [f]
-  (fn [^PcapPacket packet]
-    (f packet)))
+  [_])
 
 (defn counting-converter-forwarder-fn
   "Forwarder that converts the packets and counts how many times it was called.
    This is used for testing purposes."
   []
-  (let [cntr (Counter.)]
+  (let [cntr (Counter.)
+        printer #(let [val (.value cntr)]
+                   (if (>= val 0)
+                     (println (.value cntr))))
+        _ (run-repeat (executor) printer 1000)]
     (fn
       [_]
       (do
-        (.inc cntr)
-        (if (= 0 (mod (.value cntr) 1000))
-          (println (.value cntr)))))))
+        (.inc cntr)))))
 
 (defn calls-per-second-converter-forwarder-fn
   "Forwarder that converts the packets and periodically prints how many times it was called per second.

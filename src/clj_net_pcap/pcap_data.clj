@@ -199,7 +199,7 @@
           "seq" (.seq tcp)
           "flags" (if *tcp-flags-as-set*
                     (set
-                      (map #(.toString %1)
+                      (map #(.toString ^Tcp$Flag %1)
                            (.flagsEnum tcp)))
                     (.flags tcp))}
          (when (.hasSubHeader tcp tcp-timestamp)
@@ -317,7 +317,7 @@
     m))
 
 (defn- add-tcp-timestamp-fields
-  [^Map m tcp-timestamp]
+  [^Map m ^Tcp$Timestamp tcp-timestamp]
   (doto m
     (.put "tcpTsval" (.tsval tcp-timestamp))
     (.put "tcpTsecr" (.tsecr tcp-timestamp))))

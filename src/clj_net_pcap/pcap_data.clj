@@ -516,8 +516,8 @@ user=>
 (defn stdout-forwarder-fn
   "Pre-defined forwarder function which outputs information about org.jnetpcap.packet.PcapPacket to *out*.
    The information is in form of a map. The is pretty printed with pprint."
-  [obj]
-  (pprint obj)
+  [packet]
+  (pprint packet)
   (println "---"))
 
 (defn stdout-byte-array-forwarder-fn

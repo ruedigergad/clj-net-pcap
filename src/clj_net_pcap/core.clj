@@ -259,10 +259,10 @@
   ([file-name handler-fn]
     (process-pcap-file file-name handler-fn nil))
   ([file-name handler-fn user-data]
-    (let [^Pcap pcap (create-pcap-from-file file-name)
+    (let [pcap (create-offline-pcap file-name)
           packet-handler (proxy [PcapPacketHandler] []
                            (nextPacket [^PcapPacket p ^Object u] (handler-fn p u)))]
-      (.dispatch pcap -1 packet-handler user-data))))
+      (pcap :start packet-handler))))
 
 (defn process-pcap-file-with-extraction-fn
   "Convenience function to read a pcap file and process the packets in map format."
@@ -314,3 +314,4 @@
    Returns a vector that contains the extracted maps."
   [file-name]
   (extract-data-from-pcap-file file-name pcap-packet-to-bean))
+

@@ -185,3 +185,18 @@
         (throw (RuntimeException. errmsg)))
       pcap)))
 
+(defn create-offline-pcap
+  "Convenience function for creating and activating a Pcap instance in one step.
+   See create-online-pcap and activate-online-pcap for details."
+  [file-name]
+  (let [pcap (create-pcap-from-file file-name)]
+    (fn
+      ([]
+        pcap)
+      ([k opt]
+        (condp = k
+          :start (let [run-fn (fn [] 
+                                (.dispatch pcap -1 opt nil))]
+                   (doto (Thread. run-fn) (.setName "PcapOfflineCaptureThread") (.start) (.join)))
+          (println "Unsupported operation for online pcap:" k))))))
+

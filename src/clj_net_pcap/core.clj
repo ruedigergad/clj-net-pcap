@@ -52,13 +52,7 @@
    Capturing can be influenced via the optional device and filter-expression arguments.
    By default the 'any' device is used for capturing with no filter being applied.
    Please note that the returned handle should be stored as it is needed for stopping the capture."
-  ([forwarder-fn]
-    (create-and-start-cljnetpcap forwarder-fn any))
-  ([forwarder-fn device]
-    (create-and-start-cljnetpcap forwarder-fn device ""))
-  ([forwarder-fn device filter-expr]
-    (create-and-start-cljnetpcap forwarder-fn device filter-expr false))
-  ([forwarder-fn device filter-expr emit-raw-data]
+  [pcap forwarder-fn filter-expr emit-raw-data]
     (let [running (ref true)
           buffer-drop-counter (Counter.)
           buffer-queued-counter (Counter.)
@@ -140,7 +134,6 @@
                            (.setName "PackerScanner")
                            (.setDaemon true)
                            (.start))
-          pcap (create-and-activate-pcap device)
           filter-expressions (ref [])
           _ (if (and 
                   filter-expr 
@@ -214,7 +207,18 @@
             :remove-filter (do (dosync
                                  (alter filter-expressions (fn [fe] (vec (filter #(not= arg %) fe)))))
                                (create-and-set-filter pcap (join " " @filter-expressions)))
-            :default (throw (RuntimeException. (str "Unsupported operation: " k)))))))))
+            :default (throw (RuntimeException. (str "Unsupported operation: " k))))))))
+
+(defn create-and-start-online-cljnetpcap
+  ([forwarder-fn]
+    (create-and-start-online-cljnetpcap forwarder-fn any))
+  ([forwarder-fn device]
+    (create-and-start-online-cljnetpcap forwarder-fn device ""))
+  ([forwarder-fn device filter-expr]
+    (create-and-start-online-cljnetpcap forwarder-fn device filter-expr false))
+  ([forwarder-fn device filter-expr emit-raw-data]
+    (let [pcap (create-and-activate-pcap device)]
+      (create-and-start-cljnetpcap pcap forwarder-fn filter-expr emit-raw-data))))
 
 (defn print-stat-cljnetpcap
   "Given a handle as returned by, e.g., create-and-start-cljnetpcap,

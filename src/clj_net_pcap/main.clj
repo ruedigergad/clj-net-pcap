@@ -90,7 +90,7 @@
         (pprint arg-map)
         (let [cljnetpcap (binding [clj-net-pcap.pcap/*snap-len* (:snap-len arg-map)
                                    clj-net-pcap.pcap/*buffer-size* (:buffer-size arg-map)]
-                           (create-and-start-cljnetpcap
+                           (create-and-start-online-cljnetpcap
                              (let [f-tmp (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
                                    f (if (= 'packet (first (first (:arglists (meta f-tmp)))))
                                        f-tmp

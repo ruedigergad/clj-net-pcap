@@ -217,7 +217,7 @@
   ([forwarder-fn device filter-expr]
     (create-and-start-online-cljnetpcap forwarder-fn device filter-expr false))
   ([forwarder-fn device filter-expr emit-raw-data]
-    (let [pcap (create-and-activate-pcap device)]
+    (let [pcap (create-and-activate-online-pcap device)]
       (create-and-start-cljnetpcap pcap forwarder-fn filter-expr emit-raw-data))))
 
 (defn print-stat-cljnetpcap

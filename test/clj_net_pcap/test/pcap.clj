@@ -43,36 +43,36 @@
   (let [dev lo]
     (is (device-exists? dev))))
 
-(deftest test-create-pcap
-  (let [pcap (create-pcap lo)]
+(deftest test-create-online-pcap
+  (let [pcap (create-online-pcap lo)]
     (is (= org.jnetpcap.Pcap (type pcap)))))
 
-(deftest test-create-and-activate-pcap
-  (let [pcap (create-and-activate-pcap lo)]
+(deftest test-create-and-activate-online-pcap
+  (let [pcap (create-and-activate-online-pcap lo)]
     (is (= org.jnetpcap.Pcap (type pcap)))
     (close-pcap pcap)))
 
 (deftest test-create-filter
   (let [filter-string "tcp[tcpflags] & tcp-syn != 0"
-        pcap (create-and-activate-pcap lo)
+        pcap (create-and-activate-online-pcap lo)
         f (create-filter pcap filter-string)]
     (is (= org.jnetpcap.PcapBpfProgram (type f)))
     (close-pcap pcap)))
 
 (deftest test-set-filter
   (let [filter-string "tcp[tcpflags] & tcp-syn != 0"
-        pcap (create-and-activate-pcap lo)
+        pcap (create-and-activate-online-pcap lo)
         f (create-filter pcap filter-string)]
     (set-filter pcap f)
     (close-pcap pcap)))
 
 (deftest test-create-and-set-filter
   (let [filter-string "tcp[tcpflags] & tcp-syn != 0"
-        pcap (create-and-activate-pcap lo)]
+        pcap (create-and-activate-online-pcap lo)]
     (create-and-set-filter pcap filter-string)))
 
 (deftest test-create-get-stat-fn
-  (let [pcap (create-and-activate-pcap lo)
+  (let [pcap (create-and-activate-online-pcap lo)
         stat-fn (create-stat-fn pcap)]
     (is (not (nil? stat-fn)))
     (is (not (nil? (stat-fn))))

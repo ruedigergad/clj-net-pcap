@@ -61,7 +61,7 @@
   [dev-name]
   (not (nil? (get-device dev-name))))
 
-(defn create-pcap
+(defn create-online-pcap
   "Creates a Pcap instance and initializes it with the values for:
    *buffer-size*, *flags*, *snap-len*. You can \"override\" the default values
    by \"re-binding\" those vars.
@@ -81,7 +81,7 @@
         (throw (RuntimeException. errmsg)))
       pcap)))
 
-(defn activate-pcap
+(defn activate-online-pcap
   "Activates the passed Pcap instance."
   [^Pcap pcap]
   (if (= (.activate pcap) Pcap/OK)
@@ -90,12 +90,12 @@
       (println-err errmsg)
       (throw (RuntimeException. errmsg)))))
 
-(defn create-and-activate-pcap
+(defn create-and-activate-online-pcap
   "Convenience function for creating and activating a Pcap instance in one step.
-   See create-pcap and activate-pcap for details."
+   See create-online-pcap and activate-online-pcap for details."
   [dev-name]
-  (let [pcap (create-pcap dev-name)]
-    (activate-pcap pcap)))
+  (let [pcap (create-online-pcap dev-name)]
+    (activate-online-pcap pcap)))
 
 (defn close-pcap
   "Closes the given Pcap instance."

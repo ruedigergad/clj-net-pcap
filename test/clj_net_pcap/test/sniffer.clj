@@ -32,7 +32,7 @@
 (deftest test-sniffer
   (let [was-run (prepare-flag)
         handler-fn (fn [_ _ _] (set-flag was-run))
-        pcap (create-and-activate-pcap lo)
+        pcap (create-and-activate-online-pcap lo)
         sniffer (create-and-start-sniffer pcap handler-fn nil)]
     (is (not (flag-set? was-run)))
     (Thread/sleep receive-delay)
@@ -58,7 +58,7 @@
         handler-fn (fn [ph bb u] (.offer queue 12345))
         forwarder-fn (fn [_] (set-flag was-run))
         forwarder (create-and-start-forwarder queue forwarder-fn)
-        pcap (create-and-activate-pcap lo)
+        pcap (create-and-activate-online-pcap lo)
         sniffer (create-and-start-sniffer pcap handler-fn)]
     (Thread/sleep receive-delay)
     (exec-blocking "ping -c 1 localhost")

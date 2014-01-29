@@ -36,7 +36,7 @@
         sniffer (create-and-start-sniffer pcap handler-fn nil)]
     (is (not (flag-set? was-run)))
     (Thread/sleep receive-delay)
-    (.inject pcap (byte-array 1 (byte 0)))
+    (.inject (pcap) (byte-array 1 (byte 0)))
     (await-flag was-run)
     (is (flag-set? was-run))
     (stop-sniffer sniffer)))

@@ -90,18 +90,6 @@
       (println-err errmsg)
       (throw (RuntimeException. errmsg)))))
 
-(defn create-and-activate-online-pcap
-  "Convenience function for creating and activating a Pcap instance in one step.
-   See create-online-pcap and activate-online-pcap for details."
-  [dev-name]
-  (let [pcap (create-online-pcap dev-name)]
-    (activate-online-pcap pcap)))
-
-(defn close-pcap
-  "Closes the given Pcap instance."
-  [pcap]
-  (.close pcap))
-
 (defn create-filter
   "Creates and compiles a filter given as String. Optionally the optimize flag
    and netmask can be passed. The default value for optimize is 1 and for 
@@ -110,10 +98,10 @@
     (create-filter pcap filter-string 1))
   ([pcap filter-string optimize]
     (create-filter pcap filter-string optimize 0))
-  ([^Pcap pcap filter-string optimize netmask] 
+  ([pcap filter-string optimize netmask] 
     (let [f (PcapBpfProgram.)]
       (if 
-        (= (.compile pcap f filter-string optimize netmask) Pcap/OK)
+        (= (.compile ^Pcap pcap f filter-string optimize netmask) Pcap/OK)
         f
         ;;; TODO: Should we throw an exception when something went wrong or is 
         ;;;       returning nil sufficient?
@@ -131,16 +119,56 @@
   "Convenience function for creating and setting a filter in one step.
    For details see create-filter and set-filter."
   [pcap filter-string]
-  (let [f (create-filter pcap filter-string)]
-    (set-filter pcap f)))
+  (let [f (create-filter (pcap) filter-string)]
+    (set-filter (pcap) f)))
+
+(defn create-and-activate-online-pcap
+  "Convenience function for creating and activating a Pcap instance in one step.
+   See create-online-pcap and activate-online-pcap for details."
+  [dev-name]
+  (let [pcap (create-online-pcap dev-name)
+        pcap-thread (ref nil)]
+    (activate-online-pcap pcap)
+    (fn
+      ([]
+        pcap)
+      ([k]
+        (condp = k
+          :stop (do 
+                  (println "Stopping online pcap.")
+                  (.breakloop pcap)
+               ;;; The jNetPcap capture loop may still be active and process
+               ;;; at least one packet even after calling Pcap.breakloop().
+               ;;; To force the termination of the loop we inject a single dummy
+               ;;; packet. To ensure this packet is not filtered by some 
+               ;;; previously set filter the filter is explicitly set to accept
+               ;;; all packets. See also the jNetPcap docs for more information
+               ;;; about the behavior of Pcap.breakloop().
+                  (create-and-set-filter (fn [] pcap) "")
+                  (.inject pcap (byte-array 1 (byte 0)))
+                  (.join @pcap-thread)
+                  (dosync ref-set pcap-thread nil)
+                  (.close pcap))
+          (println "Unsupported operation for online pcap:" k)))
+      ([k opt]
+        (condp = k
+          :start (let [run-fn (fn [] 
+                                (.loop pcap Pcap/LOOP_INFINITE opt nil))]
+                   (dosync (ref-set pcap-thread (doto (Thread. run-fn) (.setName "PcapOnlineCaptureThread") (.start)))))
+          (println "Unsupported operation for online pcap:" k))))))
+
+(defn close-pcap
+  "Closes the given Pcap instance."
+  [pcap]
+  (.close (pcap)))
 
 (defn create-stat-fn
   "Returns an fn that prints statistical data about a org.jnetpcap.Pcap instance.
    Argument is the org.jnetpcap.Pcap instance."
-  [^Pcap pcap]
+  [pcap]
   (let [pcap-stats (PcapStat.)]
     (fn []
-      (if (= 0 (.stats pcap pcap-stats))
+      (if (= 0 (.stats ^Pcap (pcap) pcap-stats))
         {"recv" (.getRecv pcap-stats) 
          "drop" (.getDrop pcap-stats) 
          "ifdrop" (.getIfDrop pcap-stats)}

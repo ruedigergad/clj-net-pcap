@@ -68,27 +68,12 @@
     (create-and-start-sniffer pcap handler-fn nil))
   ([^Pcap pcap handler-fn user-data]
     (let [packet-handler (proxy [ByteBufferHandler] []
-                           (nextPacket [ph buf u] (handler-fn ph buf u)))
+                           (nextPacket [ph buf u] (handler-fn ph buf u)))]
 ;          packet-handler (proxy [PcapPacketHandler] []
 ;                           (nextPacket [^PcapPacket p ^Object u] (handler-fn p u)))
-          run-fn (fn [] 
-                   (.loop pcap Pcap/LOOP_INFINITE packet-handler user-data)) 
-          sniffer-thread (doto (Thread. run-fn) (.setName "SnifferThread") (.start))]
+      (pcap :start packet-handler)
       (fn [k]
-        (cond
-          (= k :stop) (do 
-                        (.breakloop pcap)
-               ;;; The jNetPcap capture loop may still be active and process
-               ;;; at least one packet even after calling Pcap.breakloop().
-               ;;; To force the termination of the loop we inject a single dummy
-               ;;; packet. To ensure this packet is not filtered by some 
-               ;;; previously set filter the filter is explicitly set to accept
-               ;;; all packets. See also the jNetPcap docs for more information
-               ;;; about the behavior of Pcap.breakloop().
-                        (create-and-set-filter pcap "")
-                        (.inject pcap (byte-array 1 (byte 0)))
-                        (.join sniffer-thread)
-                        (.close pcap)))))))
+        (pcap k)))))
 
 (defn stop-sniffer
   "Convenience function for stopping a sniffer that has been created with 

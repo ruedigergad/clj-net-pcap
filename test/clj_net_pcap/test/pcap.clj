@@ -49,21 +49,21 @@
 
 (deftest test-create-and-activate-online-pcap
   (let [pcap (create-and-activate-online-pcap lo)]
-    (is (= org.jnetpcap.Pcap (type pcap)))
+    (is (= org.jnetpcap.Pcap (type (pcap))))
     (close-pcap pcap)))
 
 (deftest test-create-filter
   (let [filter-string "tcp[tcpflags] & tcp-syn != 0"
         pcap (create-and-activate-online-pcap lo)
-        f (create-filter pcap filter-string)]
+        f (create-filter (pcap) filter-string)]
     (is (= org.jnetpcap.PcapBpfProgram (type f)))
     (close-pcap pcap)))
 
 (deftest test-set-filter
   (let [filter-string "tcp[tcpflags] & tcp-syn != 0"
         pcap (create-and-activate-online-pcap lo)
-        f (create-filter pcap filter-string)]
-    (set-filter pcap f)
+        f (create-filter (pcap) filter-string)]
+    (set-filter (pcap) f)
     (close-pcap pcap)))
 
 (deftest test-create-and-set-filter
@@ -76,5 +76,6 @@
         stat-fn (create-stat-fn pcap)]
     (is (not (nil? stat-fn)))
     (is (not (nil? (stat-fn))))
-    (println (stat-fn)
-    (close-pcap pcap))))
+    (println (stat-fn))
+    (close-pcap pcap)))
+

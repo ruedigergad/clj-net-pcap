@@ -260,16 +260,17 @@
     (process-pcap-file file-name handler-fn nil))
   ([file-name handler-fn user-data]
     (let [pcap (create-offline-pcap file-name)
-          packet-handler (proxy [PcapPacketHandler] []
-                           (nextPacket [^PcapPacket p ^Object u] (handler-fn p u)))]
-      (pcap :start packet-handler))))
+          clj-net-pcap (create-and-start-cljnetpcap pcap handler-fn "" nil)]
+      (sleep 1000)
+      (stop-cljnetpcap clj-net-pcap))))
+;      (pcap :start packet-handler))))
 
 (defn process-pcap-file-with-extraction-fn
   "Convenience function to read a pcap file and process the packets in map format."
   [file-name handler-fn extraction-fn]
     (process-pcap-file 
       file-name
-      (fn [p _]
+      (fn [p]
         (handler-fn (extraction-fn p)))))
 
 (defn extract-data-from-pcap-file

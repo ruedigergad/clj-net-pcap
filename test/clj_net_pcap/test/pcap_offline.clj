@@ -58,11 +58,12 @@
     (is (= 6 @my-counter))))
 
 (deftest test-process-pcap-file
-  (let [my-counter (prepare-counter)
-        handler-fn (fn [_ _] (inc-counter my-counter))]
-    (is (= 0 @my-counter))
+  (let [my-counter (counter)
+        handler-fn (fn [_] (my-counter inc))]
+    (is (= 0 (my-counter)))
     (process-pcap-file test-file handler-fn)
-    (is (= 6 @my-counter))))
+    (sleep 1000)
+    (is (= 6 (my-counter)))))
 
 (deftest test-process-pcap-file-as-nested-maps
   (let [my-map (ref {})

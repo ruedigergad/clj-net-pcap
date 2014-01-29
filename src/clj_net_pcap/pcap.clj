@@ -193,6 +193,7 @@
     (fn
       ([]
         pcap)
+      ([k])
       ([k opt]
         (condp = k
           :start (let [run-fn (fn [] 

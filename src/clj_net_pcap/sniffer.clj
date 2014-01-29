@@ -66,7 +66,7 @@
    stop-sniffer function. Stopping the sniffer also takes care of closing pcap."
   ([pcap handler-fn]
     (create-and-start-sniffer pcap handler-fn nil))
-  ([^Pcap pcap handler-fn user-data]
+  ([pcap handler-fn user-data]
     (let [packet-handler (proxy [ByteBufferHandler] []
                            (nextPacket [ph buf u] (handler-fn ph buf u)))]
 ;          packet-handler (proxy [PcapPacketHandler] []

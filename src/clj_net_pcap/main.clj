@@ -128,8 +128,7 @@
             (do
               (println "Type \"quit\" or \"q\" to quit: ")
               (loop [line ""]
-                (if (or (= line "q") (= line "quit"))
-                  nil
+                (if-not (or (= line "q") (= line "quit"))
                   (let [split-input (split line #"\s")
                         cmd (first split-input)
                         args (join " " (rest split-input))]

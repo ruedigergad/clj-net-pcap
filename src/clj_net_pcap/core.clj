@@ -69,6 +69,14 @@
     (.hdr_usec ph)
     (deep-copy buf)))
 
+(defn peer-packet
+  [^BufferRecord bufrec]
+  (let [^ByteBuffer buf (:buf bufrec)
+        ^PcapHeader ph (PcapHeader. (:cl bufrec) (:wl bufrec) (:s bufrec) (:us bufrec))
+        ^PcapPacket pkt (doto (PcapPacket. JMemory$Type/POINTER)
+                          (.peerHeaderAndData ph buf))]
+    pkt))
+
 (defn create-and-start-cljnetpcap
   "Convenience function for creating and starting packet capturing.
    forwarder-fn will be called for each captured packet.
@@ -103,17 +111,9 @@
                              (try
                                (let [bufrec (.take buffer-queue)]
                                  (if (< (.size scanner-queue) (- *queue-size* 1))
-                                   (if (and
-                                         (not (nil? bufrec))
-                                         (> (:cl bufrec) 0)
-                                         (> (:wl bufrec) 0))
-                                     (let [^ByteBuffer buf (:buf bufrec)
-                                           ^PcapHeader ph (PcapHeader. (:cl bufrec) (:wl bufrec) (:s bufrec) (:us bufrec))
-                                           ^PcapPacket pkt (doto (PcapPacket. JMemory$Type/POINTER)
-                                                             (.peerHeaderAndData ph buf))]
-                                       (if (.offer scanner-queue pkt)
-                                         (.inc scanner-queued-counter)
-                                         (.inc scanner-drop-counter)))))
+                                   (if (.offer scanner-queue (peer-packet bufrec))
+                                     (.inc scanner-queued-counter)
+                                     (.inc scanner-drop-counter)))
                                    (.inc scanner-drop-counter))
                                (catch Exception e
                                  (if @running

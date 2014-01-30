@@ -47,6 +47,13 @@
   [cl wl s us buf])
 
 (defn deep-copy
+  "Creates a deep-copy of the supplied data.
+   We differentiate two cases:
+   When only a ByteBuffer is supplied the content is copied to a directly allocated ByteBuffer.
+   This copy is primarily intended for being directly peered with a PcapPacket instance.
+   When a ByteBuffer and a PcapHeader is supplied the field values of the PcapHeader
+   are prepended to the deep copy of the ByteBuffer.
+   This is intended for being transferred as byte array."
   ([^ByteBuffer buf]
     (doto (ByteBuffer/allocateDirect (.remaining buf))
       (.put buf)
@@ -61,6 +68,9 @@
       (.flip))))
 
 (defn create-buffer-record
+  "Create a BufferRecord.
+   The BufferRecord contains the values of the PcapHeader and a directly allocated
+   deep-copy of the ByteBuffer."
   [^ByteBuffer buf ^PcapHeader ph]
   (BufferRecord.
     (.caplen ph)
@@ -70,6 +80,7 @@
     (deep-copy buf)))
 
 (defn peer-packet
+  "Create a new PcapPacket instance and fill/peer it with the data from the supplied BufferRecord."
   [^BufferRecord bufrec]
   (let [^ByteBuffer buf (:buf bufrec)
         ^PcapHeader ph (PcapHeader. (:cl bufrec) (:wl bufrec) (:s bufrec) (:us bufrec))
@@ -78,15 +89,14 @@
     pkt))
 
 (defn scan-packet
+  "Scan the supplied packet and return it."
   [^PcapPacket pkt]
   (doto pkt (.scan (.value (PcapDLT/EN10MB)))))
 
-(defn create-and-start-cljnetpcap
-  "Convenience function for creating and starting packet capturing.
-   forwarder-fn will be called for each captured packet.
-   Capturing can be influenced via the optional device and filter-expression arguments.
-   By default the 'any' device is used for capturing with no filter being applied.
-   Please note that the returned handle should be stored as it is needed for stopping the capture."
+(defn set-up-and-start-cljnetpcap
+  "Takes a pcap instance, sets up the capture pipe line, and starts the capturing and processing.
+   This is not intended to be used directly.
+   It is recommended to use: create-and-start-online-cljnetpcap or process-pcap-file"
   [pcap forwarder-fn filter-expr emit-raw-data force-put]
     (let [running (ref true)
           buffer-drop-counter (Counter.)
@@ -234,6 +244,11 @@
             :default (throw (RuntimeException. (str "Unsupported operation: " k))))))))
 
 (defn create-and-start-online-cljnetpcap
+  "Convenience function for performing live online capturing.
+   forwarder-fn will be called for each captured packet.
+   Capturing can be influenced via the optional device and filter-expression arguments.
+   By default the 'any' device is used for capturing with no filter being applied.
+   Please note that the returned handle should be stored as it is needed for stopping the capture."
   ([forwarder-fn]
     (create-and-start-online-cljnetpcap forwarder-fn any))
   ([forwarder-fn device]
@@ -242,16 +257,17 @@
     (create-and-start-online-cljnetpcap forwarder-fn device filter-expr false))
   ([forwarder-fn device filter-expr emit-raw-data]
     (let [pcap (create-and-activate-online-pcap device)]
-      (create-and-start-cljnetpcap pcap forwarder-fn filter-expr emit-raw-data false))))
+      (set-up-and-start-cljnetpcap pcap forwarder-fn filter-expr emit-raw-data false))))
 
 (defn print-stat-cljnetpcap
-  "Given a handle as returned by, e.g., create-and-start-cljnetpcap,
+  "Given a handle as returned by, e.g., create-and-start-online-cljnetpcap or process-pcap-file,
    this prints statistical output about the capture process."
   [cljnetpcap] 
   (cljnetpcap :stat))
 
 (defn stop-cljnetpcap
-  "Stops a running capture. Argument is the handle as returned by create-and-start-cljnetpcap."
+  "Stops a running capture. Argument is the handle as returned, e.g.,
+   by create-and-start-online-cljnetpcap or process-pcap-file."
   [cljnetpcap]
   (cljnetpcap :stop))
 
@@ -284,7 +300,7 @@
     (process-pcap-file file-name handler-fn nil))
   ([file-name handler-fn user-data]
     (let [pcap (create-offline-pcap file-name)
-          clj-net-pcap (create-and-start-cljnetpcap pcap handler-fn "" false true)]
+          clj-net-pcap (set-up-and-start-cljnetpcap pcap handler-fn "" false true)]
       (clj-net-pcap :wait-for-completed)
       (stop-cljnetpcap clj-net-pcap))))
 

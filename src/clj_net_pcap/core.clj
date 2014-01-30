@@ -46,6 +46,29 @@
 (defrecord BufferRecord
   [cl wl s us buf])
 
+(defn deep-copy
+  ([^ByteBuffer buf]
+    (doto (ByteBuffer/allocateDirect (.remaining buf))
+      (.put buf)
+      (.flip)))
+  ([^ByteBuffer buf ^PcapHeader ph]
+    (doto (ByteBuffer/allocate (+ (.remaining buf) 20))
+      (.putInt (.caplen ph))
+      (.putInt (.wirelen ph))
+      (.putLong (.hdr_sec ph))
+      (.putInt (.hdr_usec ph))
+      (.put ^ByteBuffer buf)
+      (.flip))))
+
+(defn create-buffer-record
+  [^ByteBuffer buf ^PcapHeader ph]
+  (BufferRecord.
+    (.caplen ph)
+    (.wirelen ph)
+    (.hdr_sec ph)
+    (.hdr_usec ph)
+    (deep-copy buf)))
+
 (defn create-and-start-cljnetpcap
   "Convenience function for creating and starting packet capturing.
    forwarder-fn will be called for each captured packet.
@@ -60,35 +83,18 @@
           out-drop-counter (Counter.)
           out-queued-counter (Counter.)
           out-queue (ArrayBlockingQueue. *queue-size*)
-          handler-fn (fn [^PcapHeader ph ^ByteBuffer buf ^Object _]
+          handler-fn (fn [ph buf _]
                        (if (not (nil? buf))
                           (if emit-raw-data
                             (if (< (.size out-queue) (- *queue-size* 1))
-                              (let [data (doto (ByteBuffer/allocate (+ (.remaining buf) 20))
-                                           (.putInt (.caplen ph))
-                                           (.putInt (.wirelen ph))
-                                           (.putLong (.hdr_sec ph))
-                                           (.putInt (.hdr_usec ph))
-                                           (.put ^ByteBuffer buf)
-                                           (.flip))]
-                                (if (.offer out-queue data)
-                                  (.inc out-queued-counter)
-                                  (.inc out-drop-counter)))
+                              (if (.offer out-queue (deep-copy buf ph))
+                                (.inc out-queued-counter)
+                                (.inc out-drop-counter))
                               (.inc out-drop-counter))
                             (if (< (.size buffer-queue) (- *queue-size* 1))
-                              (let [
-                                    bb-copy (doto (ByteBuffer/allocateDirect (.remaining buf))
-                                              (.put buf)
-                                              (.flip))
-                                    bufrec (BufferRecord.
-                                             (.caplen ph)
-                                             (.wirelen ph)
-                                             (.hdr_sec ph)
-                                             (.hdr_usec ph)
-                                             bb-copy)]
-                                (if (.offer buffer-queue bufrec)
-                                  (.inc buffer-queued-counter)
-                                  (.inc buffer-drop-counter)))
+                              (if (.offer buffer-queue (create-buffer-record buf ph))
+                                (.inc buffer-queued-counter)
+                                (.inc buffer-drop-counter))
                               (.inc buffer-drop-counter)))))
           scanner-drop-counter (Counter.)
           scanner-queued-counter (Counter.)

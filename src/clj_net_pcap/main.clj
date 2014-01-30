@@ -137,7 +137,9 @@
             (run-repeat stat-out-executor #(print-stat-cljnetpcap cljnetpcap) stat-interval))
           (cond
             (not= "" pcap-file-name)
-              (println "Finished reading from pcap file.")
+              (do
+                (println "Finished reading from pcap file.")
+                (sleep stat-interval))
             (> run-duration 0)
               (do
                 (println "Will automatically shut down in" run-duration "seconds.")

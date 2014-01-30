@@ -77,13 +77,17 @@
                           (.peerHeaderAndData ph buf))]
     pkt))
 
+(defn scan-packet
+  [^PcapPacket pkt]
+  (doto pkt (.scan (.value (PcapDLT/EN10MB)))))
+
 (defn create-and-start-cljnetpcap
   "Convenience function for creating and starting packet capturing.
    forwarder-fn will be called for each captured packet.
    Capturing can be influenced via the optional device and filter-expression arguments.
    By default the 'any' device is used for capturing with no filter being applied.
    Please note that the returned handle should be stored as it is needed for stopping the capture."
-  [pcap forwarder-fn filter-expr emit-raw-data]
+  [pcap forwarder-fn filter-expr emit-raw-data force-put]
     (let [running (ref true)
           buffer-drop-counter (Counter.)
           buffer-queued-counter (Counter.)
@@ -94,27 +98,33 @@
           handler-fn (fn [ph buf _]
                        (if (not (nil? buf))
                           (if emit-raw-data
-                            (if (< (.size out-queue) (- *queue-size* 1))
-                              (if (.offer out-queue (deep-copy buf ph))
-                                (.inc out-queued-counter)
-                                (.inc out-drop-counter))
-                              (.inc out-drop-counter))
-                            (if (< (.size buffer-queue) (- *queue-size* 1))
-                              (if (.offer buffer-queue (create-buffer-record buf ph))
-                                (.inc buffer-queued-counter)
-                                (.inc buffer-drop-counter))
-                              (.inc buffer-drop-counter)))))
+                            (if force-put
+                              (.put out-queue (deep-copy buf ph))
+                              (if (< (.size out-queue) (- *queue-size* 1))
+                                (if (.offer out-queue (deep-copy buf ph))
+                                  (.inc out-queued-counter)
+                                  (.inc out-drop-counter))
+                                (.inc out-drop-counter)))
+                            (if force-put
+                              (.put out-queue (create-buffer-record buf ph))
+                              (if (< (.size buffer-queue) (- *queue-size* 1))
+                                (if (.offer buffer-queue (create-buffer-record buf ph))
+                                  (.inc buffer-queued-counter)
+                                  (.inc buffer-drop-counter))
+                                (.inc buffer-drop-counter))))))
           scanner-drop-counter (Counter.)
           scanner-queued-counter (Counter.)
           scanner-queue (ArrayBlockingQueue. *queue-size*)
           buffer-processor (fn [] 
                              (try
                                (let [bufrec (.take buffer-queue)]
-                                 (if (< (.size scanner-queue) (- *queue-size* 1))
-                                   (if (.offer scanner-queue (peer-packet bufrec))
-                                     (.inc scanner-queued-counter)
-                                     (.inc scanner-drop-counter)))
-                                   (.inc scanner-drop-counter))
+                                 (if force-put
+                                   (.put scanner-queue (peer-packet bufrec))
+                                   (if (< (.size scanner-queue) (- *queue-size* 1))
+                                     (if (.offer scanner-queue (peer-packet bufrec))
+                                       (.inc scanner-queued-counter)
+                                       (.inc scanner-drop-counter))
+                                     (.inc scanner-drop-counter))))
                                (catch Exception e
                                  (if @running
                                    (.printStackTrace e)))))
@@ -126,12 +136,13 @@
           scanner (fn []
                     (try
                       (let [^PcapPacket pkt (.take scanner-queue)]
-                        (if (< (.size out-queue) (- *queue-size* 1))
-                          (let [_ (.scan pkt (.value (PcapDLT/EN10MB)))]
-                            (if (.offer out-queue pkt)
+                        (if force-put
+                          (.put out-queue (scan-packet pkt))
+                          (if (< (.size out-queue) (- *queue-size* 1))
+                            (if (.offer out-queue (scan-packet pkt))
                               (.inc out-queued-counter)
-                              (.inc out-drop-counter)))
-                          (.inc out-drop-counter)))
+                              (.inc out-drop-counter))
+                            (.inc out-drop-counter))))
                       (catch Exception e
                         (if @running
                           (.printStackTrace e)))))
@@ -224,7 +235,7 @@
     (create-and-start-online-cljnetpcap forwarder-fn device filter-expr false))
   ([forwarder-fn device filter-expr emit-raw-data]
     (let [pcap (create-and-activate-online-pcap device)]
-      (create-and-start-cljnetpcap pcap forwarder-fn filter-expr emit-raw-data))))
+      (create-and-start-cljnetpcap pcap forwarder-fn filter-expr emit-raw-data false))))
 
 (defn print-stat-cljnetpcap
   "Given a handle as returned by, e.g., create-and-start-cljnetpcap,
@@ -266,7 +277,7 @@
     (process-pcap-file file-name handler-fn nil))
   ([file-name handler-fn user-data]
     (let [pcap (create-offline-pcap file-name)
-          clj-net-pcap (create-and-start-cljnetpcap pcap handler-fn "" nil)]
+          clj-net-pcap (create-and-start-cljnetpcap pcap handler-fn "" false false)]
       (sleep 1000)
       (stop-cljnetpcap clj-net-pcap))))
 ;      (pcap :start packet-handler))))

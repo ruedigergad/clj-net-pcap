@@ -76,6 +76,9 @@
                        "The duration in seconds how long clj-net-pcap is run."
                        :default -1
                        :parse-fn #(Integer. %)]
+                      ["-R" "--read-file"
+                       "Read from a pcap file instead of performing a live capture."
+                       :default ""]
                       ["-r" "--raw"
                        (str "Emit raw data instead of decoded packets. "
                             "Be careful, not all transformation and forwarder functions support this.")
@@ -88,20 +91,32 @@
       (do
         (println "Starting clj-net-pcap using the following options:")
         (pprint arg-map)
-        (let [cljnetpcap (binding [clj-net-pcap.pcap/*snap-len* (:snap-len arg-map)
+        (let [pcap-file-name (arg-map :read-file)
+              cljnetpcap (binding [clj-net-pcap.pcap/*snap-len* (:snap-len arg-map)
                                    clj-net-pcap.pcap/*buffer-size* (:buffer-size arg-map)]
-                           (create-and-start-online-cljnetpcap
-                             (let [f-tmp (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
-                                   f (if (= 'packet (first (first (:arglists (meta f-tmp)))))
-                                       f-tmp
-                                       (f-tmp))
-                                   t (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))]
-                                 #(let [o (t %)]
-                                    (if o
-                                      (f o))))
-                             (arg-map :interface)
-                             (arg-map :filter)
-                             (arg-map :raw)))
+                           (if (= "" pcap-file-name)
+                             (create-and-start-online-cljnetpcap
+                               (let [f-tmp (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
+                                     f (if (= 'packet (first (first (:arglists (meta f-tmp)))))
+                                         f-tmp
+                                         (f-tmp))
+                                     t (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))]
+                                   #(let [o (t %)]
+                                      (if o
+                                        (f o))))
+                               (arg-map :interface)
+                               (arg-map :filter)
+                               (arg-map :raw))
+                             (process-pcap-file
+                               pcap-file-name
+                               (let [f-tmp (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
+                                     f (if (= 'packet (first (first (:arglists (meta f-tmp)))))
+                                         f-tmp
+                                         (f-tmp))
+                                     t (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))]
+                                   #(let [o (t %)]
+                                      (if o
+                                        (f o)))))))
               stat-interval (arg-map :stats)
               stat-out-executor (executor)
               shutdown-fn (fn [] (do
@@ -115,42 +130,47 @@
                                    (remove-native-libs)))
               run-duration (arg-map :duration)
               shutdown-timer-executor (executor)]
-          (println "clj-net-pcap standalone executable started.\n")
+          (if (not= "" pcap-file-name)
+            (println "clj-net-pcap standalone executable started.\n"))
           (when (> stat-interval 0)
             (println "Printing stats to stderr in intervalls of" stat-interval "ms.")
             (run-repeat stat-out-executor #(print-stat-cljnetpcap cljnetpcap) stat-interval))
-          (if (> run-duration 0)
-            (do
-              (println "Will automatically shut down in" run-duration "seconds.")
-              (run-once shutdown-timer-executor shutdown-fn (* 1000 run-duration)))
-          ;;; Running the main from, e.g., leiningen results in stdout not being properly accessible.
-          ;;; Hence, this will not work when run this way but works when run from a jar via "java -jar ...".
-            (do
-              (println "Type \"quit\" or \"q\" to quit: ")
-              (loop [line ""]
-                (if-not (or (= line "q") (= line "quit"))
-                  (let [split-input (split line #"\s")
-                        cmd (first split-input)
-                        args (join " " (rest split-input))]
-                    (cond
-                      (or
-                        (= cmd "af")
-                        (= cmd "add-filter")) (try 
-                                                (add-filter cljnetpcap args)
-                                                (catch Exception e
-                                                  (println "Error adding filter:" e)))
-                      (or
-                        (= cmd "sf")
-                        (= cmd "show-filters")) (pprint (get-filters cljnetpcap))
-                      (or
-                        (= cmd "rlf")
-                        (= cmd "remove-last-filter")) (remove-last-filter cljnetpcap)
-                      :default (when (not= cmd "")
-                                 (println "Unknown command:" cmd)
-                                 (println "Valid commands are: add-filter (af), show-filters (sf), remove-last-filter (rlf)")))
-                    (print "cljnetpcap=> ")
-                    (flush)
-                    (recur (read-line)))))
-              (shutdown-fn)))
+          (cond
+            (not= "" pcap-file-name)
+              (println "Finished reading from pcap file.")
+            (> run-duration 0)
+              (do
+                (println "Will automatically shut down in" run-duration "seconds.")
+                (run-once shutdown-timer-executor shutdown-fn (* 1000 run-duration)))
+            :default
+              ;;; Running the main from, e.g., leiningen results in stdout not being properly accessible.
+              ;;; Hence, this will not work when run this way but works when run from a jar via "java -jar ...".
+              (do
+                (println "Type \"quit\" or \"q\" to quit: ")
+                (loop [line ""]
+                  (if-not (or (= line "q") (= line "quit"))
+                    (let [split-input (split line #"\s")
+                          cmd (first split-input)
+                          args (join " " (rest split-input))]
+                      (cond
+                        (or
+                          (= cmd "af")
+                          (= cmd "add-filter")) (try 
+                                                  (add-filter cljnetpcap args)
+                                                  (catch Exception e
+                                                    (println "Error adding filter:" e)))
+                        (or
+                          (= cmd "sf")
+                          (= cmd "show-filters")) (pprint (get-filters cljnetpcap))
+                        (or
+                          (= cmd "rlf")
+                          (= cmd "remove-last-filter")) (remove-last-filter cljnetpcap)
+                        :default (when (not= cmd "")
+                                   (println "Unknown command:" cmd)
+                                   (println "Valid commands are: add-filter (af), show-filters (sf), remove-last-filter (rlf)")))
+                      (print "cljnetpcap=> ")
+                      (flush)
+                      (recur (read-line)))))
+                (shutdown-fn)))
           (println "Leaving (-main [& args] ...)."))))))
 

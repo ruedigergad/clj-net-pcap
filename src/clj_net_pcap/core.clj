@@ -106,7 +106,7 @@
                                   (.inc out-drop-counter))
                                 (.inc out-drop-counter)))
                             (if force-put
-                              (.put out-queue (create-buffer-record buf ph))
+                              (.put buffer-queue (create-buffer-record buf ph))
                               (if (< (.size buffer-queue) (- *queue-size* 1))
                                 (if (.offer buffer-queue (create-buffer-record buf ph))
                                   (.inc buffer-queued-counter)
@@ -214,6 +214,13 @@
                                   (dosync
                                     (alter filter-expressions pop))
                                   (create-and-set-filter pcap (join " " @filter-expressions)))
+            :wait-for-completed (do
+                                  (while (or
+                                         (> (.size buffer-queue) 0)
+                                         (> (.size scanner-queue) 0)
+                                         (> (.size out-queue) 0))
+                                    (sleep 100))
+                                  (sleep 100))
             :default (throw (RuntimeException. (str "Unsupported operation: " k)))))
         ([k arg]
           (condp = k
@@ -277,8 +284,8 @@
     (process-pcap-file file-name handler-fn nil))
   ([file-name handler-fn user-data]
     (let [pcap (create-offline-pcap file-name)
-          clj-net-pcap (create-and-start-cljnetpcap pcap handler-fn "" false false)]
-      (sleep 1000)
+          clj-net-pcap (create-and-start-cljnetpcap pcap handler-fn "" false true)]
+      (clj-net-pcap :wait-for-completed)
       (stop-cljnetpcap clj-net-pcap))))
 ;      (pcap :start packet-handler))))
 

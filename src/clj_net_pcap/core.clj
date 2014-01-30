@@ -101,8 +101,8 @@
           scanner-queue (ArrayBlockingQueue. *queue-size*)
           buffer-processor (fn [] 
                              (try
-                               (if (< (.size scanner-queue) (- *queue-size* 1))
-                                 (let [bufrec (.take buffer-queue)]
+                               (let [bufrec (.take buffer-queue)]
+                                 (if (< (.size scanner-queue) (- *queue-size* 1))
                                    (if (and
                                          (not (nil? bufrec))
                                          (> (:cl bufrec) 0)

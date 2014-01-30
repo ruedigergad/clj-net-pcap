@@ -287,7 +287,6 @@
           clj-net-pcap (create-and-start-cljnetpcap pcap handler-fn "" false true)]
       (clj-net-pcap :wait-for-completed)
       (stop-cljnetpcap clj-net-pcap))))
-;      (pcap :start packet-handler))))
 
 (defn process-pcap-file-with-extraction-fn
   "Convenience function to read a pcap file and process the packets."

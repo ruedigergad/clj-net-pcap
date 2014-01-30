@@ -295,7 +295,7 @@
 ;      (pcap :start packet-handler))))
 
 (defn process-pcap-file-with-extraction-fn
-  "Convenience function to read a pcap file and process the packets in map format."
+  "Convenience function to read a pcap file and process the packets."
   [file-name handler-fn extraction-fn]
     (process-pcap-file 
       file-name

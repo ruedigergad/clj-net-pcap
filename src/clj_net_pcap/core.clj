@@ -178,15 +178,10 @@
                                    "failed,rfailed"))
                             (header-output-counter (fn [_] 0)))
                           (let [pcap-stats (stat-fn)
-                                recv (pcap-stats "recv")
-                                pdrop (pcap-stats "drop")
-                                ifdrop (pcap-stats "ifdrop")
-                                buf-qd (.value buffer-queued-counter)
-                                buf-drop (.value buffer-drop-counter)
-                                sc-qd (.value scanner-queued-counter)
-                                sc-drop (.value scanner-drop-counter)
-                                out-qd (.value out-queued-counter)
-                                out-drop (.value out-drop-counter)
+                                recv (pcap-stats "recv") pdrop (pcap-stats "drop") ifdrop (pcap-stats "ifdrop")
+                                buf-qd (.value buffer-queued-counter) buf-drop (.value buffer-drop-counter)
+                                sc-qd (.value scanner-queued-counter) sc-drop (.value scanner-drop-counter)
+                                out-qd (.value out-queued-counter) out-drop (.value out-drop-counter)
                                 failed (.value failed-packet-counter)]
                             (print-err-ln
                               (reduce

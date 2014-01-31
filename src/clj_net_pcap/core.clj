@@ -158,7 +158,7 @@
                           (.printStackTrace e)))))
           scanner-thread (doto
                            (InfiniteLoop. scanner)
-                           (.setName "PackerScanner")
+                           (.setName "PacketScanner")
                            (.setDaemon true)
                            (.start))
           filter-expressions (ref [])

@@ -209,10 +209,10 @@
           (condp = k
             :stat (stat-print-fn)
             :stop (do
+                    (stop-sniffer sniffer)
                     (dosync (ref-set running false))
                     (.stop scanner-thread)
                     (.stop copy-thread)
-                    (stop-sniffer sniffer)
                     (stop-forwarder forwarder))
             :get-filters @filter-expressions
             :remove-last-filter (do

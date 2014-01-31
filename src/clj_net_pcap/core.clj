@@ -58,7 +58,7 @@
     (doto (ByteBuffer/allocateDirect (.remaining buf))
       (.put buf)
       (.flip)))
-  ([^ByteBuffer buf ^PcapHeader ph]
+  ([^PcapHeader ph ^ByteBuffer buf]
     (doto (ByteBuffer/allocate (+ (.remaining buf) 20))
       (.putInt (.caplen ph))
       (.putInt (.wirelen ph))
@@ -71,7 +71,7 @@
   "Create a BufferRecord.
    The BufferRecord contains the values of the PcapHeader and a directly allocated
    deep-copy of the ByteBuffer."
-  [^ByteBuffer buf ^PcapHeader ph]
+  [^PcapHeader ph ^ByteBuffer buf]
   (BufferRecord.
     (.caplen ph)
     (.wirelen ph)
@@ -111,12 +111,12 @@
                             (if force-put
                               (.put out-queue (deep-copy buf ph))
                               (if (< (.size out-queue) (- *queue-size* 1))
-                                (if (.offer out-queue (deep-copy buf ph))
+                                (if (.offer out-queue (deep-copy ph buf))
                                   (.inc out-queued-counter)
                                   (.inc out-drop-counter))
                                 (.inc out-drop-counter)))
                             (if force-put
-                              (.put buffer-queue (create-buffer-record buf ph))
+                              (.put buffer-queue (create-buffer-record ph buf))
                               (if (< (.size buffer-queue) (- *queue-size* 1))
                                 (if (.offer buffer-queue (create-buffer-record buf ph))
                                   (.inc buffer-queued-counter)

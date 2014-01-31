@@ -109,7 +109,7 @@
                        (if (not (nil? buf))
                           (if emit-raw-data
                             (if force-put
-                              (.put out-queue (deep-copy buf ph))
+                              (.put out-queue (deep-copy ph buf))
                               (if (< (.size out-queue) (- *queue-size* 1))
                                 (if (.offer out-queue (deep-copy ph buf))
                                   (.inc out-queued-counter)
@@ -118,7 +118,7 @@
                             (if force-put
                               (.put buffer-queue (create-buffer-record ph buf))
                               (if (< (.size buffer-queue) (- *queue-size* 1))
-                                (if (.offer buffer-queue (create-buffer-record buf ph))
+                                (if (.offer buffer-queue (create-buffer-record ph buf))
                                   (.inc buffer-queued-counter)
                                   (.inc buffer-drop-counter))
                                 (.inc buffer-drop-counter))))))

@@ -41,6 +41,7 @@
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
 
 
+(def ^:dynamic *trace-level* 1)
 (def ^:dynamic *queue-size* 100000)
 
 (defrecord BufferRecord
@@ -93,6 +94,20 @@
   [^PcapPacket pkt]
   (doto pkt (.scan (.value (PcapDLT/EN10MB)))))
 
+
+(defmacro enqueue-data
+  [queue op force-put queued-cntr dropped-cntr]
+  `(if ~force-put
+     (.put ~queue ~op)
+     ~(if (>= *trace-level* 2)
+        `(if (< (.size ~queue) *queue-size*)
+           (if (.offer ~queue ~op)
+             (.inc ~queued-cntr)
+             (.inc ~dropped-cntr))
+           (.inc ~dropped-cntr))
+        `(if (< (.size ~queue) *queue-size*)
+           (.offer ~queue ~op)))))
+
 (defn set-up-and-start-cljnetpcap
   "Takes a pcap instance, sets up the capture pipe line, and starts the capturing and processing.
    This is not intended to be used directly.
@@ -108,33 +123,20 @@
           handler-fn (fn [ph buf _]
                        (if (not (nil? buf))
                           (if emit-raw-data
-                            (if force-put
-                              (.put out-queue (deep-copy buf ph))
-                              (if (< (.size out-queue) (- *queue-size* 1))
-                                (if (.offer out-queue (deep-copy buf ph))
-                                  (.inc out-queued-counter)
-                                  (.inc out-drop-counter))
-                                (.inc out-drop-counter)))
-                            (if force-put
-                              (.put buffer-queue (create-buffer-record buf ph))
-                              (if (< (.size buffer-queue) (- *queue-size* 1))
-                                (if (.offer buffer-queue (create-buffer-record buf ph))
-                                  (.inc buffer-queued-counter)
-                                  (.inc buffer-drop-counter))
-                                (.inc buffer-drop-counter))))))
+                            (enqueue-data 
+                              out-queue (deep-copy buf ph) force-put
+                              out-queued-counter out-drop-counter)
+                            (enqueue-data buffer-queue (create-buffer-record buf ph) force-put
+                                          buffer-queued-counter buffer-drop-counter))))
           scanner-drop-counter (Counter.)
           scanner-queued-counter (Counter.)
           scanner-queue (ArrayBlockingQueue. *queue-size*)
           buffer-processor (fn [] 
                              (try
                                (let [bufrec (.take buffer-queue)]
-                                 (if force-put
-                                   (.put scanner-queue (peer-packet bufrec))
-                                   (if (< (.size scanner-queue) (- *queue-size* 1))
-                                     (if (.offer scanner-queue (peer-packet bufrec))
-                                       (.inc scanner-queued-counter)
-                                       (.inc scanner-drop-counter))
-                                     (.inc scanner-drop-counter))))
+                                 (enqueue-data
+                                   scanner-queue (peer-packet bufrec) force-put
+                                   scanner-queued-counter scanner-drop-counter))
                                (catch Exception e
                                  (if @running
                                    (.printStackTrace e)))))
@@ -146,13 +148,9 @@
           scanner (fn []
                     (try
                       (let [^PcapPacket pkt (.take scanner-queue)]
-                        (if force-put
-                          (.put out-queue (scan-packet pkt))
-                          (if (< (.size out-queue) (- *queue-size* 1))
-                            (if (.offer out-queue (scan-packet pkt))
-                              (.inc out-queued-counter)
-                              (.inc out-drop-counter))
-                            (.inc out-drop-counter))))
+                        (enqueue-data
+                          out-queue (scan-packet pkt) force-put
+                          out-queued-counter out-drop-counter))
                       (catch Exception e
                         (if @running
                           (.printStackTrace e)))))

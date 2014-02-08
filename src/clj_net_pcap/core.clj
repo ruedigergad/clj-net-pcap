@@ -43,7 +43,7 @@
 
 (def ^:dynamic *emit-raw-data* false)
 (def ^:dynamic *force-put* false)
-(def ^:dynamic *trace-level* 1)
+(def ^:dynamic *trace-level* 0)
 (def ^:dynamic *queue-size* 100000)
 
 (defrecord BufferRecord
@@ -101,7 +101,7 @@
   [queue op queued-cntr dropped-cntr]
   (cond
     *force-put* `(.put ~queue ~op)
-    (>= *trace-level* 2) `(if (< (.size ~queue) *queue-size*)
+    (>= *trace-level* 1) `(if (< (.size ~queue) *queue-size*)
                             (if (.offer ~queue ~op)
                               (.inc ~queued-cntr)
                               (.inc ~dropped-cntr))

@@ -49,6 +49,11 @@
                             "Defaults to 0.")
                        :default 0
                        :parse-fn #(Integer. %)]
+                      ["-t" "--trace-level"
+                       (str "Sets how detailed the tracing is performed."
+                            "Defaults to 0.")
+                       :default 0
+                       :parse-fn #(Integer. %)]
                       ["-S" "--snap-len"
                        (str "The snaplen to use."
                             "This determines how many bytes of data will be captured from each packet.")
@@ -93,6 +98,7 @@
         (pprint arg-map)
         (let [pcap-file-name (arg-map :read-file)
               cljnetpcap (binding [clj-net-pcap.core/*emit-raw-data* (arg-map :raw)
+                                   clj-net-pcap.core/*trace-level* (arg-map :trace-level)
                                    clj-net-pcap.pcap/*snap-len* (arg-map :snap-len)
                                    clj-net-pcap.pcap/*buffer-size* (arg-map :buffer-size)]
                            (if (= "" pcap-file-name)

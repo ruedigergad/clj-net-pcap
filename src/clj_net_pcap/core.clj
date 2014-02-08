@@ -138,29 +138,25 @@
           scanner-drop-counter (Counter.)
           scanner-queued-counter (Counter.)
           scanner-queue (ArrayBlockingQueue. *queue-size*)
-          buffer-processor (fn [] 
-                             (try
-                               (let [bufrec (.take buffer-queue)]
-                                 (enqueue-data
-                                   scanner-queue (peer-packet bufrec) force-put
-                                   scanner-queued-counter scanner-drop-counter))
-                               (catch Exception e
-                                 (if @running
-                                   (.printStackTrace e)))))
+          buffer-processor #(try (let [bufrec (.take buffer-queue)]
+                                   (enqueue-data
+                                     scanner-queue (peer-packet bufrec) force-put
+                                     scanner-queued-counter scanner-drop-counter))
+                              (catch Exception e
+                                (if @running
+                                  (.printStackTrace e))))
           buffer-processor-thread (doto 
                                     (InfiniteLoop. buffer-processor)
                                     (.setName "ByteBufferProcessor")
                                     (.setDaemon true)
                                     (.start))
-          scanner (fn []
-                    (try
-                      (let [^PcapPacket pkt (.take scanner-queue)]
-                        (enqueue-data
-                          out-queue (scan-packet pkt) force-put
-                          out-queued-counter out-drop-counter))
-                      (catch Exception e
-                        (if @running
-                          (.printStackTrace e)))))
+          scanner #(try (let [^PcapPacket pkt (.take scanner-queue)]
+                          (enqueue-data
+                            out-queue (scan-packet pkt) force-put
+                            out-queued-counter out-drop-counter))
+                     (catch Exception e
+                       (if @running
+                         (.printStackTrace e))))
           scanner-thread (doto
                            (InfiniteLoop. scanner)
                            (.setName "PacketScanner")

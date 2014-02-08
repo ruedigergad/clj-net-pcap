@@ -45,7 +45,6 @@
 (def ^:dynamic *queue-size* 100000)
 
 
-(def force-put false)
 (def trace-level 1)
 
 
@@ -100,6 +99,8 @@
   (doto pkt (.scan (.value (PcapDLT/EN10MB)))))
 
 (defmacro enqueue-data
+  "Convenience macro for queueing data.
+   This is not intended to be used directly."
   [queue op force-put queued-cntr dropped-cntr]
   (cond
     (>= trace-level 1) `(if ~force-put
@@ -109,7 +110,7 @@
                               (.inc ~queued-cntr)
                               (.inc ~dropped-cntr))
                             (.inc ~dropped-cntr)))
-    :default `(if force-put
+    :default `(if ~force-put
                 (.put ~queue ~op)
                 (if (< (.size ~queue) *queue-size*)
                   (.offer ~queue ~op)))))
@@ -142,6 +143,7 @@
                                      scanner-queue (peer-packet bufrec) force-put
                                      scanner-queued-counter scanner-drop-counter))
                               (catch Exception e
+                                (.inc failed-packet-counter)
                                 (if @running (.printStackTrace e))))
           buffer-processor-thread (doto (InfiniteLoop. buffer-processor)
                                     (.setName "ByteBufferProcessor") (.setDaemon true) (.start))
@@ -150,6 +152,7 @@
                             fwd-1-queue (scan-packet pkt) force-put
                             fwd-1-queued-counter fwd-1-drop-counter))
                      (catch Exception e
+                       (.inc failed-packet-counter)
                        (if @running (.printStackTrace e))))
           scanner-thread (doto (InfiniteLoop. scanner)
                            (.setName "PacketScanner") (.setDaemon true) (.start))
@@ -183,7 +186,7 @@
           stat-print-fn (fn []
                           (if (= (header-output-counter) 0)
                             (print-err-ln
-                              (str "recv,dr,ifdr,rrecv,rdr,rifdr, ,"
+                              (str "r,dr,ifdr,rr,rdr,rifdr, ,"
                                    "b_q,b_qd,b_dr,b_rqd,b_rdr, ,"
                                    "s_q,s_qd,s_dr,s_rqd,s_rdr, ,"
                                    "f1_q,f1_qd,f1_dr,f1_rqd,f1_rdr, ,"

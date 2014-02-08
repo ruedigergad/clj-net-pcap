@@ -242,7 +242,7 @@
 
 (defn create-and-start-online-cljnetpcap
   "Convenience function for performing live online capturing.
-   forwarder-fn will be called for each captured packet.
+   transformation-fn and forwarder-fn will be called for each captured packet.
    Capturing can be influenced via the optional device and filter-expression arguments.
    By default the 'any' device is used for capturing with no filter being applied.
    Please note that the returned handle should be stored as it is needed for stopping the capture."
@@ -288,12 +288,9 @@
 
 (defn process-pcap-file
   "Convenience function to process data stored in pcap files.
-   Arguments are the file-name of the pcap file, the handler-fn that is executed for each read packet, and optional user data.
-   handler-fn takes two arguments, the first is the org.jnetpcap.packet.PcapPacket instance, the second is the user data.
-   By default nil is used as user data."
+   Arguments are the file-name of the pcap file, the transformation-fn and the handler-fn that are executed for each read packet.
+   tranformation-fn takes a org.jnetpcap.packet.PcapPacket instance as single argument."
   ([file-name transformer-fn forwarder-fn]
-    (process-pcap-file file-name transformer-fn forwarder-fn nil))
-  ([file-name transformer-fn forwarder-fn user-data]
     (let [pcap (create-offline-pcap file-name)
           clj-net-pcap (set-up-and-start-cljnetpcap pcap transformer-fn forwarder-fn "" true)]
       (clj-net-pcap :wait-for-completed)

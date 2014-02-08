@@ -46,7 +46,7 @@
 
 
 (def force-put false)
-(def trace-level 0)
+(def trace-level 1)
 
 
 (defrecord BufferRecord
@@ -118,11 +118,12 @@
   "Takes a pcap instance, sets up the capture pipe line, and starts the capturing and processing.
    This is not intended to be used directly.
    It is recommended to use: create-and-start-online-cljnetpcap or process-pcap-file"
-  [pcap forwarder-fn filter-expr force-put]
+  [pcap transformer-fn forwarder-fn filter-expr force-put]
     (let [running (ref true)
           emit-raw-data *emit-raw-data*
           buffer-queue (ArrayBlockingQueue. *queue-size*) buffer-drop-counter (Counter.) buffer-queued-counter (Counter.)
           out-queue (ArrayBlockingQueue. *queue-size*) out-drop-counter (Counter.) out-queued-counter (Counter.)
+          failed-packet-counter (Counter.)
           handler-fn (fn [ph buf _]
                        (if (not (nil? buf))
                          (if emit-raw-data
@@ -140,23 +141,33 @@
                                 (if @running (.printStackTrace e))))
           buffer-processor-thread (doto (InfiniteLoop. buffer-processor)
                                     (.setName "ByteBufferProcessor") (.setDaemon true) (.start))
+          transformer-queue (ArrayBlockingQueue. *queue-size*) transformer-drop-counter (Counter.) transformer-queued-counter (Counter.)
           scanner #(try (let [^PcapPacket pkt (.take scanner-queue)]
                           (enqueue-data
-                            out-queue (scan-packet pkt) force-put
-                            out-queued-counter out-drop-counter))
+                            transformer-queue (scan-packet pkt) force-put
+                            transformer-queued-counter transformer-drop-counter))
                      (catch Exception e
                        (if @running (.printStackTrace e))))
           scanner-thread (doto (InfiniteLoop. scanner)
                            (.setName "PacketScanner") (.setDaemon true) (.start))
+          transformer #(try (let [obj (.take transformer-queue)]
+                              (enqueue-data
+                                out-queue (transformer-fn obj) force-put
+                                out-queued-counter out-drop-counter))
+                         (catch Exception e
+                           (.inc failed-packet-counter)))
+          transformer-thread (doto (InfiniteLoop. transformer)
+                               (.setName "Transformer") (.setDaemon true) (.start))
+          forwarder #(try (let [obj (.take out-queue)]
+                            (forwarder-fn obj))
+                       (catch Exception e
+                         (.inc failed-packet-counter)))
+          forwarder-thread (doto (InfiniteLoop. forwarder)
+                               (.setName "Forwarder") (.setDaemon true) (.start))
           filter-expressions (ref [])
           _ (if (and (not (nil? filter-expr)) (not= "" filter-expr))
               (dosync (alter filter-expressions conj filter-expr)))
           _ (create-and-set-filter pcap filter-expr)
-          failed-packet-counter (Counter.)
-          forwarder (create-and-start-forwarder out-queue
-                      #(try (forwarder-fn %)
-                         (catch Exception e
-                           (.inc failed-packet-counter))))
           sniffer (create-and-start-sniffer pcap handler-fn)
           stat-fn (create-stat-fn pcap)
           header-output-counter (counter)
@@ -167,12 +178,14 @@
                               (str "recv,drop,ifdrop,rrecv,rdrop,rifdrop, ,"
                                    "buf_qsize,buf_qd,buf_drop,buf_rqd,buf_rdrop, ,"
                                    "sc_qsize,sc_qd,sc_drop,sc_rqd,sc_rdrop, ,"
+                                   "tr_qsize,tr_qd,tr_drop,tr_rqd,tr_rdrop, ,"
                                    "out_qsize,out_qd,out_drop,out_rqd,out_rdrop, ,"
                                    "failed,rfailed")))
                           (let [pcap-stats (stat-fn)
                                 recv (pcap-stats "recv") pdrop (pcap-stats "drop") ifdrop (pcap-stats "ifdrop")
                                 buf-qd (.value buffer-queued-counter) buf-drop (.value buffer-drop-counter)
                                 sc-qd (.value scanner-queued-counter) sc-drop (.value scanner-drop-counter)
+                                tr-qd (.value transformer-queued-counter) tr-drop (.value transformer-drop-counter)
                                 out-qd (.value out-queued-counter) out-drop (.value out-drop-counter)
                                 failed (.value failed-packet-counter)]
                             (print-err-ln
@@ -180,6 +193,7 @@
                                 [recv pdrop ifdrop (delta-cntr :recv recv) (delta-cntr :drop pdrop) (delta-cntr :ifdrop ifdrop) " "
                                  (.size buffer-queue) buf-qd buf-drop (delta-cntr :buf-qd buf-qd) (delta-cntr :buf-drop buf-drop) " "
                                  (.size scanner-queue) sc-qd sc-drop (delta-cntr :sc-qd sc-qd) (delta-cntr :sc-drop sc-drop) " "
+                                 (.size transformer-queue) tr-qd tr-drop (delta-cntr :tr-qd tr-qd) (delta-cntr :tr-drop tr-drop) " "
                                  (.size out-queue) out-qd out-drop (delta-cntr :out-qd out-qd) (delta-cntr :out-drop out-drop) " "
                                  failed (delta-cntr :failed failed)]))
                             (if (>= (header-output-counter) 20)
@@ -193,8 +207,9 @@
                     (dosync (ref-set running false))
                     (.stop buffer-processor-thread)
                     (.stop scanner-thread)
-                    (stop-sniffer sniffer)
-                    (stop-forwarder forwarder))
+                    (.stop transformer-thread)
+                    (.stop forwarder-thread)
+                    (stop-sniffer sniffer))
             :get-filters @filter-expressions
             :remove-last-filter (do
                                   (dosync
@@ -202,9 +217,10 @@
                                   (create-and-set-filter pcap (join " " @filter-expressions)))
             :wait-for-completed (do
                                   (while (or
-                                         (> (.size buffer-queue) 0)
-                                         (> (.size scanner-queue) 0)
-                                         (> (.size out-queue) 0))
+                                           (> (.size buffer-queue) 0)
+                                           (> (.size scanner-queue) 0)
+                                           (> (.size transformer-queue) 0)
+                                           (> (.size out-queue) 0))
                                     (sleep 100))
                                   ;;; TODO: 
                                   ;;; Right now, we give it a little time to process the last data
@@ -230,13 +246,13 @@
    Capturing can be influenced via the optional device and filter-expression arguments.
    By default the 'any' device is used for capturing with no filter being applied.
    Please note that the returned handle should be stored as it is needed for stopping the capture."
-  ([forwarder-fn]
-    (create-and-start-online-cljnetpcap forwarder-fn any))
-  ([forwarder-fn device]
-    (create-and-start-online-cljnetpcap forwarder-fn device ""))
-  ([forwarder-fn device filter-expr]
+  ([transformer-fn forwarder-fn]
+    (create-and-start-online-cljnetpcap transformer-fn forwarder-fn any))
+  ([transformer-fn forwarder-fn device]
+    (create-and-start-online-cljnetpcap transformer-fn forwarder-fn device ""))
+  ([transformer-fn forwarder-fn device filter-expr]
     (let [pcap (create-and-activate-online-pcap device)]
-      (set-up-and-start-cljnetpcap pcap forwarder-fn filter-expr false))))
+      (set-up-and-start-cljnetpcap pcap transformer-fn forwarder-fn filter-expr false))))
 
 (defn print-stat-cljnetpcap
   "Given a handle as returned by, e.g., create-and-start-online-cljnetpcap or process-pcap-file,
@@ -275,21 +291,21 @@
    Arguments are the file-name of the pcap file, the handler-fn that is executed for each read packet, and optional user data.
    handler-fn takes two arguments, the first is the org.jnetpcap.packet.PcapPacket instance, the second is the user data.
    By default nil is used as user data."
-  ([file-name handler-fn]
-    (process-pcap-file file-name handler-fn nil))
-  ([file-name handler-fn user-data]
+  ([file-name transformer-fn forwarder-fn]
+    (process-pcap-file file-name transformer-fn forwarder-fn nil))
+  ([file-name transformer-fn forwarder-fn user-data]
     (let [pcap (create-offline-pcap file-name)
-          clj-net-pcap (set-up-and-start-cljnetpcap pcap handler-fn "" true)]
+          clj-net-pcap (set-up-and-start-cljnetpcap pcap transformer-fn forwarder-fn "" true)]
       (clj-net-pcap :wait-for-completed)
       (stop-cljnetpcap clj-net-pcap))))
 
 (defn process-pcap-file-with-extraction-fn
   "Convenience function to read a pcap file and process the packets."
-  [file-name handler-fn extraction-fn]
+  [file-name format-fn forwarder-fn]
     (process-pcap-file 
       file-name
-      (fn [p]
-        (handler-fn (extraction-fn p)))))
+      format-fn
+      forwarder-fn))
 
 (defn extract-data-from-pcap-file
   "Function to extract the data from a pcap file.
@@ -306,8 +322,8 @@
     (let [extracted-data (ref [])]
       (process-pcap-file-with-extraction-fn 
         file-name
-        #(dosync (alter extracted-data conj %))
-        format-fn)
+        format-fn
+        #(dosync (alter extracted-data conj %)))
       @extracted-data))
 
 (defn extract-nested-maps-from-pcap-file

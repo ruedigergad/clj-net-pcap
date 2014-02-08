@@ -29,10 +29,11 @@
 
 (deftest cljnetpcap-test
   (let [was-run (prepare-flag)
+        format-fn (fn [o] o)
         forwarder-fn (fn [_] (set-flag was-run))
         filter-expression ""
         device "lo"
-        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn device filter-expression)]
+        cljnetpcap (create-and-start-online-cljnetpcap format-fn forwarder-fn device filter-expression)]
     (Thread/sleep receive-delay)
     (exec-blocking "ping -c 1 localhost")
     (await-flag was-run)
@@ -40,57 +41,51 @@
     (stop-cljnetpcap cljnetpcap)))
 
 (deftest test-unsupported-operation-throws-exception
-  (let [forwarder-fn (fn [_])
-        filter-expression "tcp[tcpflags] & tcp-syn != 0"
+  (let [filter-expression "tcp[tcpflags] & tcp-syn != 0"
         device "lo"
-        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn device filter-expression)]
+        cljnetpcap (create-and-start-online-cljnetpcap (fn [_]) (fn [_]) device filter-expression)]
     (is (thrown? RuntimeException (cljnetpcap :unsupported-operation)))
     (stop-cljnetpcap  cljnetpcap)))
 
 (deftest test-get-filter
-  (let [forwarder-fn (fn [_])
-        filter-expression "tcp[tcpflags] & tcp-syn != 0"
+  (let [filter-expression "tcp[tcpflags] & tcp-syn != 0"
         device "lo"
-        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn device filter-expression)]
+        cljnetpcap (create-and-start-online-cljnetpcap (fn [_]) (fn [_]) device filter-expression)]
     (is (= (type []) (type (get-filters cljnetpcap))))
     (is (= "tcp[tcpflags] & tcp-syn != 0" (first (get-filters cljnetpcap))))
     (stop-cljnetpcap cljnetpcap)))
 
 (deftest test-add-filter
-  (let [forwarder-fn (fn [_])
-        filter-expression ""
+  (let [filter-expression ""
         device "lo"
-        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn device filter-expression)]
+        cljnetpcap (create-and-start-online-cljnetpcap (fn [_]) (fn [_]) device filter-expression)]
     (is (empty? (get-filters cljnetpcap)))
     (add-filter cljnetpcap "tcp[tcpflags] & tcp-syn != 0")
     (is (= "tcp[tcpflags] & tcp-syn != 0" (first (get-filters cljnetpcap))))
     (stop-cljnetpcap cljnetpcap)))
 
 (deftest test-do-not-add-empty-filter
-  (let [forwarder-fn (fn [_])
-        filter-expression ""
+  (let [filter-expression ""
         device "lo"
-        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn device filter-expression)]
+        cljnetpcap (create-and-start-online-cljnetpcap (fn [_]) (fn [_]) device filter-expression)]
     (is (empty? (get-filters cljnetpcap)))
     (add-filter cljnetpcap "")
     (is (empty? (get-filters cljnetpcap)))
     (stop-cljnetpcap cljnetpcap)))
 
 (deftest test-remove-last-filter
-  (let [forwarder-fn (fn [_])
-        filter-expression "tcp[tcpflags] & tcp-syn != 0"
+  (let [filter-expression "tcp[tcpflags] & tcp-syn != 0"
         device "lo"
-        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn device filter-expression)]
+        cljnetpcap (create-and-start-online-cljnetpcap (fn [_]) (fn [_]) device filter-expression)]
     (is (= 1 (count (get-filters cljnetpcap))))
     (remove-last-filter cljnetpcap)
     (is (empty? (get-filters cljnetpcap)))
     (stop-cljnetpcap cljnetpcap)))
 
 (deftest test-remove-filter
-  (let [forwarder-fn (fn [_])
-        filter-expression "tcp[tcpflags] & tcp-syn != 0"
+  (let [filter-expression "tcp[tcpflags] & tcp-syn != 0"
         device "lo"
-        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn device filter-expression)]
+        cljnetpcap (create-and-start-online-cljnetpcap (fn [_]) (fn [_]) device filter-expression)]
     (is (= 1 (count (get-filters cljnetpcap))))
     (remove-filter cljnetpcap "tcp[tcpflags] & tcp-syn != 0")
     (is (empty? (get-filters cljnetpcap)))

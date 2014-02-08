@@ -59,9 +59,10 @@
 
 (deftest test-process-pcap-file
   (let [my-counter (counter)
-        handler-fn (fn [_] (my-counter inc))]
+        format-fn (fn [o] o)
+        forwarder-fn (fn [_] (my-counter inc))]
     (is (= 0 (my-counter)))
-    (process-pcap-file test-file handler-fn)
+    (process-pcap-file test-file format-fn forwarder-fn)
     (sleep 1000)
     (is (= 6 (my-counter)))))
 
@@ -72,8 +73,8 @@
     (is (= {} @my-map))
     (process-pcap-file-with-extraction-fn
       "test/clj_net_pcap/test/data/icmp-echo-request.pcap"
-      handler-fn
-      pcap-packet-to-nested-maps)
+      pcap-packet-to-nested-maps
+      handler-fn)
 ; FIXME: The destination netmask and bits are wrong.
     (is (= {"PcapHeader" {"timestampInNanos" 1365516583196346000, "wirelen" 98},
             "DataLinkLayer" {"index" 0, "ProtocolType" "Ethernet", "destination" "E0:CB:4E:E3:38:46", "source" "90:E6:BA:3C:9A:47", "next" 2},

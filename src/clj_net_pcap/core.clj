@@ -167,9 +167,7 @@
                            (.setDaemon true)
                            (.start))
           filter-expressions (ref [])
-          _ (if (and 
-                  filter-expr 
-                  (not= "" filter-expr))
+          _ (if (and (not (nil? filter-expr)) (not= "" filter-expr))
               (dosync (alter filter-expressions conj filter-expr)))
           _ (create-and-set-filter pcap filter-expr)
           failed-packet-counter (Counter.)

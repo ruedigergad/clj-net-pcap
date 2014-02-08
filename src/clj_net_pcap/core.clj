@@ -145,7 +145,7 @@
                               (catch Exception e
                                 (if @running
                                   (.printStackTrace e))))
-          buffer-processor-thread (doto 
+          buffer-processor-thread (doto
                                     (InfiniteLoop. buffer-processor)
                                     (.setName "ByteBufferProcessor")
                                     (.setDaemon true)
@@ -167,10 +167,8 @@
               (dosync (alter filter-expressions conj filter-expr)))
           _ (create-and-set-filter pcap filter-expr)
           failed-packet-counter (Counter.)
-          forwarder (create-and-start-forwarder
-                      out-queue
-                      #(try
-                         (forwarder-fn %)
+          forwarder (create-and-start-forwarder out-queue
+                      #(try (forwarder-fn %)
                          (catch Exception e
                            (.inc failed-packet-counter))))
           sniffer (create-and-start-sniffer pcap handler-fn)
@@ -178,14 +176,13 @@
           header-output-counter (counter)
           delta-cntr (delta-counter)
           stat-print-fn (fn []
-                          (when (= (header-output-counter) 0)
+                          (if (= (header-output-counter) 0)
                             (print-err-ln
                               (str "recv,drop,ifdrop,rrecv,rdrop,rifdrop, ,"
                                    "buf_qsize,buf_qd,buf_drop,buf_rqd,buf_rdrop, ,"
                                    "sc_qsize,sc_qd,sc_drop,sc_rqd,sc_rdrop, ,"
                                    "out_qsize,out_qd,out_drop,out_rqd,out_rdrop, ,"
-                                   "failed,rfailed"))
-                            (header-output-counter (fn [_] 0)))
+                                   "failed,rfailed")))
                           (let [pcap-stats (stat-fn)
                                 recv (pcap-stats "recv") pdrop (pcap-stats "drop") ifdrop (pcap-stats "ifdrop")
                                 buf-qd (.value buffer-queued-counter) buf-drop (.value buffer-drop-counter)
@@ -193,8 +190,7 @@
                                 out-qd (.value out-queued-counter) out-drop (.value out-drop-counter)
                                 failed (.value failed-packet-counter)]
                             (print-err-ln
-                              (reduce
-                                #(str %1 "," %2)
+                              (reduce #(str %1 "," %2)
                                 [recv pdrop ifdrop (delta-cntr :recv recv) (delta-cntr :drop pdrop) (delta-cntr :ifdrop ifdrop) " "
                                  (.size buffer-queue) buf-qd buf-drop (delta-cntr :buf-qd buf-qd) (delta-cntr :buf-drop buf-drop) " "
                                  (.size scanner-queue) sc-qd sc-drop (delta-cntr :sc-qd sc-qd) (delta-cntr :sc-drop sc-drop) " "

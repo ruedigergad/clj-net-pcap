@@ -59,10 +59,9 @@
 
 (deftest test-process-pcap-file
   (let [my-counter (counter)
-        format-fn (fn [o] o)
         forwarder-fn (fn [_] (my-counter inc))]
     (is (= 0 (my-counter)))
-    (process-pcap-file test-file format-fn forwarder-fn)
+    (process-pcap-file test-file forwarder-fn nil)
     (sleep 1000)
     (is (= 6 (my-counter)))))
 

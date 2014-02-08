@@ -42,9 +42,12 @@
 
 
 (def ^:dynamic *emit-raw-data* false)
-(def ^:dynamic *force-put* false)
-(def ^:dynamic *trace-level* 0)
 (def ^:dynamic *queue-size* 100000)
+
+
+(def force-put false)
+(def trace-level 0)
+
 
 (defrecord BufferRecord
   [cl wl s us buf])
@@ -100,8 +103,8 @@
 (defmacro enqueue-data
   [queue op queued-cntr dropped-cntr]
   (cond
-    *force-put* `(.put ~queue ~op)
-    (>= *trace-level* 1) `(if (< (.size ~queue) *queue-size*)
+    force-put `(.put ~queue ~op)
+    (>= trace-level 1) `(if (< (.size ~queue) *queue-size*)
                             (if (.offer ~queue ~op)
                               (.inc ~queued-cntr)
                               (.inc ~dropped-cntr))
@@ -297,11 +300,10 @@
   ([file-name handler-fn]
     (process-pcap-file file-name handler-fn nil))
   ([file-name handler-fn user-data]
-    (binding [*force-put* true]
-      (let [pcap (create-offline-pcap file-name)
-            clj-net-pcap (set-up-and-start-cljnetpcap pcap handler-fn "")]
-        (clj-net-pcap :wait-for-completed)
-        (stop-cljnetpcap clj-net-pcap)))))
+    (let [pcap (create-offline-pcap file-name)
+          clj-net-pcap (set-up-and-start-cljnetpcap pcap handler-fn "")]
+      (clj-net-pcap :wait-for-completed)
+      (stop-cljnetpcap clj-net-pcap))))
 
 (defn process-pcap-file-with-extraction-fn
   "Convenience function to read a pcap file and process the packets."

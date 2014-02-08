@@ -154,19 +154,22 @@
           scanner-thread (doto (InfiniteLoop. scanner)
                            (.setName "PacketScanner") (.setDaemon true) (.start))
           fwd-1 #(try (let [obj (.take fwd-1-queue)]
-                              (enqueue-data
-                                fwd-2-queue (fwd-1-fn obj) force-put
-                                fwd-2-queued-counter fwd-2-drop-counter))
-                         (catch Exception e
-                           (.inc failed-packet-counter)))
+                        (if (nil? fwd-2-fn)
+                          (fwd-1-fn obj)
+                          (enqueue-data
+                            fwd-2-queue (fwd-1-fn obj) force-put
+                            fwd-2-queued-counter fwd-2-drop-counter)))
+                   (catch Exception e
+                     (.inc failed-packet-counter)))
           fwd-1-thread (doto (InfiniteLoop. fwd-1)
                          (.setName "Forwarder_1") (.setDaemon true) (.start))
           fwd-2 #(try (let [obj (.take fwd-2-queue)]
                             (fwd-2-fn obj))
-                       (catch Exception e
-                         (.inc failed-packet-counter)))
-          fwd-2-thread (doto (InfiniteLoop. fwd-2)
-                         (.setName "Forwarder_2") (.setDaemon true) (.start))
+                   (catch Exception e
+                     (.inc failed-packet-counter)))
+          fwd-2-thread (if (not (nil? fwd-2-fn))
+                         (doto (InfiniteLoop. fwd-2)
+                           (.setName "Forwarder_2") (.setDaemon true) (.start)))
           ; Setup etc. of pcap
           filter-expressions (ref [])
           _ (if (and (not (nil? filter-expr)) (not= "" filter-expr))
@@ -180,12 +183,12 @@
           stat-print-fn (fn []
                           (if (= (header-output-counter) 0)
                             (print-err-ln
-                              (str "recv,drop,ifdrop,rrecv,rdrop,rifdrop, ,"
-                                   "buf_qsize,buf_qd,buf_drop,buf_rqd,buf_rdrop, ,"
-                                   "sc_qsize,sc_qd,sc_drop,sc_rqd,sc_rdrop, ,"
-                                   "f1_qsize,f1_qd,f1_drop,f1_rqd,f1_rdrop, ,"
-                                   "f2_qsize,f2_qd,f2_drop,f2_rqd,f2_rdrop, ,"
-                                   "failed,rfailed")))
+                              (str "recv,dr,ifdr,rrecv,rdr,rifdr, ,"
+                                   "b_q,b_qd,b_dr,b_rqd,b_rdr, ,"
+                                   "s_q,s_qd,s_dr,s_rqd,s_rdr, ,"
+                                   "f1_q,f1_qd,f1_dr,f1_rqd,f1_rdr, ,"
+                                   "f2_q,f2_qd,f2_dr,f2_rqd,f2_rdr, ,"
+                                   "fail,rfail")))
                           (let [pcap-stats (stat-fn)
                                 recv (pcap-stats "recv") pdrop (pcap-stats "drop") ifdrop (pcap-stats "ifdrop")
                                 buf-qd (.value buffer-queued-counter) buf-drop (.value buffer-drop-counter)
@@ -213,7 +216,8 @@
                     (.stop buffer-processor-thread)
                     (.stop scanner-thread)
                     (.stop fwd-1-thread)
-                    (.stop fwd-2-thread)
+                    (if (not (nil? fwd-2-thread))
+                      (.stop fwd-2-thread))
                     (stop-sniffer sniffer))
             :get-filters @filter-expressions
             :remove-last-filter (do

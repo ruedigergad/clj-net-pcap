@@ -101,22 +101,25 @@
 
 
 (defmacro enqueue-data
-  [queue op queued-cntr dropped-cntr]
+  [queue op force-put queued-cntr dropped-cntr]
   (cond
-    force-put `(.put ~queue ~op)
-    (>= trace-level 1) `(if (< (.size ~queue) *queue-size*)
+    (>= trace-level 1) `(if ~force-put
+                          (.put ~queue ~op)
+                          (if (< (.size ~queue) *queue-size*)
                             (if (.offer ~queue ~op)
                               (.inc ~queued-cntr)
                               (.inc ~dropped-cntr))
-                            (.inc ~dropped-cntr))
-    :default `(if (< (.size ~queue) *queue-size*)
-                (.offer ~queue ~op))))
+                            (.inc ~dropped-cntr)))
+    :default `(if force-put
+                (.put ~queue ~op)
+                (if (< (.size ~queue) *queue-size*)
+                  (.offer ~queue ~op)))))
 
 (defn set-up-and-start-cljnetpcap
   "Takes a pcap instance, sets up the capture pipe line, and starts the capturing and processing.
    This is not intended to be used directly.
    It is recommended to use: create-and-start-online-cljnetpcap or process-pcap-file"
-  [pcap forwarder-fn filter-expr]
+  [pcap forwarder-fn filter-expr force-put]
     (let [running (ref true)
           emit-raw-data *emit-raw-data*
           buffer-drop-counter (Counter.)
@@ -129,9 +132,9 @@
                        (if (not (nil? buf))
                          (if emit-raw-data
                            (enqueue-data
-                             out-queue (deep-copy buf ph)
+                             out-queue (deep-copy buf ph) force-put
                              out-queued-counter out-drop-counter)
-                           (enqueue-data buffer-queue (create-buffer-record buf ph)
+                           (enqueue-data buffer-queue (create-buffer-record buf ph) force-put
                                          buffer-queued-counter buffer-drop-counter))))
           scanner-drop-counter (Counter.)
           scanner-queued-counter (Counter.)
@@ -140,7 +143,7 @@
                              (try
                                (let [bufrec (.take buffer-queue)]
                                  (enqueue-data
-                                   scanner-queue (peer-packet bufrec)
+                                   scanner-queue (peer-packet bufrec) force-put
                                    scanner-queued-counter scanner-drop-counter))
                                (catch Exception e
                                  (if @running
@@ -154,7 +157,7 @@
                     (try
                       (let [^PcapPacket pkt (.take scanner-queue)]
                         (enqueue-data
-                          out-queue (scan-packet pkt)
+                          out-queue (scan-packet pkt) force-put
                           out-queued-counter out-drop-counter))
                       (catch Exception e
                         (if @running
@@ -258,7 +261,7 @@
     (create-and-start-online-cljnetpcap forwarder-fn device ""))
   ([forwarder-fn device filter-expr]
     (let [pcap (create-and-activate-online-pcap device)]
-      (set-up-and-start-cljnetpcap pcap forwarder-fn filter-expr))))
+      (set-up-and-start-cljnetpcap pcap forwarder-fn filter-expr false))))
 
 (defn print-stat-cljnetpcap
   "Given a handle as returned by, e.g., create-and-start-online-cljnetpcap or process-pcap-file,
@@ -301,7 +304,7 @@
     (process-pcap-file file-name handler-fn nil))
   ([file-name handler-fn user-data]
     (let [pcap (create-offline-pcap file-name)
-          clj-net-pcap (set-up-and-start-cljnetpcap pcap handler-fn "")]
+          clj-net-pcap (set-up-and-start-cljnetpcap pcap handler-fn "" true)]
       (clj-net-pcap :wait-for-completed)
       (stop-cljnetpcap clj-net-pcap))))
 

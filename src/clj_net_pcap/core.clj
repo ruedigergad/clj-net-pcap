@@ -41,6 +41,7 @@
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
 
 
+(def ^:dynamic *force-put* false)
 (def ^:dynamic *trace-level* 1)
 (def ^:dynamic *queue-size* 100000)
 
@@ -96,23 +97,22 @@
 
 
 (defmacro enqueue-data
-  [queue op force-put queued-cntr dropped-cntr]
-  `(if ~force-put
-     (.put ~queue ~op)
-     ~(if (>= *trace-level* 2)
-        `(if (< (.size ~queue) *queue-size*)
-           (if (.offer ~queue ~op)
-             (.inc ~queued-cntr)
-             (.inc ~dropped-cntr))
-           (.inc ~dropped-cntr))
-        `(if (< (.size ~queue) *queue-size*)
-           (.offer ~queue ~op)))))
+  [queue op queued-cntr dropped-cntr]
+  (cond
+    *force-put* `(.put ~queue ~op)
+    (>= *trace-level* 2) `(if (< (.size ~queue) *queue-size*)
+                            (if (.offer ~queue ~op)
+                              (.inc ~queued-cntr)
+                              (.inc ~dropped-cntr))
+                            (.inc ~dropped-cntr))
+    :default `(if (< (.size ~queue) *queue-size*)
+                (.offer ~queue ~op))))
 
 (defn set-up-and-start-cljnetpcap
   "Takes a pcap instance, sets up the capture pipe line, and starts the capturing and processing.
    This is not intended to be used directly.
    It is recommended to use: create-and-start-online-cljnetpcap or process-pcap-file"
-  [pcap forwarder-fn filter-expr emit-raw-data force-put]
+  [pcap forwarder-fn filter-expr emit-raw-data]
     (let [running (ref true)
           buffer-drop-counter (Counter.)
           buffer-queued-counter (Counter.)
@@ -124,9 +124,9 @@
                        (if (not (nil? buf))
                           (if emit-raw-data
                             (enqueue-data 
-                              out-queue (deep-copy buf ph) force-put
+                              out-queue (deep-copy buf ph)
                               out-queued-counter out-drop-counter)
-                            (enqueue-data buffer-queue (create-buffer-record buf ph) force-put
+                            (enqueue-data buffer-queue (create-buffer-record buf ph)
                                           buffer-queued-counter buffer-drop-counter))))
           scanner-drop-counter (Counter.)
           scanner-queued-counter (Counter.)
@@ -135,7 +135,7 @@
                              (try
                                (let [bufrec (.take buffer-queue)]
                                  (enqueue-data
-                                   scanner-queue (peer-packet bufrec) force-put
+                                   scanner-queue (peer-packet bufrec)
                                    scanner-queued-counter scanner-drop-counter))
                                (catch Exception e
                                  (if @running
@@ -149,7 +149,7 @@
                     (try
                       (let [^PcapPacket pkt (.take scanner-queue)]
                         (enqueue-data
-                          out-queue (scan-packet pkt) force-put
+                          out-queue (scan-packet pkt)
                           out-queued-counter out-drop-counter))
                       (catch Exception e
                         (if @running
@@ -254,8 +254,9 @@
   ([forwarder-fn device filter-expr]
     (create-and-start-online-cljnetpcap forwarder-fn device filter-expr false))
   ([forwarder-fn device filter-expr emit-raw-data]
-    (let [pcap (create-and-activate-online-pcap device)]
-      (set-up-and-start-cljnetpcap pcap forwarder-fn filter-expr emit-raw-data false))))
+    (binding [*force-put* true]
+      (let [pcap (create-and-activate-online-pcap device)]
+        (set-up-and-start-cljnetpcap pcap forwarder-fn filter-expr emit-raw-data)))))
 
 (defn print-stat-cljnetpcap
   "Given a handle as returned by, e.g., create-and-start-online-cljnetpcap or process-pcap-file,
@@ -298,7 +299,7 @@
     (process-pcap-file file-name handler-fn nil))
   ([file-name handler-fn user-data]
     (let [pcap (create-offline-pcap file-name)
-          clj-net-pcap (set-up-and-start-cljnetpcap pcap handler-fn "" false true)]
+          clj-net-pcap (set-up-and-start-cljnetpcap pcap handler-fn "" false)]
       (clj-net-pcap :wait-for-completed)
       (stop-cljnetpcap clj-net-pcap))))
 

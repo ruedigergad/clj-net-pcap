@@ -92,8 +92,9 @@
         (println "Starting clj-net-pcap using the following options:")
         (pprint arg-map)
         (let [pcap-file-name (arg-map :read-file)
-              cljnetpcap (binding [clj-net-pcap.pcap/*snap-len* (:snap-len arg-map)
-                                   clj-net-pcap.pcap/*buffer-size* (:buffer-size arg-map)]
+              cljnetpcap (binding [clj-net-pcap.core/*emit-raw-data* (arg-map :raw)
+                                   clj-net-pcap.pcap/*snap-len* (arg-map :snap-len)
+                                   clj-net-pcap.pcap/*buffer-size* (arg-map :buffer-size)]
                            (if (= "" pcap-file-name)
                              (create-and-start-online-cljnetpcap
                                (let [f-tmp (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
@@ -105,8 +106,7 @@
                                       (if o
                                         (f o))))
                                (arg-map :interface)
-                               (arg-map :filter)
-                               (arg-map :raw))
+                               (arg-map :filter))
                              (process-pcap-file
                                pcap-file-name
                                (let [f-tmp (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))

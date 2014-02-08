@@ -41,6 +41,7 @@
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
 
 
+(def ^:dynamic *emit-raw-data* false)
 (def ^:dynamic *force-put* false)
 (def ^:dynamic *trace-level* 1)
 (def ^:dynamic *queue-size* 100000)
@@ -112,8 +113,9 @@
   "Takes a pcap instance, sets up the capture pipe line, and starts the capturing and processing.
    This is not intended to be used directly.
    It is recommended to use: create-and-start-online-cljnetpcap or process-pcap-file"
-  [pcap forwarder-fn filter-expr emit-raw-data]
+  [pcap forwarder-fn filter-expr]
     (let [running (ref true)
+          emit-raw-data *emit-raw-data*
           buffer-drop-counter (Counter.)
           buffer-queued-counter (Counter.)
           buffer-queue (ArrayBlockingQueue. *queue-size*)
@@ -122,12 +124,12 @@
           out-queue (ArrayBlockingQueue. *queue-size*)
           handler-fn (fn [ph buf _]
                        (if (not (nil? buf))
-                          (if emit-raw-data
-                            (enqueue-data 
-                              out-queue (deep-copy buf ph)
-                              out-queued-counter out-drop-counter)
-                            (enqueue-data buffer-queue (create-buffer-record buf ph)
-                                          buffer-queued-counter buffer-drop-counter))))
+                         (if emit-raw-data
+                           (enqueue-data
+                             out-queue (deep-copy buf ph)
+                             out-queued-counter out-drop-counter)
+                           (enqueue-data buffer-queue (create-buffer-record buf ph)
+                                         buffer-queued-counter buffer-drop-counter))))
           scanner-drop-counter (Counter.)
           scanner-queued-counter (Counter.)
           scanner-queue (ArrayBlockingQueue. *queue-size*)
@@ -252,10 +254,8 @@
   ([forwarder-fn device]
     (create-and-start-online-cljnetpcap forwarder-fn device ""))
   ([forwarder-fn device filter-expr]
-    (create-and-start-online-cljnetpcap forwarder-fn device filter-expr false))
-  ([forwarder-fn device filter-expr emit-raw-data]
     (let [pcap (create-and-activate-online-pcap device)]
-      (set-up-and-start-cljnetpcap pcap forwarder-fn filter-expr emit-raw-data))))
+      (set-up-and-start-cljnetpcap pcap forwarder-fn filter-expr))))
 
 (defn print-stat-cljnetpcap
   "Given a handle as returned by, e.g., create-and-start-online-cljnetpcap or process-pcap-file,
@@ -299,7 +299,7 @@
   ([file-name handler-fn user-data]
     (binding [*force-put* true]
       (let [pcap (create-offline-pcap file-name)
-            clj-net-pcap (set-up-and-start-cljnetpcap pcap handler-fn "" false)]
+            clj-net-pcap (set-up-and-start-cljnetpcap pcap handler-fn "")]
         (clj-net-pcap :wait-for-completed)
         (stop-cljnetpcap clj-net-pcap)))))
 

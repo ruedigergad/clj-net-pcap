@@ -220,7 +220,7 @@
                                          (> (.size scanner-queue) 0)
                                          (> (.size out-queue) 0))
                                     (sleep 100))
-                                  ;;; FIXME: 
+                                  ;;; TODO: 
                                   ;;; Right now, we give it a little time to process the last data
                                   ;;; even when the queues are empty.
                                   ;;; We should actually use other means to indicate that the entire

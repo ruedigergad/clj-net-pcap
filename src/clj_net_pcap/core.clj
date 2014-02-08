@@ -184,7 +184,7 @@
                                    "buf_qsize,buf_qd,buf_drop,buf_rqd,buf_rdrop, ,"
                                    "sc_qsize,sc_qd,sc_drop,sc_rqd,sc_rdrop, ,"
                                    "f1_qsize,f1_qd,f1_drop,f1_rqd,f1_rdrop, ,"
-                                   "out_qsize,out_qd,out_drop,out_rqd,out_rdrop, ,"
+                                   "f2_qsize,f2_qd,f2_drop,f2_rqd,f2_rdrop, ,"
                                    "failed,rfailed")))
                           (let [pcap-stats (stat-fn)
                                 recv (pcap-stats "recv") pdrop (pcap-stats "drop") ifdrop (pcap-stats "ifdrop")

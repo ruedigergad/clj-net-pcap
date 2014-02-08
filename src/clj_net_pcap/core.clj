@@ -121,12 +121,8 @@
   [pcap forwarder-fn filter-expr force-put]
     (let [running (ref true)
           emit-raw-data *emit-raw-data*
-          buffer-drop-counter (Counter.)
-          buffer-queued-counter (Counter.)
-          buffer-queue (ArrayBlockingQueue. *queue-size*)
-          out-drop-counter (Counter.)
-          out-queued-counter (Counter.)
-          out-queue (ArrayBlockingQueue. *queue-size*)
+          buffer-queue (ArrayBlockingQueue. *queue-size*) buffer-drop-counter (Counter.) buffer-queued-counter (Counter.)
+          out-queue (ArrayBlockingQueue. *queue-size*) out-drop-counter (Counter.) out-queued-counter (Counter.)
           handler-fn (fn [ph buf _]
                        (if (not (nil? buf))
                          (if emit-raw-data
@@ -135,33 +131,23 @@
                              out-queued-counter out-drop-counter)
                            (enqueue-data buffer-queue (create-buffer-record buf ph) force-put
                                          buffer-queued-counter buffer-drop-counter))))
-          scanner-drop-counter (Counter.)
-          scanner-queued-counter (Counter.)
-          scanner-queue (ArrayBlockingQueue. *queue-size*)
+          scanner-queue (ArrayBlockingQueue. *queue-size*) scanner-drop-counter (Counter.) scanner-queued-counter (Counter.)
           buffer-processor #(try (let [bufrec (.take buffer-queue)]
                                    (enqueue-data
                                      scanner-queue (peer-packet bufrec) force-put
                                      scanner-queued-counter scanner-drop-counter))
                               (catch Exception e
-                                (if @running
-                                  (.printStackTrace e))))
-          buffer-processor-thread (doto
-                                    (InfiniteLoop. buffer-processor)
-                                    (.setName "ByteBufferProcessor")
-                                    (.setDaemon true)
-                                    (.start))
+                                (if @running (.printStackTrace e))))
+          buffer-processor-thread (doto (InfiniteLoop. buffer-processor)
+                                    (.setName "ByteBufferProcessor") (.setDaemon true) (.start))
           scanner #(try (let [^PcapPacket pkt (.take scanner-queue)]
                           (enqueue-data
                             out-queue (scan-packet pkt) force-put
                             out-queued-counter out-drop-counter))
                      (catch Exception e
-                       (if @running
-                         (.printStackTrace e))))
-          scanner-thread (doto
-                           (InfiniteLoop. scanner)
-                           (.setName "PacketScanner")
-                           (.setDaemon true)
-                           (.start))
+                       (if @running (.printStackTrace e))))
+          scanner-thread (doto (InfiniteLoop. scanner)
+                           (.setName "PacketScanner") (.setDaemon true) (.start))
           filter-expressions (ref [])
           _ (if (and (not (nil? filter-expr)) (not= "" filter-expr))
               (dosync (alter filter-expressions conj filter-expr)))

@@ -254,9 +254,8 @@
   ([forwarder-fn device filter-expr]
     (create-and-start-online-cljnetpcap forwarder-fn device filter-expr false))
   ([forwarder-fn device filter-expr emit-raw-data]
-    (binding [*force-put* true]
-      (let [pcap (create-and-activate-online-pcap device)]
-        (set-up-and-start-cljnetpcap pcap forwarder-fn filter-expr emit-raw-data)))))
+    (let [pcap (create-and-activate-online-pcap device)]
+      (set-up-and-start-cljnetpcap pcap forwarder-fn filter-expr emit-raw-data))))
 
 (defn print-stat-cljnetpcap
   "Given a handle as returned by, e.g., create-and-start-online-cljnetpcap or process-pcap-file,
@@ -298,10 +297,11 @@
   ([file-name handler-fn]
     (process-pcap-file file-name handler-fn nil))
   ([file-name handler-fn user-data]
-    (let [pcap (create-offline-pcap file-name)
-          clj-net-pcap (set-up-and-start-cljnetpcap pcap handler-fn "" false)]
-      (clj-net-pcap :wait-for-completed)
-      (stop-cljnetpcap clj-net-pcap))))
+    (binding [*force-put* true]
+      (let [pcap (create-offline-pcap file-name)
+            clj-net-pcap (set-up-and-start-cljnetpcap pcap handler-fn "" false)]
+        (clj-net-pcap :wait-for-completed)
+        (stop-cljnetpcap clj-net-pcap)))))
 
 (defn process-pcap-file-with-extraction-fn
   "Convenience function to read a pcap file and process the packets."

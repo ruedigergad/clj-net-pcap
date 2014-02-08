@@ -510,8 +510,8 @@ user=>
 (defn pcap-packet-to-no-op
   "Function that takes a PcapPacket as argument and does nothing.
    This is used for testing purposes."
-  [_]
-  -1)
+  [obj]
+  obj)
 
 (defn stdout-forwarder-fn
   "Pre-defined forwarder function which outputs information about org.jnetpcap.packet.PcapPacket to *out*.

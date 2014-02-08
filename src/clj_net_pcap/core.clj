@@ -65,10 +65,10 @@
       (.flip)))
   ([^ByteBuffer buf ^PcapHeader ph]
     (doto (ByteBuffer/allocate (+ (.remaining buf) 20))
+      (.putInt (.hdr_usec ph))
+      (.putLong (.hdr_sec ph))
       (.putInt (.caplen ph))
       (.putInt (.wirelen ph))
-      (.putLong (.hdr_sec ph))
-      (.putInt (.hdr_usec ph))
       (.put ^ByteBuffer buf)
       (.flip))))
 

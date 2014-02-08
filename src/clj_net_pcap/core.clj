@@ -331,7 +331,10 @@
     (let [extracted-data (ref [])]
       (process-pcap-file-with-extraction-fn 
         file-name
-        format-fn
+        ; This is a pretty crude hack but it should do for now.
+        (if (= "pcap-packet-to-nested-maps" (fn-name format-fn))
+          format-fn
+          (format-fn))
         #(dosync (alter extracted-data conj %)))
       @extracted-data))
 

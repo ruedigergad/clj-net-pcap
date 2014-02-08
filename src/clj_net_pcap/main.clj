@@ -58,20 +58,20 @@
                        "The buffer size to use."
                        :default (int (Math/pow 2 26))
                        :parse-fn #(Integer. %)]
-                      ["-F" "--forwarder-fn"
+                      ["-F1" "--fwd-1-fn"
+                       (str "Use the specified function for transforming the raw packets."
+                            "Available function names are:\n"
+                            "pcap-packet-to-bean, pcap-packet-to-map, pcap-packet-to-nested-maps, "
+                            "pcap-packet-to-no-op, calls-per-second-forwarder-fn")
+                       :default "pcap-packet-to-bean"]
+                      ["-F2" "--fwd-2-fn"
                        (str "Use the specified function as forwarder function for "
                             "processing packets.\n"
                             "Available function names are:\n"
                             "stdout-combined-forwarder-fn, stdout-byte-array-forwarder-fn, "
-                            "stdout-forwarder-fn, no-op-converter-forwarder-fn, "
-                            "counting-converter-forwarder-fn, calls-per-second-converter-forwarder-fn")
+                            "stdout-forwarder-fn, no-op-forwarder-fn, "
+                            "counting-forwarder-fn, calls-per-second-forwarder-fn")
                        :default "stdout-forwarder-fn"]
-                      ["-T" "--transformation-fn"
-                       (str "Use the specified function for transforming the raw packets."
-                            "Available function names are:\n"
-                            "pcap-packet-to-bean, pcap-packet-to-map, "
-                            "pcap-packet-to-nested-maps, pcap-packet-to-no-op")
-                       :default "pcap-packet-to-bean"]
                       ["-d" "--duration"
                        "The duration in seconds how long clj-net-pcap is run."
                        :default -1
@@ -97,11 +97,15 @@
                                    clj-net-pcap.pcap/*buffer-size* (arg-map :buffer-size)]
                            (if (= "" pcap-file-name)
                              (create-and-start-online-cljnetpcap
-                               (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))
-                               (let [f-tmp (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))]
+                               (let [f-tmp (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :fwd-1-fn))))]
                                  (if (= 'packet (first (first (:arglists (meta f-tmp)))))
                                    f-tmp
                                    (f-tmp)))
+                               (if (not= "nil" (arg-map :fwd-2-fn))
+                                 (let [f-tmp (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :fwd-2-fn))))]
+                                   (if (= 'packet (first (first (:arglists (meta f-tmp)))))
+                                     f-tmp
+                                     (f-tmp))))
                                (arg-map :interface)
                                (arg-map :filter))
                              (process-pcap-file

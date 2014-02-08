@@ -99,7 +99,6 @@
   [^PcapPacket pkt]
   (doto pkt (.scan (.value (PcapDLT/EN10MB)))))
 
-
 (defmacro enqueue-data
   [queue op force-put queued-cntr dropped-cntr]
   (cond

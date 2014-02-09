@@ -173,7 +173,7 @@
           fwd-2-thread (if (not (nil? fwd-2-fn))
                          (doto (InfiniteLoop. fwd-2)
                            (.setName "Forwarder_2") (.setDaemon true) (.start)))
-          ; Setup etc. of pcap
+          ; Set up and start pcap.
           filter-expressions (ref [])
           _ (if (and (not (nil? filter-expr)) (not= "" filter-expr))
               (dosync (alter filter-expressions conj filter-expr)))

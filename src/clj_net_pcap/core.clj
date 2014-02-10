@@ -45,7 +45,8 @@
 (def ^:dynamic *queue-size* 100000)
 
 
-(def trace-level 1)
+(def force-put false)
+(def trace-level 0)
 
 
 (defrecord BufferRecord
@@ -65,10 +66,10 @@
       (.flip)))
   ([^ByteBuffer buf ^PcapHeader ph]
     (doto (ByteBuffer/allocate (+ (.remaining buf) 20))
-      (.putInt (.hdr_usec ph))
-      (.putLong (.hdr_sec ph))
       (.putInt (.caplen ph))
       (.putInt (.wirelen ph))
+      (.putLong (.hdr_sec ph))
+      (.putInt (.hdr_usec ph))
       (.put ^ByteBuffer buf)
       (.flip))))
 
@@ -99,8 +100,6 @@
   (doto pkt (.scan (.value (PcapDLT/EN10MB)))))
 
 (defmacro enqueue-data
-  "Convenience macro for queueing data.
-   This is not intended to be used directly."
   [queue op force-put queued-cntr dropped-cntr]
   (cond
     (>= trace-level 1) `(if ~force-put
@@ -110,7 +109,7 @@
                               (.inc ~queued-cntr)
                               (.inc ~dropped-cntr))
                             (.inc ~dropped-cntr)))
-    :default `(if ~force-put
+    :default `(if force-put
                 (.put ~queue ~op)
                 (if (< (.size ~queue) *queue-size*)
                   (.offer ~queue ~op)))))
@@ -119,93 +118,69 @@
   "Takes a pcap instance, sets up the capture pipe line, and starts the capturing and processing.
    This is not intended to be used directly.
    It is recommended to use: create-and-start-online-cljnetpcap or process-pcap-file"
-  [pcap fwd-1-fn fwd-2-fn filter-expr force-put]
-    (let [; Simple local vars
-          running (ref true)
+  [pcap forwarder-fn filter-expr force-put]
+    (let [running (ref true)
           emit-raw-data *emit-raw-data*
-          ; Queues and the associated counters
           buffer-queue (ArrayBlockingQueue. *queue-size*) buffer-drop-counter (Counter.) buffer-queued-counter (Counter.)
-          scanner-queue (ArrayBlockingQueue. *queue-size*) scanner-drop-counter (Counter.) scanner-queued-counter (Counter.)
-          fwd-1-queue (ArrayBlockingQueue. *queue-size*) fwd-1-drop-counter (Counter.) fwd-1-queued-counter (Counter.)
-          fwd-2-queue (ArrayBlockingQueue. *queue-size*) fwd-2-drop-counter (Counter.) fwd-2-queued-counter (Counter.)
-          failed-packet-counter (Counter.)
-          ; Handler, processing fns, and associated threads
+          out-queue (ArrayBlockingQueue. *queue-size*) out-drop-counter (Counter.) out-queued-counter (Counter.)
           handler-fn (fn [ph buf _]
                        (if (not (nil? buf))
                          (if emit-raw-data
                            (enqueue-data
-                             fwd-1-queue (deep-copy buf ph) force-put
-                             fwd-1-queued-counter fwd-1-drop-counter)
+                             out-queue (deep-copy buf ph) force-put
+                             out-queued-counter out-drop-counter)
                            (enqueue-data buffer-queue (create-buffer-record buf ph) force-put
                                          buffer-queued-counter buffer-drop-counter))))
+          scanner-queue (ArrayBlockingQueue. *queue-size*) scanner-drop-counter (Counter.) scanner-queued-counter (Counter.)
           buffer-processor #(try (let [bufrec (.take buffer-queue)]
                                    (enqueue-data
                                      scanner-queue (peer-packet bufrec) force-put
                                      scanner-queued-counter scanner-drop-counter))
                               (catch Exception e
-                                (.inc failed-packet-counter)
                                 (if @running (.printStackTrace e))))
           buffer-processor-thread (doto (InfiniteLoop. buffer-processor)
                                     (.setName "ByteBufferProcessor") (.setDaemon true) (.start))
           scanner #(try (let [^PcapPacket pkt (.take scanner-queue)]
                           (enqueue-data
-                            fwd-1-queue (scan-packet pkt) force-put
-                            fwd-1-queued-counter fwd-1-drop-counter))
+                            out-queue (scan-packet pkt) force-put
+                            out-queued-counter out-drop-counter))
                      (catch Exception e
-                       (.inc failed-packet-counter)
                        (if @running (.printStackTrace e))))
           scanner-thread (doto (InfiniteLoop. scanner)
                            (.setName "PacketScanner") (.setDaemon true) (.start))
-          fwd-1 #(try (let [obj (.take fwd-1-queue)]
-                        (if (nil? fwd-2-fn)
-                          (fwd-1-fn obj)
-                          (enqueue-data
-                            fwd-2-queue (fwd-1-fn obj) force-put
-                            fwd-2-queued-counter fwd-2-drop-counter)))
-                   (catch Exception e
-                     (.inc failed-packet-counter)))
-          fwd-1-thread (doto (InfiniteLoop. fwd-1)
-                         (.setName "Forwarder_1") (.setDaemon true) (.start))
-          fwd-2 #(try (let [obj (.take fwd-2-queue)]
-                            (fwd-2-fn obj))
-                   (catch Exception e
-                     (.inc failed-packet-counter)))
-          fwd-2-thread (if (not (nil? fwd-2-fn))
-                         (doto (InfiniteLoop. fwd-2)
-                           (.setName "Forwarder_2") (.setDaemon true) (.start)))
-          ; Set up and start pcap.
           filter-expressions (ref [])
           _ (if (and (not (nil? filter-expr)) (not= "" filter-expr))
               (dosync (alter filter-expressions conj filter-expr)))
           _ (create-and-set-filter pcap filter-expr)
+          failed-packet-counter (Counter.)
+          forwarder (create-and-start-forwarder out-queue
+                      #(try (forwarder-fn %)
+                         (catch Exception e
+                           (.inc failed-packet-counter))))
           sniffer (create-and-start-sniffer pcap handler-fn)
-          ; Stats collection and output
           stat-fn (create-stat-fn pcap)
           header-output-counter (counter)
           delta-cntr (delta-counter)
           stat-print-fn (fn []
                           (if (= (header-output-counter) 0)
                             (print-err-ln
-                              (str "r,dr,ifdr,rr,rdr,rifdr, ,"
-                                   "b_q,b_qd,b_dr,b_rqd,b_rdr, ,"
-                                   "s_q,s_qd,s_dr,s_rqd,s_rdr, ,"
-                                   "f1_q,f1_qd,f1_dr,f1_rqd,f1_rdr, ,"
-                                   "f2_q,f2_qd,f2_dr,f2_rqd,f2_rdr, ,"
-                                   "fail,rfail")))
+                              (str "recv,drop,ifdrop,rrecv,rdrop,rifdrop, ,"
+                                   "buf_qsize,buf_qd,buf_drop,buf_rqd,buf_rdrop, ,"
+                                   "sc_qsize,sc_qd,sc_drop,sc_rqd,sc_rdrop, ,"
+                                   "out_qsize,out_qd,out_drop,out_rqd,out_rdrop, ,"
+                                   "failed,rfailed")))
                           (let [pcap-stats (stat-fn)
                                 recv (pcap-stats "recv") pdrop (pcap-stats "drop") ifdrop (pcap-stats "ifdrop")
                                 buf-qd (.value buffer-queued-counter) buf-drop (.value buffer-drop-counter)
                                 sc-qd (.value scanner-queued-counter) sc-drop (.value scanner-drop-counter)
-                                f1-qd (.value fwd-1-queued-counter) f1-drop (.value fwd-1-drop-counter)
-                                f2-qd (.value fwd-2-queued-counter) f2-drop (.value fwd-2-drop-counter)
+                                out-qd (.value out-queued-counter) out-drop (.value out-drop-counter)
                                 failed (.value failed-packet-counter)]
                             (print-err-ln
                               (reduce #(str %1 "," %2)
                                 [recv pdrop ifdrop (delta-cntr :recv recv) (delta-cntr :drop pdrop) (delta-cntr :ifdrop ifdrop) " "
                                  (.size buffer-queue) buf-qd buf-drop (delta-cntr :buf-qd buf-qd) (delta-cntr :buf-drop buf-drop) " "
                                  (.size scanner-queue) sc-qd sc-drop (delta-cntr :sc-qd sc-qd) (delta-cntr :sc-drop sc-drop) " "
-                                 (.size fwd-1-queue) f1-qd f1-drop (delta-cntr :f1-qd f1-qd) (delta-cntr :f1-drop f1-drop) " "
-                                 (.size fwd-2-queue) f2-qd f2-drop (delta-cntr :f2-qd f2-qd) (delta-cntr :f2-drop f2-drop) " "
+                                 (.size out-queue) out-qd out-drop (delta-cntr :out-qd out-qd) (delta-cntr :out-drop out-drop) " "
                                  failed (delta-cntr :failed failed)]))
                             (if (>= (header-output-counter) 20)
                               (header-output-counter (fn [_] 0))
@@ -218,10 +193,8 @@
                     (dosync (ref-set running false))
                     (.stop buffer-processor-thread)
                     (.stop scanner-thread)
-                    (.stop fwd-1-thread)
-                    (if (not (nil? fwd-2-thread))
-                      (.stop fwd-2-thread))
-                    (stop-sniffer sniffer))
+                    (stop-sniffer sniffer)
+                    (stop-forwarder forwarder))
             :get-filters @filter-expressions
             :remove-last-filter (do
                                   (dosync
@@ -229,10 +202,9 @@
                                   (create-and-set-filter pcap (join " " @filter-expressions)))
             :wait-for-completed (do
                                   (while (or
-                                           (> (.size buffer-queue) 0)
-                                           (> (.size scanner-queue) 0)
-                                           (> (.size fwd-1-queue) 0)
-                                           (> (.size fwd-2-queue) 0))
+                                         (> (.size buffer-queue) 0)
+                                         (> (.size scanner-queue) 0)
+                                         (> (.size out-queue) 0))
                                     (sleep 100))
                                   ;;; TODO: 
                                   ;;; Right now, we give it a little time to process the last data
@@ -254,17 +226,17 @@
 
 (defn create-and-start-online-cljnetpcap
   "Convenience function for performing live online capturing.
-   transformation-fn and forwarder-fn will be called for each captured packet.
+   forwarder-fn will be called for each captured packet.
    Capturing can be influenced via the optional device and filter-expression arguments.
    By default the 'any' device is used for capturing with no filter being applied.
    Please note that the returned handle should be stored as it is needed for stopping the capture."
-  ([transformer-fn forwarder-fn]
-    (create-and-start-online-cljnetpcap transformer-fn forwarder-fn any))
-  ([transformer-fn forwarder-fn device]
-    (create-and-start-online-cljnetpcap transformer-fn forwarder-fn device ""))
-  ([transformer-fn forwarder-fn device filter-expr]
+  ([forwarder-fn]
+    (create-and-start-online-cljnetpcap forwarder-fn any))
+  ([forwarder-fn device]
+    (create-and-start-online-cljnetpcap forwarder-fn device ""))
+  ([forwarder-fn device filter-expr]
     (let [pcap (create-and-activate-online-pcap device)]
-      (set-up-and-start-cljnetpcap pcap transformer-fn forwarder-fn filter-expr false))))
+      (set-up-and-start-cljnetpcap pcap forwarder-fn filter-expr false))))
 
 (defn print-stat-cljnetpcap
   "Given a handle as returned by, e.g., create-and-start-online-cljnetpcap or process-pcap-file,
@@ -300,21 +272,24 @@
 
 (defn process-pcap-file
   "Convenience function to process data stored in pcap files.
-   Arguments are the file-name of the pcap file, the transformation-fn and the handler-fn that are executed for each read packet.
-   tranformation-fn takes a org.jnetpcap.packet.PcapPacket instance as single argument."
-  ([file-name transformer-fn forwarder-fn]
+   Arguments are the file-name of the pcap file, the handler-fn that is executed for each read packet, and optional user data.
+   handler-fn takes two arguments, the first is the org.jnetpcap.packet.PcapPacket instance, the second is the user data.
+   By default nil is used as user data."
+  ([file-name handler-fn]
+    (process-pcap-file file-name handler-fn nil))
+  ([file-name handler-fn user-data]
     (let [pcap (create-offline-pcap file-name)
-          clj-net-pcap (set-up-and-start-cljnetpcap pcap transformer-fn forwarder-fn "" true)]
+          clj-net-pcap (set-up-and-start-cljnetpcap pcap handler-fn "" true)]
       (clj-net-pcap :wait-for-completed)
       (stop-cljnetpcap clj-net-pcap))))
 
 (defn process-pcap-file-with-extraction-fn
   "Convenience function to read a pcap file and process the packets."
-  [file-name format-fn forwarder-fn]
+  [file-name handler-fn extraction-fn]
     (process-pcap-file 
       file-name
-      format-fn
-      forwarder-fn))
+      (fn [p]
+        (handler-fn (extraction-fn p)))))
 
 (defn extract-data-from-pcap-file
   "Function to extract the data from a pcap file.
@@ -331,11 +306,8 @@
     (let [extracted-data (ref [])]
       (process-pcap-file-with-extraction-fn 
         file-name
-        ; This is a pretty crude hack but it should do for now.
-        (if (= "pcap-packet-to-nested-maps" (fn-name format-fn))
-          format-fn
-          (format-fn))
-        #(dosync (alter extracted-data conj %)))
+        #(dosync (alter extracted-data conj %))
+        format-fn)
       @extracted-data))
 
 (defn extract-nested-maps-from-pcap-file

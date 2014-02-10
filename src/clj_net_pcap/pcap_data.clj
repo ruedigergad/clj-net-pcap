@@ -330,10 +330,9 @@
       (.put "udpDst" (.destination udp)))
     m))
 
-(defn pcap-packet-to-map
+(def pcap-packet-to-map
   "Convenience function to parse a org.jnetpcap.packet.PcapPacket into a flat,
    non-nested map."
-  []
   (let [eth (Ethernet.)
         arp (Arp.)
         icmp (Icmp.)
@@ -441,9 +440,8 @@
       (.setUdpDst (.destination udp)))
     p))
 
-(defn pcap-packet-to-bean
+(def pcap-packet-to-bean
   "Convenience function to parse a org.jnetpcap.packet.PcapPacket into a bean."
-  []
   (let [eth (Ethernet.)
         arp (Arp.)
         icmp (Icmp.)
@@ -535,12 +533,12 @@ user=>
     (pprint (pcap-packet-to-map packet))
     (println "Packet Start (size:" (count buffer-seq) "):" buffer-seq "Packet End\n\n")))
 
-(defn no-op-forwarder-fn
+(defn no-op-converter-forwarder-fn
   "Forwarder that converts the packets but doesn't do anything else.
    This is used for testing purposes."
   [_])
 
-(defn counting-forwarder-fn
+(defn counting-converter-forwarder-fn
   "Forwarder that converts the packets and counts how many times it was called.
    This is used for testing purposes."
   []
@@ -551,9 +549,10 @@ user=>
         _ (run-repeat (executor) printer 1000)]
     (fn
       [_]
-      (.inc cntr))))
+      (do
+        (.inc cntr)))))
 
-(defn calls-per-second-forwarder-fn
+(defn calls-per-second-converter-forwarder-fn
   "Forwarder that converts the packets and periodically prints how many times it was called per second.
    This is used for testing purposes."
   []

@@ -45,7 +45,6 @@
 (def ^:dynamic *queue-size* 100000)
 
 
-(def force-put false)
 (def trace-level 0)
 
 
@@ -109,7 +108,7 @@
                               (.inc ~queued-cntr)
                               (.inc ~dropped-cntr))
                             (.inc ~dropped-cntr)))
-    :default `(if force-put
+    :default `(if ~force-put
                 (.put ~queue ~op)
                 (if (< (.size ~queue) *queue-size*)
                   (.offer ~queue ~op)))))

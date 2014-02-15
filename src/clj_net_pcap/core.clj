@@ -45,7 +45,7 @@
 (def ^:dynamic *queue-size* 100000)
 
 
-(def trace-level 0)
+(def trace-level 1)
 
 
 (defrecord BufferRecord

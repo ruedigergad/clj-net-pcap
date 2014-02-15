@@ -1,4 +1,4 @@
-(defproject clj-net-pcap "1.6.12"
+(defproject clj-net-pcap "1.6.990"
 ;(defproject clj-net-pcap "1.7.0-SNAPSHOT"
   :description "clj-net-pcap is a wrapper/adapter/facade (No matter how you wanna call it.) 
                   around jNetPcap that enables and eases packet capturing with Clojure."
@@ -11,7 +11,7 @@
   :main clj-net-pcap.main
   :java-source-paths ["src-java"]
 ;  :javac-options     ["-target" "1.6" "-source" "1.6"]
-  :jvm-opts ["-Dnio.blocksize=1048576"]
+;  :jvm-opts ["-Dnio.blocksize=1048576"]
   :omit-source true
   :html5-docs-docs-dir "ghpages/doc"
   :html5-docs-ns-includes #"^clj-net-pcap.*"

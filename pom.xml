@@ -3,14 +3,14 @@
   <groupId>clj-net-pcap</groupId>
   <artifactId>clj-net-pcap</artifactId>
   <packaging>jar</packaging>
-  <version>1.6.991</version>
+  <version>1.6.992</version>
   <name>clj-net-pcap</name>
   <description>clj-net-pcap is a wrapper/adapter/facade (No matter how you wanna call it.) 
                   around jNetPcap that enables and eases packet capturing with Clojure.</description>
   <scm>
     <connection>scm:git:git://github.com/ruedigergad/clj-net-pcap.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/ruedigergad/clj-net-pcap.git</developerConnection>
-    <tag>9b1afb22d691af32389b44760750368f1b40ad4b</tag>
+    <tag>529604aa4de55666fa1738327488240d8ba756ec</tag>
     <url>https://github.com/ruedigergad/clj-net-pcap</url>
   </scm>
   <build>

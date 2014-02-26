@@ -12,6 +12,16 @@ public class Counter {
     private long val = 0;
     private Lock lock = new ReentrantLock();
 
+    public void add(int x) {
+        /*
+         * In the current use case we prefer to miss an increment in favor of performance.
+         */
+        if (lock.tryLock()) {
+            val += x;
+            lock.unlock();
+        }
+    }
+
     public void inc() {
         /*
          * In the current use case we prefer to miss an increment in favor of performance.

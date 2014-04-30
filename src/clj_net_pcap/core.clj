@@ -32,7 +32,7 @@
         clj-net-pcap.pcap-data
         clj-net-pcap.sniffer
         clj-assorted-utils.util)
-  (:import (clj_net_pcap Counter InfiniteLoop JBufferWrapper PcapPacketWrapper)
+  (:import (clj_net_pcap Counter JBufferWrapper PcapPacketWrapper ProcessingLoop)
            (java.nio BufferUnderflowException ByteBuffer)
            (java.util ArrayList)
            (java.util.concurrent ArrayBlockingQueue LinkedBlockingQueue)
@@ -124,7 +124,7 @@
                                      ~'scanner-queued-counter ~'scanner-drop-counter))
                               (catch Exception e#
                                 (if @~running (.printStackTrace e#))))
-         ~'buffer-processor-thread (doto (InfiniteLoop. buffer-processor#)
+         ~'buffer-processor-thread (doto (ProcessingLoop. buffer-processor#)
                                      (.setName "ByteBufferProcessor") (.setDaemon true) (.start))
          scanner# #(try (let [^PcapPacket pkt# (.take ~'scanner-queue)]
                            (enqueue-data
@@ -132,7 +132,7 @@
                              ~out-queued-counter ~out-drop-counter))
                      (catch Exception e#
                        (if @~running (.printStackTrace e#))))
-         ~'scanner-thread (doto (InfiniteLoop. scanner#)
+         ~'scanner-thread (doto (ProcessingLoop. scanner#)
                             (.setName "PacketScanner") (.setDaemon true) (.start))]
      ~@body))
 

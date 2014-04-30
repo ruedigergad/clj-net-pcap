@@ -24,7 +24,7 @@
           for more details about the data flow and interaction."}
   clj-net-pcap.sniffer
   (:use clj-net-pcap.pcap)
-  (:import (clj_net_pcap InfiniteLoop PcapPacketWrapper)
+  (:import (clj_net_pcap PcapPacketWrapper ProcessingLoop)
            (java.nio ByteBuffer)
            (java.util ArrayList)
            (java.util.concurrent BlockingQueue)
@@ -102,7 +102,7 @@
                           (if @running 
                             (.printStackTrace e)))))
         forwarder-thread (doto 
-                           (InfiniteLoop. run-fn) 
+                           (ProcessingLoop. run-fn) 
                            (.setName "ForwarderThread") 
                            (.setDaemon true) 
                            (.start))]

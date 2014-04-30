@@ -5,12 +5,12 @@ package clj_net_pcap;
  *  The purpose is primarily to compare the efficiency of the Clojure
  *  way of implementing something like this via loop and recur.
  */
-public class InfiniteLoop extends Thread {
+public class ProcessingLoop extends Thread {
     
     private Runnable runnable;
     private boolean running;
 
-    public InfiniteLoop (Runnable runnable) {
+    public ProcessingLoop (Runnable runnable) {
         this.runnable = runnable;
     }
 

@@ -49,7 +49,7 @@
 
 
 (defrecord BufferRecord
-  [cl wl s us buf])
+  [s us cl wl buf])
 
 (defn deep-copy
   "Creates a deep-copy of the supplied data.
@@ -78,10 +78,10 @@
    deep-copy of the ByteBuffer."
   [^ByteBuffer buf ^PcapHeader ph]
   (BufferRecord.
-    (.caplen ph)
-    (.wirelen ph)
     (.hdr_sec ph)
     (.hdr_usec ph)
+    (.caplen ph)
+    (.wirelen ph)
     (deep-copy buf)))
 
 (defn peer-packet

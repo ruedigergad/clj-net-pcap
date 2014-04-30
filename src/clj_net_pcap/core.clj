@@ -143,6 +143,37 @@
      (.stop ~'buffer-processor-thread)
      (.stop ~'scanner-thread)))
 
+(defmacro create-stat-print-fn
+  ""
+  []
+  `(fn []
+     (let [stat-fn# (create-stat-fn ~'pcap)
+           header-output-counter# (counter)
+           delta-cntr# (delta-counter)]
+       (if (= (header-output-counter#) 0)
+         (print-err-ln
+           (str "recv,drop,ifdrop,rrecv,rdrop,rifdrop, ,"
+                "buf_qsize,buf_qd,buf_drop,buf_rqd,buf_rdrop, ,"
+                "sc_qsize,sc_qd,sc_drop,sc_rqd,sc_rdrop, ,"
+                "out_qsize,out_qd,out_drop,out_rqd,out_rdrop, ,"
+                "failed,rfailed")))
+       (let [pcap-stats# (stat-fn#)
+             recv# (pcap-stats# "recv") pdrop# (pcap-stats# "drop") ifdrop# (pcap-stats# "ifdrop")
+             buf-qd# (.value ~'buffer-queued-counter) buf-drop# (.value ~'buffer-drop-counter)
+             sc-qd# (.value ~'scanner-queued-counter) sc-drop# (.value ~'scanner-drop-counter)
+             out-qd# (.value ~'out-queued-counter) out-drop# (.value ~'out-drop-counter)
+             failed# (.value ~'failed-packet-counter)]
+         (print-err-ln
+           (reduce #(str %1 "," %2)
+             [recv# pdrop# ifdrop# (delta-cntr# :recv recv#) (delta-cntr# :drop pdrop#) (delta-cntr# :ifdrop ifdrop#) " "
+              (.size ~'buffer-queue) buf-qd# buf-drop# (delta-cntr# :buf-qd buf-qd#) (delta-cntr# :buf-drop buf-drop#) " "
+              (.size ~'scanner-queue) sc-qd# sc-drop# (delta-cntr# :sc-qd sc-qd#) (delta-cntr# :sc-drop sc-drop#) " "
+              (.size ~'out-queue) out-qd# out-drop# (delta-cntr# :out-qd out-qd#) (delta-cntr# :out-drop out-drop#) " "
+              failed# (delta-cntr# :failed failed#)]))
+         (if (>= (header-output-counter#) 20)
+           (header-output-counter# (fn [_#] 0))
+           (header-output-counter# inc))))))
+
 (defn set-up-and-start-cljnetpcap
   "Takes a pcap instance, sets up the capture pipe line, and starts the capturing and processing.
    This is not intended to be used directly.
@@ -173,33 +204,7 @@
                            (catch Exception e
                              (.inc failed-packet-counter))))
             sniffer (create-and-start-sniffer pcap handler-fn)
-            stat-fn (create-stat-fn pcap)
-            header-output-counter (counter)
-            delta-cntr (delta-counter)
-            stat-print-fn (fn []
-                            (if (= (header-output-counter) 0)
-                              (print-err-ln
-                                (str "recv,drop,ifdrop,rrecv,rdrop,rifdrop, ,"
-                                     "buf_qsize,buf_qd,buf_drop,buf_rqd,buf_rdrop, ,"
-                                     "sc_qsize,sc_qd,sc_drop,sc_rqd,sc_rdrop, ,"
-                                     "out_qsize,out_qd,out_drop,out_rqd,out_rdrop, ,"
-                                     "failed,rfailed")))
-                            (let [pcap-stats (stat-fn)
-                                  recv (pcap-stats "recv") pdrop (pcap-stats "drop") ifdrop (pcap-stats "ifdrop")
-                                  buf-qd (.value buffer-queued-counter) buf-drop (.value buffer-drop-counter)
-                                  sc-qd (.value scanner-queued-counter) sc-drop (.value scanner-drop-counter)
-                                  out-qd (.value out-queued-counter) out-drop (.value out-drop-counter)
-                                  failed (.value failed-packet-counter)]
-                              (print-err-ln
-                                (reduce #(str %1 "," %2)
-                                  [recv pdrop ifdrop (delta-cntr :recv recv) (delta-cntr :drop pdrop) (delta-cntr :ifdrop ifdrop) " "
-                                   (.size buffer-queue) buf-qd buf-drop (delta-cntr :buf-qd buf-qd) (delta-cntr :buf-drop buf-drop) " "
-                                   (.size scanner-queue) sc-qd sc-drop (delta-cntr :sc-qd sc-qd) (delta-cntr :sc-drop sc-drop) " "
-                                   (.size out-queue) out-qd out-drop (delta-cntr :out-qd out-qd) (delta-cntr :out-drop out-drop) " "
-                                   failed (delta-cntr :failed failed)]))
-                              (if (>= (header-output-counter) 20)
-                                (header-output-counter (fn [_] 0))
-                                (header-output-counter inc))))]
+            stat-print-fn (create-stat-print-fn)]
         (fn 
           ([k]
             (condp = k

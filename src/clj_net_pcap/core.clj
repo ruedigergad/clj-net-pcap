@@ -130,8 +130,8 @@
                            (enqueue-data
                              ~out-queue (scan-packet pkt#) ~force-put
                              ~out-queued-counter ~out-drop-counter))
-                      (catch Exception e#
-                        (if @~running (.printStackTrace e#))))
+                     (catch Exception e#
+                       (if @~running (.printStackTrace e#))))
          ~'scanner-thread (doto (InfiniteLoop. scanner#)
                             (.setName "PacketScanner") (.setDaemon true) (.start))]
      ~@body))

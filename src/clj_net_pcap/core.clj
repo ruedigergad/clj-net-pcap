@@ -69,7 +69,7 @@
       (.putInt (.hdr_usec ph))
       (.putInt (.caplen ph))
       (.putInt (.wirelen ph))
-      (.put ^ByteBuffer buf)
+      (.put buf)
       (.flip))))
 
 (defn create-buffer-record

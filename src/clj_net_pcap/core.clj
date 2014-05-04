@@ -300,13 +300,6 @@
       (clj-net-pcap :wait-for-completed)
       (stop-cljnetpcap clj-net-pcap))))
 
-(defn process-pcap-file-with-extraction-fn
-  "Convenience function to read a pcap file and process the packets."
-  [file-name handler-fn extraction-fn]
-    (process-pcap-file 
-      file-name
-      (fn [p]
-        (handler-fn (extraction-fn p)))))
 
 (defn extract-data-from-pcap-file
   "Function to extract the data from a pcap file.
@@ -321,10 +314,9 @@
    extract-maps-from-pcap-file"
   [file-name format-fn]
     (let [extracted-data (ref [])]
-      (process-pcap-file-with-extraction-fn 
+      (process-pcap-file
         file-name
-        #(dosync (alter extracted-data conj %))
-        format-fn)
+        #(dosync (alter extracted-data conj (format-fn %))))
       @extracted-data))
 
 (defn extract-nested-maps-from-pcap-file

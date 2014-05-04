@@ -6,6 +6,7 @@
                   [org.clojure/tools.cli "0.2.4"]
                   [clj-assorted-utils "1.5.1"]
                   [jnetpcap "1.4.r1425-1c"]]
+  :min-lein-version "2.0.0"
   :aot [#"^clj-net-pcap.*"]
   :global-vars {*warn-on-reflection* true}
   :main clj-net-pcap.main

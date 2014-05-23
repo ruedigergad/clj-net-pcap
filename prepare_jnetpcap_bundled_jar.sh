@@ -81,7 +81,7 @@ mkdir -p "$TEMP_JAR_DIR/native/windows/x86"
 mkdir -p "$TEMP_JAR_DIR/native/windows/x86_64"
 
 
-#cp "$LINUX_i386/jnetpcap-$JNETPCAP_VERSION/*.so" "$TEMP_JAR_DIR/native/linux/i386"
+cp "$LINUX_i386/jnetpcap-$JNETPCAP_VERSION/*.so" "$TEMP_JAR_DIR/native/linux/i386"
 cp $LINUX_X86_64/jnetpcap-$JNETPCAP_VERSION/*.so $TEMP_JAR_DIR/native/linux/amd64
 cp $WIN32/jnetpcap-$JNETPCAP_VERSION/*.dll $TEMP_JAR_DIR/native/windows/x86
 cp $WIN64/jnetpcap-$JNETPCAP_VERSION/*.dll $TEMP_JAR_DIR/native/windows/x86_64

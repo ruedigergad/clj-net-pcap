@@ -193,8 +193,6 @@
     (fn
       ([]
         pcap)
-      ([k]
-        (create-offline-pcap k nil))
       ([k opt]
         (condp = k
           :start (let [run-fn (fn [] 

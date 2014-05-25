@@ -116,3 +116,9 @@
     (is (= 1 (count my-beans)))
     (is (= expected
            (first my-beans)))))
+
+(deftest test-extract-byte-arrays-raw-data-from-pcap-file
+  (let [my-raw-data (extract-byte-arrays-from-pcap-file test-file)]
+    (is (= 6 (count my-raw-data)))
+    (is (vector? my-raw-data))
+    (is (= byte-array-type (type (my-raw-data 0))))))

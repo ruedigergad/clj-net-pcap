@@ -19,7 +19,7 @@
 
 (ns 
   ^{:author "Ruediger Gad",
-    :doc "Clojure tests for reading from pcap files."} 
+    :doc "Clojure tests with respect to handling data."}
   clj-net-pcap.test.pcap-data
   (:use clojure.test
         clj-net-pcap.native

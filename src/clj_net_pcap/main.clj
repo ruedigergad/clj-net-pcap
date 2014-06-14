@@ -161,8 +161,8 @@
                                                   (catch Exception e
                                                     (println "Error adding filter:" e)))
                         (or
-                          (= cmd "sf")
-                          (= cmd "show-filters")) (pprint (get-filters cljnetpcap))
+                          (= cmd "gf")
+                          (= cmd "get-filters")) (pprint (get-filters cljnetpcap))
                         (or
                           (= cmd "rlf")
                           (= cmd "remove-last-filter")) (remove-last-filter cljnetpcap)
@@ -171,7 +171,7 @@
                           (= cmd "remove-all-filters")) (remove-all-filters cljnetpcap)
                         :default (when (not= cmd "")
                                    (println "Unknown command:" cmd)
-                                   (println "Valid commands are: add-filter (af), show-filters (sf), remove-last-filter (rlf), remove-all-filters (raf)")))
+                                   (println "Valid commands are: add-filter (af), get-filters (gf), remove-last-filter (rlf), remove-all-filters (raf)")))
                       (print "cljnetpcap=> ")
                       (flush)
                       (recur (read-line)))))

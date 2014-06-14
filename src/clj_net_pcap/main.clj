@@ -59,8 +59,7 @@
                        :default (int (Math/pow 2 26))
                        :parse-fn #(Integer. %)]
                       ["-F" "--forwarder-fn"
-                       (str "Use the specified function as forwarder function for "
-                            "processing packets.\n"
+                       (str "Use the specified function as forwarder function for processing packets.\n"
                             "Available function names are:\n"
                             "stdout-combined-forwarder-fn, stdout-byte-array-forwarder-fn, "
                             "stdout-forwarder-fn, no-op-converter-forwarder-fn, "
@@ -167,9 +166,12 @@
                         (or
                           (= cmd "rlf")
                           (= cmd "remove-last-filter")) (remove-last-filter cljnetpcap)
+                        (or
+                          (= cmd "raf")
+                          (= cmd "remove-all-filters")) (remove-all-filters cljnetpcap)
                         :default (when (not= cmd "")
                                    (println "Unknown command:" cmd)
-                                   (println "Valid commands are: add-filter (af), show-filters (sf), remove-last-filter (rlf)")))
+                                   (println "Valid commands are: add-filter (af), show-filters (sf), remove-last-filter (rlf), remove-all-filters (raf)")))
                       (print "cljnetpcap=> ")
                       (flush)
                       (recur (read-line)))))

@@ -216,8 +216,10 @@
                       (stop-forwarder forwarder))
               :get-filters @filter-expressions
               :remove-last-filter (do
-                                    (dosync
-                                      (alter filter-expressions pop))
+                                    (dosync (alter filter-expressions pop))
+                                    (create-and-set-filter pcap (join " " @filter-expressions)))
+              :remove-all-filters (do
+                                    (dosync (alter filter-expressions (fn [_] [])))
                                     (create-and-set-filter pcap (join " " @filter-expressions)))
               :wait-for-completed (do
                                     (while (or
@@ -239,7 +241,7 @@
               :remove-filter (do (dosync
                                    (alter filter-expressions (fn [fe] (vec (filter #(not= arg %) fe)))))
                                  (create-and-set-filter pcap (join " " @filter-expressions)))
-              :default (throw (RuntimeException. (str "Unsupported operation: " k))))))))))
+              :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " arg))))))))))
 
 (defn create-and-start-online-cljnetpcap
   "Convenience function for performing live online capturing.
@@ -281,6 +283,11 @@
   "Remove the last filter expression."
   [cljnetpcap]
   (cljnetpcap :remove-last-filter))
+
+(defn remove-all-filters
+  "Removes all filter expressions."
+  [cljnetpcap]
+  (cljnetpcap :remove-all-filters))
 
 (defn remove-filter
   "Remove the matching filter."

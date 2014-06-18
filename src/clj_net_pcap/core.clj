@@ -113,28 +113,6 @@
                 (if (< (.size ~queue) *queue-size*)
                   (.offer ~queue ~op)))))
 
-(defmacro with-packet-scanning-pipeline
-  ""
-  [raw-queue out-queue out-drop-counter out-queued-counter force-put running & body]
-  `(let [~'scanner-queue (ArrayBlockingQueue. *queue-size*)
-         ~'scanner-drop-counter (Counter.) ~'scanner-queued-counter (Counter.)
-         buffer-processor# #(try (let [bufrec# (.take ~raw-queue)]
-                                   (enqueue-data
-                                     ~'scanner-queue (peer-packet bufrec#) ~force-put
-                                     ~'scanner-queued-counter ~'scanner-drop-counter))
-                              (catch Exception e#
-                                (if @~running (.printStackTrace e#))))
-         ~'buffer-processor-thread (doto (ProcessingLoop. buffer-processor#)
-                                     (.setName "ByteBufferProcessor") (.setDaemon true) (.start))
-         scanner# #(try (let [^PcapPacket pkt# (.take ~'scanner-queue)]
-                           (enqueue-data
-                             ~out-queue (scan-packet pkt#) ~force-put
-                             ~out-queued-counter ~out-drop-counter))
-                     (catch Exception e#
-                       (if @~running (.printStackTrace e#))))
-         ~'scanner-thread (doto (ProcessingLoop. scanner#)
-                            (.setName "PacketScanner") (.setDaemon true) (.start))]
-     ~@body))
 
 (defmacro stop-packet-scanning-pipeline
   ""
@@ -182,88 +160,87 @@
   [pcap forwarder-fn filter-expr force-put]
   (let [running (ref true)
         out-queue (ArrayBlockingQueue. *queue-size*)
-        out-drop-counter (Counter.) out-queued-counter (Counter.)]
-;    (with-packet-scanning-pipeline buffer-queue out-queue out-drop-counter out-queued-counter force-put running
-      (let [emit-raw-data *emit-raw-data*
-            buffer-drop-counter (Counter.) buffer-queued-counter (Counter.)
-            handler-fn (let [buffer-queue (ArrayBlockingQueue. *queue-size*)
-                             scanner-queue (ArrayBlockingQueue. *queue-size*)
-                             scanner-drop-counter (Counter.) scanner-queued-counter (Counter.)
-                             buffer-processor #(try (let [bufrec (.take buffer-queue)]
-                                                      (enqueue-data
-                                                        scanner-queue (peer-packet bufrec) force-put
-                                                        scanner-queued-counter scanner-drop-counter))
-                                                 (catch Exception e
-                                                   (if @running (.printStackTrace e))))
-                             buffer-processor-thread (doto (ProcessingLoop. buffer-processor)
-                                                         (.setName "ByteBufferProcessor") (.setDaemon true) (.start))
-                             scanner #(try (let [^PcapPacket pkt (.take scanner-queue)]
-                                             (enqueue-data
-                                               out-queue (scan-packet pkt) force-put
-                                               out-queued-counter out-drop-counter))
-                                         (catch Exception e
-                                           (if @running (.printStackTrace e))))
-                             scanner-thread (doto (ProcessingLoop. scanner)
-                                                (.setName "PacketScanner") (.setDaemon true) (.start))]
-                         (fn [ph buf _]
-                           (if (not (nil? buf))
-                             (enqueue-data buffer-queue (create-buffer-record buf ph) force-put
-                                           buffer-queued-counter buffer-drop-counter))))
-            handler-fn-raw (fn [ph buf _]
-                             (if (not (nil? buf))
-                               (enqueue-data
-                                 out-queue (deep-copy buf ph) force-put
-                                 out-queued-counter out-drop-counter)))
-            filter-expressions (ref [])
-            _ (if (and (not (nil? filter-expr)) (not= "" filter-expr))
-                (dosync (alter filter-expressions conj filter-expr)))
-            _ (create-and-set-filter pcap filter-expr)
-            failed-packet-counter (Counter.)
-            forwarder (create-and-start-forwarder out-queue
-                        #(try (forwarder-fn %)
-                           (catch Exception e
-                             (.inc failed-packet-counter))))
-            sniffer (create-and-start-sniffer pcap (if emit-raw-data handler-fn-raw handler-fn))
+        out-drop-counter (Counter.) out-queued-counter (Counter.)
+        emit-raw-data *emit-raw-data*
+        buffer-drop-counter (Counter.) buffer-queued-counter (Counter.)
+        handler-fn (let [buffer-queue (ArrayBlockingQueue. *queue-size*)
+                         scanner-queue (ArrayBlockingQueue. *queue-size*)
+                         scanner-drop-counter (Counter.) scanner-queued-counter (Counter.)
+                         buffer-processor #(try (let [bufrec (.take buffer-queue)]
+                                                  (enqueue-data
+                                                    scanner-queue (peer-packet bufrec) force-put
+                                                    scanner-queued-counter scanner-drop-counter))
+                                             (catch Exception e
+                                               (if @running (.printStackTrace e))))
+                         buffer-processor-thread (doto (ProcessingLoop. buffer-processor)
+                                                     (.setName "ByteBufferProcessor") (.setDaemon true) (.start))
+                         scanner #(try (let [^PcapPacket pkt (.take scanner-queue)]
+                                         (enqueue-data
+                                           out-queue (scan-packet pkt) force-put
+                                           out-queued-counter out-drop-counter))
+                                     (catch Exception e
+                                       (if @running (.printStackTrace e))))
+                         scanner-thread (doto (ProcessingLoop. scanner)
+                                            (.setName "PacketScanner") (.setDaemon true) (.start))]
+                     (fn [ph buf _]
+                       (if (not (nil? buf))
+                         (enqueue-data buffer-queue (create-buffer-record buf ph) force-put
+                                       buffer-queued-counter buffer-drop-counter))))
+        handler-fn-raw (fn [ph buf _]
+                         (if (not (nil? buf))
+                           (enqueue-data
+                             out-queue (deep-copy buf ph) force-put
+                             out-queued-counter out-drop-counter)))
+        filter-expressions (ref [])
+        _ (if (and (not (nil? filter-expr)) (not= "" filter-expr))
+            (dosync (alter filter-expressions conj filter-expr)))
+        _ (create-and-set-filter pcap filter-expr)
+        failed-packet-counter (Counter.)
+        forwarder (create-and-start-forwarder out-queue
+                    #(try (forwarder-fn %)
+                       (catch Exception e
+                         (.inc failed-packet-counter))))
+        sniffer (create-and-start-sniffer pcap (if emit-raw-data handler-fn-raw handler-fn))
 ;            stat-print-fn (create-stat-print-fn)
-            stat-print-fn #(println "")
-            ]
-        (fn 
-          ([k]
-            (condp = k
-              :stat (stat-print-fn)
-              :stop (do
-                      (dosync (ref-set running false))
-                      (stop-packet-scanning-pipeline)
-                      (stop-sniffer sniffer)
-                      (stop-forwarder forwarder))
-              :get-filters @filter-expressions
-              :remove-last-filter (do
-                                    (dosync (alter filter-expressions pop))
-                                    (create-and-set-filter pcap (join " " @filter-expressions)))
-              :remove-all-filters (do
-                                    (dosync (alter filter-expressions (fn [_] [])))
-                                    (create-and-set-filter pcap (join " " @filter-expressions)))
-              :wait-for-completed (do
-                                    (while (or
+        stat-print-fn #(println "")
+        ]
+    (fn 
+      ([k]
+        (condp = k
+          :stat (stat-print-fn)
+          :stop (do
+                  (dosync (ref-set running false))
+                  (stop-packet-scanning-pipeline)
+                  (stop-sniffer sniffer)
+                  (stop-forwarder forwarder))
+          :get-filters @filter-expressions
+          :remove-last-filter (do
+                                (dosync (alter filter-expressions pop))
+                                (create-and-set-filter pcap (join " " @filter-expressions)))
+          :remove-all-filters (do
+                                (dosync (alter filter-expressions (fn [_] [])))
+                                (create-and-set-filter pcap (join " " @filter-expressions)))
+          :wait-for-completed (do
+                                (while (or
 ;                                           (> (.size buffer-queue) 0)
 ;                                           (> (.size scanner-queue) 0)
-                                           (> (.size out-queue) 0))
-                                      (sleep 100))
-                                    ;;; TODO: 
-                                    ;;; Right now, we give it a little time to process the last data even when the queues are empty.
-                                    ;;; We should actually use other means to indicate that the entire processing has finished.
-                                    (sleep 100))
-              :default (throw (RuntimeException. (str "Unsupported operation: " k)))))
-          ([k arg]
-            (condp = k
-              :add-filter (when (and arg (not= arg ""))
-                            (dosync
-                              (alter filter-expressions conj arg))
-                            (create-and-set-filter pcap (join " " @filter-expressions)))
-              :remove-filter (do (dosync
-                                   (alter filter-expressions (fn [fe] (vec (filter #(not= arg %) fe)))))
-                                 (create-and-set-filter pcap (join " " @filter-expressions)))
-              :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " arg)))))))))
+                                       (> (.size out-queue) 0))
+                                  (sleep 100))
+                                ;;; TODO: 
+                                ;;; Right now, we give it a little time to process the last data even when the queues are empty.
+                                ;;; We should actually use other means to indicate that the entire processing has finished.
+                                (sleep 100))
+          :default (throw (RuntimeException. (str "Unsupported operation: " k)))))
+      ([k arg]
+        (condp = k
+          :add-filter (when (and arg (not= arg ""))
+                        (dosync
+                          (alter filter-expressions conj arg))
+                        (create-and-set-filter pcap (join " " @filter-expressions)))
+          :remove-filter (do (dosync
+                               (alter filter-expressions (fn [fe] (vec (filter #(not= arg %) fe)))))
+                             (create-and-set-filter pcap (join " " @filter-expressions)))
+          :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " arg))))))))
 
 (defn create-and-start-online-cljnetpcap
   "Convenience function for performing live online capturing.

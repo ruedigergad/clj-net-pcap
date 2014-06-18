@@ -188,12 +188,13 @@
             buffer-drop-counter (Counter.) buffer-queued-counter (Counter.)
             handler-fn (fn [ph buf _]
                          (if (not (nil? buf))
-                           (if emit-raw-data
-                             (enqueue-data
-                               out-queue (deep-copy buf ph) force-put
-                               out-queued-counter out-drop-counter)
-                             (enqueue-data buffer-queue (create-buffer-record buf ph) force-put
-                                           buffer-queued-counter buffer-drop-counter))))
+                           (enqueue-data buffer-queue (create-buffer-record buf ph) force-put
+                                         buffer-queued-counter buffer-drop-counter)))
+            handler-fn-raw (fn [ph buf _]
+                             (if (not (nil? buf))
+                               (enqueue-data
+                                 out-queue (deep-copy buf ph) force-put
+                                 out-queued-counter out-drop-counter)))
             filter-expressions (ref [])
             _ (if (and (not (nil? filter-expr)) (not= "" filter-expr))
                 (dosync (alter filter-expressions conj filter-expr)))
@@ -203,7 +204,7 @@
                         #(try (forwarder-fn %)
                            (catch Exception e
                              (.inc failed-packet-counter))))
-            sniffer (create-and-start-sniffer pcap handler-fn)
+            sniffer (create-and-start-sniffer pcap (if emit-raw-data handler-fn-raw handler-fn))
             stat-print-fn (create-stat-print-fn)]
         (fn 
           ([k]

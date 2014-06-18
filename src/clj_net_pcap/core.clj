@@ -114,14 +114,6 @@
                   (.offer ~queue ~op)))))
 
 
-(defmacro stop-packet-scanning-pipeline
-  ""
-  []
-  `(do
-;     (.stop ~'buffer-processor-thread)
-;     (.stop ~'scanner-thread)))
-    ))
-
 (defmacro create-stat-print-fn
   ""
   []
@@ -156,11 +148,14 @@
 (defn create-raw-handler
   ""
   [out-queue out-queued-counter out-drop-counter force-put running]
-  (fn [ph buf _]
-    (if (not (nil? buf))
-      (enqueue-data
-        out-queue (deep-copy buf ph) force-put
-        out-queued-counter out-drop-counter))))
+  (fn
+    ([]
+      (fn [ph buf _]
+        (if (not (nil? buf))
+          (enqueue-data
+            out-queue (deep-copy buf ph) force-put
+            out-queued-counter out-drop-counter))))
+    ([k])))
 
 (defn create-packet-processing-handler
   ""
@@ -185,10 +180,21 @@
                       (if @running (.printStackTrace e))))
         scanner-thread (doto (ProcessingLoop. scanner)
                            (.setName "PacketScanner") (.setDaemon true) (.start))]
-    (fn [ph buf _]
-      (if (not (nil? buf))
-        (enqueue-data buffer-queue (create-buffer-record buf ph) force-put
-                      buffer-queued-counter buffer-drop-counter)))))
+    (fn
+      ([]
+        (fn [ph buf _]
+          (if (not (nil? buf))
+            (enqueue-data buffer-queue (create-buffer-record buf ph) force-put
+                          buffer-queued-counter buffer-drop-counter))))
+      ([k]
+        (condp = k
+          :stat nil
+          :stop (do
+                  (.stop ~'buffer-processor-thread)
+                  (.stop ~'scanner-thread))
+          :wait-for-completed (do
+                                (while (or (> (.size buffer-queue) 0) (> (.size scanner-queue) 0))
+                                  (sleep 100))))))))
 
 (defn set-up-and-start-cljnetpcap
   "Takes a pcap instance, sets up the capture pipe line, and starts the capturing and processing.
@@ -211,7 +217,7 @@
                     #(try (forwarder-fn %)
                        (catch Exception e
                          (.inc failed-packet-counter))))
-        sniffer (create-and-start-sniffer pcap handler)
+        sniffer (create-and-start-sniffer pcap (handler))
 ;            stat-print-fn (create-stat-print-fn)
         stat-print-fn #(println "")
         ]
@@ -221,7 +227,6 @@
           :stat (stat-print-fn)
           :stop (do
                   (dosync (ref-set running false))
-                  (stop-packet-scanning-pipeline)
                   (stop-sniffer sniffer)
                   (stop-forwarder forwarder))
           :get-filters @filter-expressions
@@ -232,9 +237,8 @@
                                 (dosync (alter filter-expressions (fn [_] [])))
                                 (create-and-set-filter pcap (join " " @filter-expressions)))
           :wait-for-completed (do
+                                (handler :wait-for-completed)
                                 (while (or
-;                                           (> (.size buffer-queue) 0)
-;                                           (> (.size scanner-queue) 0)
                                        (> (.size out-queue) 0))
                                   (sleep 100))
                                 ;;; TODO: 

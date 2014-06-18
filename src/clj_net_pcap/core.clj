@@ -153,6 +153,43 @@
            (header-output-counter# (fn [_#] 0))
            (header-output-counter# inc))))))
 
+(defn create-raw-handler
+  ""
+  [out-queue out-queued-counter out-drop-counter force-put running]
+  (fn [ph buf _]
+    (if (not (nil? buf))
+      (enqueue-data
+        out-queue (deep-copy buf ph) force-put
+        out-queued-counter out-drop-counter))))
+
+(defn create-packet-processing-handler
+  ""
+  [out-queue out-queued-counter out-drop-counter force-put running]
+  (let [buffer-queue (ArrayBlockingQueue. *queue-size*)
+        buffer-drop-counter (Counter.) buffer-queued-counter (Counter.)
+        scanner-queue (ArrayBlockingQueue. *queue-size*)
+        scanner-drop-counter (Counter.) scanner-queued-counter (Counter.)
+        buffer-processor #(try (let [bufrec (.take buffer-queue)]
+                                 (enqueue-data
+                                   scanner-queue (peer-packet bufrec) force-put
+                                   scanner-queued-counter scanner-drop-counter))
+                            (catch Exception e
+                              (if @running (.printStackTrace e))))
+        buffer-processor-thread (doto (ProcessingLoop. buffer-processor)
+                                    (.setName "ByteBufferProcessor") (.setDaemon true) (.start))
+        scanner #(try (let [^PcapPacket pkt (.take scanner-queue)]
+                        (enqueue-data
+                          out-queue (scan-packet pkt) force-put
+                          out-queued-counter out-drop-counter))
+                    (catch Exception e
+                      (if @running (.printStackTrace e))))
+        scanner-thread (doto (ProcessingLoop. scanner)
+                           (.setName "PacketScanner") (.setDaemon true) (.start))]
+    (fn [ph buf _]
+      (if (not (nil? buf))
+        (enqueue-data buffer-queue (create-buffer-record buf ph) force-put
+                      buffer-queued-counter buffer-drop-counter)))))
+
 (defn set-up-and-start-cljnetpcap
   "Takes a pcap instance, sets up the capture pipe line, and starts the capturing and processing.
    This is not intended to be used directly.
@@ -162,35 +199,9 @@
         out-queue (ArrayBlockingQueue. *queue-size*)
         out-drop-counter (Counter.) out-queued-counter (Counter.)
         emit-raw-data *emit-raw-data*
-        buffer-drop-counter (Counter.) buffer-queued-counter (Counter.)
-        handler-fn (let [buffer-queue (ArrayBlockingQueue. *queue-size*)
-                         scanner-queue (ArrayBlockingQueue. *queue-size*)
-                         scanner-drop-counter (Counter.) scanner-queued-counter (Counter.)
-                         buffer-processor #(try (let [bufrec (.take buffer-queue)]
-                                                  (enqueue-data
-                                                    scanner-queue (peer-packet bufrec) force-put
-                                                    scanner-queued-counter scanner-drop-counter))
-                                             (catch Exception e
-                                               (if @running (.printStackTrace e))))
-                         buffer-processor-thread (doto (ProcessingLoop. buffer-processor)
-                                                     (.setName "ByteBufferProcessor") (.setDaemon true) (.start))
-                         scanner #(try (let [^PcapPacket pkt (.take scanner-queue)]
-                                         (enqueue-data
-                                           out-queue (scan-packet pkt) force-put
-                                           out-queued-counter out-drop-counter))
-                                     (catch Exception e
-                                       (if @running (.printStackTrace e))))
-                         scanner-thread (doto (ProcessingLoop. scanner)
-                                            (.setName "PacketScanner") (.setDaemon true) (.start))]
-                     (fn [ph buf _]
-                       (if (not (nil? buf))
-                         (enqueue-data buffer-queue (create-buffer-record buf ph) force-put
-                                       buffer-queued-counter buffer-drop-counter))))
-        handler-fn-raw (fn [ph buf _]
-                         (if (not (nil? buf))
-                           (enqueue-data
-                             out-queue (deep-copy buf ph) force-put
-                             out-queued-counter out-drop-counter)))
+        handler (if emit-raw-data
+                  (create-raw-handler out-queue out-queued-counter out-drop-counter force-put running)
+                  (create-packet-processing-handler out-queue out-queued-counter out-drop-counter force-put running))
         filter-expressions (ref [])
         _ (if (and (not (nil? filter-expr)) (not= "" filter-expr))
             (dosync (alter filter-expressions conj filter-expr)))
@@ -200,7 +211,7 @@
                     #(try (forwarder-fn %)
                        (catch Exception e
                          (.inc failed-packet-counter))))
-        sniffer (create-and-start-sniffer pcap (if emit-raw-data handler-fn-raw handler-fn))
+        sniffer (create-and-start-sniffer pcap handler)
 ;            stat-print-fn (create-stat-print-fn)
         stat-print-fn #(println "")
         ]

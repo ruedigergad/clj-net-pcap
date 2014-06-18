@@ -140,8 +140,9 @@
   ""
   []
   `(do
-     (.stop ~'buffer-processor-thread)
-     (.stop ~'scanner-thread)))
+;     (.stop ~'buffer-processor-thread)
+;     (.stop ~'scanner-thread)))
+    ))
 
 (defmacro create-stat-print-fn
   ""
@@ -180,16 +181,34 @@
    It is recommended to use: create-and-start-online-cljnetpcap or process-pcap-file"
   [pcap forwarder-fn filter-expr force-put]
   (let [running (ref true)
-        buffer-queue (ArrayBlockingQueue. *queue-size*)
         out-queue (ArrayBlockingQueue. *queue-size*)
         out-drop-counter (Counter.) out-queued-counter (Counter.)]
-    (with-packet-scanning-pipeline buffer-queue out-queue out-drop-counter out-queued-counter force-put running
+;    (with-packet-scanning-pipeline buffer-queue out-queue out-drop-counter out-queued-counter force-put running
       (let [emit-raw-data *emit-raw-data*
             buffer-drop-counter (Counter.) buffer-queued-counter (Counter.)
-            handler-fn (fn [ph buf _]
-                         (if (not (nil? buf))
-                           (enqueue-data buffer-queue (create-buffer-record buf ph) force-put
-                                         buffer-queued-counter buffer-drop-counter)))
+            handler-fn (let [buffer-queue (ArrayBlockingQueue. *queue-size*)
+                             scanner-queue (ArrayBlockingQueue. *queue-size*)
+                             scanner-drop-counter (Counter.) scanner-queued-counter (Counter.)
+                             buffer-processor #(try (let [bufrec (.take buffer-queue)]
+                                                      (enqueue-data
+                                                        scanner-queue (peer-packet bufrec) force-put
+                                                        scanner-queued-counter scanner-drop-counter))
+                                                 (catch Exception e
+                                                   (if @running (.printStackTrace e))))
+                             buffer-processor-thread (doto (ProcessingLoop. buffer-processor)
+                                                         (.setName "ByteBufferProcessor") (.setDaemon true) (.start))
+                             scanner #(try (let [^PcapPacket pkt (.take scanner-queue)]
+                                             (enqueue-data
+                                               out-queue (scan-packet pkt) force-put
+                                               out-queued-counter out-drop-counter))
+                                         (catch Exception e
+                                           (if @running (.printStackTrace e))))
+                             scanner-thread (doto (ProcessingLoop. scanner)
+                                                (.setName "PacketScanner") (.setDaemon true) (.start))]
+                         (fn [ph buf _]
+                           (if (not (nil? buf))
+                             (enqueue-data buffer-queue (create-buffer-record buf ph) force-put
+                                           buffer-queued-counter buffer-drop-counter))))
             handler-fn-raw (fn [ph buf _]
                              (if (not (nil? buf))
                                (enqueue-data
@@ -205,7 +224,9 @@
                            (catch Exception e
                              (.inc failed-packet-counter))))
             sniffer (create-and-start-sniffer pcap (if emit-raw-data handler-fn-raw handler-fn))
-            stat-print-fn (create-stat-print-fn)]
+;            stat-print-fn (create-stat-print-fn)
+            stat-print-fn #(println "")
+            ]
         (fn 
           ([k]
             (condp = k
@@ -224,8 +245,8 @@
                                     (create-and-set-filter pcap (join " " @filter-expressions)))
               :wait-for-completed (do
                                     (while (or
-                                           (> (.size buffer-queue) 0)
-                                           (> (.size scanner-queue) 0)
+;                                           (> (.size buffer-queue) 0)
+;                                           (> (.size scanner-queue) 0)
                                            (> (.size out-queue) 0))
                                       (sleep 100))
                                     ;;; TODO: 
@@ -242,7 +263,7 @@
               :remove-filter (do (dosync
                                    (alter filter-expressions (fn [fe] (vec (filter #(not= arg %) fe)))))
                                  (create-and-set-filter pcap (join " " @filter-expressions)))
-              :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " arg))))))))))
+              :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " arg)))))))))
 
 (defn create-and-start-online-cljnetpcap
   "Convenience function for performing live online capturing.

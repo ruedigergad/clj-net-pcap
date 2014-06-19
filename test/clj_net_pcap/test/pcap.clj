@@ -73,9 +73,9 @@
 
 (deftest test-create-get-stat-fn
   (let [pcap (create-and-activate-online-pcap lo)
-        stat-fn (create-stat-fn pcap)]
-    (is (not (nil? stat-fn)))
-    (is (not (nil? (stat-fn))))
-    (println (stat-fn))
+        stats-fn (create-stats-fn pcap)]
+    (is (not (nil? stats-fn)))
+    (is (not (nil? (stats-fn))))
+    (println (stats-fn))
     (close-pcap pcap)))
 

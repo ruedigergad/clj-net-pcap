@@ -162,7 +162,7 @@
   [pcap]
   (.close (pcap)))
 
-(defn create-stat-fn
+(defn create-stats-fn
   "Returns an fn that prints statistical data about a org.jnetpcap.Pcap instance.
    Argument is the org.jnetpcap.Pcap instance."
   [pcap]

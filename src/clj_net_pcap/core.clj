@@ -114,11 +114,11 @@
                   (.offer ~queue ~op)))))
 
 
-(defmacro create-stat-print-fn
+(defmacro create-stats-print-fn
   ""
   []
   `(fn []
-     (let [stat-fn# (create-stat-fn ~'pcap)
+     (let [stats-fn# (create-stats-fn ~'pcap)
            header-output-counter# (counter)
            delta-cntr# (delta-counter)]
        (if (= (header-output-counter#) 0)
@@ -128,8 +128,8 @@
                 "sc_qsize,sc_qd,sc_drop,sc_rqd,sc_rdrop, ,"
                 "out_qsize,out_qd,out_drop,out_rqd,out_rdrop, ,"
                 "failed,rfailed")))
-       (let [pcap-stats# (stat-fn#)
-             recv# (pcap-stats# "recv") pdrop# (pcap-stats# "drop") ifdrop# (pcap-stats# "ifdrop")
+       (let [pcap-statss# (stats-fn#)
+             recv# (pcap-statss# "recv") pdrop# (pcap-statss# "drop") ifdrop# (pcap-statss# "ifdrop")
              buf-qd# (.value ~'buffer-queued-counter) buf-drop# (.value ~'buffer-drop-counter)
              sc-qd# (.value ~'scanner-queued-counter) sc-drop# (.value ~'scanner-drop-counter)
              out-qd# (.value ~'out-queued-counter) out-drop# (.value ~'out-drop-counter)
@@ -188,7 +188,7 @@
                           buffer-queued-counter buffer-drop-counter))))
       ([k]
         (condp = k
-          :stat nil
+          :stats nil
           :stop (do
                   (.stop ~'buffer-processor-thread)
                   (.stop ~'scanner-thread))
@@ -218,13 +218,12 @@
                        (catch Exception e
                          (.inc failed-packet-counter))))
         sniffer (create-and-start-sniffer pcap (handler))
-;            stat-print-fn (create-stat-print-fn)
-        stat-print-fn #(println "")
+        stats-fn (create-stats-fn pcap)
         ]
     (fn 
       ([k]
         (condp = k
-          :stat (stat-print-fn)
+          :stats (stats-fn)
           :stop (do
                   (dosync (ref-set running false))
                   (stop-sniffer sniffer)
@@ -271,11 +270,11 @@
     (let [pcap (create-and-activate-online-pcap device)]
       (set-up-and-start-cljnetpcap pcap forwarder-fn filter-expr false))))
 
-(defn print-stat-cljnetpcap
+(defn print-stats-cljnetpcap
   "Given a handle as returned by, e.g., create-and-start-online-cljnetpcap or process-pcap-file,
-   this prints statistical output about the capture process."
+   this function emits a map with statistical data about the capture process."
   [cljnetpcap] 
-  (cljnetpcap :stat))
+  (cljnetpcap :stats))
 
 (defn stop-cljnetpcap
   "Stops a running capture. Argument is the handle as returned, e.g.,

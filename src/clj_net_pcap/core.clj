@@ -35,7 +35,7 @@
   (:import (clj_net_pcap Counter JBufferWrapper PcapPacketWrapper ProcessingLoop)
            (java.nio BufferUnderflowException ByteBuffer)
            (java.util ArrayList)
-           (java.util.concurrent ArrayBlockingQueue LinkedBlockingQueue)
+           (java.util.concurrent ArrayBlockingQueue)
            (org.jnetpcap Pcap PcapDLT PcapHeader)
            (org.jnetpcap.nio JBuffer JMemory JMemory$Type)
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
@@ -147,7 +147,7 @@
 
 (defn create-raw-handler
   ""
-  [out-queue out-queued-counter out-drop-counter force-put running]
+  [^ArrayBlockingQueue out-queue ^Counter out-queued-counter ^Counter out-drop-counter force-put running]
   (fn
     ([]
       (fn [ph buf _]
@@ -155,13 +155,17 @@
           (enqueue-data
             out-queue (deep-copy buf ph) force-put
             out-queued-counter out-drop-counter))))
-    ([k])))
+    ([k]
+      (condp = k
+        :stats {"out-queued" (.value out-queued-counter) "out-dropped" (.value out-drop-counter)}
+        nil))))
 
 (defn create-packet-processing-handler
   ""
-  [out-queue out-queued-counter out-drop-counter force-put running]
+  [^ArrayBlockingQueue out-queue ^Counter out-queued-counter ^Counter out-drop-counter force-put running]
   (let [buffer-queue (ArrayBlockingQueue. *queue-size*)
         buffer-drop-counter (Counter.) buffer-queued-counter (Counter.)
+        failed-counter (Counter.)
         scanner-queue (ArrayBlockingQueue. *queue-size*)
         scanner-drop-counter (Counter.) scanner-queued-counter (Counter.)
         buffer-processor #(try (let [bufrec (.take buffer-queue)]
@@ -169,7 +173,9 @@
                                    scanner-queue (peer-packet bufrec) force-put
                                    scanner-queued-counter scanner-drop-counter))
                             (catch Exception e
-                              (if @running (.printStackTrace e))))
+                              (when @running
+                                (.inc failed-counter)
+                                (.printStackTrace e))))
         buffer-processor-thread (doto (ProcessingLoop. buffer-processor)
                                     (.setName "ByteBufferProcessor") (.setDaemon true) (.start))
         scanner #(try (let [^PcapPacket pkt (.take scanner-queue)]
@@ -177,7 +183,9 @@
                           out-queue (scan-packet pkt) force-put
                           out-queued-counter out-drop-counter))
                     (catch Exception e
-                      (if @running (.printStackTrace e))))
+                      (when @running
+                        (.inc failed-counter)
+                        (.printStackTrace e))))
         scanner-thread (doto (ProcessingLoop. scanner)
                            (.setName "PacketScanner") (.setDaemon true) (.start))]
     (fn
@@ -188,7 +196,10 @@
                           buffer-queued-counter buffer-drop-counter))))
       ([k]
         (condp = k
-          :stats nil
+          :stats {"buffer-queued" (.value buffer-queued-counter) "buffer-dropped" (.value buffer-drop-counter)
+                  "scanner-queued" (.value scanner-queued-counter) "scanner-dropped" (.value scanner-drop-counter)
+                  "out-queued" (.value out-queued-counter) "out-dropped" (.value out-drop-counter)
+                  "failed-handler" (.value failed-counter)}
           :stop (do
                   (.stop ~'buffer-processor-thread)
                   (.stop ~'scanner-thread))
@@ -223,7 +234,7 @@
     (fn 
       ([k]
         (condp = k
-          :stats (stats-fn)
+          :stats (merge (stats-fn) (handler :stats) {"failed-forwarder" (.value failed-packet-counter)})
           :stop (do
                   (dosync (ref-set running false))
                   (stop-sniffer sniffer)

@@ -249,7 +249,7 @@
     (let [pcap (create-and-activate-online-pcap device)]
       (set-up-and-start-cljnetpcap pcap forwarder-fn filter-expr false))))
 
-(defn print-stats-cljnetpcap
+(defn cljnetpcap-stats
   "Given a handle as returned by, e.g., create-and-start-online-cljnetpcap or process-pcap-file,
    this function emits a map with statistical data about the capture process."
   [cljnetpcap] 

@@ -167,7 +167,7 @@
           :stats {"buffer-queued" (.value buffer-queued-counter) "buffer-dropped" (.value buffer-drop-counter)
                   "scanner-queued" (.value scanner-queued-counter) "scanner-dropped" (.value scanner-drop-counter)
                   "out-queued" (.value out-queued-counter) "out-dropped" (.value out-drop-counter)
-                  "failed-handler" (.value failed-counter)}
+                  "handler-failed" (.value failed-counter)}
           :stop (do
                   (.stop ~'buffer-processor-thread)
                   (.stop ~'scanner-thread))
@@ -202,7 +202,7 @@
     (fn 
       ([k]
         (condp = k
-          :stats (merge (stats-fn) (handler :stats) {"failed-forwarder" (.value failed-packet-counter)})
+          :stats (merge (stats-fn) (handler :stats) {"forwarder-failed" (.value failed-packet-counter)})
           :stop (do
                   (dosync (ref-set running false))
                   (stop-sniffer sniffer)

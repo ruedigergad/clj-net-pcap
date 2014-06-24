@@ -167,9 +167,11 @@
                     (or
                       (= cmd "raf")
                       (= cmd "remove-all-filters")) (remove-all-filters cljnetpcap)
+                    (= cmd "replace-filter") (let [filters (split args #" with-filter ")]
+                                               (replace-filter cljnetpcap (first filters) (second filters)))
                     :default (when (not= cmd "")
                                (println "Unknown command:" cmd)
-                               (println "Valid commands are: add-filter (af), get-filters (gf), remove-last-filter (rlf), remove-all-filters (raf)")))
+                               (println "Valid commands are: add-filter (af), get-filters (gf), remove-last-filter (rlf), remove-all-filters (raf), replace-filter old with-filter new")))
                   (print "cljnetpcap=> ")
                   (flush)
                   (recur (read-line)))))

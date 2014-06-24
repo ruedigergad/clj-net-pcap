@@ -236,10 +236,11 @@
           :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " arg)))))
       ([k arg1 arg2]
         (condp = k
-          :replace-filter (when (some #(= arg1 %) filter-expressions)
+          :replace-filter (when (some #(= arg1 %) @filter-expressions)
                             (dosync
                               (alter filter-expressions #(replace {arg1 arg2} %)))
-                            (create-and-set-filter pcap (join " " @filter-expressions))))))))
+                            (create-and-set-filter pcap (join " " @filter-expressions)))
+          :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " [arg1 arg2]))))))))
 
 (defn create-and-start-online-cljnetpcap
   "Convenience function for performing live online capturing.

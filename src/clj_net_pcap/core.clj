@@ -233,7 +233,13 @@
           :remove-filter (do (dosync
                                (alter filter-expressions (fn [fe] (vec (filter #(not= arg %) fe)))))
                              (create-and-set-filter pcap (join " " @filter-expressions)))
-          :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " arg))))))))
+          :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " arg)))))
+      ([k arg1 arg2]
+        (condp = k
+          :replace-filter (when (some #(= arg1 %) filter-expressions)
+                            (dosync
+                              (alter filter-expressions #(replace {arg1 arg2} %)))
+                            (create-and-set-filter pcap (join " " @filter-expressions))))))))
 
 (defn create-and-start-online-cljnetpcap
   "Convenience function for performing live online capturing.
@@ -285,6 +291,11 @@
   "Remove the matching filter."
   [cljnetpcap filter-expr]
   (cljnetpcap :remove-filter filter-expr))
+
+(defn replace-filter
+  "Replace old-filter expression with new-filter expression."
+  [cljnetpcap old-filter new-filter]
+  (cljnetpcap :replace-filter old-filter new-filter))
 
 (defn process-pcap-file
   "Convenience function to process data stored in pcap files.

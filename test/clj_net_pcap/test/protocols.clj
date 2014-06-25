@@ -37,6 +37,18 @@
             "tcpAck" 2657863316, "tcpSeq" 1606436657}
            (first my-maps)))))
 
+(deftest test-extract-tcp-nested-maps-from-pcap-file
+  (let [my-maps (extract-nested-maps-from-pcap-file "test/clj_net_pcap/test/data/tcp-syn-ack.pcap")]
+    (is (= 1 (count my-maps)))
+    (is (= {"PcapHeader" {"timestampInNanos" 1385804488699025000, "wirelen" 74},
+            "DataLinkLayer" {"index" 0, "ProtocolType" "Ethernet",
+                             "destination" "74:DE:2B:08:78:09", "source" "00:24:FE:B1:8F:DC", "next" 2},
+            "NetworkLayer" {"index" 1, "ProtocolType" "Ip4", "destination" "192.168.0.51", "type" 6,
+                            "source" "209.132.181.16", "id" 0, "tos" 0, "ttl" 48, "next" 4},
+            "Tcp" {"index" 2, "destination" 42229, "source" 80, "ack" 2657863316, "seq" 1606436657,
+                   "flags" #{"ACK" "SYN"}}}
+           (first my-maps)))))
+
 (deftest test-extract-tcp-beans-from-pcap-file
   (let [my-beans (extract-beans-from-pcap-file "test/clj_net_pcap/test/data/tcp-syn-ack.pcap")
         expected (doto (PacketHeaderDataBean.)
@@ -68,6 +80,36 @@
                    (.setIpDst "192.168.0.1") (.setIpSrc "192.168.0.51")
                    (.setIpId 20831) (.setIpTtl 64) (.setIpChecksum 26570)
                    (.setIpVer 4) (.setUdpSrc 34904) (.setUdpDst 53))]
+    (is (= 2 (count my-beans)))
+    (is (= expected
+           (first my-beans)))))
+
+(deftest test-extract-arp-maps-from-pcap-file
+  (let [my-maps (extract-maps-from-pcap-file "test/clj_net_pcap/test/data/arp-request-reply.pcap")]
+    (is (= 2 (count my-maps)))
+    (is (= {"ethSrc" "E8:9D:87:B1:45:2F", "ethDst" "FF:FF:FF:FF:FF:FF",
+            "ts" 1403685403524575000, "len" 42,
+            "arpOpDesc" "REQUEST", "arpTargetMac" "00:00:00:00:00:00", "arpTargetIp" "10.1.1.21",
+            "arpSourceMac" "E8:9D:87:B1:45:2F", "arpSourceIp" "10.1.1.42"}
+           (first my-maps)))))
+
+(deftest test-extract-arp-nested-maps-from-pcap-file
+  (let [my-maps (extract-nested-maps-from-pcap-file "test/clj_net_pcap/test/data/arp-request-reply.pcap")]
+    (is (= 2 (count my-maps)))
+    (is (= {"PcapHeader" {"timestampInNanos" 1403685403524575000, "wirelen" 42},
+            "DataLinkLayer" {"index" 0, "ProtocolType" "Ethernet",
+                             "destination" "FF:FF:FF:FF:FF:FF", "source" "E8:9D:87:B1:45:2F", "next" 16},
+            "Arp" {"operationDescription" "REQUEST", "targetMac" "00:00:00:00:00:00", "targetIp" "10.1.1.21",
+                   "sourceMac" "E8:9D:87:B1:45:2F", "sourceIp" "10.1.1.42", "index" 1}}
+           (first my-maps)))))
+
+(deftest test-extract-arp-beans-from-pcap-file
+  (let [my-beans (extract-beans-from-pcap-file "test/clj_net_pcap/test/data/arp-request-reply.pcap")
+        expected (doto (PacketHeaderDataBean.)
+                   (.setTs 1403685403524575000) (.setLen 42)
+                   (.setEthDst "FF:FF:FF:FF:FF:FF") (.setEthSrc "E8:9D:87:B1:45:2F")
+                   (.setArpOpDesc "REQUEST") (.setArpTargetMac "00:00:00:00:00:00") (.setArpTargetIp "10.1.1.21")
+                   (.setArpSourceMac "E8:9D:87:B1:45:2F") (.setArpSourceIp "10.1.1.42"))]
     (is (= 2 (count my-beans)))
     (is (= expected
            (first my-beans)))))

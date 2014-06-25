@@ -18,6 +18,7 @@ http://ruedigergad.github.io/clj-net-pcap/doc/
 
 ## CI
 [![Build Status](https://travis-ci.org/ruedigergad/clj-net-pcap.png?branch=master)](https://travis-ci.org/ruedigergad/clj-net-pcap)
+[![Coverage Status](https://img.shields.io/coveralls/ruedigergad/clj-net-pcap.svg)](https://coveralls.io/r/ruedigergad/clj-net-pcap?branch=master)
 
 ## Test Results
 clj-net-pcap is developed following the test-driven development paradigm.

@@ -20,5 +20,6 @@
   :test2junit-output-dir "ghpages/test-results"
   :test2junit-run-ant true
   :plugins [[lein-cloverage "1.0.2"]]
-  :profiles {:uberjar {:source-paths ["src" "src-main"]}}
+  :profiles {:uberjar {:source-paths ["src" "src-main"]}
+             :run {:source-paths ["src" "src-main"]}}
 )

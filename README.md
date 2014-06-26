@@ -1,28 +1,30 @@
 # clj-net-pcap
-clj-net-pcap is a wrapper/adapter/facade (No matter how you wanna call it.)
-around jNetPcap that enables and eases packet capturing with Clojure.
+clj-net-pcap is a wrapper/adapter/facade (No matter how you want to call it.) around jNetPcap that enables and eases packet capturing with Clojure.
 
-## Requirements
-clj-net-pcap requires libpcap.
+## Requirements/Dependencies
+When using clj-net-pcap via Leiningen or Maven, all Java/Clojure related dependencies should be resolved and pulled automatically.
 
-Please note:
-clj-net-pcap expects the libpcap library to be named "libpcap.so".
-If this is not the case this can be fixed by adding a symlink like shown for Fedora below:
+Please note, however, that clj-net-pcap requires the native libpcap packet capturing library.
+Typically, this library has to be installed separately.
+On Linux, this is usually done via the packet manager of the respective distribution.
+
+Additionally, please note that clj-net-pcap expects the libpcap library to be named "libpcap.so".
+If this is not the case this can be fixed by, e.g., adding a symbolic link like shown for Fedora below:
 
     sudo ln -s /usr/lib64/libpcap.so.1 /usr/lib64/libpcap.so
 
 ## API Docs
-Automatically generated API docs are available:
+API docs are available:
 
 http://ruedigergad.github.io/clj-net-pcap/doc/
 
 ## CI
 [![Build Status](https://travis-ci.org/ruedigergad/clj-net-pcap.png?branch=master)](https://travis-ci.org/ruedigergad/clj-net-pcap)
-[![Coverage Status](https://img.shields.io/coveralls/ruedigergad/clj-net-pcap.svg)](https://coveralls.io/r/ruedigergad/clj-net-pcap?branch=master)
 
 ## Test Results
-clj-net-pcap is developed following the test-driven development paradigm.
-Test results are available here:
+[![Coverage Status](https://img.shields.io/coveralls/ruedigergad/clj-net-pcap.svg)](https://coveralls.io/r/ruedigergad/clj-net-pcap?branch=master)
+
+Detailed results of unit tests are available:
 
 http://ruedigergad.github.io/clj-net-pcap/test-results/html/
 
@@ -39,9 +41,7 @@ clj-net-pcap uses Leiningen.
 Please note that Leiningen version 2.x is used.
 
 ## License
-Copyright (C) 2012, 2013 Ruediger Gad
-
-This file is part of clj-net-pcap.
+Copyright (C) 2012, 2013, 2014 Ruediger Gad
 
 clj-net-pcap is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License (LGPL) as 

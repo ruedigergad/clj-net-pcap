@@ -22,9 +22,13 @@
     :doc "Clojure tests with respect to handling data."}
   clj-net-pcap.test.pcap-data
   (:use clojure.test
+        clj-net-pcap.core
         clj-net-pcap.native
         clj-net-pcap.pcap-data
-        clj-assorted-utils.util))
+        clj-assorted-utils.util)
+  (:import (clj_net_pcap PcapByteArrayTimeStampComparator)))
+
+(def test-file "test/clj_net_pcap/test/data/offline-test.pcap")
 
 (deftest test-guess-class-c-net
   (let [ip-addr "192.168.42.123"]
@@ -54,3 +58,18 @@
     (is (= "255.255.0.0" (guess-subnet-mask ip-addr)))
     (is (= 16 (guess-subnet-mask-bits ip-addr)))))
 
+(deftest test-timestamp-equals
+  (let [my-raw-data (extract-byte-arrays-from-pcap-file test-file)
+        my-comparator (PcapByteArrayTimeStampComparator.)]
+    (is (.equals my-comparator (my-raw-data 0) (my-raw-data 0)))
+    (is (not (.equals my-comparator (my-raw-data 0) (my-raw-data 1))))))
+
+(deftest test-timestamp-compare-to-1
+  (let [my-raw-data (extract-byte-arrays-from-pcap-file test-file)
+        my-comparator (PcapByteArrayTimeStampComparator.)]
+    (is (= -1 (.compare my-comparator (my-raw-data 0) (my-raw-data 1))))))
+
+(deftest test-timestamp-compare-to-2
+  (let [my-raw-data (extract-byte-arrays-from-pcap-file test-file)
+        my-comparator (PcapByteArrayTimeStampComparator.)]
+    (is (= 1 (.compare my-comparator (my-raw-data 1) (my-raw-data 0))))))

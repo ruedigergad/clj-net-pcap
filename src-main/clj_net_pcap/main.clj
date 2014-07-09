@@ -32,55 +32,59 @@
         clj-assorted-utils.util)
   (:gen-class))
 
+(defn- parse-args [args]
+  (cli args
+    ["-d" "--duration"
+     "The duration in seconds how long clj-net-pcap is run."
+     :default -1
+     :parse-fn #(Integer. ^java.lang.String %)]
+    ["-f" "--filter"
+     (str "Pcap filter to be used."
+          " Defaults to the empty String which means that all packets are captured.")
+     :default ""]
+    ["-h" "--help" "Print this help." :flag true]
+    ["-i" "--interface"
+     "Interface on which the packets are captured"
+     :default "eth0"]
+    ["-r" "--raw"
+     (str "Emit raw data instead of decoded packets."
+          " Be careful, not all transformation and forwarder functions support this.")
+     :flag true]
+    ["-s" "--stats"
+     (str "Print stats to stderr in a regular interval."
+          " The interval is given as parameter in milliseconds."
+          " Values smaller equal 0 mean that no stats are printed.")
+     :default 0
+     :parse-fn #(Integer. ^java.lang.String %)]
+    ["-B" "--buffer-size"
+     "The buffer size to use."
+     :default (int (Math/pow 2 26))
+     :parse-fn #(Integer. ^java.lang.String %)]
+    ["-D" "--debug" "Enable additional debugging." :flag true]
+    ["-F" "--forwarder-fn"
+     (str "Use the specified function as forwarder function for processing packets.\n"
+          "Available function names are:\n"
+          "stdout-combined-forwarder-fn, stdout-byte-array-forwarder-fn, "
+          "stdout-forwarder-fn, no-op-converter-forwarder-fn, "
+          "counting-converter-forwarder-fn, calls-per-second-converter-forwarder-fn")
+     :default "stdout-forwarder-fn"]
+    ["-S" "--snap-len"
+     (str "The snaplen to use."
+          " This determines how many bytes of data will be captured from each packet.")
+     :default 128
+     :parse-fn #(Integer. ^java.lang.String %)]
+    ["-T" "--transformation-fn"
+     (str "Use the specified function for transforming the raw packets."
+          " Available function names are:\n"
+          "pcap-packet-to-bean, pcap-packet-to-map, "
+          "pcap-packet-to-nested-maps, pcap-packet-to-no-op")
+     :default "pcap-packet-to-bean"]
+    ["-R" "--read-file"
+     "Read from a pcap file instead of performing a live capture."
+     :default ""]))
+
 (defn -main [& args]
-  (let [cli-args (cli args
-                      ["-i" "--interface"
-                       "Interface on which the packets are captured"
-                       :default "eth0"]
-                      ["-f" "--filter"
-                       (str "Pcap filter to be used."
-                            " Defaults to the empty String which means that all packets are captured.")
-                       :default ""]
-                      ["-s" "--stats"
-                       (str "Print stats to stderr in a regular interval."
-                            " The interval is given as parameter in milliseconds."
-                            " Values smaller equal 0 mean that no stats are printed.")
-                       :default 0
-                       :parse-fn #(Integer. ^java.lang.String %)]
-                      ["-S" "--snap-len"
-                       (str "The snaplen to use."
-                            " This determines how many bytes of data will be captured from each packet.")
-                       :default 128
-                       :parse-fn #(Integer. ^java.lang.String %)]
-                      ["-B" "--buffer-size"
-                       "The buffer size to use."
-                       :default (int (Math/pow 2 26))
-                       :parse-fn #(Integer. ^java.lang.String %)]
-                      ["-F" "--forwarder-fn"
-                       (str "Use the specified function as forwarder function for processing packets.\n"
-                            "Available function names are:\n"
-                            "stdout-combined-forwarder-fn, stdout-byte-array-forwarder-fn, "
-                            "stdout-forwarder-fn, no-op-converter-forwarder-fn, "
-                            "counting-converter-forwarder-fn, calls-per-second-converter-forwarder-fn")
-                       :default "stdout-forwarder-fn"]
-                      ["-T" "--transformation-fn"
-                       (str "Use the specified function for transforming the raw packets."
-                            " Available function names are:\n"
-                            "pcap-packet-to-bean, pcap-packet-to-map, "
-                            "pcap-packet-to-nested-maps, pcap-packet-to-no-op")
-                       :default "pcap-packet-to-bean"]
-                      ["-d" "--duration"
-                       "The duration in seconds how long clj-net-pcap is run."
-                       :default -1
-                       :parse-fn #(Integer. ^java.lang.String %)]
-                      ["-R" "--read-file"
-                       "Read from a pcap file instead of performing a live capture."
-                       :default ""]
-                      ["-r" "--raw"
-                       (str "Emit raw data instead of decoded packets."
-                            " Be careful, not all transformation and forwarder functions support this.")
-                       :flag true]
-                      ["-h" "--help" "Print this help." :flag true])
+  (let [cli-args (parse-args args)
         arg-map (cli-args 0)
         help-string (cli-args 2)]
     (when (arg-map :help)
@@ -90,6 +94,7 @@
     (pprint arg-map)
     (let [pcap-file-name (arg-map :read-file)
           cljnetpcap (binding [clj-net-pcap.core/*emit-raw-data* (arg-map :raw)
+                               clj-net-pcap.core/*forward-exceptions* (arg-map :debug)
                                clj-net-pcap.pcap/*snap-len* (arg-map :snap-len)
                                clj-net-pcap.pcap/*buffer-size* (arg-map :buffer-size)]
                        (if (= "" pcap-file-name)

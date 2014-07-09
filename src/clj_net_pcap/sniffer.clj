@@ -89,7 +89,7 @@
    taken from the queue passing the packet instance to forwarder-fn.
    When no packets are int the queue the execution of forwarder-fn blocks until
    new packets are available for being processed."
-  [^BlockingQueue queue forwarder-fn]
+  [^BlockingQueue queue forwarder-fn forward-exceptions]
   (let [running (ref true)
         run-fn (fn [] (try
                         (let [obj (.take queue)]
@@ -100,7 +100,9 @@
                           ;;; If we get this exception when @running is already
                           ;;; false then we ignore it.
                           (if @running 
-                            (.printStackTrace e)))))
+                            (.printStackTrace e))
+                          (if forward-exceptions
+                            (throw e)))))
         forwarder-thread (doto 
                            (ProcessingLoop. run-fn) 
                            (.setName "ForwarderThread") 

@@ -45,7 +45,7 @@
   (let [was-run (prepare-flag)
         forwarder-fn (fn [_] (set-flag was-run))
         queue (LinkedBlockingQueue.)
-        forwarder (create-and-start-forwarder queue forwarder-fn)]
+        forwarder (create-and-start-forwarder queue forwarder-fn false)]
     (is (not (flag-set? was-run)))
     (.offer queue 12345)
     (await-flag was-run)
@@ -57,7 +57,7 @@
         queue (LinkedBlockingQueue.)
         handler-fn (fn [ph bb u] (.offer queue 12345))
         forwarder-fn (fn [_] (set-flag was-run))
-        forwarder (create-and-start-forwarder queue forwarder-fn)
+        forwarder (create-and-start-forwarder queue forwarder-fn false)
         pcap (create-and-activate-online-pcap lo)
         sniffer (create-and-start-sniffer pcap handler-fn)]
     (Thread/sleep receive-delay)

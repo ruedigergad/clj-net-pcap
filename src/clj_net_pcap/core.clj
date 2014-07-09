@@ -42,6 +42,7 @@
 
 
 (def ^:dynamic *emit-raw-data* false)
+(def ^:dynamic *forward-exceptions* false)
 (def ^:dynamic *queue-size* 100000)
 
 
@@ -130,7 +131,7 @@
 
 (defn create-packet-processing-handler
   ""
-  [^ArrayBlockingQueue out-queue ^Counter out-queued-counter ^Counter out-drop-counter force-put running]
+  [^ArrayBlockingQueue out-queue ^Counter out-queued-counter ^Counter out-drop-counter force-put running forward-exceptions]
   (let [buffer-queue (ArrayBlockingQueue. *queue-size*)
         buffer-drop-counter (Counter.) buffer-queued-counter (Counter.)
         failed-counter (Counter.)
@@ -143,7 +144,9 @@
                             (catch Exception e
                               (when @running
                                 (.inc failed-counter)
-                                (.printStackTrace e))))
+                                (.printStackTrace e))
+                              (if forward-exceptions
+                                (throw e))))
         buffer-processor-thread (doto (ProcessingLoop. buffer-processor)
                                     (.setName "ByteBufferProcessor") (.setDaemon true) (.start))
         scanner #(try (let [^PcapPacket pkt (.take scanner-queue)]
@@ -153,7 +156,9 @@
                     (catch Exception e
                       (when @running
                         (.inc failed-counter)
-                        (.printStackTrace e))))
+                        (.printStackTrace e))
+                      (if forward-exceptions
+                        (throw e))))
         scanner-thread (doto (ProcessingLoop. scanner)
                            (.setName "PacketScanner") (.setDaemon true) (.start))]
     (fn
@@ -184,9 +189,10 @@
         out-queue (ArrayBlockingQueue. *queue-size*)
         out-drop-counter (Counter.) out-queued-counter (Counter.)
         emit-raw-data *emit-raw-data*
+        forward-exceptions *forward-exceptions*
         handler (if emit-raw-data
                   (create-raw-handler out-queue out-queued-counter out-drop-counter force-put running)
-                  (create-packet-processing-handler out-queue out-queued-counter out-drop-counter force-put running))
+                  (create-packet-processing-handler out-queue out-queued-counter out-drop-counter force-put running forward-exceptions))
         filter-expressions (ref [])
         _ (if (and (not (nil? filter-expr)) (not= "" filter-expr))
             (dosync (alter filter-expressions conj filter-expr)))
@@ -195,7 +201,10 @@
         forwarder (create-and-start-forwarder out-queue
                     #(try (forwarder-fn %)
                        (catch Exception e
-                         (.inc failed-packet-counter))))
+                         (.inc failed-packet-counter)
+                         (if forward-exceptions
+                           (throw e))))
+                    forward-exceptions)
         sniffer (create-and-start-sniffer pcap (handler))
         stats-fn (create-stats-fn pcap)
         ]

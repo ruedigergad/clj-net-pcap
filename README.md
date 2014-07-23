@@ -2,13 +2,17 @@
 clj-net-pcap is a wrapper/adapter/facade (No matter how you want to call it.) around jNetPcap that enables and eases packet capturing with Clojure.
 
 ## Requirements/Dependencies
-When using clj-net-pcap via Leiningen or Maven, all Java/Clojure related dependencies should be resolved and pulled automatically.
+clj-net-pcap is currently available for Linux and Windows for both x86 and x86_64 architecture.
 
-Please note, however, that clj-net-pcap requires the native libpcap packet capturing library.
-Typically, this library has to be installed separately.
+Please note, that clj-net-pcap requires native packet capturing libraries.
+For Linux, this is the [libpcap](http://www.tcpdump.org/) library.
+For Windows, this is the [winpcap](http://www.winpcap.org/) library.
+Typically, these libraries have to be installed separately.
 On Linux, this is usually done via the packet manager of the respective distribution.
 
-Additionally, please note that clj-net-pcap expects the libpcap library to be named "libpcap.so".
+When using clj-net-pcap via Leiningen or Maven, all Java/Clojure related dependencies should be resolved and pulled in automatically.
+
+Additionally, please note that on Linux clj-net-pcap expects the libpcap library to be named "libpcap.so".
 If this is not the case this can be fixed by, e.g., adding a symbolic link like shown for Fedora below:
 
     sudo ln -s /usr/lib64/libpcap.so.1 /usr/lib64/libpcap.so

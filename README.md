@@ -4,7 +4,7 @@ clj-net-pcap is a wrapper/adapter/facade (No matter how you want to call it.) ar
 ## Requirements/Dependencies
 clj-net-pcap is currently available for Linux and Windows for both x86 and x86_64 architecture.
 
-Please note, that clj-net-pcap requires native packet capturing libraries.
+Please note that clj-net-pcap requires native packet capturing libraries.
 For Linux, this is the [libpcap](http://www.tcpdump.org/) library.
 For Windows, this is the [winpcap](http://www.winpcap.org/) library.
 Typically, these libraries have to be installed separately.

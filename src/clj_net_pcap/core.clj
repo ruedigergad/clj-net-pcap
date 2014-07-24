@@ -174,8 +174,8 @@
                   "out-queued" (.value out-queued-counter) "out-dropped" (.value out-drop-counter)
                   "handler-failed" (.value failed-counter)}
           :stop (do
-                  (.stop ~'buffer-processor-thread)
-                  (.stop ~'scanner-thread))
+                  (.stop buffer-processor-thread)
+                  (.stop scanner-thread))
           :wait-for-completed (do
                                 (while (or (> (.size buffer-queue) 0) (> (.size scanner-queue) 0))
                                   (sleep 100))))))))
@@ -215,7 +215,8 @@
           :stop (do
                   (dosync (ref-set running false))
                   (stop-sniffer sniffer)
-                  (stop-forwarder forwarder))
+                  (stop-forwarder forwarder)
+                  (handler :stop))
           :get-filters @filter-expressions
           :remove-last-filter (do
                                 (dosync (alter filter-expressions pop))

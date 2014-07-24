@@ -113,3 +113,23 @@
     (is (= 2 (count my-beans)))
     (is (= expected
            (first my-beans)))))
+
+(deftest test-extract-icmpv6-router-solicitation-maps-from-pcap-file
+  (let [my-maps (extract-maps-from-pcap-file "test/clj_net_pcap/test/data/icmpv6-router-solicitation.pcap")]
+    (is (= 1 (count my-maps)))
+    (is (= {"ipVer" 6,
+            "ipDst" "FF02:0000:0000:0000:0000:0000:0000:0002", "ipSrc" "FE80:0000:0000:0000:EA9D:87FF:FEB1:452F",
+            "ethSrc" "E8:9D:87:B1:45:2F", "ethDst" "33:33:00:00:00:02",
+            "ts" 1403685403642220000, "len" 62}
+           (first my-maps)))))
+
+(deftest test-extract-icmpv6-router-solicitation-beans-from-pcap-file
+  (let [my-beans (extract-beans-from-pcap-file "test/clj_net_pcap/test/data/icmpv6-router-solicitation.pcap")
+        expected (doto (PacketHeaderDataBean.)
+                   (.setTs 1403685403642220000) (.setLen 62)
+                   (.setEthDst "33:33:00:00:00:02") (.setEthSrc "E8:9D:87:B1:45:2F")
+                   (.setIpDst "FF02:0000:0000:0000:0000:0000:0000:0002") (.setIpSrc "FE80:0000:0000:0000:EA9D:87FF:FEB1:452F")
+                   (.setIpVer 6))]
+    (is (= 1 (count my-beans)))
+    (is (= expected
+           (first my-beans)))))

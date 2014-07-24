@@ -535,7 +535,7 @@ user=>
 (defn no-op-converter-forwarder-fn
   "Forwarder that does nothing.
    This is used for testing purposes."
-  [_])
+  [^PcapPacket packet])
 
 (defn counting-no-op-forwarder-fn
   "No-op forwarder that counts how many times it was called.

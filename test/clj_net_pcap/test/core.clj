@@ -96,3 +96,11 @@
     (is (empty? (get-filters cljnetpcap)))
     (stop-cljnetpcap cljnetpcap)))
 
+(deftest test-simple-cljnetpcap-stats
+  (let [forwarder-fn (fn [_])
+        filter-expression "less 1"
+        device "lo"
+        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn device filter-expression)]
+    (is (map? (cljnetpcap-stats cljnetpcap)))
+    (stop-cljnetpcap  cljnetpcap)))
+

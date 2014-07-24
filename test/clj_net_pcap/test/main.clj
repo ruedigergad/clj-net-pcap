@@ -26,10 +26,38 @@
         clj-assorted-utils.util))
 
 (deftest test-simple-timed-main-run
-  (let [out-string (with-out-str (-main "-i" "lo" "-d" "1" "-f" "less 1"))]
+  (let [out-string (with-out-str (-main "-i" "lo" "-d" "2" "-s" "200" "-f" "less 1"))]
     (println "Example app output follows:\n" out-string)))
 
 (deftest test-simple-manual-main-run
   (let [out-string (with-in-str "q" (with-out-str (-main "-i" "lo" "-f" "less 1")))]
+    (println "Example app output follows:\n" out-string)))
+
+(deftest test-main-print-help
+  (let [out-string (with-out-str (-main "--help"))]
+    (println "Example app output follows:\n" out-string)))
+
+(deftest test-manual-main-run-command-interaction
+  (let [out-string (with-in-str (str "gf\n"
+                                     "af less 1\n"
+                                     "gf\n"
+                                     "rlf\n"
+                                     "gf\n"
+                                     "invalid-command\n"
+                                     "af less 2\n"
+                                     "af or less 3\n"
+                                     "gf\n"
+                                     "replace-filter or less 3 with-filter or less 4\n"
+                                     "gf\n"
+                                     "raf\n"
+                                     "gf\n"
+                                     "af invalid-pcap-filter foo\n"
+                                     "gf\n"
+                                     "q")
+                     (with-out-str (-main "-i" "lo" "-f" "")))]
+    (println "Example app output follows:\n" out-string)))
+
+(deftest test-simple-main-read-file
+  (let [out-string (with-in-str "q" (with-out-str (-main "-R" "test/clj_net_pcap/test/data/offline-test.pcap")))]
     (println "Example app output follows:\n" out-string)))
 

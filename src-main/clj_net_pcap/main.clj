@@ -126,7 +126,7 @@
                                (when (> stat-interval 0)
                                  (println "Stopping stat output.")
                                  (shutdown stat-out-executor))
-                               (cljnetpcap-stats cljnetpcap)
+                               (get-stats cljnetpcap)
                                (stop-cljnetpcap cljnetpcap)
                                (println "Removing temporarily extracted native libs...")
                                (remove-native-libs)))
@@ -136,7 +136,7 @@
         (println "clj-net-pcap standalone executable started.\n"))
       (when (> stat-interval 0)
         (println "Printing stats to stderr in intervalls of" stat-interval "ms.")
-        (run-repeat stat-out-executor #(print-err-ln (cljnetpcap-stats cljnetpcap)) stat-interval))
+        (run-repeat stat-out-executor #(print-err-ln (get-stats cljnetpcap)) stat-interval))
       (cond
         (not= "" pcap-file-name)
           (do

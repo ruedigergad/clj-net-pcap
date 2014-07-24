@@ -126,7 +126,7 @@
             out-queued-counter out-drop-counter))))
     ([k]
       (condp = k
-        :stats {"out-queued" (.value out-queued-counter) "out-dropped" (.value out-drop-counter)}
+        :get-stats {"out-queued" (.value out-queued-counter) "out-dropped" (.value out-drop-counter)}
         nil))))
 
 (defn create-packet-processing-handler
@@ -169,7 +169,7 @@
                           buffer-queued-counter buffer-drop-counter))))
       ([k]
         (condp = k
-          :stats {"buffer-queued" (.value buffer-queued-counter) "buffer-dropped" (.value buffer-drop-counter)
+          :get-stats {"buffer-queued" (.value buffer-queued-counter) "buffer-dropped" (.value buffer-drop-counter)
                   "scanner-queued" (.value scanner-queued-counter) "scanner-dropped" (.value scanner-drop-counter)
                   "out-queued" (.value out-queued-counter) "out-dropped" (.value out-drop-counter)
                   "handler-failed" (.value failed-counter)}
@@ -211,7 +211,7 @@
     (fn 
       ([k]
         (condp = k
-          :stats (merge (stats-fn) (handler :stats) {"forwarder-failed" (.value failed-packet-counter)})
+          :get-stats (merge (stats-fn) (handler :get-stats) {"forwarder-failed" (.value failed-packet-counter)})
           :stop (do
                   (dosync (ref-set running false))
                   (stop-sniffer sniffer)
@@ -266,11 +266,11 @@
     (let [pcap (create-and-activate-online-pcap device)]
       (set-up-and-start-cljnetpcap pcap forwarder-fn filter-expr false))))
 
-(defn cljnetpcap-stats
+(defn get-stats
   "Given a handle as returned by, e.g., create-and-start-online-cljnetpcap or process-pcap-file,
    this function emits a map with statistical data about the capture process."
   [cljnetpcap] 
-  (cljnetpcap :stats))
+  (cljnetpcap :get-stats))
 
 (defn stop-cljnetpcap
   "Stops a running capture. Argument is the handle as returned, e.g.,

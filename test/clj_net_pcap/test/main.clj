@@ -61,3 +61,20 @@
   (let [out-string (with-in-str "q" (with-out-str (-main "-R" "test/clj_net_pcap/test/data/offline-test.pcap")))]
     (println "Example app output follows:\n" out-string)))
 
+(deftest test-simple-timed-main-run-with-no-op-counter-forwarder
+  (let [out-string (with-out-str (-main "-i" "lo" "-d" "2" "-f" "less 1" "-F" "counting-no-op-forwarder-fn"))]
+    (println "Example app output follows:\n" out-string)))
+
+(deftest test-simple-timed-main-run-with-no-op-calls-per-second-forwarder
+  (let [out-string (with-out-str (-main "-i" "lo" "-d" "2" "-f" "less 1" "-F" "calls-per-second-no-op-forwarder-fn"))]
+    (println "Example app output follows:\n" out-string)))
+
+(deftest test-simple-timed-main-run-with-combined-output
+  (let [_ (exec "ping -c 3 localhost")
+        out-string (with-out-str (-main "-i" "lo" "-d" "2" "-f" "icmp" "-T" "pcap-packet-to-no-op" "-F" "stdout-combined-forwarder-fn"))]
+    (println "Example app output follows:\n" out-string)))
+
+(deftest test-simple-timed-main-run-with-byte-array-output
+  (let [_ (exec "ping -c 3 localhost")
+        out-string (with-out-str (-main "-i" "lo" "-d" "2" "-f" "icmp" "-T" "pcap-packet-to-no-op" "-F" "stdout-byte-array-forwarder-fn"))]
+    (println "Example app output follows:\n" out-string)))

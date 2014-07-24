@@ -550,7 +550,7 @@ user=>
       (do
         (.inc cntr)))))
 
-(defn calls-per-second-converter-forwarder-fn
+(defn calls-per-second-no-op-forwarder-fn
   "No-op forwarder that periodically prints how many times it was called per second.
    This is used for testing purposes."
   []

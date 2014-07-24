@@ -66,7 +66,7 @@
           "Available function names are:\n"
           "stdout-combined-forwarder-fn, stdout-byte-array-forwarder-fn, "
           "stdout-forwarder-fn, no-op-converter-forwarder-fn, "
-          "counting-converter-forwarder-fn, calls-per-second-converter-forwarder-fn")
+          "counting-no-op-forwarder-fn, calls-per-second-no-op-forwarder-fn")
      :default "stdout-forwarder-fn"]
     ["-S" "--snap-len"
      (str "The snaplen to use."

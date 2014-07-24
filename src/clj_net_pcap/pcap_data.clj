@@ -514,8 +514,7 @@ user=>
   obj)
 
 (defn stdout-forwarder-fn
-  "Pre-defined forwarder function which outputs information about org.jnetpcap.packet.PcapPacket to *out*.
-   The information is in form of a map. The is pretty printed with pprint."
+  "Pre-defined forwarder function which outputs information about org.jnetpcap.packet.PcapPacket to *out*."
   [packet]
   (pprint packet)
   (println "---"))
@@ -528,18 +527,18 @@ user=>
 
 (defn stdout-combined-forwarder-fn
   [^PcapPacket packet]
-  "Print both, the map and the byte vector representations, of a org.jnetpcap.packet.PcapPacket to *out*."
+  "Print both, the parsed packet and the byte vector representations, of a org.jnetpcap.packet.PcapPacket to *out*."
   (let [buffer-seq (pcap-packet-to-byte-vector packet)]
     (pprint (pcap-packet-to-map packet))
     (println "Packet Start (size:" (count buffer-seq) "):" buffer-seq "Packet End\n\n")))
 
 (defn no-op-converter-forwarder-fn
-  "Forwarder that converts the packets but doesn't do anything else.
+  "Forwarder that does nothing.
    This is used for testing purposes."
   [_])
 
-(defn counting-converter-forwarder-fn
-  "Forwarder that converts the packets and counts how many times it was called.
+(defn counting-no-op-forwarder-fn
+  "No-op forwarder that counts how many times it was called.
    This is used for testing purposes."
   []
   (let [cntr (Counter.)
@@ -547,13 +546,12 @@ user=>
                    (if (>= val 0)
                      (println (.value cntr))))
         _ (run-repeat (executor) printer 1000)]
-    (fn
-      [_]
+    (fn [_]
       (do
         (.inc cntr)))))
 
 (defn calls-per-second-converter-forwarder-fn
-  "Forwarder that converts the packets and periodically prints how many times it was called per second.
+  "No-op forwarder that periodically prints how many times it was called per second.
    This is used for testing purposes."
   []
   (let [cntr (Counter.)
@@ -568,7 +566,6 @@ user=>
                              (dosync
                                (ref-set time-tmp cur-time))))))
         _ (run-repeat (executor) pps-printer 1000)]
-    (fn
-      [_]
+    (fn [_]
       (.inc cntr))))
 

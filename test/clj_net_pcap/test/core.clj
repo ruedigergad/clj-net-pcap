@@ -19,13 +19,11 @@
 
 (ns 
   ^{:author "Ruediger Gad",
-    :doc "Tests for clj-net-pcap integration"}  
+    :doc "Tests for clj-net-pcap integration"}
   clj-net-pcap.test.core
   (:use clojure.test
         clj-net-pcap.core
         clj-assorted-utils.util))
-
-(def receive-delay 1000)
 
 (deftest cljnetpcap-test
   (let [was-run (prepare-flag)
@@ -33,7 +31,6 @@
         filter-expression ""
         device "lo"
         cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn device filter-expression)]
-    (Thread/sleep receive-delay)
     (exec-blocking "ping -c 1 localhost")
     (await-flag was-run)
     (is (flag-set? was-run))

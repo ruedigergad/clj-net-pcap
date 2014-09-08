@@ -41,6 +41,7 @@
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
 
 
+(def ^:dynamic *bulk-size* 1)
 (def ^:dynamic *emit-raw-data* false)
 (def ^:dynamic *forward-exceptions* false)
 (def ^:dynamic *queue-size* 100000)
@@ -129,6 +130,25 @@
         :get-stats {"out-queued" (.value out-queued-counter) "out-dropped" (.value out-drop-counter)}
         nil))))
 
+(defn create-raw-bulk-handler
+  ""
+  [^ArrayBlockingQueue out-queue ^Counter out-queued-counter ^Counter out-drop-counter bulk-size force-put running]
+  (fn
+    ([]
+      (fn [buf _]
+        (if (not (nil? buf))
+          (enqueue-data
+            out-queue
+            (doto (ByteBuffer/allocate (.remaining buf))
+              (.put buf)
+              (.flip))
+            force-put
+            out-queued-counter out-drop-counter))))
+    ([k]
+      (condp = k
+        :get-stats {"out-queued" (* (.value out-queued-counter) bulk-size) "out-dropped" (* (.value out-drop-counter) bulk-size)}
+        nil))))
+
 (defn create-packet-processing-handler
   ""
   [^ArrayBlockingQueue out-queue ^Counter out-queued-counter ^Counter out-drop-counter force-put running forward-exceptions]
@@ -188,10 +208,13 @@
   (let [running (ref true)
         out-queue (ArrayBlockingQueue. *queue-size*)
         out-drop-counter (Counter.) out-queued-counter (Counter.)
+        bulk-size *bulk-size*
         emit-raw-data *emit-raw-data*
         forward-exceptions *forward-exceptions*
         handler (if emit-raw-data
-                  (create-raw-handler out-queue out-queued-counter out-drop-counter force-put running)
+                  (if (<= bulk-size 1)
+                    (create-raw-handler out-queue out-queued-counter out-drop-counter force-put running)
+                    (create-raw-bulk-handler out-queue out-queued-counter out-drop-counter bulk-size force-put running))
                   (create-packet-processing-handler out-queue out-queued-counter out-drop-counter force-put running forward-exceptions))
         filter-expressions (ref [])
         _ (if (and (not (nil? filter-expr)) (not= "" filter-expr))
@@ -205,7 +228,9 @@
                          (if forward-exceptions
                            (throw e))))
                     forward-exceptions)
-        sniffer (create-and-start-sniffer pcap (handler))
+        sniffer (if (and emit-raw-data (> bulk-size 1))
+                  (create-and-start-sniffer pcap bulk-size (handler) nil)
+                  (create-and-start-sniffer pcap (handler)))
         stats-fn (create-stats-fn pcap)
         ]
     (fn 

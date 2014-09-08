@@ -28,7 +28,7 @@
            (java.nio ByteBuffer)
            (java.util ArrayList)
            (java.util.concurrent BlockingQueue)
-           (org.jnetpcap ByteBufferHandler Pcap PcapHeader)
+           (org.jnetpcap BulkByteBufferHandler ByteBufferHandler Pcap PcapHeader)
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
 
 
@@ -72,6 +72,12 @@
 ;          packet-handler (proxy [PcapPacketHandler] []
 ;                           (nextPacket [^PcapPacket p ^Object u] (handler-fn p u)))
       (pcap :start packet-handler)
+      (fn [k]
+        (pcap k))))
+  ([pcap bulk-size handler-fn user-data]
+    (let [packet-handler (proxy [BulkByteBufferHandler] []
+                           (nextPacket [buf u] (handler-fn buf u)))]
+      (pcap :start bulk-size packet-handler)
       (fn [k]
         (pcap k)))))
 

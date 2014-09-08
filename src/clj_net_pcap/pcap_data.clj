@@ -540,11 +540,11 @@ user=>
 (defn counting-no-op-forwarder-fn
   "No-op forwarder that counts how many times it was called.
    This is used for testing purposes."
-  []
+  [bulk-size]
   (let [cntr (Counter.)
         printer #(let [val (.value cntr)]
                    (if (>= val 0)
-                     (println (.value cntr))))
+                     (println (* (.value cntr) bulk-size))))
         _ (run-repeat (executor) printer 1000)]
     (fn [_]
       (do
@@ -553,11 +553,11 @@ user=>
 (defn calls-per-second-no-op-forwarder-fn
   "No-op forwarder that periodically prints how many times it was called per second.
    This is used for testing purposes."
-  []
+  [bulk-size]
   (let [cntr (Counter.)
         delta-cntr (delta-counter)
         time-tmp (ref (System/currentTimeMillis))
-        pps-printer #(let [val (.value cntr)]
+        pps-printer #(let [val (* bulk-size (.value cntr))]
                        (if (>= val 0)
                          (let [cur-time (System/currentTimeMillis)
                                time-delta (- cur-time @time-tmp)]

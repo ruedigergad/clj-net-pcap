@@ -155,6 +155,12 @@
           :start (let [run-fn (fn [] 
                                 (.loop pcap Pcap/LOOP_INFINITE opt nil))]
                    (dosync (ref-set pcap-thread (doto (Thread. run-fn) (.setName "PcapOnlineCaptureThread") (.start)))))
+          (println "Unsupported operation for online pcap:" k)))
+      ([k bulk-size handler]
+        (condp = k
+          :start (let [run-fn (fn [] 
+                                (.loop pcap Pcap/LOOP_INFINITE bulk-size handler nil))]
+                   (dosync (ref-set pcap-thread (doto (Thread. run-fn) (.setName "PcapOnlineCaptureThread") (.start)))))
           (println "Unsupported operation for online pcap:" k))))))
 
 (defn close-pcap

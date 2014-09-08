@@ -34,6 +34,10 @@
 
 (defn- parse-args [args]
   (cli args
+    ["-b" "--bulk-size"
+     "The bulk size to use."
+     :default 1
+     :parse-fn #(Integer. ^java.lang.String %)]
     ["-d" "--duration"
      "The duration in seconds how long clj-net-pcap is run."
      :default -1
@@ -93,7 +97,8 @@
         (println "Starting clj-net-pcap using the following options:")
         (pprint arg-map)
         (let [pcap-file-name (arg-map :read-file)
-              cljnetpcap (binding [clj-net-pcap.core/*emit-raw-data* (arg-map :raw)
+              cljnetpcap (binding [clj-net-pcap.core/*bulk-size* (arg-map :bulk-size)
+                                   clj-net-pcap.core/*emit-raw-data* (arg-map :raw)
                                    clj-net-pcap.core/*forward-exceptions* (arg-map :debug)
                                    clj-net-pcap.pcap/*snap-len* (arg-map :snap-len)
                                    clj-net-pcap.pcap/*buffer-size* (arg-map :buffer-size)]
@@ -102,7 +107,7 @@
                                (let [f-tmp (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
                                      f (if (= 'packet (first (first (:arglists (meta f-tmp)))))
                                          f-tmp
-                                         (f-tmp))
+                                         (f-tmp (arg-map :bulk-size)))
                                      t (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))]
                                    #(let [o (t %)]
                                       (if o

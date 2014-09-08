@@ -77,7 +77,7 @@
      (str "Use the specified function for transforming the raw packets."
           " Available function names are:\n"
           "pcap-packet-to-bean, pcap-packet-to-map, "
-          "pcap-packet-to-nested-maps, pcap-packet-to-no-op")
+          "pcap-packet-to-nested-maps, no-op")
      :default "pcap-packet-to-bean"]
     ["-R" "--read-file"
      "Read from a pcap file instead of performing a live capture."

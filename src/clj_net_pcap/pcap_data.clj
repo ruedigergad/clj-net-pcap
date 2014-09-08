@@ -507,8 +507,8 @@ user=>
         _ (.transferStateAndDataTo pcap-packet buffer)]
     (vec buffer)))
 
-(defn pcap-packet-to-no-op
-  "Function that takes a PcapPacket as argument and does nothing.
+(defn no-op
+  "Function that forwardes the supplied argument as-is.
    This is used for testing purposes."
   [obj]
   obj)

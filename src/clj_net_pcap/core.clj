@@ -135,7 +135,7 @@
   [^ArrayBlockingQueue out-queue ^Counter out-queued-counter ^Counter out-drop-counter bulk-size force-put running]
   (fn
     ([]
-      (fn [buf _]
+      (fn [^ByteBuffer buf _]
         (if (not (nil? buf))
           (enqueue-data
             out-queue

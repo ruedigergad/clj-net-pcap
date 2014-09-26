@@ -36,7 +36,7 @@
            (java.nio BufferUnderflowException ByteBuffer)
            (java.util ArrayList)
            (java.util.concurrent ArrayBlockingQueue)
-           (org.jnetpcap Pcap PcapDLT PcapHeader)
+           (org.jnetpcap DirectBulkByteBufferWrapper Pcap PcapDLT PcapHeader)
            (org.jnetpcap.nio JBuffer JMemory JMemory$Type)
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
 
@@ -45,6 +45,7 @@
 (def ^:dynamic *emit-raw-data* false)
 (def ^:dynamic *forward-exceptions* false)
 (def ^:dynamic *queue-size* 100000)
+(def ^:dynamic *use-intermediate-buffer* false)
 
 
 (def trace-level 1)
@@ -135,15 +136,17 @@
   [^ArrayBlockingQueue out-queue ^Counter out-queued-counter ^Counter out-drop-counter bulk-size force-put running]
   (fn
     ([]
-      (fn [^ByteBuffer buf _]
-        (if (not (nil? buf))
+      (fn [^DirectBulkByteBufferWrapper buf _]
+        (when (not (nil? buf))
           (enqueue-data
             out-queue
-            (doto (ByteBuffer/allocate (.remaining buf))
-              (.put buf)
-              (.flip))
+            buf
+;            (doto (ByteBuffer/allocate (.remaining buf))
+;              (.put buf)
+;              (.flip))
             force-put
-            out-queued-counter out-drop-counter))))
+            out-queued-counter out-drop-counter)
+          (.freeNativeMemory buf))))
     ([k]
       (condp = k
         :get-stats {"out-queued" (* (.value out-queued-counter) bulk-size) "out-dropped" (* (.value out-drop-counter) bulk-size)}
@@ -209,6 +212,7 @@
         out-queue (ArrayBlockingQueue. *queue-size*)
         out-drop-counter (Counter.) out-queued-counter (Counter.)
         bulk-size *bulk-size*
+        use-intermediate-buffer *use-intermediate-buffer*
         emit-raw-data *emit-raw-data*
         forward-exceptions *forward-exceptions*
         handler (if emit-raw-data
@@ -229,7 +233,7 @@
                            (throw e))))
                     forward-exceptions)
         sniffer (if (and emit-raw-data (> bulk-size 1))
-                  (create-and-start-sniffer pcap bulk-size (handler) nil)
+                  (create-and-start-sniffer pcap bulk-size use-intermediate-buffer (handler) nil)
                   (create-and-start-sniffer pcap (handler)))
         stats-fn (create-stats-fn pcap)
         ]

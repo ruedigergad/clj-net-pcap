@@ -34,6 +34,16 @@ API docs are available:
 
 http://ruedigergad.github.io/clj-net-pcap/doc/
 
+## CI
+[![Build Status](https://travis-ci.org/ruedigergad/clj-net-pcap.png?branch=master)](https://travis-ci.org/ruedigergad/clj-net-pcap)
+
+## Test Results
+[![Coverage Status](https://img.shields.io/coveralls/ruedigergad/clj-net-pcap.svg)](https://coveralls.io/r/ruedigergad/clj-net-pcap?branch=master)
+
+Detailed results of unit tests are available:
+
+http://ruedigergad.github.io/clj-net-pcap/test-results/html/
+
 ## Publications
 We published a paper in which we describe the current clj-net-pcap architecture and assess the performance.
 The publisher is IEEE and the paper is available via IEEE Xplore: [Bridging the Gap between Low-Level Network Traffic Data Acquisition and Higher-Level Frameworks](http://ieeexplore.ieee.org/xpl/articleDetails.jsp?tp=&arnumber=6903107), Ruediger Gad, Martin Kappes, and Inmaculada Medina-Bulo.
@@ -52,16 +62,6 @@ If you want to reference clj-net-pcap, you can refer to our paper, e.g., in LaTe
     doi={10.1109/COMPSACW.2014.15},}
 
 This Bibtex entry was taken from the IEEE Xplore site of our paper linked above.
-
-## CI
-[![Build Status](https://travis-ci.org/ruedigergad/clj-net-pcap.png?branch=master)](https://travis-ci.org/ruedigergad/clj-net-pcap)
-
-## Test Results
-[![Coverage Status](https://img.shields.io/coveralls/ruedigergad/clj-net-pcap.svg)](https://coveralls.io/r/ruedigergad/clj-net-pcap?branch=master)
-
-Detailed results of unit tests are available:
-
-http://ruedigergad.github.io/clj-net-pcap/test-results/html/
 
 ## Building etc.
 clj-net-pcap uses Leiningen.

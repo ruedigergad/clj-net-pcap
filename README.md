@@ -36,7 +36,7 @@ http://ruedigergad.github.io/clj-net-pcap/doc/
 
 ## Publications
 A paper about clj-net-pcap in which we describe the current architecture and assess the performance was published by IEEE.
-The paper is available via IEEE Xplore: [Bridging the Gap between Low-Level Network Traffic Data Acquisition and Higher-Level Frameworks]{http://ieeexplore.ieee.org/xpl/articleDetails.jsp?tp=&arnumber=6903107}, Ruediger Gad, Martin Kappes, and Inmaculada Medina-Bulo.
+The paper is available via IEEE Xplore: [Bridging the Gap between Low-Level Network Traffic Data Acquisition and Higher-Level Frameworks](http://ieeexplore.ieee.org/xpl/articleDetails.jsp?tp=&arnumber=6903107), Ruediger Gad, Martin Kappes, and Inmaculada Medina-Bulo.
 
 ### Referencing
 If you want to reference clj-net-pcap, you can refer to our paper, e.g., in LaTeX:
@@ -71,10 +71,10 @@ Please note that Leiningen version 2.x is used.
 clj-net-pcap was created and is still mainly developed and maintained as a "personal fun project".
 However, I am in the fortunate situation that it showed after some time that clj-net-pcap could also be used for my PhD and research work.
 Thus, I had the lucky chance to partially also work on clj-net-pcap in scope of my employment as research assistant and during my current studies as PhD student.
-Consequently, acknowledgements go to my employer the [Frankfurt University of Applied Sciences]{http://frankfurt-university.de} and the [Universidad de Cádiz]{http://uca.es} where I am currently enrolled as PhD student.
+Consequently, acknowledgements go to my employer the [Frankfurt University of Applied Sciences](http://frankfurt-university.de) and the [Universidad de Cádiz](http://uca.es) where I am currently enrolled as PhD student.
 
 While the project name was initially "cljNetPcap", it was renamed to "clj-net-pcap" in order to adhere to common package naming conventions.
-Furthermore, I decided to upload clj-net-pcap to [clojars.org]{http://clojars.org} in order to ease its application.
+Furthermore, I decided to upload clj-net-pcap to [clojars.org](http://clojars.org) in order to ease its application.
 
 ## License
 Copyright (C) 2012, 2013, 2014 Ruediger Gad

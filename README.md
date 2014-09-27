@@ -35,8 +35,8 @@ API docs are available:
 http://ruedigergad.github.io/clj-net-pcap/doc/
 
 ## Publications
-A paper about clj-net-pcap in which we describe the current architecture and assess the performance was published by IEEE.
-The paper is available via IEEE Xplore: [Bridging the Gap between Low-Level Network Traffic Data Acquisition and Higher-Level Frameworks](http://ieeexplore.ieee.org/xpl/articleDetails.jsp?tp=&arnumber=6903107), Ruediger Gad, Martin Kappes, and Inmaculada Medina-Bulo.
+We published a paper in which we describe the current clj-net-pcap architecture and assess the performance.
+The publisher is IEEE and the paper is available via IEEE Xplore: [Bridging the Gap between Low-Level Network Traffic Data Acquisition and Higher-Level Frameworks](http://ieeexplore.ieee.org/xpl/articleDetails.jsp?tp=&arnumber=6903107), Ruediger Gad, Martin Kappes, and Inmaculada Medina-Bulo.
 
 ### Referencing
 If you want to reference clj-net-pcap, you can refer to our paper, e.g., in LaTeX:

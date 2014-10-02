@@ -138,15 +138,24 @@
     ([]
       (fn [^DirectBulkByteBufferWrapper buf _]
         (when (not (nil? buf))
-          (enqueue-data
-            out-queue
-            buf
-;            (doto (ByteBuffer/allocate (.remaining buf))
-;              (.put buf)
-;              (.flip))
-            force-put
-            out-queued-counter out-drop-counter)
-          (.freeNativeMemory buf))))
+          (let [
+;                direct-bb (doto (ByteBuffer/allocate (.remaining buf))
+;                            (.put buf)
+;                            (.flip))
+               ]
+;            (while (.hasRemaining direct-bb)
+;              (print (.get direct-bb)))
+            (let [bb (.getBuffer buf)]
+              (while (.hasRemaining bb)
+                (print (.get bb))))
+            (enqueue-data
+              out-queue
+;              direct-bb
+              buf
+              force-put
+              out-queued-counter out-drop-counter)
+            (.freeNativeMemory buf)
+          ))))
     ([k]
       (condp = k
         :get-stats {"out-queued" (* (.value out-queued-counter) bulk-size) "out-dropped" (* (.value out-drop-counter) bulk-size)}

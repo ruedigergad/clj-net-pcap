@@ -1,0 +1,692 @@
+diff --git a/build.xml b/build.xml
+index bbae929..0c2cf11 100644
+--- a/build.xml
++++ b/build.xml
+@@ -116,7 +116,7 @@
+      -->
+ 	<taskdef resource="cpptasks.tasks" classpathref="ant.cpptask.classpath" />
+ 	<typedef resource="cpptasks.types" classpathref="ant.cpptask.classpath" />
+-	<taskdef name="deb" classpathref="ant.deb.classpath" classname="org.vafer.jdeb.ant.DebAntTask" />
++    <!--	<taskdef name="deb" classpathref="ant.deb.classpath" classname="org.vafer.jdeb.ant.DebAntTask" />-->
+ 	<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="ant.svnant.classpath" />
+ 
+ 
+@@ -600,11 +600,15 @@
+ 		<exec executable="locate" outputproperty="result.locate_out" >
+ 			<arg value="libpcap.so"/>
+ 		</exec>
+-		
++
++        <!--
+ 		<exec executable="grep" inputstring="${result.locate_out}" outputproperty="result.grep_out">
+ 			<arg value="libpcap.so$" />
+-		</exec>
++        </exec>
++        -->
+ 		
++        <property name="result.grep_out" value="/home/rc/repositories/work/src/dane.dmf/lib/jnetpcap/native/Linux/x86_64/libpcap.so" />
++
+ 		<echo message="Located libpcap.so file: ${result.grep_out}" />
+ 		
+ 		<property name="build.libpcap.so" value="${build.lib.dir}/libpcap.so" />
+@@ -723,17 +727,17 @@
+ 
+ 		<echo message="Using pcap version ${compiler.LIBPCAP_VERSION}" />
+ 		<echo message="compiling JNI C++ files to object code" />
+-		<echo message="using ${compiler.cc.cmd} compiler" />
++        <echo message="using ${compiler.cc.cmd} compiler" />
+ 		<echo message="system include = ${java.sdk.include.dir}" />
+ 		<cc runtime="dynamic" outtype="shared" outfile="${build.lib.dir}/${lib.pcap.basename}" debug="${compiler.debug}" objdir="${build.obj.dir}" multithreaded="compiler.multithreaded" exceptions="compiler.exceptions" warnings="${compiler.warnings}">
+ 
+ 			<env key="PATH" path="${compiler.cc.bin.dir};${env.PATH}" />
+ 
+-			<fileset dir="${src.c.dir}" />
++			<fileset dir="${src.c.dir}" includes="*.cpp" />
+ 			<includepath location="${build.include.dir}" />
+ 			<includepath location="${src.c.dir}" />
+-			<sysincludepath location="${java.sdk.include.dir}" />
+-			<sysincludepath location="${java.sdk.include.dir}/linux" />
++			<sysincludepath location="/usr/lib/jvm/java/include" />
++			<sysincludepath location="/usr/lib/jvm/java/include/linux" />
+ 			<defineset define="LIBPCAP_VERSION=0x${compiler.LIBPCAP_VERSION}" if="compiler.LIBPCAP_VERSION" />
+ 			<defineset define="DEBUG" if="DEBUG" />
+ 
+@@ -757,8 +761,8 @@
+ 			</fileset>
+ 			<includepath location="${build.include.dir}" />
+ 			<includepath location="${src.c.dir}" />
+-			<sysincludepath location="${java.sdk.include.dir}" />
+-			<sysincludepath location="${java.sdk.include.dir}/linux" />
++			<sysincludepath location="/usr/lib/jvm/java/include" />
++			<sysincludepath location="/usr/lib/jvm/java/include/linux" />
+ 			<defineset define="LIBPCAP_VERSION=0x${compiler.LIBPCAP_VERSION}" if="compiler.LIBPCAP_VERSION" />
+ 			<defineset define="DEBUG" if="DEBUG" />
+ 			<defineset define="Linux" />
+diff --git a/src/c/jnetpcap.cpp b/src/c/jnetpcap.cpp
+index 66dcd7f..324af33 100644
+--- a/src/c/jnetpcap.cpp
++++ b/src/c/jnetpcap.cpp
+@@ -547,6 +547,107 @@ JNIEXPORT jint JNICALL Java_org_jnetpcap_Pcap_loop__ILorg_jnetpcap_PcapHandler_2
+ }
+ 
+ /*
++ * Class:     org_jnetpcap_DirectBulkByteBufferWrapper
++ * Method:    free
++ * Signature: (Ljava/nio/ByteBufferBuffer;)I
++ */
++JNIEXPORT jint JNICALL Java_org_jnetpcap_DirectBulkByteBufferWrapper_free__Ljava_nio_ByteBuffer_2
++(JNIEnv *env, jobject obj, jobject byteBuffer) {
++    void* addr = env->GetDirectBufferAddress(byteBuffer);
++
++    if (addr == NULL) {
++        return -1;
++    }
++
++    free(addr);
++    return 0;
++}
++
++/*
++ * Class:     org_jnetpcap_Pcap
++ * Method:    loop
++ * Signature: (IIIZZLorg/jnetpcap/BulkByteBufferHandler;Ljava/lang/Object;)I
++ */
++JNIEXPORT jint JNICALL Java_org_jnetpcap_Pcap_loop__IIIZZLorg_jnetpcap_BulkByteBufferHandler_2Ljava_lang_Object_2
++(JNIEnv *env, jobject obj, jint jcnt, jint bulkSize, jint snapLength, jboolean useIntTs, jboolean useIntermediateBuffer, jobject jhandler, jobject juser) {
++
++//	printf("LOOP-BulkByteBufferHandler\n"); fflush(stdout);
++	if (jhandler == NULL) {
++		throwException(env, NULL_PTR_EXCEPTION, NULL);
++		return -1;
++	}
++
++	pcap_t *p = getPcap(env, obj);
++	if (p == NULL) {
++		return -1; // Exception already thrown
++	}
++
++	/*
++	 * Structure to encapsulate user data object, and store our JNI information
++	 * so we can dispatch to Java land.
++	 */
++	cb_bulk_byte_buffer_t data;
++	data.env = env;
++	data.obj = jhandler;
++	data.pcap = obj;
++	data.user = juser;
++	data.p = p;
++	data.exception = NULL;
++	data.mid = BulkByteBufferHandlerNextPacketMID;
++
++    pcap_pkthdr dummyHdr;
++    int bulkBufferEntrySize = snapLength;
++    bulkBufferEntrySize += sizeof(dummyHdr.caplen);
++    bulkBufferEntrySize += sizeof(dummyHdr.len);
++    if (useIntTs) {
++        bulkBufferEntrySize += (2 * sizeof(int));
++    } else {
++        bulkBufferEntrySize += sizeof(dummyHdr.ts.tv_sec);
++        bulkBufferEntrySize += sizeof(dummyHdr.ts.tv_usec);
++    }
++
++
++    bulk_buffer_t wb_tmp;
++    wb_tmp.data = malloc(bulkBufferEntrySize * bulkSize);
++    wb_tmp.bytes = 0;
++    wb_tmp.packets = 0;
++    data.write_buffer = &wb_tmp;
++    if (useIntermediateBuffer) {
++        bulk_buffer_t rb_tmp;
++        rb_tmp.data = malloc(bulkBufferEntrySize * bulkSize);
++        rb_tmp.bytes = 0;
++        rb_tmp.packets = 0;
++        data.read_buffer = &rb_tmp;
++    } else {
++        data.read_buffer = NULL;
++    }
++    data.bulk_size = bulkSize;
++    data.bulk_buffer_entry_size = bulkBufferEntrySize;
++
++    int r = 0;
++
++    if (useIntermediateBuffer) {
++        if (useIntTs) {
++            r = pcap_loop(p, jcnt, cb_bulk_byte_buffer_dispatch_int_ts, (u_char *)&data);
++        } else {
++            r = pcap_loop(p, jcnt, cb_bulk_byte_buffer_dispatch, (u_char *)&data);
++        }
++    } else {
++        if (useIntTs) {
++            r = pcap_loop(p, jcnt, cb_bulk_byte_buffer_dispatch_direct_int_ts, (u_char *)&data);
++        } else {
++            r = pcap_loop(p, jcnt, cb_bulk_byte_buffer_dispatch_direct, (u_char *)&data);
++        }
++    }
++
++	if (data.exception != NULL) {
++		env->Throw(data.exception);
++	}
++
++	return r;
++}
++
++/*
+  * Class:     org_jnetpcap_Pcap
+  * Method:    loop
+  * Signature: (ILorg/jnetpcap/ByteBufferHandler;Ljava/lang/Object;Lorg/jnetpcap/PcapHeader;)I
+diff --git a/src/c/jnetpcap_ids.cpp b/src/c/jnetpcap_ids.cpp
+index 7d025a2..b879e4c 100644
+--- a/src/c/jnetpcap_ids.cpp
++++ b/src/c/jnetpcap_ids.cpp
+@@ -42,11 +42,13 @@ jmethodID appendMID = 0;
+ jmethodID setLengthMID = 0;
+ 
+ jclass JBufferHandlerClass;
++jclass BulkByteBufferHandlerClass;
+ jclass ByteBufferHandlerClass;
+ jclass JPacketHandlerClass;
+ jclass PcapPacketHandlerClass;
+ 
+ jmethodID JBufferHandlerNextPacketMID;
++jmethodID BulkByteBufferHandlerNextPacketMID;
+ jmethodID ByteBufferHandlerNextPacketMID;
+ jmethodID JPacketHandlerNextPacketMID;
+ jmethodID PcapPacketHandlerNextPacketMID;
+@@ -112,6 +114,10 @@ JNIEXPORT void JNICALL JNICALL Java_org_jnetpcap_Pcap_initIDs
+ 		return;
+ 	}
+ 
++	if ( (BulkByteBufferHandlerClass = findClass(env, 
++			"org/jnetpcap/BulkByteBufferHandler")) == NULL) {
++		return;
++	}
+ 	if ( (ByteBufferHandlerClass = findClass(env, 
+ 			"org/jnetpcap/ByteBufferHandler")) == NULL) {
+ 		return;
+@@ -130,6 +136,11 @@ JNIEXPORT void JNICALL JNICALL Java_org_jnetpcap_Pcap_initIDs
+ 			"(Lorg/jnetpcap/PcapHeader;Lorg/jnetpcap/nio/JBuffer;Ljava/lang/Object;)V")) == NULL) {
+ 		return;
+ 	}
++	if ( (BulkByteBufferHandlerNextPacketMID = 
++		env->GetMethodID(BulkByteBufferHandlerClass, "nextPacket",
++			"(Ljava/nio/ByteBuffer;Ljava/lang/Object;)V")) == NULL) {
++		return;
++	}
+ 	if ( (ByteBufferHandlerNextPacketMID = 
+ 		env->GetMethodID(ByteBufferHandlerClass, "nextPacket",
+ 			"(Lorg/jnetpcap/PcapHeader;Ljava/nio/ByteBuffer;Ljava/lang/Object;)V")) == NULL) {
+diff --git a/src/c/jnetpcap_ids.h b/src/c/jnetpcap_ids.h
+index 89e25a7..7e29983 100644
+--- a/src/c/jnetpcap_ids.h
++++ b/src/c/jnetpcap_ids.h
+@@ -20,6 +20,7 @@ extern jclass pcapAddrClass;
+ extern jclass PcapSockAddrClass;
+ extern jclass pcapIntegerClass;
+ extern jclass JBufferHandlerClass;
++extern jclass BulkByteBufferHandlerClass;
+ extern jclass ByteBufferHandlerClass;
+ extern jclass JPacketHandlerClass;
+ extern jclass PcapPacketHandlerClass;
+@@ -32,6 +33,7 @@ extern 	jmethodID bufferSetPositionMID;
+ extern 	jmethodID bufferGetPositionMID;
+ extern 	jmethodID bufferGetCapacityMID;
+ extern  jmethodID JBufferHandlerNextPacketMID;
++extern  jmethodID BulkByteBufferHandlerNextPacketMID;
+ extern  jmethodID ByteBufferHandlerNextPacketMID;
+ extern  jmethodID JPacketHandlerNextPacketMID;
+ extern  jmethodID PcapPacketHandlerNextPacketMID;
+diff --git a/src/c/jnetpcap_utils.cpp b/src/c/jnetpcap_utils.cpp
+index 50f0150..5642c30 100644
+--- a/src/c/jnetpcap_utils.cpp
++++ b/src/c/jnetpcap_utils.cpp
+@@ -737,6 +737,228 @@ void pcap_callback(u_char *user, const pcap_pkthdr *pkt_header,
+ }
+ 
+ /**
++ * Bulk dispatcher that allocates a new java.nio.ByteBuffer and dispatches
++ * it to java listener. This version casts the timestamp values to int.
++ */
++void cb_bulk_byte_buffer_dispatch_int_ts(u_char *user, const pcap_pkthdr *pkt_header,
++		const u_char *pkt_data) {
++
++	cb_bulk_byte_buffer_t *data = (cb_bulk_byte_buffer_t *)user;
++
++    int offset = 0;
++    char *data_ptr = (char *) data->write_buffer->data;
++    int tv_sec = (int) pkt_header->ts.tv_sec;
++    memcpy((void *) (data_ptr + data->write_buffer->bytes), &(tv_sec), sizeof(tv_sec));
++    offset += sizeof(tv_sec);
++    int tv_usec = (int) pkt_header->ts.tv_usec;
++    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(tv_usec), sizeof(tv_usec));
++    offset += sizeof(tv_usec);
++    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(pkt_header->caplen), sizeof(pkt_header->caplen));
++    offset += sizeof(pkt_header->caplen);
++    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(pkt_header->len), sizeof(pkt_header->len));
++    offset += sizeof(pkt_header->len);
++    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), (void *) pkt_data, pkt_header->caplen);
++    data->write_buffer->bytes += offset + pkt_header->caplen;
++    data->write_buffer->packets++;
++
++    if (data->write_buffer->packets < data->bulk_size) {
++        return;
++    }
++
++    bulk_buffer_t *tmp_buffer = data->read_buffer;
++    data->read_buffer = data->write_buffer;
++    data->write_buffer = tmp_buffer;
++    data->write_buffer->bytes = 0;
++    data->write_buffer->packets = 0;
++
++	JNIEnv *env = data->env;
++
++    jobject buffer = env->NewDirectByteBuffer((void *) data->read_buffer->data,
++			data->read_buffer->bytes);
++	if (buffer == NULL) {
++		return;
++	}
++
++	env->CallVoidMethod(
++			data->obj,
++			data->mid,
++			(jobject) buffer,
++			(jobject) data->user);
++
++	env->DeleteLocalRef(buffer);
++
++	if (env->ExceptionCheck() == JNI_TRUE) {
++		data->exception = env->ExceptionOccurred();
++		pcap_breakloop(data->p);
++	}
++}
++
++/**
++ * Bulk dispatcher that allocates a new java.nio.ByteBuffer and dispatches
++ * it to java listener.
++ */
++void cb_bulk_byte_buffer_dispatch(u_char *user, const pcap_pkthdr *pkt_header,
++		const u_char *pkt_data) {
++
++	cb_bulk_byte_buffer_t *data = (cb_bulk_byte_buffer_t *)user;
++
++    int offset = 0;
++    char *data_ptr = (char *) data->write_buffer->data;
++    memcpy((void *) (data_ptr + data->write_buffer->bytes), &(pkt_header->ts.tv_sec), sizeof(pkt_header->ts.tv_sec));
++    offset += sizeof(pkt_header->ts.tv_sec);
++    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(pkt_header->ts.tv_usec), sizeof(pkt_header->ts.tv_usec));
++    offset += sizeof(pkt_header->ts.tv_usec);
++    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(pkt_header->caplen), sizeof(pkt_header->caplen));
++    offset += sizeof(pkt_header->caplen);
++    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(pkt_header->len), sizeof(pkt_header->len));
++    offset += sizeof(pkt_header->len);
++    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), (void *) pkt_data, pkt_header->caplen);
++    data->write_buffer->bytes += offset + pkt_header->caplen;
++    data->write_buffer->packets++;
++
++    if (data->write_buffer->packets < data->bulk_size) {
++        return;
++    }
++
++    bulk_buffer_t *tmp_buffer = data->read_buffer;
++    data->read_buffer = data->write_buffer;
++    data->write_buffer = tmp_buffer;
++    data->write_buffer->bytes = 0;
++    data->write_buffer->packets = 0;
++
++	JNIEnv *env = data->env;
++
++    jobject buffer = env->NewDirectByteBuffer((void *) data->read_buffer->data,
++			data->read_buffer->bytes);
++	if (buffer == NULL) {
++		return;
++	}
++
++	env->CallVoidMethod(
++			data->obj,
++			data->mid,
++			(jobject) buffer,
++			(jobject) data->user);
++
++	env->DeleteLocalRef(buffer);
++
++	if (env->ExceptionCheck() == JNI_TRUE) {
++		data->exception = env->ExceptionOccurred();
++		pcap_breakloop(data->p);
++	}
++}
++
++/**
++ * Bulk dispatcher that allocates a new java.nio.ByteBuffer and dispatches
++ * it to java listener. This version casts the timestamp values to int.
++ */
++void cb_bulk_byte_buffer_dispatch_direct_int_ts(u_char *user, const pcap_pkthdr *pkt_header,
++		const u_char *pkt_data) {
++
++	cb_bulk_byte_buffer_t *data = (cb_bulk_byte_buffer_t *)user;
++
++    int offset = 0;
++    char *data_ptr = (char *) data->write_buffer->data;
++    int tv_sec = (int) pkt_header->ts.tv_sec;
++    memcpy((void *) (data_ptr + data->write_buffer->bytes), &(tv_sec), sizeof(tv_sec));
++    offset += sizeof(tv_sec);
++    int tv_usec = (int) pkt_header->ts.tv_usec;
++    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(tv_usec), sizeof(tv_usec));
++    offset += sizeof(tv_usec);
++    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(pkt_header->caplen), sizeof(pkt_header->caplen));
++    offset += sizeof(pkt_header->caplen);
++    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(pkt_header->len), sizeof(pkt_header->len));
++    offset += sizeof(pkt_header->len);
++    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), (void *) pkt_data, pkt_header->caplen);
++    data->write_buffer->bytes += offset + pkt_header->caplen;
++    data->write_buffer->packets++;
++
++    if (data->write_buffer->packets < data->bulk_size) {
++        return;
++    }
++
++	JNIEnv *env = data->env;
++
++    jobject buffer = env->NewDirectByteBuffer((void *) data->write_buffer->data,
++			data->write_buffer->bytes);
++
++    data->write_buffer->data = malloc(data->bulk_buffer_entry_size * data->bulk_size);
++    data->write_buffer->bytes = 0;
++    data->write_buffer->packets = 0;
++
++	if (buffer == NULL) {
++		return;
++	}
++
++	env->CallVoidMethod(
++			data->obj,
++			data->mid,
++			(jobject) buffer,
++			(jobject) data->user);
++
++	env->DeleteLocalRef(buffer);
++
++	if (env->ExceptionCheck() == JNI_TRUE) {
++		data->exception = env->ExceptionOccurred();
++		pcap_breakloop(data->p);
++	}
++}
++
++/**
++ * Bulk dispatcher that allocates a new java.nio.ByteBuffer and dispatches
++ * it to java listener.
++ */
++void cb_bulk_byte_buffer_dispatch_direct(u_char *user, const pcap_pkthdr *pkt_header,
++		const u_char *pkt_data) {
++
++	cb_bulk_byte_buffer_t *data = (cb_bulk_byte_buffer_t *)user;
++
++    int offset = 0;
++    char *data_ptr = (char *) data->write_buffer->data;
++    memcpy((void *) (data_ptr + data->write_buffer->bytes), &(pkt_header->ts.tv_sec), sizeof(pkt_header->ts.tv_sec));
++    offset += sizeof(pkt_header->ts.tv_sec);
++    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(pkt_header->ts.tv_usec), sizeof(pkt_header->ts.tv_usec));
++    offset += sizeof(pkt_header->ts.tv_usec);
++    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(pkt_header->caplen), sizeof(pkt_header->caplen));
++    offset += sizeof(pkt_header->caplen);
++    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(pkt_header->len), sizeof(pkt_header->len));
++    offset += sizeof(pkt_header->len);
++    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), (void *) pkt_data, pkt_header->caplen);
++    data->write_buffer->bytes += offset + pkt_header->caplen;
++    data->write_buffer->packets++;
++
++    if (data->write_buffer->packets < data->bulk_size) {
++        return;
++    }
++
++	JNIEnv *env = data->env;
++
++    jobject buffer = env->NewDirectByteBuffer((void *) data->write_buffer->data,
++			data->write_buffer->bytes);
++
++    data->write_buffer->data = malloc(data->bulk_buffer_entry_size * data->bulk_size);
++    data->write_buffer->bytes = 0;
++    data->write_buffer->packets = 0;
++
++	if (buffer == NULL) {
++		return;
++	}
++
++	env->CallVoidMethod(
++			data->obj,
++			data->mid,
++			(jobject) buffer,
++			(jobject) data->user);
++
++	env->DeleteLocalRef(buffer);
++
++	if (env->ExceptionCheck() == JNI_TRUE) {
++		data->exception = env->ExceptionOccurred();
++		pcap_breakloop(data->p);
++	}
++}
++
++/**
+  * ByteBuffer dispatcher that allocates a new java.nio.ByteBuffer and dispatches
+  * it to java listener.
+  */
+diff --git a/src/c/jnetpcap_utils.h b/src/c/jnetpcap_utils.h
+index 502d699..46ae315 100644
+--- a/src/c/jnetpcap_utils.h
++++ b/src/c/jnetpcap_utils.h
+@@ -90,6 +90,26 @@ typedef struct pcap_user_data_t {
+ 	
+ } pcap_user_data_t;
+ 
++typedef struct bulk_buffer_t {
++    void *data;
++    long bytes;
++    long packets;
++} bulk_buffer_t;
++
++typedef struct cb_bulk_byte_buffer_t {
++	pcap_t *p;
++	jmethodID mid;
++	JNIEnv *env;    // thread
++	jobject obj;    // ByteBufferHandler
++	jobject pcap;
++	jthrowable  exception; // Any exceptions to rethrow
++	jobject user;
++    bulk_buffer_t *write_buffer;
++    bulk_buffer_t *read_buffer;
++    int bulk_size;
++    int bulk_buffer_entry_size;
++} cb_bulk_byte_buffer_t;
++
+ typedef struct cb_byte_buffer_t {
+ 	pcap_t *p;
+ 	jmethodID mid;
+@@ -135,6 +155,10 @@ typedef struct cb_packet_t {
+ 
+ extern "C"
+ void pcap_callback(u_char*, const pcap_pkthdr*, const u_char*);
++void cb_bulk_byte_buffer_dispatch_int_ts(u_char*, const pcap_pkthdr*, const u_char*);
++void cb_bulk_byte_buffer_dispatch(u_char*, const pcap_pkthdr*, const u_char*);
++void cb_bulk_byte_buffer_dispatch_direct_int_ts(u_char*, const pcap_pkthdr*, const u_char*);
++void cb_bulk_byte_buffer_dispatch_direct(u_char*, const pcap_pkthdr*, const u_char*);
+ void cb_byte_buffer_dispatch(u_char*, const pcap_pkthdr*, const u_char*);
+ void cb_jbuffer_dispatch(u_char*, const pcap_pkthdr*, const u_char*);
+ void cb_pcap_packet_dispatch(u_char*, const pcap_pkthdr*, const u_char*);
+diff --git a/src/java1.5/org/jnetpcap/BulkByteBufferHandler.java b/src/java1.5/org/jnetpcap/BulkByteBufferHandler.java
+new file mode 100644
+index 0000000..3756700
+--- /dev/null
++++ b/src/java1.5/org/jnetpcap/BulkByteBufferHandler.java
+@@ -0,0 +1,48 @@
++/*
++ * Copyright (C) 2005, 2006, 2007, 2008, 2009, 2010 Sly Technologies, Inc.
++ *
++ * This file is part of jNetPcap.
++ *
++ * jNetPcap is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as 
++ * published by the Free Software Foundation, either version 3 of 
++ * the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++package org.jnetpcap;
++
++import java.nio.ByteBuffer;
++
++// TODO: Auto-generated Javadoc
++/**
++ * A handler, listener or call back inteface that gets notified when a new
++ * packet has been captured.
++ * 
++ * @param <T>
++ *          user object type
++ * @author Mark Bednarczyk
++ * @author Sly Technologies, Inc.
++ */
++public interface BulkByteBufferHandler<T> {
++
++	/**
++	 * Callback method that will called by libpcap when a new packet is captured.
++	 * 
++	 * @param header
++	 *          pcap capture header
++	 * @param buffer
++	 *          Buffer containing packet data. The new ByteBuffer object is
++	 *          allocated per call for the peering, the data is not copied but
++	 *          referenced.
++	 * @param user
++	 *          user supplied object
++	 */
++	public void nextPacket(ByteBuffer buffer, T user);
++}
+diff --git a/src/java1.5/org/jnetpcap/DirectBulkByteBufferHandler.java b/src/java1.5/org/jnetpcap/DirectBulkByteBufferHandler.java
+new file mode 100644
+index 0000000..b1b6e17
+--- /dev/null
++++ b/src/java1.5/org/jnetpcap/DirectBulkByteBufferHandler.java
+@@ -0,0 +1,27 @@
++/*
++ * This file is part of jNetPcap.
++ *
++ * jNetPcap is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as 
++ * published by the Free Software Foundation, either version 3 of 
++ * the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++package org.jnetpcap;
++
++// TODO: Auto-generated Javadoc
++/**
++ * @author Ruediger Gad
++ */
++public interface DirectBulkByteBufferHandler<T> {
++
++	public void nextPacket(DirectBulkByteBufferWrapper buffer, T user);
++}
++
+diff --git a/src/java1.5/org/jnetpcap/DirectBulkByteBufferWrapper.java b/src/java1.5/org/jnetpcap/DirectBulkByteBufferWrapper.java
+new file mode 100644
+index 0000000..1659455
+--- /dev/null
++++ b/src/java1.5/org/jnetpcap/DirectBulkByteBufferWrapper.java
+@@ -0,0 +1,56 @@
++/*
++ * This file is part of jNetPcap.
++ *
++ * jNetPcap is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU Lesser General Public License as 
++ * published by the Free Software Foundation, either version 3 of 
++ * the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++package org.jnetpcap;
++
++import java.nio.ByteBuffer;
++
++/**
++ * @author Ruediger Gad
++ */
++public class DirectBulkByteBufferWrapper {
++
++    private ByteBuffer buffer;
++
++    public DirectBulkByteBufferWrapper (ByteBuffer buf) {
++        buffer = buf;
++    }
++
++    public ByteBuffer getBuffer() {
++        return buffer;
++    }
++
++    @Override
++    public String toString() {
++        return "DirectBulkByteBufferWrapper: " + (buffer != null ? buffer.toString() : "null"); 
++    }
++
++    @Override
++    protected void finalize() throws Throwable {
++        freeNativeMemory();
++        super.finalize();
++    }
++
++    public void freeNativeMemory() {
++        if (buffer != null && buffer.isDirect()) {
++            free(buffer);
++            buffer = null;
++        }
++    }
++
++    private native int free(ByteBuffer buffer);
++
++}
+diff --git a/src/java1.5/org/jnetpcap/Pcap.java b/src/java1.5/org/jnetpcap/Pcap.java
+index 1851ed5..ceab2d2 100644
+--- a/src/java1.5/org/jnetpcap/Pcap.java
++++ b/src/java1.5/org/jnetpcap/Pcap.java
+@@ -2289,6 +2289,26 @@ public class Pcap {
+ 	private native <T> int loop(int cnt, ByteBufferHandler<T> handler, T user,
+ 			PcapHeader header);
+ 
++
++	public int loop_direct(int cnt, int bulkSize, int snapLength, boolean useIntTs, final DirectBulkByteBufferHandler handler, Object user) {
++        BulkByteBufferHandler hdlr = new BulkByteBufferHandler() {
++            @Override
++            public void nextPacket(ByteBuffer buffer, Object userData) {
++                handler.nextPacket(new DirectBulkByteBufferWrapper(buffer), userData);
++            }
++        };
++        return loop(cnt, bulkSize, snapLength, useIntTs, false, hdlr, user);
++    }
++
++	public <T> int loop(int cnt, int bulkSize, int snapLength, boolean useIntTs, BulkByteBufferHandler<T> handler, T user) {
++        return loop(cnt, bulkSize, snapLength, useIntTs, true, handler, user);
++    }
++	/**
++	 * Start a pcap loop for bulk processing.
++	 */
++	@LibraryMember("pcap_loop")
++	public native <T> int loop(int cnt, int bulkSize, int snapLength, boolean useIntTs, boolean useIntermediateBuffer, BulkByteBufferHandler<T> handler, T user);
++
+ 	/**
+ 	 * Collect a group of packets. pcap_loop() is similar to pcap_dispatch()
+ 	 * except it keeps reading packets until cnt packets are processed or an

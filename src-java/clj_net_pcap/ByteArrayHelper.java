@@ -23,6 +23,8 @@ package clj_net_pcap;
 
 /**
  * Helper class for handling byte arrays.
+ * Please note that, by default, the methods do not perform any sanity checks.
+ *
  */
 public class ByteArrayHelper {
 

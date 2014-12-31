@@ -69,5 +69,17 @@ public class ByteArrayHelper {
 
         return ret;
     }
+
+    public static byte[] ipv4StringToByteArray(String str) {
+        byte[] ret = new byte[4];
+
+        String[] s = str.split("\\.");
+
+        for (int i = 0; i < ret.length; i++) {
+            ret[i] = (byte) Integer.parseInt(s[i], 10);
+        }
+
+        return ret;
+    }
 }
 

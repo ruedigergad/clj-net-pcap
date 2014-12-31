@@ -52,3 +52,9 @@
     (is (Arrays/equals expected (ByteArrayHelper/ethMacStringToByteArray in-str)))
     (is (= in-str (FormatUtils/mac expected)))))
 
+(deftest ipv4-string-to-byte-array-1_2_3_4-test
+  (let [in-str "1.2.3.4"
+        expected (byte-array (map byte [1 2 3 4]))]
+    (is (Arrays/equals expected (ByteArrayHelper/ipv4StringToByteArray in-str)))
+    (is (= in-str (FormatUtils/ip expected)))))
+

@@ -40,9 +40,9 @@
     (is (Arrays/equals expected (ByteArrayHelper/ethMacStringToByteArrayUnchecked in-str)))
     (is (= in-str (FormatUtils/mac expected)))))
 
-(deftest eth-mac-string-to-byte-array-81_82_83_84_85_86-unchecked-test
-  (let [in-str "81:82:83:84:85:86"
-        expected (byte-array (map byte [-127 -126 -125 -124 -123 -122]))]
+(deftest eth-mac-string-to-byte-array-7F_80_81_82_83_84-unchecked-test
+  (let [in-str "7F:80:81:82:83:84"
+        expected (byte-array (map byte [127 -128 -127 -126 -125 -124]))]
     (is (Arrays/equals expected (ByteArrayHelper/ethMacStringToByteArrayUnchecked in-str)))
     (is (= in-str (FormatUtils/mac expected)))))
 

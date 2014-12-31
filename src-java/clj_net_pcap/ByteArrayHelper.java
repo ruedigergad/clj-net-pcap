@@ -57,5 +57,17 @@ public class ByteArrayHelper {
             (array[index+1] & 0xFF) << 48 |
             (array[index] & 0xFF) << 56;
     }
+
+    public static byte[] ethMacStringToByteArray(String str) {
+        byte[] ret = new byte[6];
+
+        String[] s = str.split(":");
+
+        for (int i = 0; i < ret.length; i++) {
+            ret[i] = (byte) Integer.parseInt(s[i], 16);
+        }
+
+        return ret;
+    }
 }
 

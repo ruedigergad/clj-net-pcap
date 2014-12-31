@@ -58,3 +58,15 @@
     (is (Arrays/equals expected (ByteArrayHelper/ipv4StringToByteArrayUnchecked in-str)))
     (is (= in-str (FormatUtils/ip expected)))))
 
+(deftest ipv4-string-to-byte-array-127_128_129_130-unchecked-test
+  (let [in-str "127.128.129.130"
+        expected (byte-array (map byte [127 -128 -127 -126]))]
+    (is (Arrays/equals expected (ByteArrayHelper/ipv4StringToByteArrayUnchecked in-str)))
+    (is (= in-str (FormatUtils/ip expected)))))
+
+(deftest ipv4-string-to-byte-array-252_253_254_255-unchecked-test
+  (let [in-str "252.253.254.255"
+        expected (byte-array (map byte [-4 -3 -2 -1]))]
+    (is (Arrays/equals expected (ByteArrayHelper/ipv4StringToByteArrayUnchecked in-str)))
+    (is (= in-str (FormatUtils/ip expected)))))
+

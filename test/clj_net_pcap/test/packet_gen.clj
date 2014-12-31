@@ -34,3 +34,9 @@
     (is (Arrays/equals expected (ByteArrayHelper/ethMacStringToByteArray in-str)))
     (is (= in-str (FormatUtils/mac expected)))))
 
+(deftest eth-mac-string-to-byte-array-10_11_12_1A_1B_1C-test
+  (let [in-str "10:11:12:1A:1B:1C"
+        expected (byte-array (map byte [16 17 18 26 27 28]))]
+    (is (Arrays/equals expected (ByteArrayHelper/ethMacStringToByteArray in-str)))
+    (is (= in-str (FormatUtils/mac expected)))))
+

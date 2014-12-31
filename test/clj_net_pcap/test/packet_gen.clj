@@ -25,10 +25,12 @@
         clj-net-pcap.core
         clj-assorted-utils.util)
   (:import (clj_net_pcap ByteArrayHelper PacketHeaderDataBean)
-           (java.util Arrays)))
+           (java.util Arrays)
+           (org.jnetpcap.packet.format FormatUtils)))
 
 (deftest eth-mac-string-to-byte-array-01_02_03_04_05_06-test
   (let [in-str "01:02:03:04:05:06"
         expected (byte-array (map byte [1 2 3 4 5 6]))]
-    (is (Arrays/equals expected (ByteArrayHelper/ethMacStringToByteArray in-str)))))
+    (is (Arrays/equals expected (ByteArrayHelper/ethMacStringToByteArray in-str)))
+    (is (= in-str (FormatUtils/mac expected)))))
 

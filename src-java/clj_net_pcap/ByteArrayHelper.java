@@ -58,7 +58,7 @@ public class ByteArrayHelper {
             (array[index] & 0xFF) << 56;
     }
 
-    public static byte[] ethMacStringToByteArray(String str) {
+    public static byte[] ethMacStringToByteArrayUnchecked(String str) {
         byte[] ret = new byte[6];
 
         String[] s = str.split(":");
@@ -70,7 +70,7 @@ public class ByteArrayHelper {
         return ret;
     }
 
-    public static byte[] ipv4StringToByteArray(String str) {
+    public static byte[] ipv4StringToByteArrayUnchecked(String str) {
         byte[] ret = new byte[4];
 
         String[] s = str.split("\\.");

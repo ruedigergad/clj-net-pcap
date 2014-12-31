@@ -28,33 +28,33 @@
            (java.util Arrays)
            (org.jnetpcap.packet.format FormatUtils)))
 
-(deftest eth-mac-string-to-byte-array-01_02_03_04_05_06-test
+(deftest eth-mac-string-to-byte-array-01_02_03_04_05_06-unchecked-test
   (let [in-str "01:02:03:04:05:06"
         expected (byte-array (map byte [1 2 3 4 5 6]))]
-    (is (Arrays/equals expected (ByteArrayHelper/ethMacStringToByteArray in-str)))
+    (is (Arrays/equals expected (ByteArrayHelper/ethMacStringToByteArrayUnchecked in-str)))
     (is (= in-str (FormatUtils/mac expected)))))
 
-(deftest eth-mac-string-to-byte-array-10_11_12_1A_1B_1C-test
+(deftest eth-mac-string-to-byte-array-10_11_12_1A_1B_1C-unchecked-test
   (let [in-str "10:11:12:1A:1B:1C"
         expected (byte-array (map byte [16 17 18 26 27 28]))]
-    (is (Arrays/equals expected (ByteArrayHelper/ethMacStringToByteArray in-str)))
+    (is (Arrays/equals expected (ByteArrayHelper/ethMacStringToByteArrayUnchecked in-str)))
     (is (= in-str (FormatUtils/mac expected)))))
 
-(deftest eth-mac-string-to-byte-array-81_82_83_84_85_86-test
+(deftest eth-mac-string-to-byte-array-81_82_83_84_85_86-unchecked-test
   (let [in-str "81:82:83:84:85:86"
         expected (byte-array (map byte [-127 -126 -125 -124 -123 -122]))]
-    (is (Arrays/equals expected (ByteArrayHelper/ethMacStringToByteArray in-str)))
+    (is (Arrays/equals expected (ByteArrayHelper/ethMacStringToByteArrayUnchecked in-str)))
     (is (= in-str (FormatUtils/mac expected)))))
 
-(deftest eth-mac-string-to-byte-array-FF_FE_FD_F2_F1_F0-test
+(deftest eth-mac-string-to-byte-array-FF_FE_FD_F2_F1_F0-unchecked-test
   (let [in-str "FF:FE:FD:F2:F1:F0"
         expected (byte-array (map byte [-1 -2 -3 -14 -15 -16]))]
-    (is (Arrays/equals expected (ByteArrayHelper/ethMacStringToByteArray in-str)))
+    (is (Arrays/equals expected (ByteArrayHelper/ethMacStringToByteArrayUnchecked in-str)))
     (is (= in-str (FormatUtils/mac expected)))))
 
-(deftest ipv4-string-to-byte-array-1_2_3_4-test
+(deftest ipv4-string-to-byte-array-1_2_3_4-unchecked-test
   (let [in-str "1.2.3.4"
         expected (byte-array (map byte [1 2 3 4]))]
-    (is (Arrays/equals expected (ByteArrayHelper/ipv4StringToByteArray in-str)))
+    (is (Arrays/equals expected (ByteArrayHelper/ipv4StringToByteArrayUnchecked in-str)))
     (is (= in-str (FormatUtils/ip expected)))))
 

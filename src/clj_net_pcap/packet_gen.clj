@@ -37,7 +37,6 @@
 (defn generate-packet-data
   [^Map pkt-desc-map]
   (let [len (.get pkt-desc-map "len")
-;        v [0 0 0 0 0 0 0 0 0 0 0 0 8 0 69 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
         ba (byte-array len)
         jpkt (JMemoryPacket. JProtocol/ETHERNET_ID ba)
         eth (.getHeader jpkt (Ethernet.))]
@@ -65,6 +64,6 @@
             (.destination (ByteArrayHelper/ipv4StringToByteArrayUnchecked (.get pkt-desc-map "ipDst"))))
           (if (.containsKey pkt-desc-map "ipChecksum")
             (.checksum ip4 (.get pkt-desc-map "ipChecksum"))
-            (.calculateChecksum ip4)))))
+            (.checksum ip4 (.calculateChecksum ip4))))))
     (.getByteArray jpkt 0 ba)))
 

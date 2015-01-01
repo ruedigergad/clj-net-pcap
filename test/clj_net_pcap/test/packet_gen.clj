@@ -83,7 +83,8 @@
                              "ipVer" 4, "ipDst" "252.253.254.255", "ipId" 3,
                              "ipTtl" 7, "ipSrc" "1.2.3.4"}
         expected-vec [-1 -2 -3 -14 -15 -16 1 2 3 4 5 6 8 0
-                      68 0 0 26 0 3 64 0 7 0 -1 -1 1 2 3 4 -4 -3 -2 -1]
+                      68 0 0 26 0 3 64 0 7 0 116 -34 1 2 3 4 -4 -3 -2 -1
+                      0 0 0 0 0 0]
         expected-ba (byte-array (map byte expected-vec))
         result-ba (generate-packet-data pkt-description-map)]
     (is (= expected-vec (vec result-ba)))
@@ -94,7 +95,8 @@
                              "ipVer" 4, "ipDst" "252.253.254.255", "ipId" 3,
                              "ipTtl" 7, "ipChecksum" 123, "ipSrc" "1.2.3.4"}
         expected-vec [-1 -2 -3 -14 -15 -16 1 2 3 4 5 6 8 0
-                      68 0 0 26 0 3 64 0 7 0 0 123 1 2 3 4 -4 -3 -2 -1]
+                      68 0 0 26 0 3 64 0 7 0 0 123 1 2 3 4 -4 -3 -2 -1
+                      0 0 0 0 0 0]
         expected-ba (byte-array (map byte expected-vec))
         result-ba (generate-packet-data pkt-description-map)]
     (is (= expected-vec (vec result-ba)))

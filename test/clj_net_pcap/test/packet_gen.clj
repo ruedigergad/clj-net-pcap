@@ -1,5 +1,5 @@
 ;;;
-;;; Copyright (C) 2014 Ruediger Gad
+;;; Copyright (C) 2014, 2015 Ruediger Gad
 ;;;
 ;;; This file is part of clj-net-pcap.
 ;;;
@@ -22,7 +22,7 @@
     :doc "Tests for generating packets"}
   clj-net-pcap.test.packet-gen
   (:use clojure.test
-        clj-net-pcap.core
+        clj-net-pcap.packet-gen
         clj-assorted-utils.util)
   (:import (clj_net_pcap ByteArrayHelper PacketHeaderDataBean)
            (java.util Arrays)
@@ -69,4 +69,12 @@
         expected (byte-array (map byte [-4 -3 -2 -1]))]
     (is (Arrays/equals expected (ByteArrayHelper/ipv4StringToByteArrayUnchecked in-str)))
     (is (= in-str (FormatUtils/ip expected)))))
+
+(deftest generate-packet-data-ethernet-test
+  (let [pkt-description-map {"len" 20, "ethSrc" "01:02:03:04:05:06", "ethDst" "FF:FE:FD:F2:F1:F0"}
+        expected-vec [-1 -2 -3 -14 -15 -16 1 2 3 4 5 6 0 0 0 0 0 0 0 0]
+        expected-ba (byte-array (map byte expected-vec))
+        result-ba (generate-packet-data pkt-description-map)]
+    (is (= expected-vec (vec result-ba)))
+    (is (Arrays/equals expected-ba result-ba))))
 

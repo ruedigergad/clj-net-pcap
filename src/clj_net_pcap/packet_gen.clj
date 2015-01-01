@@ -32,7 +32,8 @@
            (org.jnetpcap.packet JPacket JMemoryPacket)
            (org.jnetpcap.protocol JProtocol)
            (org.jnetpcap.protocol.lan Ethernet Ethernet$EthernetType)
-           (org.jnetpcap.protocol.network Icmp Icmp$Echo Icmp$EchoReply Icmp$EchoRequest Icmp$IcmpType Ip4 Ip4$Flag Ip6)))
+           (org.jnetpcap.protocol.network Icmp Icmp$Echo Icmp$EchoReply Icmp$EchoRequest Icmp$IcmpType Ip4 Ip4$Flag Ip6)
+           (org.jnetpcap.protocol.tcpip Udp)))
 
 (defn generate-packet-data
   [^Map pkt-desc-map]
@@ -79,11 +80,19 @@
                   (doto icmp-echo-req
                     (.id (get-with-default pkt-desc-map "icmpId" 0))
                     (.sequence (get-with-default pkt-desc-map "icmpSeqNo" 0)))
-                  (when-let [icmpData (.get pkt-desc-map "icmpData")]
-                    (.setByteArray jpkt (+ (.getHeaderLength eth) 20 8 (.getHeaderLength icmp)) (.getBytes icmpData))))
+                  (when-let [data (.get pkt-desc-map "data")]
+                    (.setByteArray jpkt (+ (.getHeaderLength eth) 20 8 (.getHeaderLength icmp)) (.getBytes data))))
               nil)
             (.recalculateChecksum icmp))
-        17 (println "UDP")
+        17 (let [^Udp udp (.getHeader jpkt (Udp.))
+                 ^String data (get-with-default pkt-desc-map "data" "")]
+             (doto udp
+               (.source (int (get-with-default pkt-desc-map "udpSrc" 2048)))
+               (.destination (int (get-with-default pkt-desc-map "udpDst" 2048)))
+               (.length (.length data)))
+             (if (> (.length data) 0)
+               (.setByteArray jpkt (+ (.getHeaderLength eth) 20 (.getHeaderLength udp)) (.getBytes data)))
+             (.recalculateChecksum udp))
         nil))
     (.getByteArray jpkt 0 ba)))
 

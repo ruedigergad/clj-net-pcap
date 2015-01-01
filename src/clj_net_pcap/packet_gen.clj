@@ -29,16 +29,42 @@
            (java.util.concurrent ArrayBlockingQueue)
            (org.jnetpcap Pcap PcapDLT PcapHeader)
            (org.jnetpcap.nio JBuffer JMemory JMemory$Type)
-           (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
+           (org.jnetpcap.packet JPacket JMemoryPacket)
+           (org.jnetpcap.protocol JProtocol)
+           (org.jnetpcap.protocol.lan Ethernet Ethernet$EthernetType)
+           (org.jnetpcap.protocol.network Ip4 Ip4$Flag Ip6)))
 
 (defn generate-packet-data
   [^Map pkt-desc-map]
-  (let [ba (byte-array (.get pkt-desc-map "len"))]
-    (System/arraycopy 
-      (ByteArrayHelper/ethMacStringToByteArrayUnchecked (.get pkt-desc-map "ethDst"))
-      0 ba 0 6)
-    (System/arraycopy 
-      (ByteArrayHelper/ethMacStringToByteArrayUnchecked (.get pkt-desc-map "ethSrc"))
-      0 ba 6 6)
-    ba))
+  (let [len (.get pkt-desc-map "len")
+;        v [0 0 0 0 0 0 0 0 0 0 0 0 8 0 69 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]
+        ba (byte-array len)
+        jpkt (JMemoryPacket. JProtocol/ETHERNET_ID ba)
+        eth (.getHeader jpkt (Ethernet.))]
+    (doto eth
+      (.destination (ByteArrayHelper/ethMacStringToByteArrayUnchecked (.get pkt-desc-map "ethDst")))
+      (.source (ByteArrayHelper/ethMacStringToByteArrayUnchecked (.get pkt-desc-map "ethSrc"))))
+    (when-let [ipVer (.get pkt-desc-map "ipVer")]
+      (if (= ipVer 4)
+        (let [_ (.type eth (.getId Ethernet$EthernetType/IP4))
+              _ (doto jpkt 
+                  (.setByte (.getHeaderLength eth) 69)
+                  (.scan JProtocol/ETHERNET_ID))
+              ^Ip4 ip4 (.getHeader jpkt (Ip4.))]
+          (doto ip4
+            (.version ipVer)
+            (.hlen 20)
+            (.tos 0)
+            (.length (- len 14))
+            (.id (.get pkt-desc-map "ipId"))
+            (.flags 2)
+            (.offset 0)
+            (.ttl (.get pkt-desc-map "ipTtl"))
+            (.type 0)
+            (.source (ByteArrayHelper/ipv4StringToByteArrayUnchecked (.get pkt-desc-map "ipSrc")))
+            (.destination (ByteArrayHelper/ipv4StringToByteArrayUnchecked (.get pkt-desc-map "ipDst"))))
+          (if (.containsKey pkt-desc-map "ipChecksum")
+            (.checksum ip4 (.get pkt-desc-map "ipChecksum"))
+            (.calculateChecksum ip4)))))
+    (.getByteArray jpkt 0 ba)))
 

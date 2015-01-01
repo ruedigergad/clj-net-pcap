@@ -39,10 +39,10 @@
   (let [len (.get pkt-desc-map "len")
         ba (byte-array len)
         jpkt (JMemoryPacket. JProtocol/ETHERNET_ID ba)
-        eth (.getHeader jpkt (Ethernet.))]
+        ^Ethernet eth (.getHeader jpkt (Ethernet.))]
     (doto eth
-      (.destination (ByteArrayHelper/ethMacStringToByteArrayUnchecked (.get pkt-desc-map "ethDst")))
-      (.source (ByteArrayHelper/ethMacStringToByteArrayUnchecked (.get pkt-desc-map "ethSrc"))))
+      (.destination #^bytes (ByteArrayHelper/ethMacStringToByteArrayUnchecked (.get pkt-desc-map "ethDst")))
+      (.source #^bytes (ByteArrayHelper/ethMacStringToByteArrayUnchecked (.get pkt-desc-map "ethSrc"))))
     (when-let [ipVer (.get pkt-desc-map "ipVer")]
       (if (= ipVer 4)
         (let [_ (.type eth (.getId Ethernet$EthernetType/IP4))

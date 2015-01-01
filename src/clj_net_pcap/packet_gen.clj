@@ -32,7 +32,7 @@
            (org.jnetpcap.packet JPacket JMemoryPacket)
            (org.jnetpcap.protocol JProtocol)
            (org.jnetpcap.protocol.lan Ethernet Ethernet$EthernetType)
-           (org.jnetpcap.protocol.network Ip4 Ip4$Flag Ip6)))
+           (org.jnetpcap.protocol.network Icmp Icmp$Echo Icmp$EchoReply Icmp$EchoRequest Icmp$IcmpType Ip4 Ip4$Flag Ip6)))
 
 (defn generate-packet-data
   [^Map pkt-desc-map]
@@ -64,6 +64,26 @@
             (.destination (ByteArrayHelper/ipv4StringToByteArrayUnchecked (.get pkt-desc-map "ipDst"))))
           (if (.containsKey pkt-desc-map "ipChecksum")
             (.checksum ip4 (.get pkt-desc-map "ipChecksum"))
-            (.checksum ip4 (.calculateChecksum ip4))))))
+            (.checksum ip4 (.calculateChecksum ip4))))
+        (println "Generating IPv6 is not yet implemented."))
+      (.scan jpkt JProtocol/ETHERNET_ID)
+      (condp = (get-with-default pkt-desc-map "ipType" 0)
+        1 (let [^Icmp icmp (.getHeader jpkt (Icmp.))
+                icmpType (int (get-with-default pkt-desc-map "icmpType" 0))]
+            (doto icmp
+              (.type icmpType)
+              (.code (int (get-with-default pkt-desc-map "icmpCode" 0)))
+              (.decode))
+            (condp = icmpType
+              8 (let [icmp-echo-req (.getSubHeader icmp (Icmp$EchoRequest.))]
+                  (doto icmp-echo-req
+                    (.id (get-with-default pkt-desc-map "icmpId" 0))
+                    (.sequence (get-with-default pkt-desc-map "icmpSeqNo" 0)))
+                  (when-let [icmpData (.get pkt-desc-map "icmpData")]
+                    (.setByteArray jpkt (+ (.getHeaderLength eth) 20 8 (.getHeaderLength icmp)) (.getBytes icmpData))))
+              nil)
+            (.recalculateChecksum icmp))
+        17 (println "UDP")
+        nil))
     (.getByteArray jpkt 0 ba)))
 

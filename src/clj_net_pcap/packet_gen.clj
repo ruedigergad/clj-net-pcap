@@ -52,7 +52,7 @@
               ^Ip4 ip4 (.getHeader jpkt (Ip4.))]
           (doto ip4
             (.version ipVer)
-            (.hlen 20)
+            (.hlen 5)
             (.tos 0)
             (.length (- len 14))
             (.id (.get pkt-desc-map "ipId"))

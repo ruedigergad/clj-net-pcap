@@ -54,7 +54,7 @@
             (.version ipVer)
             (.hlen 5)
             (.tos 0)
-            (.length (- len 14))
+            (.length (- len (.getHeaderLength eth)))
             (.id (.get pkt-desc-map "ipId"))
             (.flags 2)
             (.offset 0)

@@ -59,7 +59,7 @@
             (.flags 2)
             (.offset 0)
             (.ttl (.get pkt-desc-map "ipTtl"))
-            (.type 0)
+            (.type ^int (.get pkt-desc-map "ipType"))
             (.source (ByteArrayHelper/ipv4StringToByteArrayUnchecked (.get pkt-desc-map "ipSrc")))
             (.destination (ByteArrayHelper/ipv4StringToByteArrayUnchecked (.get pkt-desc-map "ipDst"))))
           (if (.containsKey pkt-desc-map "ipChecksum")

@@ -23,6 +23,8 @@ package clj_net_pcap;
 
 /**
  * Helper class for handling byte arrays.
+ * Please note that, by default, the methods do not perform any sanity checks.
+ *
  */
 public class ByteArrayHelper {
 
@@ -56,6 +58,30 @@ public class ByteArrayHelper {
             (array[index+2] & 0xFF) << 40 |
             (array[index+1] & 0xFF) << 48 |
             (array[index] & 0xFF) << 56;
+    }
+
+    public static byte[] ethMacStringToByteArrayUnchecked(String str) {
+        byte[] ret = new byte[6];
+
+        String[] s = str.split(":");
+
+        for (int i = 0; i < ret.length; i++) {
+            ret[i] = (byte) Integer.parseInt(s[i], 16);
+        }
+
+        return ret;
+    }
+
+    public static byte[] ipv4StringToByteArrayUnchecked(String str) {
+        byte[] ret = new byte[4];
+
+        String[] s = str.split("\\.");
+
+        for (int i = 0; i < ret.length; i++) {
+            ret[i] = (byte) Integer.parseInt(s[i], 10);
+        }
+
+        return ret;
     }
 }
 

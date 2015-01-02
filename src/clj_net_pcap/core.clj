@@ -177,6 +177,23 @@
                                 (while (or (> (.size buffer-queue) 0) (> (.size scanner-queue) 0))
                                   (sleep 100))))))))
 
+(defn send-bytes-packet
+  "Send the packet as given in the byte array pkt-ba packets via the Pcap instance pcap.
+   Optionally a repetition count rep as well as a delay d can be given."
+  ([pcap pkt-ba]
+    (pcap :send-bytes-packet pkt-ba))
+  ([pcap pkt-ba rep]
+    (loop [cnt rep]
+      (pcap :send-bytes-packet pkt-ba)
+      (if (> cnt 1)
+        (recur (dec cnt)))))
+  ([pcap pkt-ba rep d]
+    (loop [cnt rep]
+      (sleep d)
+      (pcap :send-bytes-packet pkt-ba)
+      (if (> cnt 1)
+        (recur (dec cnt))))))
+
 (defn set-up-and-start-cljnetpcap
   "Takes a pcap instance, sets up the capture pipe line, and starts the capturing and processing.
    This is not intended to be used directly.
@@ -240,7 +257,7 @@
           :remove-filter (do (dosync
                                (alter filter-expressions (fn [fe] (vec (filter #(not= arg %) fe)))))
                              (create-and-set-filter pcap (join " " @filter-expressions)))
-          :send-bytes-packet (pcap :send-bytes-packet arg)
+          :send-bytes-packet (send-bytes-packet pcap arg)
           :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " arg)))))
       ([k arg1 arg2]
         (condp = k
@@ -248,18 +265,11 @@
                             (dosync
                               (alter filter-expressions #(replace {arg1 arg2} %)))
                             (create-and-set-filter pcap (join " " @filter-expressions)))
-          :send-bytes-packet (loop [cnt arg2]
-                               (pcap :send-bytes-packet arg1)
-                               (if (> cnt 1)
-                                 (recur (dec cnt))))
+          :send-bytes-packet (send-bytes-packet pcap arg1 arg2)
           :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " [arg1 arg2])))))
       ([k arg1 arg2 arg3]
         (condp = k
-          :send-bytes-packet (loop [cnt arg2]
-                               (sleep arg3)
-                               (pcap :send-bytes-packet arg1)
-                               (if (> cnt 1)
-                                 (recur (dec cnt))))
+          :send-bytes-packet (send-bytes-packet pcap arg1 arg2 arg3)
           :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " [arg1 arg2 arg3]))))))))
 
 (defn create-and-start-online-cljnetpcap

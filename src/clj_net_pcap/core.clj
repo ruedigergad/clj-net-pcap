@@ -248,6 +248,10 @@
                             (dosync
                               (alter filter-expressions #(replace {arg1 arg2} %)))
                             (create-and-set-filter pcap (join " " @filter-expressions)))
+          :send-bytes-packet (loop [cnt arg2]
+                               (pcap :send-bytes-packet arg1)
+                               (if (> cnt 1)
+                                 (recur (dec cnt))))
           :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " [arg1 arg2])))))
       ([k arg1 arg2 arg3]
         (condp = k

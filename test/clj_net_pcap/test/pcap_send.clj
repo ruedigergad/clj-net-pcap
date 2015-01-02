@@ -134,3 +134,15 @@
     (is (= 10 (cntr)))
     (stop-cljnetpcap cljnetpcap)))
 
+(deftest cljnetpcap-send-and-receive-bytes-packet-with-count-test
+  (let [ba (byte-array (map byte test-pkt-bytes))
+        cntr (counter)
+        forwarder-fn (fn [_]
+                       (cntr inc))
+        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)]
+    (sleep 100)
+    (cljnetpcap :send-bytes-packet ba 10)
+    (sleep 1000)
+    (is (= 10 (cntr)))
+    (stop-cljnetpcap cljnetpcap)))
+

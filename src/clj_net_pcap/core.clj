@@ -148,19 +148,19 @@
                               (if forward-exceptions
                                 (throw e))))
         buffer-processor-thread (doto (ProcessingLoop. buffer-processor)
-                                    (.setName "ByteBufferProcessor") (.setDaemon true) (.start))
+                                  (.setName "ByteBufferProcessor") (.setDaemon true) (.start))
         scanner #(try (let [^PcapPacket pkt (.take scanner-queue)]
                         (enqueue-data
                           out-queue (scan-packet pkt) force-put
                           out-queued-counter out-drop-counter))
-                    (catch Exception e
-                      (when @running
-                        (.inc failed-counter)
-                        (.printStackTrace e))
-                      (if forward-exceptions
-                        (throw e))))
+                  (catch Exception e
+                    (when @running
+                      (.inc failed-counter)
+                      (.printStackTrace e))
+                    (if forward-exceptions
+                      (throw e))))
         scanner-thread (doto (ProcessingLoop. scanner)
-                           (.setName "PacketScanner") (.setDaemon true) (.start))]
+                         (.setName "PacketScanner") (.setDaemon true) (.start))]
     (fn
       ([]
         (fn [ph buf _]
@@ -170,12 +170,9 @@
       ([k]
         (condp = k
           :get-stats {"buffer-queued" (.value buffer-queued-counter) "buffer-dropped" (.value buffer-drop-counter)
-                  "scanner-queued" (.value scanner-queued-counter) "scanner-dropped" (.value scanner-drop-counter)
-                  "out-queued" (.value out-queued-counter) "out-dropped" (.value out-drop-counter)
-                  "handler-failed" (.value failed-counter)}
-          :stop (do
-                  (.stop buffer-processor-thread)
-                  (.stop scanner-thread))
+                      "scanner-queued" (.value scanner-queued-counter) "scanner-dropped" (.value scanner-drop-counter)
+                      "out-queued" (.value out-queued-counter) "out-dropped" (.value out-drop-counter)
+                      "handler-failed" (.value failed-counter)}
           :wait-for-completed (do
                                 (while (or (> (.size buffer-queue) 0) (> (.size scanner-queue) 0))
                                   (sleep 100))))))))
@@ -214,9 +211,8 @@
           :get-stats (merge (stats-fn) (handler :get-stats) {"forwarder-failed" (.value failed-packet-counter)})
           :stop (do
                   (dosync (ref-set running false))
-                  (stop-sniffer sniffer)
                   (stop-forwarder forwarder)
-                  (handler :stop))
+                  (stop-sniffer sniffer))
           :get-filters @filter-expressions
           :remove-last-filter (do
                                 (dosync (alter filter-expressions pop))
@@ -225,6 +221,7 @@
                                 (dosync (alter filter-expressions empty))
                                 (create-and-set-filter pcap (join " " @filter-expressions)))
           :wait-for-completed (do
+                                (println "Waiting till handler completed...")
                                 (handler :wait-for-completed)
                                 (while (or
                                        (> (.size out-queue) 0))

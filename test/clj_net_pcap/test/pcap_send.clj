@@ -52,6 +52,7 @@
                     (.flip))
                   (set-flag flag))
         sniffer (create-and-start-sniffer pcap handler)]
+    ; Give the sniffer a little time to start before we actually send the packet.
     (sleep 100)
     (pcap :send-bytes-packet ba)
     (await-flag flag)

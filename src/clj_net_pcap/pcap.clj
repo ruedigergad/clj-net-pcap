@@ -147,15 +147,16 @@
                   (create-and-set-filter (fn [] pcap) "")
                   (.inject pcap (byte-array 1 (byte 0)))
                   (.join @pcap-thread)
-                  (dosync ref-set pcap-thread nil)
-                  (.close pcap))
-          (println "Unsupported operation for online pcap:" k)))
-      ([k opt]
+                  (.close pcap)
+                  (dosync ref-set pcap-thread nil))
+          (throw (RuntimeException. (str "Unsupported operation for online pcap: " k)))))
+      ([k arg]
         (condp = k
+          :send-bytes-packet (.sendPacket ^Pcap pcap ^bytes arg)
           :start (let [run-fn (fn []
                                 (.loop pcap Pcap/LOOP_INFINITE opt nil))]
                    (dosync (ref-set pcap-thread (doto (Thread. run-fn) (.setName "PcapOnlineCaptureThread") (.start)))))
-          (println "Unsupported operation for online pcap:" k)))
+          (throw (RuntimeException. (str "Unsupported operation for online pcap: " k " argument: " arg)))))
       ([k bulk-size use-intermediate-buffer handler]
         (condp = k
           :start (let [snap-len *snap-len*
@@ -167,7 +168,7 @@
                                   (.loop_direct pcap Pcap/LOOP_INFINITE bulk-size 
                                          snap-len true handler nil)))]
                    (dosync (ref-set pcap-thread (doto (Thread. run-fn) (.setName "PcapOnlineCaptureThread") (.start)))))
-          (println "Unsupported operation for online pcap:" k))))))
+          (throw (RuntimeException. (str "Unsupported operation for online pcap: " k " arguments: " [bulk-size use-intermediate-buffer handler]))))))))
 
 (defn close-pcap
   "Closes the given Pcap instance."

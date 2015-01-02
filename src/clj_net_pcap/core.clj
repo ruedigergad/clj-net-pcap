@@ -28,6 +28,7 @@
   (:use clojure.pprint 
         [clojure.string :only [join]]
         clj-net-pcap.native
+        clj-net-pcap.packet-gen
         clj-net-pcap.pcap
         clj-net-pcap.pcap-data
         clj-net-pcap.sniffer
@@ -180,19 +181,19 @@
                               (if forward-exceptions
                                 (throw e))))
         buffer-processor-thread (doto (ProcessingLoop. buffer-processor)
-                                    (.setName "ByteBufferProcessor") (.setDaemon true) (.start))
+                                  (.setName "ByteBufferProcessor") (.setDaemon true) (.start))
         scanner #(try (let [^PcapPacket pkt (.take scanner-queue)]
                         (enqueue-data
                           out-queue (scan-packet pkt) force-put
                           out-queued-counter out-drop-counter))
-                    (catch Exception e
-                      (when @running
-                        (.inc failed-counter)
-                        (.printStackTrace e))
-                      (if forward-exceptions
-                        (throw e))))
+                  (catch Exception e
+                    (when @running
+                      (.inc failed-counter)
+                      (.printStackTrace e))
+                    (if forward-exceptions
+                      (throw e))))
         scanner-thread (doto (ProcessingLoop. scanner)
-                           (.setName "PacketScanner") (.setDaemon true) (.start))]
+                         (.setName "PacketScanner") (.setDaemon true) (.start))]
     (fn
       ([]
         (fn [ph buf _]
@@ -202,15 +203,29 @@
       ([k]
         (condp = k
           :get-stats {"buffer-queued" (.value buffer-queued-counter) "buffer-dropped" (.value buffer-drop-counter)
-                  "scanner-queued" (.value scanner-queued-counter) "scanner-dropped" (.value scanner-drop-counter)
-                  "out-queued" (.value out-queued-counter) "out-dropped" (.value out-drop-counter)
-                  "handler-failed" (.value failed-counter)}
-          :stop (do
-                  (.stop buffer-processor-thread)
-                  (.stop scanner-thread))
+                      "scanner-queued" (.value scanner-queued-counter) "scanner-dropped" (.value scanner-drop-counter)
+                      "out-queued" (.value out-queued-counter) "out-dropped" (.value out-drop-counter)
+                      "handler-failed" (.value failed-counter)}
           :wait-for-completed (do
                                 (while (or (> (.size buffer-queue) 0) (> (.size scanner-queue) 0))
                                   (sleep 100))))))))
+
+(defn send-bytes-packet
+  "Send the packet as given in the byte array pkt-ba packets via the Pcap instance pcap.
+   Optionally a repetition count rep as well as a delay d can be given."
+  ([pcap pkt-ba]
+    (pcap :send-bytes-packet pkt-ba))
+  ([pcap pkt-ba rep]
+    (loop [cnt rep]
+      (pcap :send-bytes-packet pkt-ba)
+      (if (> cnt 1)
+        (recur (dec cnt)))))
+  ([pcap pkt-ba rep d]
+    (loop [cnt rep]
+      (sleep d)
+      (pcap :send-bytes-packet pkt-ba)
+      (if (> cnt 1)
+        (recur (dec cnt))))))
 
 (defn set-up-and-start-cljnetpcap
   "Takes a pcap instance, sets up the capture pipe line, and starts the capturing and processing.
@@ -252,17 +267,17 @@
           :get-stats (merge (stats-fn) (handler :get-stats) {"forwarder-failed" (.value failed-packet-counter)})
           :stop (do
                   (dosync (ref-set running false))
-                  (stop-sniffer sniffer)
                   (stop-forwarder forwarder)
-                  (handler :stop))
+                  (stop-sniffer sniffer))
           :get-filters @filter-expressions
           :remove-last-filter (do
                                 (dosync (alter filter-expressions pop))
                                 (create-and-set-filter pcap (join " " @filter-expressions)))
           :remove-all-filters (do
-                                (dosync (alter filter-expressions (fn [_] [])))
+                                (dosync (alter filter-expressions empty))
                                 (create-and-set-filter pcap (join " " @filter-expressions)))
           :wait-for-completed (do
+                                (println "Waiting till handler completed...")
                                 (handler :wait-for-completed)
                                 (while (or
                                        (> (.size out-queue) 0))
@@ -281,6 +296,8 @@
           :remove-filter (do (dosync
                                (alter filter-expressions (fn [fe] (vec (filter #(not= arg %) fe)))))
                              (create-and-set-filter pcap (join " " @filter-expressions)))
+          :send-bytes-packet (send-bytes-packet pcap arg)
+          :send-packet-map (send-bytes-packet pcap (generate-packet-data arg))
           :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " arg)))))
       ([k arg1 arg2]
         (condp = k
@@ -288,7 +305,14 @@
                             (dosync
                               (alter filter-expressions #(replace {arg1 arg2} %)))
                             (create-and-set-filter pcap (join " " @filter-expressions)))
-          :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " [arg1 arg2]))))))))
+          :send-bytes-packet (send-bytes-packet pcap arg1 arg2)
+          :send-packet-map (send-bytes-packet pcap (generate-packet-data arg1) arg2)
+          :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " [arg1 arg2])))))
+      ([k arg1 arg2 arg3]
+        (condp = k
+          :send-bytes-packet (send-bytes-packet pcap arg1 arg2 arg3)
+          :send-packet-map (send-bytes-packet pcap (generate-packet-data arg1) arg2 arg3)
+          :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " [arg1 arg2 arg3]))))))))
 
 (defn create-and-start-online-cljnetpcap
   "Convenience function for performing live online capturing.

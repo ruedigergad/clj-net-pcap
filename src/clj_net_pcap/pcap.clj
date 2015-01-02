@@ -149,13 +149,13 @@
                   (.join @pcap-thread)
                   (dosync ref-set pcap-thread nil)
                   (.close pcap))
-          (println "Unsupported operation for online pcap:" k)))
-      ([k opt]
+          (throw (RuntimeException. (str "Unsupported operation for online pcap: " k)))))
+      ([k arg]
         (condp = k
           :start (let [run-fn (fn [] 
-                                (.loop pcap Pcap/LOOP_INFINITE opt nil))]
+                                (.loop pcap Pcap/LOOP_INFINITE arg nil))]
                    (dosync (ref-set pcap-thread (doto (Thread. run-fn) (.setName "PcapOnlineCaptureThread") (.start)))))
-          (println "Unsupported operation for online pcap:" k))))))
+          (throw (RuntimeException. (str "Unsupported operation for online pcap: " k " argument: " arg))))))))
 
 (defn close-pcap
   "Closes the given Pcap instance."

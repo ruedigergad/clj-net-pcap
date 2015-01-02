@@ -79,3 +79,11 @@
     (println (stats-fn))
     (close-pcap pcap)))
 
+(deftest throw-exception-on-invalid-operation-no-arg-test
+  (let [pcap (create-and-activate-online-pcap lo)]
+    (is (thrown-with-msg? RuntimeException #"Unsupported operation for online pcap: :this-operation-does-not-exist" (pcap :this-operation-does-not-exist)))))
+
+(deftest throw-exception-on-invalid-operation-single-arg-test
+  (let [pcap (create-and-activate-online-pcap lo)]
+    (is (thrown-with-msg? RuntimeException #"Unsupported operation for online pcap: :this-operation-does-not-exist argument: 123" (pcap :this-operation-does-not-exist 123)))))
+

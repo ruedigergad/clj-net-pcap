@@ -66,7 +66,7 @@
     (await-flag flag)
     (is (flag-set? flag))
     (is (Arrays/equals ba (.array bb)))
-    (close-pcap pcap)))
+    (stop-sniffer sniffer)))
 
 (deftest cljnetpcap-send-and-receive-bytes-packet-raw-test
   (let [ba (byte-array (map byte test-pkt-bytes))

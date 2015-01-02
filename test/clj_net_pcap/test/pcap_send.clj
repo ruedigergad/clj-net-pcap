@@ -108,3 +108,19 @@
     (is (= expected (dissoc (merge {} @received) "ts")))
     (stop-cljnetpcap cljnetpcap)))
 
+(deftest cljnetpcap-send-and-receive-bytes-packet-raw-count-single-test
+  (let [ba (byte-array (map byte test-pkt-bytes))
+        cntr (counter)
+        forwarder-fn (fn [_]
+                       (cntr inc))
+        cljnetpcap (binding [*emit-raw-data* false
+                             *queue-size* 1]
+                     (create-and-start-online-cljnetpcap forwarder-fn lo))]
+    (sleep 100)
+    (doseq [_ (repeat 10 1)]
+      (sleep 50)
+      (cljnetpcap :send-bytes-packet ba))
+    (sleep 1000)
+    (is (= 10 (cntr)))
+    (stop-cljnetpcap cljnetpcap)))
+

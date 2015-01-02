@@ -144,10 +144,10 @@
                ;;; previously set filter the filter is explicitly set to accept
                ;;; all packets. See also the jNetPcap docs for more information
                ;;; about the behavior of Pcap.breakloop().
-                  (create-and-set-filter (fn [] pcap) "")
-                  (.inject pcap (byte-array 1 (byte 0)))
-                  (.join @pcap-thread)
-                  (dosync ref-set pcap-thread nil)
+;                  (create-and-set-filter (fn [] pcap) "")
+;                  (.inject pcap (byte-array 1 (byte 0)))
+;                  (.join @pcap-thread)
+;                  (dosync ref-set pcap-thread nil)
                   (.close pcap))
           (throw (RuntimeException. (str "Unsupported operation for online pcap: " k)))))
       ([k arg]
@@ -155,7 +155,7 @@
           :send-bytes-packet (.sendPacket ^Pcap pcap ^bytes arg)
           :start (let [run-fn (fn [] 
                                 (.loop pcap Pcap/LOOP_INFINITE arg nil))]
-                   (dosync (ref-set pcap-thread (doto (Thread. run-fn) (.setName "PcapOnlineCaptureThread") (.start)))))
+                   (dosync (ref-set pcap-thread (doto (Thread. run-fn) (.setName "PcapOnlineCaptureThread") (.setDaemon true) (.start)))))
           (throw (RuntimeException. (str "Unsupported operation for online pcap: " k " argument: " arg))))))))
 
 (defn close-pcap

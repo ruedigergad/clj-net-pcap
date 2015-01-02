@@ -116,9 +116,9 @@
         cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)]
     (sleep 100)
     (doseq [_ (repeat 10 1)]
-      (sleep 50)
+      (sleep 10)
       (cljnetpcap :send-bytes-packet ba))
-    (sleep 1000)
+    (sleep 300)
     (is (= 10 (cntr)))
     (stop-cljnetpcap cljnetpcap)))
 
@@ -129,8 +129,8 @@
                        (cntr inc))
         cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)]
     (sleep 100)
-    (cljnetpcap :send-bytes-packet ba 10 50)
-    (sleep 1000)
+    (cljnetpcap :send-bytes-packet ba 10 10)
+    (sleep 300)
     (is (= 10 (cntr)))
     (stop-cljnetpcap cljnetpcap)))
 
@@ -142,7 +142,7 @@
         cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)]
     (sleep 100)
     (cljnetpcap :send-bytes-packet ba 10)
-    (sleep 1000)
+    (sleep 300)
     (is (= 10 (cntr)))
     (stop-cljnetpcap cljnetpcap)))
 

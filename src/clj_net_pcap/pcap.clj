@@ -136,7 +136,13 @@
         (condp = k
           :stop (do 
                   (println "Stopping online pcap.")
+                  ;;; Set a filter that rejects all packets to avoid packets being captured during shutdown.
+                  (create-and-set-filter (fn [] pcap) "less 0")
+                  (.interrupt @pcap-thread)
                   (.breakloop pcap)
+                  (.close pcap))
+               ;;; Please note: The comments below are obsolete as the above method seems to work more reliable.
+               ;;;              However, for the time being, the parts below are left in. (Date: 2015-01-02)
                ;;; The jNetPcap capture loop may still be active and process
                ;;; at least one packet even after calling Pcap.breakloop().
                ;;; To force the termination of the loop we inject a single dummy
@@ -144,11 +150,9 @@
                ;;; previously set filter the filter is explicitly set to accept
                ;;; all packets. See also the jNetPcap docs for more information
                ;;; about the behavior of Pcap.breakloop().
-;                  (create-and-set-filter (fn [] pcap) "")
 ;                  (.inject pcap (byte-array 1 (byte 0)))
 ;                  (.join @pcap-thread)
 ;                  (dosync ref-set pcap-thread nil)
-                  (.close pcap))
           (throw (RuntimeException. (str "Unsupported operation for online pcap: " k)))))
       ([k arg]
         (condp = k

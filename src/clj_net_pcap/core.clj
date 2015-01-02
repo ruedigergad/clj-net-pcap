@@ -243,6 +243,7 @@
           :remove-filter (do (dosync
                                (alter filter-expressions (fn [fe] (vec (filter #(not= arg %) fe)))))
                              (create-and-set-filter pcap (join " " @filter-expressions)))
+          :send-bytes-packet (pcap :send-bytes-packet arg)
           :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " arg)))))
       ([k arg1 arg2]
         (condp = k

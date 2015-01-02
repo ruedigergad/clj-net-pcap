@@ -152,6 +152,7 @@
           (throw (RuntimeException. (str "Unsupported operation for online pcap: " k)))))
       ([k arg]
         (condp = k
+          :send-bytes-packet (.sendPacket ^Pcap pcap ^bytes arg)
           :start (let [run-fn (fn [] 
                                 (.loop pcap Pcap/LOOP_INFINITE arg nil))]
                    (dosync (ref-set pcap-thread (doto (Thread. run-fn) (.setName "PcapOnlineCaptureThread") (.start)))))

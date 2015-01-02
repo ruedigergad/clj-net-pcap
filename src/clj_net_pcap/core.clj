@@ -222,7 +222,7 @@
                                 (dosync (alter filter-expressions pop))
                                 (create-and-set-filter pcap (join " " @filter-expressions)))
           :remove-all-filters (do
-                                (dosync (alter filter-expressions (fn [_] [])))
+                                (dosync (alter filter-expressions empty))
                                 (create-and-set-filter pcap (join " " @filter-expressions)))
           :wait-for-completed (do
                                 (handler :wait-for-completed)

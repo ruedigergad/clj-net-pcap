@@ -154,7 +154,7 @@
         (condp = k
           :send-bytes-packet (.sendPacket ^Pcap pcap ^bytes arg)
           :start (let [run-fn (fn []
-                                (.loop pcap Pcap/LOOP_INFINITE opt nil))]
+                                (.loop pcap Pcap/LOOP_INFINITE arg nil))]
                    (dosync (ref-set pcap-thread (doto (Thread. run-fn) (.setName "PcapOnlineCaptureThread") (.start)))))
           (throw (RuntimeException. (str "Unsupported operation for online pcap: " k " argument: " arg)))))
       ([k bulk-size use-intermediate-buffer handler]

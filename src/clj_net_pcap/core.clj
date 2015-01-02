@@ -28,6 +28,7 @@
   (:use clojure.pprint 
         [clojure.string :only [join]]
         clj-net-pcap.native
+        clj-net-pcap.packet-gen
         clj-net-pcap.pcap
         clj-net-pcap.pcap-data
         clj-net-pcap.sniffer
@@ -258,6 +259,7 @@
                                (alter filter-expressions (fn [fe] (vec (filter #(not= arg %) fe)))))
                              (create-and-set-filter pcap (join " " @filter-expressions)))
           :send-bytes-packet (send-bytes-packet pcap arg)
+          :send-packet-map (send-bytes-packet pcap (generate-packet-data arg))
           :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " arg)))))
       ([k arg1 arg2]
         (condp = k
@@ -266,10 +268,12 @@
                               (alter filter-expressions #(replace {arg1 arg2} %)))
                             (create-and-set-filter pcap (join " " @filter-expressions)))
           :send-bytes-packet (send-bytes-packet pcap arg1 arg2)
+          :send-packet-map (send-bytes-packet pcap (generate-packet-data arg1) arg2)
           :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " [arg1 arg2])))))
       ([k arg1 arg2 arg3]
         (condp = k
           :send-bytes-packet (send-bytes-packet pcap arg1 arg2 arg3)
+          :send-packet-map (send-bytes-packet pcap (generate-packet-data arg1) arg2 arg3)
           :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " [arg1 arg2 arg3]))))))))
 
 (defn create-and-start-online-cljnetpcap

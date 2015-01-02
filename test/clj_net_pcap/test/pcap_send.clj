@@ -146,3 +146,58 @@
     (is (= 10 (cntr)))
     (stop-cljnetpcap cljnetpcap)))
 
+(deftest cljnetpcap-send-and-receive-bytes-packet-maps-test
+  (let [expected {"len" 54, "ethSrc" "01:02:03:04:05:06", "ethDst" "FF:FE:FD:F2:F1:F0",
+                  "ipVer" 4, "ipDst" "252.253.254.255", "ipId" 3,
+                  "ipTtl" 7, "ipSrc" "1.2.3.4", "ipChecksum" 29647,
+                  "icmpEchoSeq" 12, "icmpType" "echo request"}
+        received (ref nil)
+        flag (prepare-flag)
+        forwarder-fn (fn [data]
+                       (dosync (ref-set received (pcap-packet-to-map data)))
+                       (set-flag flag))
+        cljnetpcap (binding [*emit-raw-data* false
+                             *queue-size* 1]
+                     (create-and-start-online-cljnetpcap forwarder-fn lo))]
+    (sleep 100)
+    (cljnetpcap :send-packet-map test-pkt-descr-map)
+    (await-flag flag)
+    (is (flag-set? flag))
+    (is (= expected (dissoc (merge {} @received) "ts")))
+    (stop-cljnetpcap cljnetpcap)))
+
+(deftest cljnetpcap-send-and-receive-packet-from-description-map-count-test
+  (let [cntr (counter)
+        forwarder-fn (fn [_]
+                       (cntr inc))
+        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)]
+    (sleep 100)
+    (doseq [_ (repeat 10 1)]
+      (sleep 10)
+      (cljnetpcap :send-packet-map test-pkt-descr-map))
+    (sleep 300)
+    (is (= 10 (cntr)))
+    (stop-cljnetpcap cljnetpcap)))
+
+(deftest cljnetpcap-send-and-receive-packet-from-description-map-with-count-and-delay-test
+  (let [cntr (counter)
+        forwarder-fn (fn [_]
+                       (cntr inc))
+        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)]
+    (sleep 100)
+    (cljnetpcap :send-packet-map test-pkt-descr-map 10 10)
+    (sleep 300)
+    (is (= 10 (cntr)))
+    (stop-cljnetpcap cljnetpcap)))
+
+(deftest cljnetpcap-send-and-receive-packet-from-description-map-with-count-test
+  (let [cntr (counter)
+        forwarder-fn (fn [_]
+                       (cntr inc))
+        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)]
+    (sleep 100)
+    (cljnetpcap :send-packet-map test-pkt-descr-map 10)
+    (sleep 300)
+    (is (= 10 (cntr)))
+    (stop-cljnetpcap cljnetpcap)))
+

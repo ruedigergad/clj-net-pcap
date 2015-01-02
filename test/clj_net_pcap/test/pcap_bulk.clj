@@ -19,7 +19,7 @@
 
 (ns 
   ^{:author "Ruediger Gad",
-    :doc "Tests for sending packets via pcap."}
+    :doc "Tests for the bulk capture mode."}
   clj-net-pcap.test.pcap-bulk
   (:use clojure.test
         clj-assorted-utils.util

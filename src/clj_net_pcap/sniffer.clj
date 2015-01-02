@@ -87,7 +87,7 @@
    This function accepts a queue that is an instance of 
    java.util.concurrent.BlockingQueue and executes forwarder-fn for each packet
    taken from the queue passing the packet instance to forwarder-fn.
-   When no packets are int the queue the execution of forwarder-fn blocks until
+   When no packets are in the queue the execution of forwarder-fn blocks until
    new packets are available for being processed."
   [^BlockingQueue queue forwarder-fn forward-exceptions]
   (let [running (ref true)

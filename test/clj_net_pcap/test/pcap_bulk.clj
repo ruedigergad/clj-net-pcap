@@ -49,7 +49,8 @@
         forwarder-fn (fn [_]
                        (cntr inc))
         cljnetpcap (binding [clj-net-pcap.core/*bulk-size* 10
-                             clj-net-pcap.core/*emit-raw-data* true]
+                             clj-net-pcap.core/*emit-raw-data* true
+                             clj-net-pcap.core/*use-intermediate-buffer* true]
                      (create-and-start-online-cljnetpcap forwarder-fn lo))]
     (sleep 100)
     (cljnetpcap :send-bytes-packet ba 10 10)
@@ -59,15 +60,24 @@
 
 (deftest cljnetpcap-send-and-receive-packet-maps-count-test
   (let [cntr (counter)
-        forwarder-fn (fn [_]
+        data-inst-len (+ 16 (count test-pkt-bytes))
+        bb (ByteBuffer/allocate (* data-inst-len 10))
+        forwarder-fn (fn [data]
+                       (doto bb
+                         (.put data)
+                         (.flip))
                        (cntr inc))
         cljnetpcap (binding [clj-net-pcap.core/*bulk-size* 10
-                             clj-net-pcap.core/*emit-raw-data* true]
+                             clj-net-pcap.core/*emit-raw-data* true
+                             clj-net-pcap.core/*use-intermediate-buffer* true]
                      (create-and-start-online-cljnetpcap forwarder-fn lo))]
     (sleep 100)
-    (doseq [x (range 1 11)]
+    (doseq [x (range 0 10)]
       (cljnetpcap :send-packet-map (assoc test-pkt-descr-map "icmpSeqNo" x)))
     (sleep 300)
     (is (= 1 (cntr)))
+    (doseq [x (range 0 10)]
+      (is (= 123 (.get bb (+ (+ 40 15) (* x data-inst-len)))))
+      (is (= x (.get bb (+ (+ 42 15) (* x data-inst-len))))))
     (stop-cljnetpcap cljnetpcap)))
 

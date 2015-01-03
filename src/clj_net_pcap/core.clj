@@ -140,22 +140,22 @@
       (fn [^DirectBulkByteBufferWrapper buf _]
         (when (not (nil? buf))
           (let [
-;                direct-bb (doto (ByteBuffer/allocate (.remaining buf))
-;                            (.put buf)
-;                            (.flip))
+                direct-bb (doto (ByteBuffer/allocate (.remaining buf))
+                            (.put buf)
+                            (.flip))
                ]
 ;            (while (.hasRemaining direct-bb)
 ;              (print (.get direct-bb)))
-            (let [bb (.getBuffer buf)]
-              (while (.hasRemaining bb)
-                (print (.get bb))))
+;            (let [bb (.getBuffer buf)]
+;              (while (.hasRemaining bb)
+;                (print (.get bb))))
             (enqueue-data
               out-queue
-;              direct-bb
-              buf
+              direct-bb
+;              buf
               force-put
               out-queued-counter out-drop-counter)
-            (.freeNativeMemory buf)
+;            (.freeNativeMemory buf)
           ))))
     ([k]
       (condp = k

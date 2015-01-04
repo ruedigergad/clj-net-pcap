@@ -46,14 +46,14 @@
 (defn get-data-length
   [data]
   (cond
-    (seq? data) (count data)
+    (counted? data) (count data)
     (= String (type data)) (.length ^String data)
     :default 0))
 
 (defn get-data-val
   [data]
   (cond
-    (seq? data) (byte-array (map byte data))
+    (counted? data) (byte-array (map byte data))
     (= String (type data)) (.getBytes ^String data)
     :default (byte-array 0)))
 

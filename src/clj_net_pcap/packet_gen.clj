@@ -112,9 +112,9 @@
                                (.id (get-with-default pkt-desc-map "icmpId" 0))
                                (.sequence (get-with-default pkt-desc-map "icmpSeqNo" 0)))
                              (if (.containsKey pkt-desc-map "data")
-                               (let [data-val (get-with-default pkt-desc-map "data" "")
-                                     data (get-data-val data-val)]
-                                 (.setByteArray jpkt (+ (.getHeaderLength eth) 20 8 (.getHeaderLength icmp)) data))))
+                               (let [data (get-with-default pkt-desc-map "data" "")
+                                     data-val (get-data-val data)]
+                                 (.setByteArray jpkt (+ (.getHeaderLength eth) 20 8 (.getHeaderLength icmp)) data-val))))
                          nil)
                        (.recalculateChecksum icmp))
         ip-type-udp (let [^Udp udp (.getHeader jpkt (Udp.))

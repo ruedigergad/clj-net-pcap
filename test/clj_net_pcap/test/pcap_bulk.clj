@@ -43,10 +43,12 @@
 
 
 
-(deftest cljnetpcap-send-and-receive-bytes-packet-count-test
+(deftest cljnetpcap-send-and-receive-bytes-packet-via-intermediate-buffer-count-test
   (let [ba (byte-array (map byte test-pkt-bytes))
         cntr (counter)
-        forwarder-fn (fn [_]
+        received-data (ref nil)
+        forwarder-fn (fn [data]
+                       (dosync (ref-set received-data data))
                        (cntr inc))
         cljnetpcap (binding [clj-net-pcap.core/*bulk-size* 10
                              clj-net-pcap.core/*emit-raw-data* true
@@ -56,9 +58,11 @@
     (cljnetpcap :send-bytes-packet ba 10 10)
     (sleep 300)
     (is (= 1 (cntr)))
+    (is (not (.isDirect @received-data)))
+    (is (.hasArray @received-data))
     (stop-cljnetpcap cljnetpcap)))
 
-(deftest cljnetpcap-send-and-receive-packet-maps-count-test
+(deftest cljnetpcap-send-and-receive-packet-maps-via-intermediate-buffer--count-test
   (let [cntr (counter)
         data-inst-len (+ 16 (count test-pkt-bytes))
         bb (ByteBuffer/allocate (* data-inst-len 10))

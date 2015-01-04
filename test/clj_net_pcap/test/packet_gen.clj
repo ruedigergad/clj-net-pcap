@@ -129,3 +129,30 @@
     (is (= expected-vec (vec result-ba)))
     (is (Arrays/equals expected-ba result-ba))))
 
+(deftest generate-packet-data-ipv4-with-icmp-compute-len-test
+  (let [pkt-description-map {"ethSrc" "01:02:03:04:05:06", "ethDst" "FF:FE:FD:F2:F1:F0",
+                             "ipVer" 4, "ipDst" "252.253.254.255", "ipId" 3, "ipType" 1,
+                             "ipTtl" 7, "ipSrc" "1.2.3.4",
+                             "icmpType" 8, "icmpEchoSeq" "bar",
+                             "icmpId" 123, "icmpSeqNo" 12, "data" "abcd"}
+        expected-vec [-1 -2 -3 -14 -15 -16 1 2 3 4 5 6 8 0
+                      69 0 0 40 0 3 64 0 7 1 115 -49 1 2 3 4 -4 -3 -2 -1
+                      8 0 50 -78 0 123 0 12 0 0 0 0 0 0 0 0 97 98 99 100]
+        expected-ba (byte-array (map byte expected-vec))
+        result-ba (generate-packet-data pkt-description-map)]
+    (is (= expected-vec (vec result-ba)))
+    (is (Arrays/equals expected-ba result-ba))))
+
+(deftest generate-packet-data-ipv4-with-udp-compute-len-test
+  (let [pkt-description-map {"ethSrc" "01:02:03:04:05:06", "ethDst" "FF:FE:FD:F2:F1:F0",
+                             "ipVer" 4, "ipDst" "252.253.254.255", "ipId" 3, "ipType" 17,
+                             "ipTtl" 7, "ipSrc" "1.2.3.4",
+                             "udpSrc" 2048, "udpDst" 4096, "data" "abcd"}
+        expected-vec [-1 -2 -3 -14 -15 -16 1 2 3 4 5 6 8 0
+                      69 0 0 32 0 3 64 0 7 17 115 -57 1 2 3 4 -4 -3 -2 -1
+                      8 0 16 0 0 4 -25 -26 97 98 99 100]
+        expected-ba (byte-array (map byte expected-vec))
+        result-ba (generate-packet-data pkt-description-map)]
+    (is (= expected-vec (vec result-ba)))
+    (is (Arrays/equals expected-ba result-ba))))
+

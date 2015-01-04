@@ -154,6 +154,14 @@
     (is (= expected-vec (vec result-ba)))
     (is (Arrays/equals expected-ba result-ba))))
 
+(deftest generate-packet-data-ethernet-compute-len-test
+  (let [pkt-description-map {"ethSrc" "01:02:03:04:05:06", "ethDst" "FF:FE:FD:F2:F1:F0"}
+        expected-vec [-1 -2 -3 -14 -15 -16 1 2 3 4 5 6 0 0]
+        expected-ba (byte-array (map byte expected-vec))
+        result-ba (generate-packet-data pkt-description-map)]
+    (is (= expected-vec (vec result-ba)))
+    (is (Arrays/equals expected-ba result-ba))))
+
 (deftest generate-packet-data-ipv4-with-icmp-vec-payload-compute-len-test
   (let [pkt-description-map {"ethSrc" "01:02:03:04:05:06", "ethDst" "FF:FE:FD:F2:F1:F0",
                              "ipVer" 4, "ipDst" "252.253.254.255", "ipId" 3, "ipType" 1,

@@ -36,7 +36,7 @@
            (org.jnetpcap.protocol.tcpip Udp)))
 
 (def def-hdr-len-eth 14)
-(def def-hdr-len-ip 20)
+(def def-hdr-len-ip4 20)
 (def def-hdr-len-icmp 16)
 (def def-hdr-len-udp 8)
 
@@ -62,7 +62,9 @@
   (let [len (if (.containsKey pkt-desc-map "len")
               (.get pkt-desc-map "len")
               (let [eth-hdr-len def-hdr-len-eth
-                    ip-hdr-len def-hdr-len-ip
+                    ip-hdr-len (condp = (get-with-default pkt-desc-map "ipVer" 0)
+                                 4 def-hdr-len-ip4
+                                 0)
                     ip-payload-hdr-len (condp = (get-with-default pkt-desc-map "ipType" 0)
                                          ip-type-icmp def-hdr-len-icmp
                                          ip-type-udp def-hdr-len-udp
@@ -124,7 +126,7 @@
                         (.destination (int (get-with-default pkt-desc-map "udpDst" 2048)))
                         (.length (get-data-length data)))
                       (if (not (nil? data))
-                        (.setByteArray jpkt (+ (.getHeaderLength eth) def-hdr-len-ip (.getHeaderLength udp)) (get-data-val data)))
+                        (.setByteArray jpkt (+ (.getHeaderLength eth) def-hdr-len-ip4 (.getHeaderLength udp)) (get-data-val data)))
                       (.recalculateChecksum udp))
         nil))
     (.getByteArray jpkt 0 ba)))

@@ -134,29 +134,27 @@
 
 (defn create-raw-bulk-handler
   ""
-  [^ArrayBlockingQueue out-queue ^Counter out-queued-counter ^Counter out-drop-counter bulk-size force-put running]
+  [^ArrayBlockingQueue out-queue ^Counter out-queued-counter ^Counter out-drop-counter bulk-size force-put running use-intermediate-buffer]
   (fn
     ([]
-      (fn [^DirectBulkByteBufferWrapper buf _]
-        (when (not (nil? buf))
-          (let [
-                direct-bb (doto (ByteBuffer/allocate (.remaining buf))
-                            (.put buf)
-                            (.flip))
-               ]
-;            (while (.hasRemaining direct-bb)
-;              (print (.get direct-bb)))
-;            (let [bb (.getBuffer buf)]
-;              (while (.hasRemaining bb)
-;                (print (.get bb))))
+      (if use-intermediate-buffer
+        (fn [^ByteBuffer buf _]
+          (when (not (nil? buf))
+            (let [direct-bb (doto (ByteBuffer/allocate (.remaining buf))
+                              (.put buf)
+                              (.flip))]
+              (enqueue-data
+                out-queue
+                direct-bb
+                force-put
+                out-queued-counter out-drop-counter))))
+        (fn [^DirectBulkByteBufferWrapper buf _]
+          (when (not (nil? buf))
             (enqueue-data
               out-queue
-              direct-bb
-;              buf
+              buf
               force-put
-              out-queued-counter out-drop-counter)
-;            (.freeNativeMemory buf)
-          ))))
+              out-queued-counter out-drop-counter)))))
     ([k]
       (condp = k
         :get-stats {"out-queued" (* (.value out-queued-counter) bulk-size) "out-dropped" (* (.value out-drop-counter) bulk-size)}
@@ -242,7 +240,7 @@
         handler (if emit-raw-data
                   (if (<= bulk-size 1)
                     (create-raw-handler out-queue out-queued-counter out-drop-counter force-put running)
-                    (create-raw-bulk-handler out-queue out-queued-counter out-drop-counter bulk-size force-put running))
+                    (create-raw-bulk-handler out-queue out-queued-counter out-drop-counter bulk-size force-put running use-intermediate-buffer))
                   (create-packet-processing-handler out-queue out-queued-counter out-drop-counter force-put running forward-exceptions))
         filter-expressions (ref [])
         _ (if (and (not (nil? filter-expr)) (not= "" filter-expr))

@@ -29,7 +29,8 @@
         clj-net-pcap.pcap-data
         clj-net-pcap.sniffer)
   (:import (java.util Arrays)
-           (java.nio ByteBuffer)))
+           (java.nio ByteBuffer)
+           (org.jnetpcap DirectBulkByteBufferWrapper)))
 
 (def test-pkt-bytes [-1 -2 -3 -14 -15 -16 1 2 3 4 5 6 8 0
                      69 0 0 40 0 3 64 0 7 1 115 -49 1 2 3 4 -4 -3 -2 -1
@@ -62,7 +63,7 @@
     (is (.hasArray @received-data))
     (stop-cljnetpcap cljnetpcap)))
 
-(deftest cljnetpcap-send-and-receive-packet-maps-via-intermediate-buffer--count-test
+(deftest cljnetpcap-send-and-receive-packet-maps-via-intermediate-buffer-count-test
   (let [cntr (counter)
         data-inst-len (+ 16 (count test-pkt-bytes))
         bb (ByteBuffer/allocate (* data-inst-len 10))
@@ -83,5 +84,24 @@
     (doseq [x (range 0 10)]
       (is (= 123 (.get bb (+ (+ 40 15) (* x data-inst-len)))))
       (is (= x (.get bb (+ (+ 42 15) (* x data-inst-len))))))
+    (stop-cljnetpcap cljnetpcap)))
+
+(deftest cljnetpcap-send-and-receive-bytes-packet-without-intermediate-buffer-count-test
+  (let [ba (byte-array (map byte test-pkt-bytes))
+        cntr (counter)
+        received-data (ref nil)
+        forwarder-fn (fn [data]
+                       (dosync (ref-set received-data data))
+                       (cntr inc)
+                       (.freeNativeMemory data))
+        cljnetpcap (binding [clj-net-pcap.core/*bulk-size* 10
+                             clj-net-pcap.core/*emit-raw-data* true
+                             clj-net-pcap.core/*use-intermediate-buffer* false]
+                     (create-and-start-online-cljnetpcap forwarder-fn lo))]
+    (sleep 100)
+    (cljnetpcap :send-bytes-packet ba 10 10)
+    (sleep 300)
+    (is (= 1 (cntr)))
+    (is (= DirectBulkByteBufferWrapper (type @received-data)))
     (stop-cljnetpcap cljnetpcap)))
 

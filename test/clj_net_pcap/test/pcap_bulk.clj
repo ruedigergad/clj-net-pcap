@@ -105,3 +105,27 @@
     (is (= DirectBulkByteBufferWrapper (type @received-data)))
     (stop-cljnetpcap cljnetpcap)))
 
+(deftest cljnetpcap-send-and-receive-packet-maps-without-intermediate-buffer-count-test
+  (let [cntr (counter)
+        data-inst-len (+ 16 (count test-pkt-bytes))
+        received-data (ref nil)
+        forwarder-fn (fn [data]
+                       (dosync (ref-set received-data data))
+                       (cntr inc))
+        cljnetpcap (binding [clj-net-pcap.core/*bulk-size* 10
+                             clj-net-pcap.core/*emit-raw-data* true
+                             clj-net-pcap.core/*use-intermediate-buffer* false]
+                     (create-and-start-online-cljnetpcap forwarder-fn lo))]
+    (sleep 100)
+    (doseq [x (range 0 10)]
+      (cljnetpcap :send-packet-map (assoc test-pkt-descr-map "icmpSeqNo" x)))
+    (sleep 300)
+    (is (= 1 (cntr)))
+    (is (.isDirect (.getBuffer @received-data)))
+    (is (not (.hasArray (.getBuffer @received-data))))
+    (doseq [x (range 0 10)]
+      (is (= 123 (.get (.getBuffer @received-data) (+ (+ 40 15) (* x data-inst-len)))))
+      (is (= x (.get (.getBuffer @received-data) (+ (+ 42 15) (* x data-inst-len))))))
+    (.freeNativeMemory @received-data)
+    (stop-cljnetpcap cljnetpcap)))
+

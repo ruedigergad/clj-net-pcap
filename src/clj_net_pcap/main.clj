@@ -157,38 +157,41 @@
                     (let [split-input (split line #"\s")
                           cmd (first split-input)
                           args (join " " (rest split-input))]
-                      (cond
-                        (or
-                          (= cmd "af")
-                          (= cmd "add-filter")) (try 
-                                                  (add-filter cljnetpcap args)
-                                                  (catch Exception e
-                                                    (println "Error adding filter:" e)
-                                                    (.printStackTrace e)))
-                        (or
-                          (= cmd "gf")
-                          (= cmd "get-filters")) (pprint (get-filters cljnetpcap))
-                        (or
-                          (= cmd "rlf")
-                          (= cmd "remove-last-filter")) (remove-last-filter cljnetpcap)
-                        (or
-                          (= cmd "raf")
-                          (= cmd "remove-all-filters")) (remove-all-filters cljnetpcap)
-                        (= cmd "replace-filter") (let [filters (split args #" with-filter ")]
-                                                   (replace-filter cljnetpcap (first filters) (second filters)))
-                        (or
-                          (= cmd "gp")
-                          (= cmd "gen-packet")) (binding [*read-eval* false]
-                                                  (println (vec (generate-packet-data (read-string args)))))
-                        (or
-                          (= cmd "sp")
-                          (= cmd "send-packet")) (let [read-data (binding [*read-eval* false] (read-string args))]
-                                                   (if (map? read-data)
-                                                     (cljnetpcap :send-packet-map read-data)
-                                                     (cljnetpcap :send-bytes-packet (byte-array (map byte read-data)))))
-                        :default (when (not= cmd "")
-                                   (println "Unknown command:" cmd)
-                                   (println "Valid commands are: add-filter (af), get-filters (gf), remove-last-filter (rlf), remove-all-filters (raf), replace-filter old with-filter new")))
+                      (try
+                        (cond
+                          (or
+                            (= cmd "af")
+                            (= cmd "add-filter")) (try
+                                                    (add-filter cljnetpcap args)
+                                                    (catch Exception e
+                                                      (println "Error adding filter:" e)
+                                                      (.printStackTrace e)))
+                          (or
+                            (= cmd "gf")
+                            (= cmd "get-filters")) (pprint (get-filters cljnetpcap))
+                          (or
+                            (= cmd "rlf")
+                            (= cmd "remove-last-filter")) (remove-last-filter cljnetpcap)
+                          (or
+                            (= cmd "raf")
+                            (= cmd "remove-all-filters")) (remove-all-filters cljnetpcap)
+                          (= cmd "replace-filter") (let [filters (split args #" with-filter ")]
+                                                     (replace-filter cljnetpcap (first filters) (second filters)))
+                          (or
+                            (= cmd "gp")
+                            (= cmd "gen-packet")) (binding [*read-eval* false]
+                                                    (println (vec (generate-packet-data (read-string args)))))
+                          (or
+                            (= cmd "sp")
+                            (= cmd "send-packet")) (let [read-data (binding [*read-eval* false] (read-string args))]
+                                                     (if (map? read-data)
+                                                       (cljnetpcap :send-packet-map read-data)
+                                                       (cljnetpcap :send-bytes-packet (byte-array (map byte read-data)))))
+                          :default (when (not= cmd "")
+                                     (println "Unknown command:" cmd)
+                                     (println "Valid commands are: add-filter (af), get-filters (gf), remove-last-filter (rlf), remove-all-filters (raf), replace-filter old with-filter new")))
+                        (catch Exception e
+                          (println "Error while processing input:" (.getMessage e))))
                       (print "cljnetpcap=> ")
                       (flush)
                       (recur (read-line)))))

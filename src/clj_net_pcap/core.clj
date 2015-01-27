@@ -392,7 +392,7 @@
    See also:
    extract-nested-maps-from-pcap-file
    extract-maps-from-pcap-file
-   extract-maps-from-pcap-file"
+   extract-beans-from-pcap-file"
   [file-name format-fn]
     (let [extracted-data (ref [])]
       (process-pcap-file

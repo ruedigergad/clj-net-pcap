@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author Ruediger Gad
  * 
  */
-public class PacketHeaderDataBean implements Serializable {
+public class PacketHeaderDataBean implements Serializable, PacketHeaderDataBeanWithIpv4Udp {
 
     public static final long serialVersionUID = 1L;
 
@@ -353,12 +353,12 @@ public class PacketHeaderDataBean implements Serializable {
 			builder.append(", ");
 		}
 		if (ipSrc != null) {
-			builder.append("ip4Src=");
+			builder.append("ipSrc=");
 			builder.append(ipSrc);
 			builder.append(", ");
 		}
 		if (ipDst != null) {
-			builder.append("ip4Dst=");
+			builder.append("ipDst=");
 			builder.append(ipDst);
 			builder.append(", ");
 		}

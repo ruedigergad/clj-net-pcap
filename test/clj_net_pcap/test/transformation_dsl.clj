@@ -24,7 +24,7 @@
   (:use clojure.test
         clj-net-pcap.core
         clj-assorted-utils.util)
-  (:import (clj_net_pcap PacketHeaderDataBean)))
+  (:import (clj_net_pcap PacketHeaderDataBeanIpv4UdpOnly)))
 
 (deftest test-extract-udp-maps-from-pcap-file-ipv4-udp-only-reference
   (let [my-maps (extract-maps-from-pcap-file-ipv4-udp-only "test/clj_net_pcap/test/data/dns-query-response.pcap")]
@@ -38,7 +38,7 @@
 
 (deftest test-extract-udp-beans-from-pcap-file-ipv4-udp-only-reference
   (let [my-beans (extract-beans-from-pcap-file-ipv4-udp-only "test/clj_net_pcap/test/data/dns-query-response.pcap")
-        expected (doto (PacketHeaderDataBean.)
+        expected (doto (PacketHeaderDataBeanIpv4UdpOnly.)
                    (.setTs 1385804494276477000) (.setLen 77)
                    (.setEthDst "00:24:FE:B1:8F:DC") (.setEthSrc "74:DE:2B:08:78:09")
                    (.setIpDst "192.168.0.1") (.setIpSrc "192.168.0.51")

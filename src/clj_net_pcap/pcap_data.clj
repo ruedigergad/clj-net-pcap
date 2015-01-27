@@ -28,7 +28,7 @@
   (:import (java.net InetAddress)
            (java.util HashMap Map)
            (java.util.concurrent ScheduledThreadPoolExecutor)
-           (clj_net_pcap Counter PacketHeaderDataBean)
+           (clj_net_pcap Counter PacketHeaderDataBean PacketHeaderDataBeanIpv4UdpOnly PacketHeaderDataBeanWithIpv4Udp)
            (org.jnetpcap PcapHeader)
            (org.jnetpcap.packet PcapPacket)
            (org.jnetpcap.packet.format FormatUtils)
@@ -378,13 +378,13 @@
         )))
 
 (defn- add-pcap-header-data-bean
-  [^PacketHeaderDataBean p ^PcapHeader hdr]
+  [^PacketHeaderDataBeanWithIpv4Udp p ^PcapHeader hdr]
   (doto p
     (.setTs (.timestampInNanos hdr))
     (.setLen (.wirelen hdr))))
 
 (defn- add-eth-fields-bean
-  [^PacketHeaderDataBean p ^PcapPacket pkt ^Ethernet eth]
+  [^PacketHeaderDataBeanWithIpv4Udp p ^PcapPacket pkt ^Ethernet eth]
   (if (.hasHeader pkt eth)
     (doto p
       (.setEthSrc (prettify-addr-array (.source eth)))
@@ -403,7 +403,7 @@
     p))
 
 (defn- add-ip4-fields-bean
-  [^PacketHeaderDataBean p ^PcapPacket pkt ^Ip4 ip4]
+  [^PacketHeaderDataBeanWithIpv4Udp p ^PcapPacket pkt ^Ip4 ip4]
   (if (.hasHeader pkt ip4)
     (doto p
       (.setIpSrc (prettify-addr-array (.source ip4)))
@@ -451,7 +451,7 @@
     p))
 
 (defn- add-udp-fields-bean
-  [^PacketHeaderDataBean p ^PcapPacket pkt ^Udp udp]
+  [^PacketHeaderDataBeanWithIpv4Udp p ^PcapPacket pkt ^Udp udp]
   (if (.hasHeader pkt udp)
     (doto p
       (.setUdpSrc (.source udp))
@@ -472,7 +472,7 @@
         http (Http.)]
     (fn [^PcapPacket pkt]
       (let [hdr (.getCaptureHeader pkt)
-        p (PacketHeaderDataBean.)]
+            p (PacketHeaderDataBean.)]
         (-> p
           (add-pcap-header-data-bean hdr)
           (add-eth-fields-bean pkt eth)
@@ -492,7 +492,7 @@
         udp (Udp.)]
     (fn [^PcapPacket pkt]
       (let [hdr (.getCaptureHeader pkt)
-        p (PacketHeaderDataBean.)]
+            p (PacketHeaderDataBeanIpv4UdpOnly.)]
         (-> p
           (add-pcap-header-data-bean hdr)
           (add-eth-fields-bean pkt eth)

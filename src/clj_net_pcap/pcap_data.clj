@@ -679,3 +679,15 @@ user=>
             (recur new-offset))))
       r)))
 
+(defn packet-byte-buffer-extract-bean-ipv4-udp-bulk
+  [^ByteBuffer bb]
+  (if (.hasArray bb)
+    (let [ba (.array bb)
+          r (ArrayList.)]
+      (loop [offset 0]
+        (.add r (packet-byte-array-extract-bean-ipv4-udp-be ba offset))
+        (let [new-offset (+ 16 offset (ByteArrayHelper/getIntBigEndian ba 8))]
+          (if (< new-offset (alength ba))
+            (recur new-offset))))
+      r)))
+

@@ -35,9 +35,42 @@
            (org.jnetpcap.protocol.network Icmp Icmp$Echo Icmp$EchoReply Icmp$EchoRequest Icmp$IcmpType Ip4 Ip4$Flag Ip6)
            (org.jnetpcap.protocol.tcpip Udp)))
 
+(def def-hdr-len-eth 14)
+(def def-hdr-len-ip4 20)
+(def def-hdr-len-icmp 16)
+(def def-hdr-len-udp 8)
+
+(def ip-type-icmp 1)
+(def ip-type-udp 17)
+
+(defn get-data-length
+  [data]
+  (cond
+    (counted? data) (count data)
+    (= String (type data)) (.length ^String data)
+    :default 0))
+
+(defn get-data-val
+  [data]
+  (cond
+    (counted? data) (byte-array (map byte data))
+    (= String (type data)) (.getBytes ^String data)
+    :default (byte-array 0)))
+
 (defn generate-packet-data
   [^Map pkt-desc-map]
-  (let [len (.get pkt-desc-map "len")
+  (let [len (if (.containsKey pkt-desc-map "len")
+              (.get pkt-desc-map "len")
+              (let [eth-hdr-len def-hdr-len-eth
+                    ip-hdr-len (condp = (get-with-default pkt-desc-map "ipVer" 0)
+                                 4 def-hdr-len-ip4
+                                 0)
+                    ip-payload-hdr-len (condp = (get-with-default pkt-desc-map "ipType" 0)
+                                         ip-type-icmp def-hdr-len-icmp
+                                         ip-type-udp def-hdr-len-udp
+                                         0)
+                    payload-len (get-data-length (get-with-default pkt-desc-map "data" nil))]
+                (+ eth-hdr-len ip-hdr-len ip-payload-hdr-len payload-len)))
         ba (byte-array len)
         jpkt (JMemoryPacket. JProtocol/ETHERNET_ID ba)
         ^Ethernet eth (.getHeader jpkt (Ethernet.))]
@@ -69,30 +102,32 @@
         (println "Generating IPv6 is not yet implemented."))
       (.scan jpkt JProtocol/ETHERNET_ID)
       (condp = (get-with-default pkt-desc-map "ipType" 0)
-        1 (let [^Icmp icmp (.getHeader jpkt (Icmp.))
-                icmpType (int (get-with-default pkt-desc-map "icmpType" 0))]
-            (doto icmp
-              (.type icmpType)
-              (.code (int (get-with-default pkt-desc-map "icmpCode" 0)))
-              (.decode))
-            (condp = icmpType
-              8 (let [icmp-echo-req (.getSubHeader icmp (Icmp$EchoRequest.))]
-                  (doto icmp-echo-req
-                    (.id (get-with-default pkt-desc-map "icmpId" 0))
-                    (.sequence (get-with-default pkt-desc-map "icmpSeqNo" 0)))
-                  (when-let [data (.get pkt-desc-map "data")]
-                    (.setByteArray jpkt (+ (.getHeaderLength eth) 20 8 (.getHeaderLength icmp)) (.getBytes data))))
-              nil)
-            (.recalculateChecksum icmp))
-        17 (let [^Udp udp (.getHeader jpkt (Udp.))
-                 ^String data (get-with-default pkt-desc-map "data" "")]
-             (doto udp
-               (.source (int (get-with-default pkt-desc-map "udpSrc" 2048)))
-               (.destination (int (get-with-default pkt-desc-map "udpDst" 2048)))
-               (.length (.length data)))
-             (if (> (.length data) 0)
-               (.setByteArray jpkt (+ (.getHeaderLength eth) 20 (.getHeaderLength udp)) (.getBytes data)))
-             (.recalculateChecksum udp))
+        ip-type-icmp (let [^Icmp icmp (.getHeader jpkt (Icmp.))
+                           icmpType (int (get-with-default pkt-desc-map "icmpType" 0))]
+                       (doto icmp
+                         (.type icmpType)
+                         (.code (int (get-with-default pkt-desc-map "icmpCode" 0)))
+                         (.decode))
+                       (condp = icmpType
+                         8 (let [icmp-echo-req (.getSubHeader icmp (Icmp$EchoRequest.))]
+                             (doto icmp-echo-req
+                               (.id (get-with-default pkt-desc-map "icmpId" 0))
+                               (.sequence (get-with-default pkt-desc-map "icmpSeqNo" 0)))
+                             (if (.containsKey pkt-desc-map "data")
+                               (let [data (get-with-default pkt-desc-map "data" "")
+                                     data-val (get-data-val data)]
+                                 (.setByteArray jpkt (+ (.getHeaderLength eth) 20 8 (.getHeaderLength icmp)) data-val))))
+                         nil)
+                       (.recalculateChecksum icmp))
+        ip-type-udp (let [^Udp udp (.getHeader jpkt (Udp.))
+                          data (get-with-default pkt-desc-map "data" nil)]
+                      (doto udp
+                        (.source (int (get-with-default pkt-desc-map "udpSrc" 2048)))
+                        (.destination (int (get-with-default pkt-desc-map "udpDst" 2048)))
+                        (.length (get-data-length data)))
+                      (if (not (nil? data))
+                        (.setByteArray jpkt (+ (.getHeaderLength eth) def-hdr-len-ip4 (.getHeaderLength udp)) (get-data-val data)))
+                      (.recalculateChecksum udp))
         nil))
     (.getByteArray jpkt 0 ba)))
 

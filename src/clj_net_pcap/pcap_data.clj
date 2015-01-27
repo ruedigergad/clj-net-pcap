@@ -359,6 +359,24 @@
           (add-icmp-fields pkt icmp icmp-echo-reply icmp-echo-request)))
         )))
 
+(def pcap-packet-to-map-ipv4-udp-only
+  "Convenience function to parse a org.jnetpcap.packet.PcapPacket into a flat,
+   non-nested map.
+   Please note that this function only extracts data for IPv4 up to UDP."
+  (let [eth (Ethernet.)
+        ip4 (Ip4.)
+        udp (Udp.)]
+    (fn [^PcapPacket pkt]
+      (let [hdr (.getCaptureHeader pkt)
+            m (doto (HashMap.)
+                (.put "ts" (.timestampInNanos hdr))
+                (.put "len" (.wirelen hdr)))]
+        (doto m
+          (add-eth-fields pkt eth)
+          (add-ip4-fields pkt ip4)
+          (add-udp-fields pkt udp)))
+        )))
+
 (defn- add-pcap-header-data-bean
   [^PacketHeaderDataBean p ^PcapHeader hdr]
   (doto p
@@ -463,6 +481,22 @@
           (add-ip6-fields-bean pkt ip6)
           (add-icmp-fields-bean pkt icmp icmp-echo-reply icmp-echo-request)
           (add-tcp-fields-bean pkt tcp)
+          (add-udp-fields-bean pkt udp))))))
+
+(def pcap-packet-to-bean-ipv4-udp-only
+  "Convenience function to parse a org.jnetpcap.packet.PcapPacket into a bean.
+   Please note that this function only extracts data for IPv4 up to UDP."
+  (let [eth (Ethernet.)
+        arp (Arp.)
+        ip4 (Ip4.)
+        udp (Udp.)]
+    (fn [^PcapPacket pkt]
+      (let [hdr (.getCaptureHeader pkt)
+        p (PacketHeaderDataBean.)]
+        (-> p
+          (add-pcap-header-data-bean hdr)
+          (add-eth-fields-bean pkt eth)
+          (add-ip4-fields-bean pkt ip4)
           (add-udp-fields-bean pkt udp))))))
 
 (defn pcap-packet-to-byte-vector

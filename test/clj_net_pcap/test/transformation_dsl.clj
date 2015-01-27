@@ -26,8 +26,8 @@
         clj-assorted-utils.util)
   (:import (clj_net_pcap PacketHeaderDataBean)))
 
-(deftest test-extract-udp-maps-from-pcap-file-reference
-  (let [my-maps (extract-maps-from-pcap-file "test/clj_net_pcap/test/data/dns-query-response.pcap")]
+(deftest test-extract-udp-maps-from-pcap-file-ipv4-udp-only-reference
+  (let [my-maps (extract-maps-from-pcap-file-ipv4-udp-only "test/clj_net_pcap/test/data/dns-query-response.pcap")]
     (is (= 2 (count my-maps)))
     (is (= {"ipVer" 4, "ipDst" "192.168.0.1", 
             "ipSrc" "192.168.0.51", "ethDst" "00:24:FE:B1:8F:DC", 
@@ -36,8 +36,8 @@
             "udpSrc" 34904, "udpDst" 53}
            (first my-maps)))))
 
-(deftest test-extract-udp-beans-from-pcap-file-reference
-  (let [my-beans (extract-beans-from-pcap-file "test/clj_net_pcap/test/data/dns-query-response.pcap")
+(deftest test-extract-udp-beans-from-pcap-file-ipv4-udp-only-reference
+  (let [my-beans (extract-beans-from-pcap-file-ipv4-udp-only "test/clj_net_pcap/test/data/dns-query-response.pcap")
         expected (doto (PacketHeaderDataBean.)
                    (.setTs 1385804494276477000) (.setLen 77)
                    (.setEthDst "00:24:FE:B1:8F:DC") (.setEthSrc "74:DE:2B:08:78:09")

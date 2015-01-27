@@ -659,10 +659,8 @@ user=>
     (let [ba (.array bb)
           r (ArrayList.)]
       (loop [offset 0]
-        (println "Offset:" offset "Length:" (alength ba))
         (.add r (packet-byte-array-extract-map-ipv4-udp-be ba offset))
         (let [new-offset (+ 16 offset (ByteArrayHelper/getIntBigEndian ba 8))]
-          (println new-offset)
           (if (< new-offset (alength ba))
             (recur new-offset))))
       r)))

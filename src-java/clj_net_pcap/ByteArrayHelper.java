@@ -43,14 +43,23 @@ public class ByteArrayHelper {
     }
 
     public static int getInt(byte[] array, int index) {
-        return   array[index+3] & 0xFF |
+        return array[index+3] & 0xFF |
             (array[index+2] & 0xFF) << 8 |
             (array[index+1] & 0xFF) << 16 |
-            (array[index+0] & 0xFF) << 24;
+            (array[index] & 0xFF) << 24;
+    }
+
+    public static int getInt16(byte[] array, int index) {
+        return array[index+1] & 0xFF |
+            (array[index] & 0xFF) << 8;
+    }
+
+    public static int getByte(byte[] array, int index) {
+        return array[index] & 0xFF;
     }
 
     public static long getLong(byte[] array, int index) {
-        return   array[index+7] & 0xFF |
+        return array[index+7] & 0xFF |
             (array[index+6] & 0xFF) << 8 |
             (array[index+5] & 0xFF) << 16 |
             (array[index+4] & 0xFF) << 24 |

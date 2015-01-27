@@ -26,9 +26,9 @@
         clj-assorted-utils.util
         clj-net-pcap.native)
   (:import (java.net InetAddress)
-           (java.util HashMap Map)
+           (java.util Arrays HashMap Map)
            (java.util.concurrent ScheduledThreadPoolExecutor)
-           (clj_net_pcap Counter PacketHeaderDataBean PacketHeaderDataBeanIpv4UdpOnly PacketHeaderDataBeanWithIpv4Udp)
+           (clj_net_pcap ByteArrayHelper Counter PacketHeaderDataBean PacketHeaderDataBeanIpv4UdpOnly PacketHeaderDataBeanWithIpv4Udp)
            (org.jnetpcap PcapHeader)
            (org.jnetpcap.packet PcapPacket)
            (org.jnetpcap.packet.format FormatUtils)
@@ -603,20 +603,30 @@ user=>
     (fn [_]
       (.inc cntr))))
 
+
+
+(def pcap-hdr-len 16)
+(def eth-hdr-len 14)
+(def ip-hdr-len 20)
+(def udp-hdr-len 8)
+(def eth-hdr-offset pcap-hdr-len)
+(def ip-hdr-offset (+ eth-hdr-offset eth-hdr-len))
+(def udp-hdr-offset (+ ip-hdr-offset ip-hdr-len))
+
 (defn packet-byte-array-extract-map-ipv4-udp
   [^bytes ba]
   (let [m (doto (HashMap.)
-            (.put "ts" ts)
-            (.put "len" wirelen)
-            (.put "ethSrc" xxxxx)
-            (.put "ethDst" xxxxx)
-            (.put "ipVer" xxxxx)
-            (.put "ipDst" xxxxx)
-            (.put "ipId" xxxxx)
-            (.put "ipTtl" xxxxx)
-            (.put "ipSrc" xxxxx)
-            (.put "udpSrc" xxxxx)
-            (.put "udpDst" xxxxx)
-            (.put "ts" 0))]
+            (.put "ts" (ByteArrayHelper/getInt ba 0))
+            (.put "len" (ByteArrayHelper/getInt ba 12))
+            (.put "ethDst" (FormatUtils/mac (Arrays/copyOfRange ba eth-hdr-offset (+ eth-hdr-offset 6))))
+            (.put "ethSrc" (FormatUtils/mac (Arrays/copyOfRange ba (+ eth-hdr-offset 6) (+ eth-hdr-offset 12))))
+            (.put "ipVer" 4)
+            (.put "ipSrc" (FormatUtils/ip (Arrays/copyOfRange ba (+ ip-hdr-offset 12) (+ ip-hdr-offset 16))))
+            (.put "ipDst" (FormatUtils/ip (Arrays/copyOfRange ba (+ ip-hdr-offset 16) (+ ip-hdr-offset 20))))
+            (.put "ipId" (ByteArrayHelper/getInt16 ba (+ ip-hdr-offset 4)))
+            (.put "ipChecksum" (ByteArrayHelper/getInt16 ba (+ ip-hdr-offset 10)))
+            (.put "ipTtl" (ByteArrayHelper/getByte ba (+ ip-hdr-offset 8)))
+            (.put "udpSrc" (ByteArrayHelper/getInt16 ba udp-hdr-offset))
+            (.put "udpDst" (ByteArrayHelper/getInt16 ba (+ udp-hdr-offset 2))))]
     m))
 

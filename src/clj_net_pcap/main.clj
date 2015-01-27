@@ -82,7 +82,8 @@
           " Available function names are:\n"
           "pcap-packet-to-bean, pcap-packet-to-map, pcap-packet-to-nested-maps,\n"
           "pcap-packet-to-bean-ipv4-udp-only, pcap-packet-to-map-ipv4-udp-only,\n"
-          "packet-byte-buffer-extract-map-ipv4-udp-single, packet-byte-buffer-extract-map-ipv4-udp-bulk, no-op")
+          "packet-byte-buffer-extract-map-ipv4-udp-single, packet-byte-buffer-extract-map-ipv4-udp-bulk,\n"
+          "packet-byte-buffer-extract-bean-ipv4-udp-single, packet-byte-buffer-extract-bean-ipv4-udp-bulk, no-op")
      :default "pcap-packet-to-bean"]
     ["-R" "--read-file"
      "Read from a pcap file instead of performing a live capture."

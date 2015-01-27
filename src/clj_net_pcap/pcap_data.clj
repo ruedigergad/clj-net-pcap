@@ -648,6 +648,23 @@ user=>
             (.put "udpDst" (ByteArrayHelper/getInt16 ba (+ offset udp-hdr-offset 2))))]
     m))
 
+(defn packet-byte-array-extract-bean-ipv4-udp-be
+  [^bytes ba offset]
+  (let [p (doto (PacketHeaderDataBeanIpv4UdpOnly.)
+            (.setTs (+ (* (ByteArrayHelper/getIntBigEndian ba (+ offset 0)) 1000000000) (* (ByteArrayHelper/getIntBigEndian ba (+ offset 4)) 1000)))
+            (.setLen (ByteArrayHelper/getIntBigEndian ba (+ offset 12)))
+            (.setEthDst (FormatUtils/asStringZeroPad ba \: 16 (+ offset eth-hdr-offset) 6))
+            (.setEthSrc (FormatUtils/asStringZeroPad ba \: 16 (+ offset eth-hdr-offset 6) 6))
+            (.setIpVer 4)
+            (.setIpSrc (FormatUtils/asString ba \. 10 (+ offset ip-hdr-offset 12) 4))
+            (.setIpDst (FormatUtils/asString ba \. 10 (+ offset ip-hdr-offset 16) 4))
+            (.setIpId (ByteArrayHelper/getInt16 ba (+ offset ip-hdr-offset 4)))
+            (.setIpChecksum (ByteArrayHelper/getInt16 ba (+ offset ip-hdr-offset 10)))
+            (.setIpTtl (ByteArrayHelper/getByte ba (+ offset ip-hdr-offset 8)))
+            (.setUdpSrc (ByteArrayHelper/getInt16 ba (+ offset udp-hdr-offset)))
+            (.setUdpDst (ByteArrayHelper/getInt16 ba (+ offset udp-hdr-offset 2))))]
+    p))
+
 (defn packet-byte-buffer-extract-map-ipv4-udp-single
   [^ByteBuffer bb]
   (if (.hasArray bb)

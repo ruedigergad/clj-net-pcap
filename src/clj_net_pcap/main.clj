@@ -81,7 +81,8 @@
      (str "Use the specified function for transforming the raw packets."
           " Available function names are:\n"
           "pcap-packet-to-bean, pcap-packet-to-map, pcap-packet-to-nested-maps,\n"
-          "pcap-packet-to-bean-ipv4-udp-only, pcap-packet-to-map-ipv4-udp-only, no-op")
+          "pcap-packet-to-bean-ipv4-udp-only, pcap-packet-to-map-ipv4-udp-only,\n"
+          "packet-byte-array-extract-map-ipv4-udp, no-op")
      :default "pcap-packet-to-bean"]
     ["-R" "--read-file"
      "Read from a pcap file instead of performing a live capture."

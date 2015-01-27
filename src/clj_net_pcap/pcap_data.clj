@@ -634,18 +634,18 @@ user=>
 (defn packet-byte-array-extract-map-ipv4-udp-be
   [^bytes ba offset]
   (let [m (doto (HashMap.)
-            (.put "ts" (+ (* (ByteArrayHelper/getIntBigEndian ba 0) 1000000000) (* (ByteArrayHelper/getIntBigEndian ba 4) 1000)))
-            (.put "len" (ByteArrayHelper/getIntBigEndian ba 12))
-            (.put "ethDst" (FormatUtils/asStringZeroPad ba \: 16 eth-hdr-offset 6))
-            (.put "ethSrc" (FormatUtils/asStringZeroPad ba \: 16 (+ eth-hdr-offset 6) 6))
+            (.put "ts" (+ (* (ByteArrayHelper/getIntBigEndian ba (+ offset 0)) 1000000000) (* (ByteArrayHelper/getIntBigEndian ba (+ offset 4)) 1000)))
+            (.put "len" (ByteArrayHelper/getIntBigEndian ba (+ offset 12)))
+            (.put "ethDst" (FormatUtils/asStringZeroPad ba \: 16 (+ offset eth-hdr-offset) 6))
+            (.put "ethSrc" (FormatUtils/asStringZeroPad ba \: 16 (+ offset eth-hdr-offset 6) 6))
             (.put "ipVer" 4)
-            (.put "ipSrc" (FormatUtils/asString ba \. 10 (+ ip-hdr-offset 12) 4))
-            (.put "ipDst" (FormatUtils/asString ba \. 10 (+ ip-hdr-offset 16) 4))
-            (.put "ipId" (ByteArrayHelper/getInt16 ba (+ ip-hdr-offset 4)))
-            (.put "ipChecksum" (ByteArrayHelper/getInt16 ba (+ ip-hdr-offset 10)))
-            (.put "ipTtl" (ByteArrayHelper/getByte ba (+ ip-hdr-offset 8)))
-            (.put "udpSrc" (ByteArrayHelper/getInt16 ba udp-hdr-offset))
-            (.put "udpDst" (ByteArrayHelper/getInt16 ba (+ udp-hdr-offset 2))))]
+            (.put "ipSrc" (FormatUtils/asString ba \. 10 (+ offset ip-hdr-offset 12) 4))
+            (.put "ipDst" (FormatUtils/asString ba \. 10 (+ offset ip-hdr-offset 16) 4))
+            (.put "ipId" (ByteArrayHelper/getInt16 ba (+ offset ip-hdr-offset 4)))
+            (.put "ipChecksum" (ByteArrayHelper/getInt16 ba (+ offset ip-hdr-offset 10)))
+            (.put "ipTtl" (ByteArrayHelper/getByte ba (+ offset ip-hdr-offset 8)))
+            (.put "udpSrc" (ByteArrayHelper/getInt16 ba (+ offset udp-hdr-offset)))
+            (.put "udpDst" (ByteArrayHelper/getInt16 ba (+ offset udp-hdr-offset 2))))]
     m))
 
 (defn packet-byte-buffer-extract-map-ipv4-udp-single
@@ -659,8 +659,10 @@ user=>
     (let [ba (.array bb)
           r (ArrayList.)]
       (loop [offset 0]
+        (println "Offset:" offset "Length:" (alength ba))
         (.add r (packet-byte-array-extract-map-ipv4-udp-be ba offset))
-        (let [new-offset (+ offset (ByteArrayHelper/getIntBigEndian ba 8))]
+        (let [new-offset (+ 16 offset (ByteArrayHelper/getIntBigEndian ba 8))]
+          (println new-offset)
           (if (< new-offset (alength ba))
             (recur new-offset))))
       r)))

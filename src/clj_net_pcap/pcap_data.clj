@@ -603,3 +603,20 @@ user=>
     (fn [_]
       (.inc cntr))))
 
+(defn packet-byte-array-extract-map-ipv4-udp
+  [^bytes ba]
+  (let [m (doto (HashMap.)
+            (.put "ts" ts)
+            (.put "len" wirelen)
+            (.put "ethSrc" xxxxx)
+            (.put "ethDst" xxxxx)
+            (.put "ipVer" xxxxx)
+            (.put "ipDst" xxxxx)
+            (.put "ipId" xxxxx)
+            (.put "ipTtl" xxxxx)
+            (.put "ipSrc" xxxxx)
+            (.put "udpSrc" xxxxx)
+            (.put "udpDst" xxxxx)
+            (.put "ts" 0))]
+    m))
+

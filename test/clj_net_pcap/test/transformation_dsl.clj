@@ -49,3 +49,16 @@
     (is (= expected
            (first my-beans)))))
 
+(deftest test-extract-data-from-byte-array-to-map-ipv4-udp-only
+  (let [expected-map {"len" 46, "ethSrc" "01:02:03:04:05:06", "ethDst" "FF:FE:FD:F2:F1:F0",
+                      "ipVer" 4, "ipDst" "252.253.254.255", "ipId" 3,
+                      "ipTtl" 7, "ipSrc" "1.2.3.4",
+                      "udpSrc" 2048, "udpDst" 4096, "ts" 0}
+        pkt-raw-vec [0 0 0 0   0 0 0 0   0 0 0 0   0 0 0 0
+                     -1 -2 -3 -14 -15 -16 1 2 3 4 5 6 8 0
+                     69 0 0 32 0 3 64 0 7 17 115 -57 1 2 3 4 -4 -3 -2 -1
+                     8 0 16 0 0 4 -25 -26 97 98 99 100]
+        pkt-ba (byte-array (map byte expected-vec))
+        extracted-map (packet-byte-array-extract-map-ipv4-udp pkt-ba)]
+    (is (= expected-map (vec extracted-map)))))
+

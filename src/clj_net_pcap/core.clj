@@ -46,7 +46,7 @@
 (def ^:dynamic *emit-raw-data* false)
 (def ^:dynamic *forward-exceptions* false)
 (def ^:dynamic *queue-size* 100000)
-(def ^:dynamic *use-intermediate-buffer* false)
+(def ^:dynamic *use-intermediate-buffer* true)
 
 
 (def trace-level 1)

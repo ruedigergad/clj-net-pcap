@@ -617,7 +617,7 @@ user=>
 (defn packet-byte-array-extract-map-ipv4-udp
   [^bytes ba]
   (let [m (doto (HashMap.)
-            (.put "ts" (ByteArrayHelper/getInt ba 0))
+            (.put "ts" (+ (* (ByteArrayHelper/getInt ba 0) 1000) (* (ByteArrayHelper/getInt ba 4) 1000000000)))
             (.put "len" (ByteArrayHelper/getInt ba 12))
             (.put "ethDst" (FormatUtils/asStringZeroPad ba \: 16 eth-hdr-offset 6))
             (.put "ethSrc" (FormatUtils/asStringZeroPad ba \: 16 (+ eth-hdr-offset 6) 6))

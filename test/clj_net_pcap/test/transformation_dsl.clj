@@ -50,11 +50,11 @@
            (first my-beans)))))
 
 (deftest test-extract-data-from-byte-array-to-map-ipv4-udp-only
-  (let [expected-map {"len" 0, "ethSrc" "01:02:03:04:05:06", "ethDst" "FF:FE:FD:F2:F1:F0",
+  (let [expected-map {"len" 77, "ethSrc" "01:02:03:04:05:06", "ethDst" "FF:FE:FD:F2:F1:F0",
                       "ipVer" 4, "ipDst" "252.253.254.255", "ipId" 3,
                       "ipTtl" 7, "ipSrc" "1.2.3.4", "ipChecksum" 29639,
                       "udpSrc" 2048, "udpDst" 4096, "ts" 0}
-        pkt-raw-vec [0 0 0 0   0 0 0 0   0 0 0 0   0 0 0 0                 ; 16 byte pcap header
+        pkt-raw-vec [-50 -78 -103 82 0 0 0 0    0 0 0 77   0 0 0 77       ; 16 byte pcap header
                      -1 -2 -3 -14 -15 -16 1 2 3 4 5 6 8 0                  ; 14 byte Ethernet header
                      69 0 0 32 0 3 64 0 7 17 115 -57 1 2 3 4 -4 -3 -2 -1   ; 20 byte IP header
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header

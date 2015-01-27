@@ -678,22 +678,26 @@ user=>
     (.setUdpSrc (ByteArrayHelper/getInt16 ba (+ offset udp-hdr-offset)))
     (.setUdpDst (ByteArrayHelper/getInt16 ba (+ offset udp-hdr-offset 2)))))
 
+(defn packet-byte-buffer-bulk-map
+  [^ByteBuffer bb f]
+  (if (.hasArray bb)
+    (let [ba (.array bb)
+          r (ArrayList.)]
+      (loop [offset 0]
+        (.add r (f ba offset))
+        (let [new-offset (+ offset 16 (ByteArrayHelper/getIntBigEndian ba 8))]
+          (if (< new-offset (alength ba))
+            (recur new-offset))))
+      r)))
+
 (defn packet-byte-buffer-extract-map-ipv4-udp-single
   [^ByteBuffer bb]
   (if (.hasArray bb)
     (packet-byte-array-extract-map-ipv4-udp (.array bb))))
 
 (defn packet-byte-buffer-extract-map-ipv4-udp-bulk
-  [^ByteBuffer bb]
-  (if (.hasArray bb)
-    (let [ba (.array bb)
-          r (ArrayList.)]
-      (loop [offset 0]
-        (.add r (packet-byte-array-extract-map-ipv4-udp-be ba offset))
-        (let [new-offset (+ 16 offset (ByteArrayHelper/getIntBigEndian ba 8))]
-          (if (< new-offset (alength ba))
-            (recur new-offset))))
-      r)))
+  [bb]
+  (packet-byte-buffer-bulk-map bb packet-byte-array-extract-map-ipv4-udp-be))
 
 (defn packet-byte-buffer-extract-bean-ipv4-udp-single
   [^ByteBuffer bb]
@@ -701,14 +705,6 @@ user=>
     (packet-byte-array-extract-bean-ipv4-udp (.array bb))))
 
 (defn packet-byte-buffer-extract-bean-ipv4-udp-bulk
-  [^ByteBuffer bb]
-  (if (.hasArray bb)
-    (let [ba (.array bb)
-          r (ArrayList.)]
-      (loop [offset 0]
-        (.add r (packet-byte-array-extract-bean-ipv4-udp-be ba offset))
-        (let [new-offset (+ 16 offset (ByteArrayHelper/getIntBigEndian ba 8))]
-          (if (< new-offset (alength ba))
-            (recur new-offset))))
-      r)))
+  [bb]
+  (packet-byte-buffer-bulk-map bb packet-byte-array-extract-bean-ipv4-udp-be))
 

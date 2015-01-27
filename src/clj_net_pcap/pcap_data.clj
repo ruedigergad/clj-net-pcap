@@ -27,7 +27,7 @@
         clj-net-pcap.native)
   (:import (java.net InetAddress)
            (java.nio ByteBuffer)
-           (java.util Arrays HashMap Map)
+           (java.util Arrays ArrayList HashMap Map)
            (java.util.concurrent ScheduledThreadPoolExecutor)
            (clj_net_pcap ByteArrayHelper Counter PacketHeaderDataBean PacketHeaderDataBeanIpv4UdpOnly PacketHeaderDataBeanWithIpv4Udp)
            (org.jnetpcap PcapHeader)
@@ -617,6 +617,23 @@ user=>
 (defn packet-byte-array-extract-map-ipv4-udp
   [^bytes ba]
   (let [m (doto (HashMap.)
+            (.put "ts" (+ (* (ByteArrayHelper/getInt ba 0) 1000000000) (* (ByteArrayHelper/getInt ba 4) 1000)))
+            (.put "len" (ByteArrayHelper/getInt ba 12))
+            (.put "ethDst" (FormatUtils/asStringZeroPad ba \: 16 eth-hdr-offset 6))
+            (.put "ethSrc" (FormatUtils/asStringZeroPad ba \: 16 (+ eth-hdr-offset 6) 6))
+            (.put "ipVer" 4)
+            (.put "ipSrc" (FormatUtils/asString ba \. 10 (+ ip-hdr-offset 12) 4))
+            (.put "ipDst" (FormatUtils/asString ba \. 10 (+ ip-hdr-offset 16) 4))
+            (.put "ipId" (ByteArrayHelper/getInt16 ba (+ ip-hdr-offset 4)))
+            (.put "ipChecksum" (ByteArrayHelper/getInt16 ba (+ ip-hdr-offset 10)))
+            (.put "ipTtl" (ByteArrayHelper/getByte ba (+ ip-hdr-offset 8)))
+            (.put "udpSrc" (ByteArrayHelper/getInt16 ba udp-hdr-offset))
+            (.put "udpDst" (ByteArrayHelper/getInt16 ba (+ udp-hdr-offset 2))))]
+    m))
+
+(defn packet-byte-array-extract-map-ipv4-udp-be
+  [^bytes ba offset]
+  (let [m (doto (HashMap.)
             (.put "ts" (+ (* (ByteArrayHelper/getIntBigEndian ba 0) 1000000000) (* (ByteArrayHelper/getIntBigEndian ba 4) 1000)))
             (.put "len" (ByteArrayHelper/getIntBigEndian ba 12))
             (.put "ethDst" (FormatUtils/asStringZeroPad ba \: 16 eth-hdr-offset 6))
@@ -631,7 +648,20 @@ user=>
             (.put "udpDst" (ByteArrayHelper/getInt16 ba (+ udp-hdr-offset 2))))]
     m))
 
-(defn packet-byte-buffer-extract-map-ipv4-udp
+(defn packet-byte-buffer-extract-map-ipv4-udp-single
   [^ByteBuffer bb]
   (if (.hasArray bb)
     (packet-byte-array-extract-map-ipv4-udp (.array bb))))
+
+(defn packet-byte-buffer-extract-map-ipv4-udp-bulk
+  [^ByteBuffer bb]
+  (if (.hasArray bb)
+    (let [ba (.array bb)
+          r (ArrayList.)]
+      (loop [offset 0]
+        (.add r (packet-byte-array-extract-map-ipv4-udp-be ba offset))
+        (let [new-offset (+ offset (ByteArrayHelper/getIntBigEndian ba 8))]
+          (if (< new-offset (alength ba))
+            (recur new-offset))))
+      r)))
+

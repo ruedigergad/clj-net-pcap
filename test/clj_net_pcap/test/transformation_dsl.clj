@@ -60,6 +60,6 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extracted-map (packet-byte-array-extract-map-ipv4-udp pkt-ba)]
+        extracted-map (packet-byte-array-extract-map-ipv4-udp-be pkt-ba)]
     (is (= expected-map extracted-map))))
 

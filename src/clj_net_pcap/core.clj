@@ -424,24 +424,6 @@
   [file-name]
   (extract-data-from-pcap-file file-name pcap-packet-to-bean))
 
-(defn extract-maps-from-pcap-file-ipv4-udp-only
-  "Convenience function to extract the data from a pcap file in flat map format.
-   Please note that this function only extracts data for IPv4 up to UDP.
-   Please note that all data will be stored in memory.
-   So this is not suited for large amounts of data.
-   Returns a vector that contains the extracted maps."
-  [file-name]
-  (extract-data-from-pcap-file file-name pcap-packet-to-map-ipv4-udp-only))
-
-(defn extract-beans-from-pcap-file-ipv4-udp-only
-  "Convenience function to extract the data from a pcap file in bean format.
-   Please note that this function only extracts data for IPv4 up to UDP.
-   Please note that all data will be stored in memory.
-   So this is not suited for large amounts of data.
-   Returns a vector that contains the extracted beans."
-  [file-name]
-  (extract-data-from-pcap-file file-name pcap-packet-to-bean-ipv4-udp-only))
-
 (defn extract-byte-arrays-from-pcap-file
   "Convenience function to extract the raw data from a pcap file as byte arrays.
    Please note that all data will be stored in memory.

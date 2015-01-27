@@ -19,8 +19,8 @@
 
 (ns 
   ^{:author "Ruediger Gad",
-    :doc "Tests for transforming data via a DSL"}  
-  clj-net-pcap.test.transformation-dsl
+    :doc "Tests for extracting data from byte arrays."}  
+  clj-net-pcap.test.byte-array-extraction
   (:use clojure.test
         clj-net-pcap.core
         clj-net-pcap.pcap-data
@@ -60,6 +60,6 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extracted-map (packet-byte-array-extract-map-ipv4-udp-be pkt-ba)]
+        extracted-map (packet-byte-array-extract-map-ipv4-udp-be pkt-ba 0)]
     (is (= expected-map extracted-map))))
 

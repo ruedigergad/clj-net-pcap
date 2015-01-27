@@ -82,7 +82,7 @@
           " Available function names are:\n"
           "pcap-packet-to-bean, pcap-packet-to-map, pcap-packet-to-nested-maps,\n"
           "pcap-packet-to-bean-ipv4-udp-only, pcap-packet-to-map-ipv4-udp-only,\n"
-          "packet-byte-array-extract-map-ipv4-udp, no-op")
+          "packet-byte-buffer-extract-map-ipv4-udp, no-op")
      :default "pcap-packet-to-bean"]
     ["-R" "--read-file"
      "Read from a pcap file instead of performing a live capture."
@@ -109,7 +109,9 @@
                                      f (if (= 'packet (first (first (:arglists (meta f-tmp)))))
                                          f-tmp
                                          (f-tmp (arg-map :bulk-size)))
-                                     t (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))]
+                                     t (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))
+                                     _ (println "Resolved forwarder fn:" f)
+                                     _ (println "Resolved transformer fn:" t)]
                                    #(let [o (t %)]
                                       (if o
                                         (f o))))
@@ -121,7 +123,9 @@
                                      f (if (= 'packet (first (first (:arglists (meta f-tmp)))))
                                          f-tmp
                                          (f-tmp))
-                                     t (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))]
+                                     t (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))
+                                     _ (println "Resolved forwarder fn:" f)
+                                     _ (println "Resolved transformer fn:" t)]
                                    #(let [o (t %)]
                                       (if o
                                         (f o)))))))

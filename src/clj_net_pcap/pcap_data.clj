@@ -26,6 +26,7 @@
         clj-assorted-utils.util
         clj-net-pcap.native)
   (:import (java.net InetAddress)
+           (java.nio ByteBuffer)
            (java.util Arrays HashMap Map)
            (java.util.concurrent ScheduledThreadPoolExecutor)
            (clj_net_pcap ByteArrayHelper Counter PacketHeaderDataBean PacketHeaderDataBeanIpv4UdpOnly PacketHeaderDataBeanWithIpv4Udp)
@@ -630,3 +631,7 @@ user=>
             (.put "udpDst" (ByteArrayHelper/getInt16 ba (+ udp-hdr-offset 2))))]
     m))
 
+(defn packet-byte-buffer-extract-map-ipv4-udp
+  [^ByteBuffer bb]
+  (if (.hasArray bb)
+    (packet-byte-array-extract-map-ipv4-udp (.array bb))))

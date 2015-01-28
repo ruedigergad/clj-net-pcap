@@ -98,3 +98,31 @@
         extraction-fn (eval `(fn [~ba-sym] ~fn-body))]
     extraction-fn))
 
+(def ipv4-udp-be-dsl-expression
+  [{:offset 0 :transformation "timestamp-be" :name "ts"}
+   {:offset 12 :transformation "int32be" :name "len"}
+   {:offset "eth-dst" :transformation "ethernet-address" :name "ethDst"}
+   {:offset "eth-src" :transformation "ethernet-address" :name "ethSrc"}
+   {:offset "ipv4-dst" :transformation "ipv4-address" :name "ipDst"}
+   {:offset "ipv4-src" :transformation "ipv4-address" :name "ipSrc"}
+   {:offset "ipv4-id" :transformation "int16" :name "ipId"}
+   {:offset "ipv4-ttl" :transformation "int8" :name "ipTtl"}
+   {:offset "ipv4-checksum" :transformation "int16" :name "ipChecksum"}
+   {:offset "ipv4-version" :transformation "int4high" :name "ipVer"}
+   {:offset "udp-src" :transformation "int16" :name "udpSrc"}
+   {:offset "udp-dst" :transformation "int16" :name "udpDst"}])
+
+(def ipv4-udp-le-dsl-expression
+  [{:offset 0 :transformation "timestamp" :name "ts"}
+   {:offset 12 :transformation "int32" :name "len"}
+   {:offset "eth-dst" :transformation "ethernet-address" :name "ethDst"}
+   {:offset "eth-src" :transformation "ethernet-address" :name "ethSrc"}
+   {:offset "ipv4-dst" :transformation "ipv4-address" :name "ipDst"}
+   {:offset "ipv4-src" :transformation "ipv4-address" :name "ipSrc"}
+   {:offset "ipv4-id" :transformation "int16" :name "ipId"}
+   {:offset "ipv4-ttl" :transformation "int8" :name "ipTtl"}
+   {:offset "ipv4-checksum" :transformation "int16" :name "ipChecksum"}
+   {:offset "ipv4-version" :transformation "int4high" :name "ipVer"}
+   {:offset "udp-src" :transformation "int16" :name "udpSrc"}
+   {:offset "udp-dst" :transformation "int16" :name "udpDst"}])
+

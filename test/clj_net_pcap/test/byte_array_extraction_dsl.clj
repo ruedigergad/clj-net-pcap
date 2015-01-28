@@ -44,8 +44,8 @@
 
 (deftest simple-hardcoded-offsets-dsl-test
   (let [expected-map {"udpSrc" 2048, "udpDst" 4096}
-        dsl-expression [{:offset 50 :transformation "int16" :name "udpSrc"}
-                        {:offset 52 :transformation "int16" :name "udpDst"}]
+        dsl-expression [{:offset 50 :transformation :int16 :name :udpSrc}
+                        {:offset 52 :transformation :int16 :name :udpDst}]
         pkt-raw-vec [-5 -106 -57 84   15 -54 14 0   77 0 0 0   77 0 0 0    ; 16 byte pcap header
                      -1 -2 -3 -14 -15 -16 1 2 3 4 5 6 8 0                  ; 14 byte Ethernet header
                      69 0 0 32 0 3 64 0 7 17 115 -57 1 2 3 4 -4 -3 -2 -1   ; 20 byte IP header
@@ -58,8 +58,8 @@
 
 (deftest simple-packet-offsets-name-dsl-test
   (let [expected-map {"udpSrc" 2048, "udpDst" 4096}
-        dsl-expression [{:offset "udp-src" :transformation "int16" :name "udpSrc"}
-                        {:offset "udp-dst" :transformation "int16" :name "udpDst"}]
+        dsl-expression [{:offset :udp-src :transformation :int16 :name :udpSrc}
+                        {:offset :udp-dst :transformation :int16 :name :udpDst}]
         pkt-raw-vec [-5 -106 -57 84   15 -54 14 0   77 0 0 0   77 0 0 0    ; 16 byte pcap header
                      -1 -2 -3 -14 -15 -16 1 2 3 4 5 6 8 0                  ; 14 byte Ethernet header
                      69 0 0 32 0 3 64 0 7 17 115 -57 1 2 3 4 -4 -3 -2 -1   ; 20 byte IP header
@@ -73,12 +73,12 @@
 (deftest extended-packet-offsets-name-dsl-test-be
   (let [expected-map {"ipId" 3, "ipTtl" 7, "ipChecksum" 29639,
                       "udpSrc" 2048, "udpDst" 4096, "len" 77}
-        dsl-expression [{:offset 12 :transformation "int32be" :name "len"}
-                        {:offset "ip-id" :transformation "int16" :name "ipId"}
-                        {:offset "ip-ttl" :transformation "int8" :name "ipTtl"}
-                        {:offset "ip-checksum" :transformation "int16" :name "ipChecksum"}
-                        {:offset "udp-src" :transformation "int16" :name "udpSrc"}
-                        {:offset "udp-dst" :transformation "int16" :name "udpDst"}]
+        dsl-expression [{:offset 12 :transformation :int32be :name :len}
+                        {:offset :ip-id :transformation :int16 :name :ipId}
+                        {:offset :ip-ttl :transformation :int8 :name :ipTtl}
+                        {:offset :ip-checksum :transformation :int16 :name :ipChecksum}
+                        {:offset :udp-src :transformation :int16 :name :udpSrc}
+                        {:offset :udp-dst :transformation :int16 :name :udpDst}]
         pkt-raw-vec [-5 -106 -57 84   15 -54 14 0   77 0 0 0   77 0 0 0    ; 16 byte pcap header
                      -1 -2 -3 -14 -15 -16 1 2 3 4 5 6 8 0                  ; 14 byte Ethernet header
                      69 0 0 32 0 3 64 0 7 17 115 -57 1 2 3 4 -4 -3 -2 -1   ; 20 byte IP header
@@ -92,12 +92,12 @@
 (deftest extended-packet-offsets-name-dsl-test-le
   (let [expected-map {"ipId" 3, "ipTtl" 7, "ipChecksum" 29639,
                       "udpSrc" 2048, "udpDst" 4096, "len" 77}
-        dsl-expression [{:offset 12 :transformation "int32" :name "len"}
-                        {:offset "ip-id" :transformation "int16" :name "ipId"}
-                        {:offset "ip-ttl" :transformation "int8" :name "ipTtl"}
-                        {:offset "ip-checksum" :transformation "int16" :name "ipChecksum"}
-                        {:offset "udp-src" :transformation "int16" :name "udpSrc"}
-                        {:offset "udp-dst" :transformation "int16" :name "udpDst"}]
+        dsl-expression [{:offset 12 :transformation :int32 :name :len}
+                        {:offset :ip-id :transformation :int16 :name :ipId}
+                        {:offset :ip-ttl :transformation :int8 :name :ipTtl}
+                        {:offset :ip-checksum :transformation :int16 :name :ipChecksum}
+                        {:offset :udp-src :transformation :int16 :name :udpSrc}
+                        {:offset :udp-dst :transformation :int16 :name :udpDst}]
         pkt-raw-vec [-5 -106 -57 84   15 -54 14 0   0 0 0 77   0 0 0 77    ; 16 byte pcap header
                      -1 -2 -3 -14 -15 -16 1 2 3 4 5 6 8 0                  ; 14 byte Ethernet header
                      69 0 0 32 0 3 64 0 7 17 115 -57 1 2 3 4 -4 -3 -2 -1   ; 20 byte IP header

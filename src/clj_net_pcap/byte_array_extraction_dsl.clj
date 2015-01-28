@@ -54,7 +54,9 @@
   (let [offset-val (:offset e)]
     (cond
       (number? offset-val) offset-val
-      (keyword? offset-val) (var-get (resolve (symbol (str "clj-net-pcap.packet-offsets/" (name offset-val)))))
+      (or
+        (keyword? offset-val)
+        (string? offset-val)) (var-get (resolve (symbol (str "clj-net-pcap.packet-offsets/" (name offset-val)))))
       :default (do
                  (println "Error: Got unknown offset value" offset-val "from entry" e)
                  0))))

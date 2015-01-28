@@ -67,6 +67,9 @@
           " Values smaller equal 0 mean that no stats are printed.")
      :default 0
      :parse-fn #(Integer. ^java.lang.String %)]
+    ["-t" "--dynamic-transformation-fn"
+     (str "If set, the transformation-fn can be changed dynamically at runtime.")
+     :flag true]
     ["-B" "--buffer-size"
      "The buffer size to use."
      :default (int (Math/pow 2 26))
@@ -114,23 +117,33 @@
                                  (if (not= "" dsl-expr-string)
                                    (read-string dsl-expr-string))))
               _ (println "DSL expression from command line args:" dsl-expression)
+              get-dsl-fn (fn [dsl-expr]
+                           (let [extraction-fn (create-extraction-fn dsl-expr)]
+                             (if (> bulk-size 1)
+                               (partial process-packet-byte-buffer-bulk extraction-fn)
+                               (partial process-packet-byte-buffer extraction-fn))))
               get-transformation-fn (fn []
                                       (if dsl-expression
-                                        (let [extraction-fn (create-extraction-fn dsl-expression)]
-                                          (if (> bulk-size 1)
-                                            (partial process-packet-byte-buffer-bulk extraction-fn)
-                                            (partial process-packet-byte-buffer extraction-fn)))
+                                        (get-dsl-fn dsl-expression)
                                         (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))))
+              static-transformation-fn (get-transformation-fn)
+              dynamic-transformation-fn (atom (get-transformation-fn))
               processing-fn (let [f-tmp (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
                                   f (if (= 'packet (first (first (:arglists (meta f-tmp)))))
                                       f-tmp
-                                      (f-tmp bulk-size))
-                                  t (get-transformation-fn)
-                                  _ (println "Resolved forwarder fn:" f)
-                                  _ (println "Resolved transformer fn:" t)]
-                              #(let [o (t %)]
-                                 (if o
-                                   (f o))))
+                                      (f-tmp bulk-size))]
+                              (println "Resolved forwarder fn:" f)
+                              (if (arg-map :dynamic-transformation-fn)
+                                (do
+                                  (println "Using dynamic transformation-fn:" @dynamic-transformation-fn)
+                                  #(let [o (@dynamic-transformation-fn %)]
+                                     (if o
+                                       (f o))))
+                                (do
+                                  (println "Using static transformation-fn:" static-transformation-fn)
+                                  #(let [o (static-transformation-fn %)]
+                                     (if o
+                                       (f o))))))
               cljnetpcap (binding [clj-net-pcap.core/*bulk-size* bulk-size
                                    clj-net-pcap.core/*emit-raw-data* (arg-map :raw)
                                    clj-net-pcap.core/*forward-exceptions* (arg-map :debug)

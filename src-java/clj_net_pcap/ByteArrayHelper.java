@@ -65,6 +65,13 @@ public class ByteArrayHelper {
         return array[index] & 0xFF;
     }
 
+    public static int getNibbleLow(byte[] array, int index) {
+        return array[index] & 0x0F;
+    }
+
+    public static int getNibbleHigh(byte[] array, int index) {
+        return (array[index] & 0xF0) >> 4;
+    }
     public static long getLong(byte[] array, int index) {
         return array[index+7] & 0xFF |
             (array[index+6] & 0xFF) << 8 |

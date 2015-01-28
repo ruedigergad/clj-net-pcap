@@ -29,6 +29,14 @@
            (org.jnetpcap.packet.format FormatUtils)))
 
 
+(defn int4low
+  [ba idx]
+  (ByteArrayHelper/getNibbleLow ba idx))
+
+(defn int4high
+  [ba idx]
+  (ByteArrayHelper/getNibbleHigh ba idx))
+
 (defn int8
   [ba idx]
   (ByteArrayHelper/getByte ba idx))

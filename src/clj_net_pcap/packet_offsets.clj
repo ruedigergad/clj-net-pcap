@@ -38,6 +38,7 @@
 (def ipv4-id (+ ipv4-hdr-offset 4))
 (def ipv4-checksum (+ ipv4-hdr-offset 10))
 (def ipv4-ttl (+ ipv4-hdr-offset 8))
+(def ipv4-version ipv4-hdr-offset)
 (def udp-src udp-hdr-offset)
 (def udp-dst (+ udp-hdr-offset 2))
 

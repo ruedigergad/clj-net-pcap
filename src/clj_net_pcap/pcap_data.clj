@@ -677,7 +677,6 @@ user=>
     (let [ba (.array bb)
           r (ArrayList.)]
       (loop [offset 0]
-        (println offset)
         (.add r (f ba offset))
         (let [new-offset (+ offset 16 (ByteArrayHelper/getIntBigEndian ba 8))]
           (if (< new-offset (alength ba))

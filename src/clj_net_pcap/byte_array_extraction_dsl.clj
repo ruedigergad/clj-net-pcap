@@ -57,6 +57,10 @@
   [ba idx]
   (FormatUtils/asStringZeroPad ba \: 16 idx 6))
 
+(defn ipv4-address
+  [ba idx]
+  (FormatUtils/asString ba \. 10 idx 4))
+
 (defn put
   [^Map m k v]
   (.put m k v))

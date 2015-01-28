@@ -45,6 +45,14 @@
   [ba idx]
   (ByteArrayHelper/getIntBigEndian ba idx))
 
+(defn timestamp
+  [ba idx]
+  (+ (* (ByteArrayHelper/getInt ba idx) 1000000000) (* (ByteArrayHelper/getInt ba (+ idx 4)) 1000)))
+
+(defn timestamp-be
+  [ba idx]
+  (+ (* (ByteArrayHelper/getIntBigEndian ba idx) 1000000000) (* (ByteArrayHelper/getIntBigEndian ba (+ idx 4)) 1000)))
+
 (defn put
   [^Map m k v]
   (.put m k v))

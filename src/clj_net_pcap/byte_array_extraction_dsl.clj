@@ -38,12 +38,22 @@
   [^Map m k v]
   (.put m k v))
 
+(defn get-offset
+  [e]
+  (let [offset-val (:offset e)]
+    (cond
+      (number? offset-val) offset-val
+      (string? offset-val) (var-get (resolve (symbol (str "clj-net-pcap.packet-offsets/" offset-val))))
+      :default (do
+                 (println "Error: Got unknown offset value" offset-val "from entry" e)
+                 0))))
+
 (defn create-parse-fn
   [ba]
   (fn [v e]
     (conj v `(.put 
                ~(:name e)
-               (~(resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (:transformation e)))) ~ba ~(:offset e))))))
+               (~(resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (:transformation e)))) ~ba ~(get-offset e))))))
 
 (defn create-extraction-fn
   [dsl-expression]

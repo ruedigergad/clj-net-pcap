@@ -107,13 +107,21 @@
         (pprint arg-map)
         (let [pcap-file-name (arg-map :read-file)
               dsl-expr-string (arg-map :dsl-expression)
+              bulk-size (arg-map :bulk-size)
               dsl-expression (let [expr (resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" dsl-expr-string)))]
                                (if expr
                                  (var-get expr)
                                  (if (not= "" dsl-expr-string)
                                    (read-string dsl-expr-string))))
               _ (println "DSL expression from command line args:" dsl-expression)
-              cljnetpcap (binding [clj-net-pcap.core/*bulk-size* (arg-map :bulk-size)
+              get-transformation-fn (fn []
+                                      (if dsl-expression
+                                        (let [extraction-fn (create-extraction-fn dsl-expression)]
+                                          (if (> bulk-size 1)
+                                            (partial process-packet-byte-buffer-bulk extraction-fn)
+                                            (partial process-packet-byte-buffer extraction-fn)))
+                                        (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))))
+              cljnetpcap (binding [clj-net-pcap.core/*bulk-size* bulk-size
                                    clj-net-pcap.core/*emit-raw-data* (arg-map :raw)
                                    clj-net-pcap.core/*forward-exceptions* (arg-map :debug)
                                    clj-net-pcap.pcap/*snap-len* (arg-map :snap-len)
@@ -123,8 +131,8 @@
                                (let [f-tmp (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
                                      f (if (= 'packet (first (first (:arglists (meta f-tmp)))))
                                          f-tmp
-                                         (f-tmp (arg-map :bulk-size)))
-                                     t (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))
+                                         (f-tmp bulk-size))
+                                     t (get-transformation-fn)
                                      _ (println "Resolved forwarder fn:" f)
                                      _ (println "Resolved transformer fn:" t)]
                                    #(let [o (t %)]
@@ -138,7 +146,7 @@
                                      f (if (= 'packet (first (first (:arglists (meta f-tmp)))))
                                          f-tmp
                                          (f-tmp))
-                                     t (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))
+                                     t (get-transformation-fn)
                                      _ (println "Resolved forwarder fn:" f)
                                      _ (println "Resolved transformer fn:" t)]
                                    #(let [o (t %)]

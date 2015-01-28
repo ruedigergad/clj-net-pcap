@@ -24,20 +24,20 @@
 
 (def pcap-hdr-len 16)
 (def eth-hdr-len 14)
-(def ip-hdr-len 20)
+(def ipv4-hdr-len 20)
 (def udp-hdr-len 8)
 
 (def eth-hdr-offset pcap-hdr-len)
-(def ip-hdr-offset (+ eth-hdr-offset eth-hdr-len))
-(def udp-hdr-offset (+ ip-hdr-offset ip-hdr-len))
+(def ipv4-hdr-offset (+ eth-hdr-offset eth-hdr-len))
+(def udp-hdr-offset (+ ipv4-hdr-offset ipv4-hdr-len))
 
 (def eth-dst eth-hdr-offset)
 (def eth-src (+ eth-hdr-offset 6))
-(def ip-src (+ ip-hdr-offset 12))
-(def ip-dst (+ ip-hdr-offset 16))
-(def ip-id (+ ip-hdr-offset 4))
-(def ip-checksum (+ ip-hdr-offset 10))
-(def ip-ttl (+ ip-hdr-offset 8))
+(def ipv4-src (+ ipv4-hdr-offset 12))
+(def ipv4-dst (+ ipv4-hdr-offset 16))
+(def ipv4-id (+ ipv4-hdr-offset 4))
+(def ipv4-checksum (+ ipv4-hdr-offset 10))
+(def ipv4-ttl (+ ipv4-hdr-offset 8))
 (def udp-src udp-hdr-offset)
 (def udp-dst (+ udp-hdr-offset 2))
 

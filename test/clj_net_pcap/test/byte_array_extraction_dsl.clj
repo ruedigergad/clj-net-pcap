@@ -74,9 +74,9 @@
   (let [expected-map {"ipId" 3, "ipTtl" 7, "ipChecksum" 29639,
                       "udpSrc" 2048, "udpDst" 4096, "len" 77}
         dsl-expression [{:offset 12 :transformation :int32be :name :len}
-                        {:offset :ip-id :transformation :int16 :name :ipId}
-                        {:offset :ip-ttl :transformation :int8 :name :ipTtl}
-                        {:offset :ip-checksum :transformation :int16 :name :ipChecksum}
+                        {:offset :ipv4-id :transformation :int16 :name :ipId}
+                        {:offset :ipv4-ttl :transformation :int8 :name :ipTtl}
+                        {:offset :ipv4-checksum :transformation :int16 :name :ipChecksum}
                         {:offset :udp-src :transformation :int16 :name :udpSrc}
                         {:offset :udp-dst :transformation :int16 :name :udpDst}]
         pkt-raw-vec [-5 -106 -57 84   15 -54 14 0   77 0 0 0   77 0 0 0    ; 16 byte pcap header
@@ -93,9 +93,9 @@
   (let [expected-map {"ipId" 3, "ipTtl" 7, "ipChecksum" 29639,
                       "udpSrc" 2048, "udpDst" 4096, "len" 77}
         dsl-expression [{:offset 12 :transformation :int32 :name :len}
-                        {:offset :ip-id :transformation :int16 :name :ipId}
-                        {:offset :ip-ttl :transformation :int8 :name :ipTtl}
-                        {:offset :ip-checksum :transformation :int16 :name :ipChecksum}
+                        {:offset :ipv4-id :transformation :int16 :name :ipId}
+                        {:offset :ipv4-ttl :transformation :int8 :name :ipTtl}
+                        {:offset :ipv4-checksum :transformation :int16 :name :ipChecksum}
                         {:offset :udp-src :transformation :int16 :name :udpSrc}
                         {:offset :udp-dst :transformation :int16 :name :udpDst}]
         pkt-raw-vec [84 -57 -106 -5   0 14 -54 15   0 0 0 77   0 0 0 77    ; 16 byte pcap header
@@ -112,9 +112,9 @@
   (let [expected-map {"ipId" 3, "ipTtl" 7, "ipChecksum" 29639,
                       "udpSrc" 2048, "udpDst" 4096, "len" 77}
         dsl-expression [{:offset 12 :transformation "int32" :name "len"}
-                        {:offset "ip-id" :transformation "int16" :name "ipId"}
-                        {:offset "ip-ttl" :transformation "int8" :name "ipTtl"}
-                        {:offset "ip-checksum" :transformation "int16" :name "ipChecksum"}
+                        {:offset "ipv4-id" :transformation "int16" :name "ipId"}
+                        {:offset "ipv4-ttl" :transformation "int8" :name "ipTtl"}
+                        {:offset "ipv4-checksum" :transformation "int16" :name "ipChecksum"}
                         {:offset "udp-src" :transformation "int16" :name "udpSrc"}
                         {:offset "udp-dst" :transformation "int16" :name "udpDst"}]
         pkt-raw-vec [84 -57 -106 -5   0 14 -54 15   0 0 0 77   0 0 0 77    ; 16 byte pcap header
@@ -132,9 +132,9 @@
                       "udpSrc" 2048, "udpDst" 4096, "len" 77, "ts" 1422366459969231000}
         dsl-expression [{:offset 0 :transformation "timestamp" :name "ts"}
                         {:offset 12 :transformation "int32" :name "len"}
-                        {:offset "ip-id" :transformation "int16" :name "ipId"}
-                        {:offset "ip-ttl" :transformation "int8" :name "ipTtl"}
-                        {:offset "ip-checksum" :transformation "int16" :name "ipChecksum"}
+                        {:offset "ipv4-id" :transformation "int16" :name "ipId"}
+                        {:offset "ipv4-ttl" :transformation "int8" :name "ipTtl"}
+                        {:offset "ipv4-checksum" :transformation "int16" :name "ipChecksum"}
                         {:offset "udp-src" :transformation "int16" :name "udpSrc"}
                         {:offset "udp-dst" :transformation "int16" :name "udpDst"}]
         pkt-raw-vec [84 -57 -106 -5   0 14 -54 15   0 0 0 77   0 0 0 77    ; 16 byte pcap header
@@ -152,9 +152,9 @@
                       "udpSrc" 2048, "udpDst" 4096, "len" 77, "ts" 1422366459969231000}
         dsl-expression [{:offset 0 :transformation "timestamp-be" :name "ts"}
                         {:offset 12 :transformation "int32be" :name "len"}
-                        {:offset "ip-id" :transformation "int16" :name "ipId"}
-                        {:offset "ip-ttl" :transformation "int8" :name "ipTtl"}
-                        {:offset "ip-checksum" :transformation "int16" :name "ipChecksum"}
+                        {:offset "ipv4-id" :transformation "int16" :name "ipId"}
+                        {:offset "ipv4-ttl" :transformation "int8" :name "ipTtl"}
+                        {:offset "ipv4-checksum" :transformation "int16" :name "ipChecksum"}
                         {:offset "udp-src" :transformation "int16" :name "udpSrc"}
                         {:offset "udp-dst" :transformation "int16" :name "udpDst"}]
         pkt-raw-vec [-5 -106 -57 84   15 -54 14 0   77 0 0 0   77 0 0 0    ; 16 byte pcap header
@@ -175,9 +175,9 @@
                         {:offset 12 :transformation "int32be" :name "len"}
                         {:offset "eth-dst" :transformation "ethernet-address" :name "ethDst"}
                         {:offset "eth-src" :transformation "ethernet-address" :name "ethSrc"}
-                        {:offset "ip-id" :transformation "int16" :name "ipId"}
-                        {:offset "ip-ttl" :transformation "int8" :name "ipTtl"}
-                        {:offset "ip-checksum" :transformation "int16" :name "ipChecksum"}
+                        {:offset "ipv4-id" :transformation "int16" :name "ipId"}
+                        {:offset "ipv4-ttl" :transformation "int8" :name "ipTtl"}
+                        {:offset "ipv4-checksum" :transformation "int16" :name "ipChecksum"}
                         {:offset "udp-src" :transformation "int16" :name "udpSrc"}
                         {:offset "udp-dst" :transformation "int16" :name "udpDst"}]
         pkt-raw-vec [-5 -106 -57 84   15 -54 14 0   77 0 0 0   77 0 0 0    ; 16 byte pcap header
@@ -199,11 +199,11 @@
                         {:offset 12 :transformation "int32be" :name "len"}
                         {:offset "eth-dst" :transformation "ethernet-address" :name "ethDst"}
                         {:offset "eth-src" :transformation "ethernet-address" :name "ethSrc"}
-                        {:offset "ip-dst" :transformation "ipv4-address" :name "ipDst"}
-                        {:offset "ip-src" :transformation "ipv4-address" :name "ipSrc"}
-                        {:offset "ip-id" :transformation "int16" :name "ipId"}
-                        {:offset "ip-ttl" :transformation "int8" :name "ipTtl"}
-                        {:offset "ip-checksum" :transformation "int16" :name "ipChecksum"}
+                        {:offset "ipv4-dst" :transformation "ipv4-address" :name "ipDst"}
+                        {:offset "ipv4-src" :transformation "ipv4-address" :name "ipSrc"}
+                        {:offset "ipv4-id" :transformation "int16" :name "ipId"}
+                        {:offset "ipv4-ttl" :transformation "int8" :name "ipTtl"}
+                        {:offset "ipv4-checksum" :transformation "int16" :name "ipChecksum"}
                         {:offset "udp-src" :transformation "int16" :name "udpSrc"}
                         {:offset "udp-dst" :transformation "int16" :name "udpDst"}]
         pkt-raw-vec [-5 -106 -57 84   15 -54 14 0   77 0 0 0   77 0 0 0    ; 16 byte pcap header

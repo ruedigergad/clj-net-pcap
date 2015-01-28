@@ -45,18 +45,18 @@
 
 (defn network-class
   "Determine the network class based on the private network classes as defined in RFC 1918. This assume no CIDR is used."
-  [^String ip-addr]
+  [^String ipv4-addr]
   (cond
-    (.startsWith ip-addr "192.168.") :class-c
-    (.startsWith ip-addr "10.") :class-a
-    (.startsWith ip-addr "172.") :class-b
+    (.startsWith ipv4-addr "192.168.") :class-c
+    (.startsWith ipv4-addr "10.") :class-a
+    (.startsWith ipv4-addr "172.") :class-b
     :default nil))
 
 (defn guess-subnet
   "Try to guess the subnet address based on private network classes as defined in RFC 1918."
-  [ip-addr]
-  (let [addr-bytes (split ip-addr #"\.")
-        n-class (network-class ip-addr)]
+  [ipv4-addr]
+  (let [addr-bytes (split ipv4-addr #"\.")
+        n-class (network-class ipv4-addr)]
     (cond
       (= :class-c n-class) (join "." (conj (vec (drop-last addr-bytes)) "0"))
       (= :class-a n-class) (join "." (reduce conj (vec (drop-last 3 addr-bytes)) (repeat 3 "0")))
@@ -65,8 +65,8 @@
 
 (defn guess-subnet-mask
   "Try to guess the subnet mask based on private network classes as defined in RFC 1918."
-  [ip-addr]
-  (let [n-class (network-class ip-addr)]
+  [ipv4-addr]
+  (let [n-class (network-class ipv4-addr)]
     (cond
       (= :class-c n-class) "255.255.255.0"
       (= :class-a n-class) "255.0.0.0"
@@ -75,8 +75,8 @@
 
 (defn guess-subnet-mask-bits
   "Try to guess the number of bits in the subnet mask based on private network classes as defined in RFC 1918."
-  [ip-addr]
-  (let [n-class (network-class ip-addr)]
+  [ipv4-addr]
+  (let [n-class (network-class ipv4-addr)]
     (cond
       (= :class-c n-class) 24
       (= :class-a n-class) 8
@@ -615,11 +615,11 @@ user=>
     (.put "ethDst" (FormatUtils/asStringZeroPad ba \: 16 offsets/eth-dst 6))
     (.put "ethSrc" (FormatUtils/asStringZeroPad ba \: 16 offsets/eth-src 6))
     (.put "ipVer" 4)
-    (.put "ipSrc" (FormatUtils/asString ba \. 10 offsets/ip-src 4))
-    (.put "ipDst" (FormatUtils/asString ba \. 10 offsets/ip-dst 4))
-    (.put "ipId" (ByteArrayHelper/getInt16 ba offsets/ip-id))
-    (.put "ipChecksum" (ByteArrayHelper/getInt16 ba offsets/ip-checksum))
-    (.put "ipTtl" (ByteArrayHelper/getByte ba offsets/ip-ttl))
+    (.put "ipSrc" (FormatUtils/asString ba \. 10 offsets/ipv4-src 4))
+    (.put "ipDst" (FormatUtils/asString ba \. 10 offsets/ipv4-dst 4))
+    (.put "ipId" (ByteArrayHelper/getInt16 ba offsets/ipv4-id))
+    (.put "ipChecksum" (ByteArrayHelper/getInt16 ba offsets/ipv4-checksum))
+    (.put "ipTtl" (ByteArrayHelper/getByte ba offsets/ipv4-ttl))
     (.put "udpSrc" (ByteArrayHelper/getInt16 ba offsets/udp-src))
     (.put "udpDst" (ByteArrayHelper/getInt16 ba offsets/udp-dst))))
 
@@ -631,11 +631,11 @@ user=>
     (.put "ethDst" (FormatUtils/asStringZeroPad ba \: 16 (+ offset offsets/eth-dst) 6))
     (.put "ethSrc" (FormatUtils/asStringZeroPad ba \: 16 (+ offset offsets/eth-src) 6))
     (.put "ipVer" 4)
-    (.put "ipSrc" (FormatUtils/asString ba \. 10 (+ offset offsets/ip-src) 4))
-    (.put "ipDst" (FormatUtils/asString ba \. 10 (+ offset offsets/ip-dst) 4))
-    (.put "ipId" (ByteArrayHelper/getInt16 ba (+ offset offsets/ip-id)))
-    (.put "ipChecksum" (ByteArrayHelper/getInt16 ba (+ offset offsets/ip-checksum)))
-    (.put "ipTtl" (ByteArrayHelper/getByte ba (+ offset offsets/ip-ttl)))
+    (.put "ipSrc" (FormatUtils/asString ba \. 10 (+ offset offsets/ipv4-src) 4))
+    (.put "ipDst" (FormatUtils/asString ba \. 10 (+ offset offsets/ipv4-dst) 4))
+    (.put "ipId" (ByteArrayHelper/getInt16 ba (+ offset offsets/ipv4-id)))
+    (.put "ipChecksum" (ByteArrayHelper/getInt16 ba (+ offset offsets/ipv4-checksum)))
+    (.put "ipTtl" (ByteArrayHelper/getByte ba (+ offset offsets/ipv4-ttl)))
     (.put "udpSrc" (ByteArrayHelper/getInt16 ba (+ offset offsets/udp-src)))
     (.put "udpDst" (ByteArrayHelper/getInt16 ba (+ offset offsets/udp-dst)))))
 
@@ -647,11 +647,11 @@ user=>
     (.setEthDst (FormatUtils/asStringZeroPad ba \: 16 offsets/eth-dst 6))
     (.setEthSrc (FormatUtils/asStringZeroPad ba \: 16 (+ offsets/eth-src 6) 6))
     (.setIpVer 4)
-    (.setIpSrc (FormatUtils/asString ba \. 10 offsets/ip-src 4))
-    (.setIpDst (FormatUtils/asString ba \. 10 offsets/ip-dst 4))
-    (.setIpId (ByteArrayHelper/getInt16 ba offsets/ip-id))
-    (.setIpChecksum (ByteArrayHelper/getInt16 ba offsets/ip-checksum))
-    (.setIpTtl (ByteArrayHelper/getByte ba offsets/ip-ttl))
+    (.setIpSrc (FormatUtils/asString ba \. 10 offsets/ipv4-src 4))
+    (.setIpDst (FormatUtils/asString ba \. 10 offsets/ipv4-dst 4))
+    (.setIpId (ByteArrayHelper/getInt16 ba offsets/ipv4-id))
+    (.setIpChecksum (ByteArrayHelper/getInt16 ba offsets/ipv4-checksum))
+    (.setIpTtl (ByteArrayHelper/getByte ba offsets/ipv4-ttl))
     (.setUdpSrc (ByteArrayHelper/getInt16 ba offsets/udp-src))
     (.setUdpDst (ByteArrayHelper/getInt16 ba offsets/udp-dst))))
 
@@ -663,11 +663,11 @@ user=>
     (.setEthDst (FormatUtils/asStringZeroPad ba \: 16 (+ offset offsets/eth-dst) 6))
     (.setEthSrc (FormatUtils/asStringZeroPad ba \: 16 (+ offset offsets/eth-src) 6))
     (.setIpVer 4)
-    (.setIpSrc (FormatUtils/asString ba \. 10 (+ offset offsets/ip-src) 4))
-    (.setIpDst (FormatUtils/asString ba \. 10 (+ offset offsets/ip-dst) 4))
-    (.setIpId (ByteArrayHelper/getInt16 ba (+ offset offsets/ip-id)))
-    (.setIpChecksum (ByteArrayHelper/getInt16 ba (+ offset offsets/ip-checksum)))
-    (.setIpTtl (ByteArrayHelper/getByte ba (+ offset offsets/ip-ttl)))
+    (.setIpSrc (FormatUtils/asString ba \. 10 (+ offset offsets/ipv4-src) 4))
+    (.setIpDst (FormatUtils/asString ba \. 10 (+ offset offsets/ipv4-dst) 4))
+    (.setIpId (ByteArrayHelper/getInt16 ba (+ offset offsets/ipv4-id)))
+    (.setIpChecksum (ByteArrayHelper/getInt16 ba (+ offset offsets/ipv4-checksum)))
+    (.setIpTtl (ByteArrayHelper/getByte ba (+ offset offsets/ipv4-ttl)))
     (.setUdpSrc (ByteArrayHelper/getInt16 ba (+ offset offsets/udp-src)))
     (.setUdpDst (ByteArrayHelper/getInt16 ba (+ offset offsets/udp-dst)))))
 

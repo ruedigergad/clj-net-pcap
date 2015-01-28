@@ -121,6 +121,16 @@
                                             (partial process-packet-byte-buffer-bulk extraction-fn)
                                             (partial process-packet-byte-buffer extraction-fn)))
                                         (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))))
+              processing-fn (let [f-tmp (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
+                                  f (if (= 'packet (first (first (:arglists (meta f-tmp)))))
+                                      f-tmp
+                                      (f-tmp bulk-size))
+                                  t (get-transformation-fn)
+                                  _ (println "Resolved forwarder fn:" f)
+                                  _ (println "Resolved transformer fn:" t)]
+                               #(let [o (t %)]
+                                  (if o
+                                    (f o))))
               cljnetpcap (binding [clj-net-pcap.core/*bulk-size* bulk-size
                                    clj-net-pcap.core/*emit-raw-data* (arg-map :raw)
                                    clj-net-pcap.core/*forward-exceptions* (arg-map :debug)
@@ -128,30 +138,12 @@
                                    clj-net-pcap.pcap/*buffer-size* (arg-map :buffer-size)]
                            (if (= "" pcap-file-name)
                              (create-and-start-online-cljnetpcap
-                               (let [f-tmp (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
-                                     f (if (= 'packet (first (first (:arglists (meta f-tmp)))))
-                                         f-tmp
-                                         (f-tmp bulk-size))
-                                     t (get-transformation-fn)
-                                     _ (println "Resolved forwarder fn:" f)
-                                     _ (println "Resolved transformer fn:" t)]
-                                   #(let [o (t %)]
-                                      (if o
-                                        (f o))))
+                               processing-fn
                                (arg-map :interface)
                                (arg-map :filter))
                              (process-pcap-file
                                pcap-file-name
-                               (let [f-tmp (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
-                                     f (if (= 'packet (first (first (:arglists (meta f-tmp)))))
-                                         f-tmp
-                                         (f-tmp))
-                                     t (get-transformation-fn)
-                                     _ (println "Resolved forwarder fn:" f)
-                                     _ (println "Resolved transformer fn:" t)]
-                                   #(let [o (t %)]
-                                      (if o
-                                        (f o)))))))
+                               processing-fn)))
               stat-interval (arg-map :stats)
               stat-out-executor (executor)
               shutdown-fn (fn [] (do

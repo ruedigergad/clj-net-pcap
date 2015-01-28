@@ -55,9 +55,9 @@
                              clj-net-pcap.core/*emit-raw-data* true
                              clj-net-pcap.core/*use-intermediate-buffer* true]
                      (create-and-start-online-cljnetpcap forwarder-fn lo))]
-    (sleep 100)
+    (sleep 500)
     (cljnetpcap :send-bytes-packet ba 10 10)
-    (sleep 300)
+    (sleep 500)
     (is (= 1 (cntr)))
     (is (not (.isDirect @received-data)))
     (is (.hasArray @received-data))
@@ -76,10 +76,10 @@
                              clj-net-pcap.core/*emit-raw-data* true
                              clj-net-pcap.core/*use-intermediate-buffer* true]
                      (create-and-start-online-cljnetpcap forwarder-fn lo))]
-    (sleep 100)
+    (sleep 500)
     (doseq [x (range 0 10)]
       (cljnetpcap :send-packet-map (assoc test-pkt-descr-map "icmpSeqNo" x)))
-    (sleep 300)
+    (sleep 500)
     (is (= 1 (cntr)))
     (doseq [x (range 0 10)]
       (is (= 123 (.get bb (+ (+ 40 15) (* x data-inst-len)))))
@@ -98,9 +98,9 @@
                              clj-net-pcap.core/*emit-raw-data* true
                              clj-net-pcap.core/*use-intermediate-buffer* false]
                      (create-and-start-online-cljnetpcap forwarder-fn lo))]
-    (sleep 100)
+    (sleep 500)
     (cljnetpcap :send-bytes-packet ba 10 10)
-    (sleep 300)
+    (sleep 500)
     (is (= 1 (cntr)))
     (is (= DirectBulkByteBufferWrapper (type @received-data)))
     (stop-cljnetpcap cljnetpcap)))
@@ -116,10 +116,10 @@
                              clj-net-pcap.core/*emit-raw-data* true
                              clj-net-pcap.core/*use-intermediate-buffer* false]
                      (create-and-start-online-cljnetpcap forwarder-fn lo))]
-    (sleep 100)
+    (sleep 500)
     (doseq [x (range 0 10)]
       (cljnetpcap :send-packet-map (assoc test-pkt-descr-map "icmpSeqNo" x)))
-    (sleep 300)
+    (sleep 500)
     (is (= 1 (cntr)))
     (is (.isDirect (.getBuffer @received-data)))
     (is (not (.hasArray (.getBuffer @received-data))))

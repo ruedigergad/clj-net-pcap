@@ -61,10 +61,6 @@
   [ba idx]
   (FormatUtils/asString ba \. 10 idx 4))
 
-(defn put
-  [^Map m k v]
-  (.put m k v))
-
 (defn get-offset
   [e]
   (let [offset-val (:offset e)]

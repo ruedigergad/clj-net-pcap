@@ -53,6 +53,10 @@
   [ba idx]
   (+ (* (ByteArrayHelper/getIntBigEndian ba idx) 1000000000) (* (ByteArrayHelper/getIntBigEndian ba (+ idx 4)) 1000)))
 
+(defn ethernet-address
+  [ba idx]
+  (FormatUtils/asStringZeroPad ba \: 16 idx 6))
+
 (defn put
   [^Map m k v]
   (.put m k v))

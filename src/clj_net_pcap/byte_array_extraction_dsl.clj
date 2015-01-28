@@ -29,10 +29,21 @@
            (org.jnetpcap.packet.format FormatUtils)))
 
 
+(defn int8
+  [ba idx]
+  (ByteArrayHelper/getByte ba idx))
 
 (defn int16
   [ba idx]
   (ByteArrayHelper/getInt16 ba idx))
+
+(defn int32
+  [ba idx]
+  (ByteArrayHelper/getInt ba idx))
+
+(defn int32be
+  [ba idx]
+  (ByteArrayHelper/getIntBigEndian ba idx))
 
 (defn put
   [^Map m k v]

@@ -82,20 +82,21 @@
                  0))))
 
 (defn create-parse-fn
-  [ba]
+  [ba offset]
   (fn [v e]
     (conj v `(.put 
                ~(name (:name e))
-               (~(resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation e))))) ~ba ~(get-offset e))))))
+               (~(resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation e))))) ~ba (+ ~offset ~(get-offset e)))))))
 
 (defn create-extraction-fn
   [dsl-expression]
   (println "Got DSL expression:" dsl-expression)
   (let [ba-sym 'ba
-        fn-body-vec (reduce (create-parse-fn ba-sym) '[doto (java.util.HashMap.)] dsl-expression)
+        offset-sym 'offset
+        fn-body-vec (reduce (create-parse-fn ba-sym offset-sym) '[doto (java.util.HashMap.)] dsl-expression)
         _ (println "Created extraction function vector from DSL:" fn-body-vec)
         fn-body (reverse (into '() fn-body-vec))
-        extraction-fn (eval `(fn [~ba-sym] ~fn-body))]
+        extraction-fn (eval `(fn [~ba-sym ~offset-sym] ~fn-body))]
     extraction-fn))
 
 (def ipv4-udp-be-dsl-expression

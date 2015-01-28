@@ -39,7 +39,7 @@
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
-        extracted-map (extraction-fn pkt-ba)]
+        extracted-map (extraction-fn pkt-ba 0)]
     (is (= expected-map extracted-map))))
 
 (deftest simple-packet-offsets-name-dsl-test
@@ -53,7 +53,7 @@
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
-        extracted-map (extraction-fn pkt-ba)]
+        extracted-map (extraction-fn pkt-ba 0)]
     (is (= expected-map extracted-map))))
 
 (deftest extended-packet-offsets-name-dsl-be-test
@@ -72,7 +72,7 @@
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
-        extracted-map (extraction-fn pkt-ba)]
+        extracted-map (extraction-fn pkt-ba 0)]
     (is (= expected-map extracted-map))))
 
 (deftest extended-packet-offsets-name-dsl-le-test
@@ -91,7 +91,7 @@
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
-        extracted-map (extraction-fn pkt-ba)]
+        extracted-map (extraction-fn pkt-ba 0)]
     (is (= expected-map extracted-map))))
 
 (deftest extended-packet-offsets-name-dsl-le-strings-test
@@ -110,7 +110,7 @@
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
-        extracted-map (extraction-fn pkt-ba)]
+        extracted-map (extraction-fn pkt-ba 0)]
     (is (= expected-map extracted-map))))
 
 (deftest timestamp-extraction-le-test
@@ -130,7 +130,7 @@
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
-        extracted-map (extraction-fn pkt-ba)]
+        extracted-map (extraction-fn pkt-ba 0)]
     (is (= expected-map extracted-map))))
 
 (deftest timestamp-extraction-be-test
@@ -150,7 +150,7 @@
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
-        extracted-map (extraction-fn pkt-ba)]
+        extracted-map (extraction-fn pkt-ba 0)]
     (is (= expected-map extracted-map))))
 
 (deftest ethernet-address-extraction-test
@@ -173,7 +173,7 @@
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
-        extracted-map (extraction-fn pkt-ba)]
+        extracted-map (extraction-fn pkt-ba 0)]
     (is (= expected-map extracted-map))))
 
 (deftest ipv4-address-extraction-test
@@ -199,7 +199,7 @@
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
-        extracted-map (extraction-fn pkt-ba)]
+        extracted-map (extraction-fn pkt-ba 0)]
     (is (= expected-map extracted-map))))
 
 (deftest ipv4-version-extraction-test
@@ -226,7 +226,7 @@
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
-        extracted-map (extraction-fn pkt-ba)]
+        extracted-map (extraction-fn pkt-ba 0)]
     (is (= expected-map extracted-map))))
 
 (deftest full-ipv4-udp-dsl-be-test
@@ -241,7 +241,7 @@
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn ipv4-udp-be-dsl-expression)
-        extracted-map (extraction-fn pkt-ba)]
+        extracted-map (extraction-fn pkt-ba 0)]
     (is (= expected-map extracted-map))))
 
 (deftest full-ipv4-udp-dsl-le-test
@@ -256,6 +256,6 @@
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn ipv4-udp-le-dsl-expression)
-        extracted-map (extraction-fn pkt-ba)]
+        extracted-map (extraction-fn pkt-ba 0)]
     (is (= expected-map extracted-map))))
 

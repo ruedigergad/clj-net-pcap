@@ -128,9 +128,9 @@
                                   t (get-transformation-fn)
                                   _ (println "Resolved forwarder fn:" f)
                                   _ (println "Resolved transformer fn:" t)]
-                               #(let [o (t %)]
-                                  (if o
-                                    (f o))))
+                              #(let [o (t %)]
+                                 (if o
+                                   (f o))))
               cljnetpcap (binding [clj-net-pcap.core/*bulk-size* bulk-size
                                    clj-net-pcap.core/*emit-raw-data* (arg-map :raw)
                                    clj-net-pcap.core/*forward-exceptions* (arg-map :debug)

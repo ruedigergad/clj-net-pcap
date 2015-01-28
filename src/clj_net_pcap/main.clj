@@ -224,6 +224,11 @@
                                                      (if (map? read-data)
                                                        (cljnetpcap :send-packet-map read-data)
                                                        (cljnetpcap :send-bytes-packet (byte-array (map byte read-data)))))
+                          (or
+                            (= cmd "sdtf")
+                            (= cmd "set-dsl-transformation-fn")) (let [read-data (binding [*read-eval* false] (read-string args))
+                                                                       new-dsl-t-fn (get-dsl-fn read-data)]
+                                                                   (swap! dynamic-transformation-fn (fn [_] new-dsl-t-fn)))
                           :default (when (not= cmd "")
                                      (println "Unknown command:" cmd)
                                      (println "Valid commands are: add-filter (af), get-filters (gf), remove-last-filter (rlf), remove-all-filters (raf), replace-filter old with-filter new")))

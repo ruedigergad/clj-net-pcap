@@ -26,6 +26,7 @@
   (:use clojure.pprint
         [clojure.string :only [join split]]
         clojure.tools.cli
+        clj-net-pcap.byte-array-extraction-dsl
         clj-net-pcap.core
         clj-net-pcap.native
         clj-net-pcap.packet-gen
@@ -43,6 +44,11 @@
      "The duration in seconds how long clj-net-pcap is run."
      :default -1
      :parse-fn #(Integer. ^java.lang.String %)]
+    ["-e" "--dsl-expression"
+     (str "Configure a DSL expression for extracting data from raw packet data in form of byte arrays."
+          "Pre-configured DSL expressions are:\n"
+          "ipv4-udp-be-dsl-expression, ipv4-udp-le-dsl-expression")
+     :default ""]
     ["-f" "--filter"
      (str "Pcap filter to be used."
           " Defaults to the empty String which means that all packets are captured.")
@@ -100,6 +106,13 @@
         (println "Starting clj-net-pcap using the following options:")
         (pprint arg-map)
         (let [pcap-file-name (arg-map :read-file)
+              dsl-expr-string (arg-map :dsl-expression)
+              dsl-expression (let [expr (resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" dsl-expr-string)))]
+                               (if expr
+                                 (var-get expr)
+                                 (if (not= "" dsl-expr-string)
+                                   (read-string dsl-expr-string))))
+              _ (println "DSL expression from command line args:" dsl-expression)
               cljnetpcap (binding [clj-net-pcap.core/*bulk-size* (arg-map :bulk-size)
                                    clj-net-pcap.core/*emit-raw-data* (arg-map :raw)
                                    clj-net-pcap.core/*forward-exceptions* (arg-map :debug)

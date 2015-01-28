@@ -47,8 +47,8 @@
 
 (defn create-extraction-fn
   [dsl-expression]
+  (println "Got DSL expression:" dsl-expression)
   (let [ba-sym 'ba
-        _ (println dsl-expression)
         fn-body-vec (reduce (create-parse-fn ba-sym) '[doto (java.util.HashMap.)] dsl-expression)
         _ (println "Created extraction function vector from DSL:" fn-body-vec)
         fn-body (reverse (into '() fn-body-vec))

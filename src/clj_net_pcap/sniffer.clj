@@ -67,6 +67,7 @@
   ([pcap handler-fn]
     (create-and-start-sniffer pcap handler-fn nil))
   ([pcap handler-fn user-data]
+;    (create-and-start-sniffer pcap 1 true handler-fn user-data))
     (let [packet-handler (proxy [ByteBufferHandler] []
                            (nextPacket [ph buf u] (handler-fn ph buf u)))]
 ;          packet-handler (proxy [PcapPacketHandler] []

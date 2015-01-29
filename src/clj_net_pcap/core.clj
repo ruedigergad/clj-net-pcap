@@ -36,7 +36,7 @@
   (:import (clj_net_pcap Counter JBufferWrapper PcapPacketWrapper ProcessingLoop)
            (java.nio BufferUnderflowException ByteBuffer)
            (java.util ArrayList)
-           (java.util.concurrent ArrayBlockingQueue)
+           (java.util.concurrent ArrayBlockingQueue LinkedTransferQueue)
            (org.jnetpcap DirectBulkByteBufferWrapper Pcap PcapDLT PcapHeader)
            (org.jnetpcap.nio JBuffer JMemory JMemory$Type)
            (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
@@ -108,7 +108,24 @@
     (>= trace-level 1) `(if ~force-put
                           (.put ~queue ~op)
                           (if (< (.size ~queue) *queue-size*)
-                            (if (.offer ~queue ~op)
+                            (if (.hasWaitingConsumer ~queue)
+                              (.transfer ~queue ~op)
+                              (if (.put ~queue ~op)
+                                (.inc ~queued-cntr)
+                                (.inc ~dropped-cntr)))
+                            (.inc ~dropped-cntr)))
+    :default `(if ~force-put
+                (.put ~queue ~op)
+                (if (< (.size ~queue) *queue-size*)
+                  (.offer ~queue ~op)))))
+
+(defmacro enqueue-data-put
+  [queue op force-put queued-cntr dropped-cntr]
+  (cond
+    (>= trace-level 1) `(if ~force-put
+                          (.put ~queue ~op)
+                          (if (< (.size ~queue) *queue-size*)
+                            (if (.put ~queue ~op)
                               (.inc ~queued-cntr)
                               (.inc ~dropped-cntr))
                             (.inc ~dropped-cntr)))
@@ -119,12 +136,12 @@
 
 (defn create-raw-handler
   ""
-  [^ArrayBlockingQueue out-queue ^Counter out-queued-counter ^Counter out-drop-counter force-put running]
+  [^LinkedTransferQueue out-queue ^Counter out-queued-counter ^Counter out-drop-counter force-put running]
   (fn
     ([]
       (fn [ph buf _]
         (if (not (nil? buf))
-          (enqueue-data
+          (enqueue-data-put
             out-queue (deep-copy buf ph) force-put
             out-queued-counter out-drop-counter))))
     ([k]
@@ -134,7 +151,7 @@
 
 (defn create-raw-bulk-handler
   ""
-  [^ArrayBlockingQueue out-queue ^Counter out-queued-counter ^Counter out-drop-counter bulk-size force-put running use-intermediate-buffer]
+  [^LinkedTransferQueue out-queue ^Counter out-queued-counter ^Counter out-drop-counter bulk-size force-put running use-intermediate-buffer]
   (fn
     ([]
       (if use-intermediate-buffer
@@ -162,14 +179,14 @@
 
 (defn create-packet-processing-handler
   ""
-  [^ArrayBlockingQueue out-queue ^Counter out-queued-counter ^Counter out-drop-counter force-put running forward-exceptions]
+  [^LinkedTransferQueue out-queue ^Counter out-queued-counter ^Counter out-drop-counter force-put running forward-exceptions]
   (let [buffer-queue (ArrayBlockingQueue. *queue-size*)
         buffer-drop-counter (Counter.) buffer-queued-counter (Counter.)
         failed-counter (Counter.)
         scanner-queue (ArrayBlockingQueue. *queue-size*)
         scanner-drop-counter (Counter.) scanner-queued-counter (Counter.)
         buffer-processor #(try (let [bufrec (.take buffer-queue)]
-                                 (enqueue-data
+                                 (enqueue-data-put
                                    scanner-queue (peer-packet bufrec) force-put
                                    scanner-queued-counter scanner-drop-counter))
                             (catch Exception e
@@ -181,7 +198,7 @@
         buffer-processor-thread (doto (ProcessingLoop. buffer-processor)
                                   (.setName "ByteBufferProcessor") (.setDaemon true) (.start))
         scanner #(try (let [^PcapPacket pkt (.take scanner-queue)]
-                        (enqueue-data
+                        (enqueue-data-put
                           out-queue (scan-packet pkt) force-put
                           out-queued-counter out-drop-counter))
                   (catch Exception e
@@ -196,8 +213,8 @@
       ([]
         (fn [ph buf _]
           (if (not (nil? buf))
-            (enqueue-data buffer-queue (create-buffer-record buf ph) force-put
-                          buffer-queued-counter buffer-drop-counter))))
+            (enqueue-data-put buffer-queue (create-buffer-record buf ph) force-put
+                              buffer-queued-counter buffer-drop-counter))))
       ([k]
         (condp = k
           :get-stats {"buffer-queued" (.value buffer-queued-counter) "buffer-dropped" (.value buffer-drop-counter)
@@ -231,14 +248,14 @@
    It is recommended to use: create-and-start-online-cljnetpcap or process-pcap-file"
   [pcap forwarder-fn filter-expr force-put]
   (let [running (ref true)
-        out-queue (ArrayBlockingQueue. *queue-size*)
+        out-queue (LinkedTransferQueue.)
         out-drop-counter (Counter.) out-queued-counter (Counter.)
         bulk-size *bulk-size*
         use-intermediate-buffer *use-intermediate-buffer*
         emit-raw-data *emit-raw-data*
         forward-exceptions *forward-exceptions*
         handler (if emit-raw-data
-                  (if (<= bulk-size 1)
+                  (if force-put
                     (create-raw-handler out-queue out-queued-counter out-drop-counter force-put running)
                     (create-raw-bulk-handler out-queue out-queued-counter out-drop-counter bulk-size force-put running use-intermediate-buffer))
                   (create-packet-processing-handler out-queue out-queued-counter out-drop-counter force-put running forward-exceptions))
@@ -254,7 +271,7 @@
                          (if forward-exceptions
                            (throw e))))
                     forward-exceptions)
-        sniffer (if (and emit-raw-data (> bulk-size 1))
+        sniffer (if (and emit-raw-data (not force-put))
                   (create-and-start-sniffer pcap bulk-size use-intermediate-buffer (handler) nil)
                   (create-and-start-sniffer pcap (handler)))
         stats-fn (create-stats-fn pcap)

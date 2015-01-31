@@ -26,5 +26,9 @@
 
 (defn create-stat-delta-counter
   []
-  (let []
-    (fn [current-stats])))
+  (let [delta-cntr (delta-counter)]
+    (doseq [e {"out-dropped" 0, "ifdrop" 0, "out-queued" 0, "drop" 0, "recv" 0, "forwarder-failed" 0}]
+      (delta-cntr (keyword (key e)) (val e)))
+    (fn [current-stats]
+      (reduce #(let [k (key %2)]
+                 (assoc %1 k (delta-cntr (keyword k) (val %2)))) {} current-stats))))

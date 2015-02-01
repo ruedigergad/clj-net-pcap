@@ -54,7 +54,7 @@
       ([]
         (/ (apply + @data) cnt))
       ([value]
-        (dosync (alter data (fn [d v] (-> d (rest) (vec) (conj v))) value))))))
+        (dosync (alter data (fn [d v] (-> d (subvec 1) (conj v))) value))))))
 
 (defn create-max-capture-rate-determinator
   [threshold interpolation]

@@ -37,3 +37,13 @@
   [data]
   (let [{:strs [out-dropped ifdrop drop]} data]
     (+ out-dropped ifdrop drop)))
+
+(defn create-repetition-detector
+  [repetitions]
+  (let [cntr (counter)]
+    (fn [pred-f]
+      (if (pred-f)
+        (cntr inc)
+        (cntr (fn [_] 0)))
+      (= repetitions (cntr)))))
+

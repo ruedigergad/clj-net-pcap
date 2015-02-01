@@ -39,3 +39,20 @@
   (let [delta {"forwarder-failed" 1, "out-dropped" 2, "out-queued" 3, "recv" 4, "drop" 5, "ifdrop" 6}]
     (is (= 13 (get-dropped-sum delta)))))
 
+(deftest simple-repetition-detection-test-1
+  (let [detector (create-repetition-detector 3)]
+    (is (not (detector (fn [] true))))
+    (is (not (detector (fn [] true))))
+    (is (detector (fn [] true)))
+    (is (not (detector (fn [] true))))))
+
+(deftest simple-repetition-detection-test-2
+  (let [detector (create-repetition-detector 3)]
+    (is (not (detector (fn [] true))))
+    (is (not (detector (fn [] true))))
+    (is (not (detector (fn [] false))))
+    (is (not (detector (fn [] true))))
+    (is (not (detector (fn [] true))))
+    (is (detector (fn [] true)))
+    (is (not (detector (fn [] true))))))
+

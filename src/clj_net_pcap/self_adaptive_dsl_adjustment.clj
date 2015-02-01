@@ -32,3 +32,8 @@
     (fn [current-stats]
       (reduce #(let [k (key %2)]
                  (assoc %1 k (delta-cntr (keyword k) (val %2)))) {} current-stats))))
+
+(defn get-dropped-sum
+  [data]
+  (let [{:strs [out-dropped ifdrop drop]} data]
+    (+ out-dropped ifdrop drop)))

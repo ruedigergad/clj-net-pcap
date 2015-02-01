@@ -35,3 +35,7 @@
     (is (= expected-delta-1 (stat-d-cntr stat-1)))
     (is (= expected-delta-2 (stat-d-cntr stat-2)))))
 
+(deftest get-dropped-sum-test
+  (let [delta {"forwarder-failed" 1, "out-dropped" 2, "out-queued" 3, "recv" 4, "drop" 5, "ifdrop" 6}]
+    (is (= 13 (get-dropped-sum delta)))))
+

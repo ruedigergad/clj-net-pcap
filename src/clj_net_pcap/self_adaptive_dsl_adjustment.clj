@@ -47,3 +47,16 @@
         (cntr (fn [_] 0)))
       (= repetitions (cntr)))))
 
+(defn create-max-capture-rate-determinator
+  [threshold interpolation]
+  (let [stats-delta-cntr (create-stat-delta-counter)
+        rep-det (create-repetition-detector interpolation)]
+    (fn
+      [stat-data]
+      (let [deltas (stats-delta-cntr stat-data)
+            dropped (get-dropped-sum deltas)
+            recvd (deltas "recv")]
+        (if (rep-det #(> dropped (* recvd threshold)))
+          (- recvd dropped)
+          -1)))))
+

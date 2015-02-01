@@ -56,3 +56,42 @@
     (is (detector (fn [] true)))
     (is (not (detector (fn [] true))))))
 
+(deftest determine-max-capture-rate-test-1
+  (let [stat-1 {"forwarder-failed" 0, "out-dropped" 2000, "out-queued" 0, "recv" 10000, "drop" 0, "ifdrop" 0}
+        stat-2 {"forwarder-failed" 0, "out-dropped" 4000, "out-queued" 0, "recv" 20000, "drop" 0, "ifdrop" 0}
+        stat-3 {"forwarder-failed" 0, "out-dropped" 6000, "out-queued" 0, "recv" 30000, "drop" 0, "ifdrop" 0}
+        threshold 0.01
+        interpolation 3
+        max-cap-rate-det (create-max-capture-rate-determinator threshold interpolation)]
+    (is (= -1 (max-cap-rate-det stat-1)))
+    (is (= -1 (max-cap-rate-det stat-2)))
+    (is (= 8000 (max-cap-rate-det stat-3)))))
+
+(deftest determine-max-capture-rate-test-2
+  (let [stat-1 {"forwarder-failed" 0, "out-dropped" 20, "out-queued" 0, "recv" 10000, "drop" 0, "ifdrop" 0}
+        stat-2 {"forwarder-failed" 0, "out-dropped" 40, "out-queued" 0, "recv" 20000, "drop" 0, "ifdrop" 0}
+        stat-3 {"forwarder-failed" 0, "out-dropped" 60, "out-queued" 0, "recv" 30000, "drop" 0, "ifdrop" 0}
+        threshold 0.01
+        interpolation 3
+        max-cap-rate-det (create-max-capture-rate-determinator threshold interpolation)]
+    (is (= -1 (max-cap-rate-det stat-1)))
+    (is (= -1 (max-cap-rate-det stat-2)))
+    (is (= -1 (max-cap-rate-det stat-3)))))
+
+(deftest determine-max-capture-rate-test-3
+  (let [stat-1 {"forwarder-failed" 0, "out-dropped" 2000, "out-queued" 0, "recv" 10000, "drop" 0, "ifdrop" 0}
+        stat-2 {"forwarder-failed" 0, "out-dropped" 4000, "out-queued" 0, "recv" 20000, "drop" 0, "ifdrop" 0}
+        stat-3 {"forwarder-failed" 0, "out-dropped" 4020, "out-queued" 0, "recv" 30000, "drop" 0, "ifdrop" 0}
+        stat-4 {"forwarder-failed" 0, "out-dropped" 6000, "out-queued" 0, "recv" 40000, "drop" 0, "ifdrop" 0}
+        stat-5 {"forwarder-failed" 0, "out-dropped" 8000, "out-queued" 0, "recv" 50000, "drop" 0, "ifdrop" 0}
+        stat-6 {"forwarder-failed" 0, "out-dropped" 10000, "out-queued" 0, "recv" 60000, "drop" 0, "ifdrop" 0}
+        threshold 0.01
+        interpolation 3
+        max-cap-rate-det (create-max-capture-rate-determinator threshold interpolation)]
+    (is (= -1 (max-cap-rate-det stat-1)))
+    (is (= -1 (max-cap-rate-det stat-2)))
+    (is (= -1 (max-cap-rate-det stat-3)))
+    (is (= -1 (max-cap-rate-det stat-4)))
+    (is (= -1 (max-cap-rate-det stat-5)))
+    (is (= 8000 (max-cap-rate-det stat-6)))))
+

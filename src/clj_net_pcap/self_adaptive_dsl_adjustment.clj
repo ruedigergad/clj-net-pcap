@@ -47,16 +47,27 @@
         (cntr (fn [_] 0)))
       (= repetitions (cntr)))))
 
+(defn create-moving-average-calculator
+  [cnt]
+  (let [data (ref (vec (repeat cnt 0)))]
+    (fn
+      ([]
+        (/ (apply + @data) cnt))
+      ([value]
+        (dosync (alter data (fn [d v] (-> d (rest) (vec) (conj v))) value))))))
+
 (defn create-max-capture-rate-determinator
   [threshold interpolation]
   (let [stats-delta-cntr (create-stat-delta-counter)
-        rep-det (create-repetition-detector interpolation)]
+        rep-det (create-repetition-detector interpolation)
+        mvg-avg-calc (create-moving-average-calculator interpolation)]
     (fn
       [stat-data]
       (let [deltas (stats-delta-cntr stat-data)
             dropped (get-dropped-sum deltas)
             recvd (deltas "recv")]
+        (mvg-avg-calc (- recvd dropped))
         (if (rep-det #(> dropped (* recvd threshold)))
-          (- recvd dropped)
+          (mvg-avg-calc)
           -1)))))
 

@@ -71,3 +71,10 @@
           (mvg-avg-calc)
           -1)))))
 
+(defn create-self-adaptation-controller
+  [init dynamic-dsl]
+  (let [state (ref {})]
+    (swap! dynamic-dsl (fn [_] init))
+    (fn
+      [stat-data])))
+

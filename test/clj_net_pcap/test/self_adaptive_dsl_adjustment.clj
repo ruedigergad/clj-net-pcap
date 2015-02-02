@@ -132,3 +132,8 @@
     (is (= -1 (max-cap-rate-det stat-2)))
     (is (= 8000 (max-cap-rate-det stat-3)))))
 
+(deftest self-adaptation-controller-initialization-test
+  (let [initial-dsl-expr [{:a "A"} {:b "B"} {:c "C"}]
+        dynamic-dsl-expr (atom nil)
+        self-adpt-ctrlr (create-self-adaptation-controller initial-dsl-expr dynamic-dsl-expr)]
+    (is (= initial-dsl-expr @dynamic-dsl-expr))))

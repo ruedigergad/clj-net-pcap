@@ -42,6 +42,8 @@
   [repetitions]
   (let [cntr (counter)]
     (fn [pred-f]
+      (if (>= (cntr) repetitions)
+        (cntr (fn [_] 0)))
       (if (pred-f)
         (cntr inc)
         (cntr (fn [_] 0)))
@@ -79,9 +81,12 @@
     (swap! dynamic-dsl (fn [_] init))
     (fn
       [stat-data]
+      (println "State:" @current-state "State map:" @state-map)
       (if (> 0 (get-in @state-map [@current-state :max-cap-rate]))
         (let [cur-max-cap-rate (max-cap-rate-det stat-data)]
+          (println "Determined max. capture rate:" cur-max-cap-rate)
           (when (< 0 cur-max-cap-rate)
+            (println "Adjusting max. capture rate for current state.")
             (dosync
               (alter state-map (fn [m] (-> m
                                          (assoc-in [@current-state :max-cap-rate] cur-max-cap-rate)

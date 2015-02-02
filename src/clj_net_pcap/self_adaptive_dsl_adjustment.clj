@@ -73,8 +73,19 @@
 
 (defn create-self-adaptation-controller
   [init dynamic-dsl threshold interpolation inactivity]
-  (let [state (ref {})]
+  (let [state-map (ref {1 {:dsl init :max-cap-rate -1}})
+        current-state (ref 1)
+        max-cap-rate-det (create-max-capture-rate-determinator threshold interpolation)]
     (swap! dynamic-dsl (fn [_] init))
     (fn
-      [stat-data])))
+      [stat-data]
+      (if (> 0 (get-in @state-map [@current-state :max-cap-rate]))
+        (let [cur-max-cap-rate (max-cap-rate-det stat-data)]
+          (when (< 0 cur-max-cap-rate)
+            (dosync
+              (alter state-map (fn [m] (-> m
+                                         (assoc-in [@current-state :max-cap-rate] cur-max-cap-rate)
+                                         (assoc (inc @current-state) {:dsl (subvec (get-in m [@current-state :dsl]) 1) :max-cap-rate -1})))))
+            (dosync (alter current-state inc))
+            (swap! dynamic-dsl (fn [_] (get-in @state-map [@current-state :dsl])))))))))
 

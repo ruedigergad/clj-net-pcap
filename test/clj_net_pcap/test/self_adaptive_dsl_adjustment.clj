@@ -140,3 +140,20 @@
         inactivity 2
         self-adpt-ctrlr (create-self-adaptation-controller initial-dsl-expr dynamic-dsl-expr threshold interpolation inactivity)]
     (is (= initial-dsl-expr @dynamic-dsl-expr))))
+
+(deftest self-adaptation-controller-cap-rate-calc-test-1
+  (let [initial-dsl-expr [{:a "A"} {:b "B"} {:c "C"}]
+        dynamic-dsl-expr (atom nil)
+        threshold 0.01
+        interpolation 3
+        inactivity 2
+        stat-1 {"forwarder-failed" 0, "out-dropped" 2000, "out-queued" 0, "recv" 10000, "drop" 0, "ifdrop" 0}
+        stat-2 {"forwarder-failed" 0, "out-dropped" 4000, "out-queued" 0, "recv" 20000, "drop" 0, "ifdrop" 0}
+        stat-3 {"forwarder-failed" 0, "out-dropped" 6000, "out-queued" 0, "recv" 30000, "drop" 0, "ifdrop" 0}
+        self-adpt-ctrlr (create-self-adaptation-controller initial-dsl-expr dynamic-dsl-expr threshold interpolation inactivity)]
+    (is (= initial-dsl-expr @dynamic-dsl-expr))
+    (self-adpt-ctrlr stat-1)
+    (self-adpt-ctrlr stat-2)
+    (self-adpt-ctrlr stat-3)
+    (is (= [{:b "B"} {:c "C"}] @dynamic-dsl-expr))))
+

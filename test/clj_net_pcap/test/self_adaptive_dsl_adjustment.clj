@@ -135,5 +135,8 @@
 (deftest self-adaptation-controller-initialization-test
   (let [initial-dsl-expr [{:a "A"} {:b "B"} {:c "C"}]
         dynamic-dsl-expr (atom nil)
-        self-adpt-ctrlr (create-self-adaptation-controller initial-dsl-expr dynamic-dsl-expr)]
+        threshold 0.01
+        interpolation 3
+        inactivity 2
+        self-adpt-ctrlr (create-self-adaptation-controller initial-dsl-expr dynamic-dsl-expr threshold interpolation inactivity)]
     (is (= initial-dsl-expr @dynamic-dsl-expr))))

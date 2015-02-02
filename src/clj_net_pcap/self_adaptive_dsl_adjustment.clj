@@ -72,7 +72,7 @@
           -1)))))
 
 (defn create-self-adaptation-controller
-  [init dynamic-dsl]
+  [init dynamic-dsl threshold interpolation inactivity]
   (let [state (ref {})]
     (swap! dynamic-dsl (fn [_] init))
     (fn

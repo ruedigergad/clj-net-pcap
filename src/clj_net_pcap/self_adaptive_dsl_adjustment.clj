@@ -77,20 +77,28 @@
   [init dynamic-dsl threshold interpolation inactivity]
   (let [state-map (ref {1 {:dsl init :max-cap-rate -1}})
         current-state (ref 1)
-        max-cap-rate-det (create-max-capture-rate-determinator threshold interpolation)]
+        max-cap-rate-det (create-max-capture-rate-determinator threshold interpolation)
+        inact-ctr (counter)
+        reset-inact (fn []
+                      (println "Resetting inact-ctr to" inactivity)
+                      (inact-ctr (fn [_] inactivity)))]
     (swap! dynamic-dsl (fn [_] init))
     (fn
       [stat-data]
       (println "State:" @current-state "State map:" @state-map)
-      (if (> 0 (get-in @state-map [@current-state :max-cap-rate]))
-        (let [cur-max-cap-rate (max-cap-rate-det stat-data)]
-          (println "Determined max. capture rate:" cur-max-cap-rate)
-          (when (< 0 cur-max-cap-rate)
-            (println "Adjusting max. capture rate for current state.")
-            (dosync
-              (alter state-map (fn [m] (-> m
-                                         (assoc-in [@current-state :max-cap-rate] cur-max-cap-rate)
-                                         (assoc (inc @current-state) {:dsl (subvec (get-in m [@current-state :dsl]) 1) :max-cap-rate -1})))))
-            (dosync (alter current-state inc))
-            (swap! dynamic-dsl (fn [_] (get-in @state-map [@current-state :dsl])))))))))
+      (cond 
+        (< 0 (inact-ctr)) (do (println "Decrementing inact-ctr:" (inact-ctr)) (inact-ctr dec))
+        (> 0 (get-in @state-map [@current-state :max-cap-rate]))
+                (let [cur-max-cap-rate (max-cap-rate-det stat-data)]
+                  (println "Determined max. capture rate:" cur-max-cap-rate)
+                  (when (< 0 cur-max-cap-rate)
+                    (println "Adjusting max. capture rate for current state.")
+                    (dosync
+                      (alter state-map (fn [m] (-> m
+                                                 (assoc-in [@current-state :max-cap-rate] cur-max-cap-rate)
+                                                 (assoc (inc @current-state) {:dsl (subvec (get-in m [@current-state :dsl]) 1) :max-cap-rate -1})))))
+                    (dosync (alter current-state inc))
+                    (swap! dynamic-dsl (fn [_] (get-in @state-map [@current-state :dsl])))
+                    (reset-inact)))
+        :default (println "Undefined state in self-adaptation-controller.")))))
 

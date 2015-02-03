@@ -31,11 +31,16 @@
         clj-net-pcap.native
         clj-net-pcap.packet-gen
         clj-net-pcap.pcap-data
+        clj-net-pcap.self-adaptive-dsl-adjustment
         clj-assorted-utils.util)
   (:gen-class))
 
 (defn- parse-args [args]
   (cli args
+    ["-a" "--self-adaptation"
+     "Interval for self-adaptation of DSL expressions in ms."
+     :default -1
+     :parse-fn #(Integer. ^java.lang.String %)]
     ["-b" "--bulk-size"
      "The bulk size to use."
      :default 1
@@ -70,6 +75,10 @@
     ["-t" "--dynamic-transformation-fn"
      (str "If set, the transformation-fn can be changed dynamically at runtime.")
      :flag true]
+    ["-A" "--self-adaptation-opts"
+     "Options for self-adaptive adjustment of DSL expressions."
+     :default {:threshold 0.01, :interpolation 2, :inactivity 1}
+     :parse-fn #(read-string %)]
     ["-B" "--buffer-size"
      "The buffer size to use."
      :default (int (Math/pow 2 26))
@@ -128,6 +137,14 @@
                                         (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))))
               static-transformation-fn (get-transformation-fn)
               dynamic-transformation-fn (atom (get-transformation-fn))
+              dynamic-dsl-expression (atom nil)
+              sa-opts (arg-map :self-adaptation-opts)
+              self-adapt-ctrlr (create-self-adaptation-controller dsl-expression dynamic-dsl-expression
+                                                                 (sa-opts :threshold) (sa-opts :interpolation) (sa-opts :inactivity)) 
+              _ (add-watch dynamic-dsl-expression :dsl-fn-update-watch
+                           (fn [k r old-val new-val]
+                             (println "Dynamic DSL updated. Updating dynamic transformation fn:" new-val)
+                             (swap! dynamic-transformation-fn (get-dsl-fn new-val))))
               processing-fn (let [f-tmp (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
                                   f (if (= 'packet (first (first (:arglists (meta f-tmp)))))
                                       f-tmp
@@ -169,12 +186,17 @@
                                    (println "Removing temporarily extracted native libs...")
                                    (remove-native-libs)))
               run-duration (arg-map :duration)
+              sa-interval (arg-map :self-adaptation)
+              sa-executor (executor)
               shutdown-timer-executor (executor)]
           (if (not= "" pcap-file-name)
             (println "clj-net-pcap standalone executable started.\n"))
           (when (> stat-interval 0)
             (println "Printing stats to stderr in intervalls of" stat-interval "ms.")
             (run-repeat stat-out-executor #(print-err-ln (get-stats cljnetpcap)) stat-interval))
+          (when (> sa-interval 0)
+            (println "Enabling self-adaptivity with interval:" sa-interval)
+            (run-repeat sa-executor #(self-adapt-ctrlr (get-stats cljnetpcap)) sa-interval))
           (cond
             (not= "" pcap-file-name)
               (do

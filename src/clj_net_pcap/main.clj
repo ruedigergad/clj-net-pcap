@@ -146,7 +146,8 @@
               _ (add-watch dynamic-dsl-expression :dsl-fn-update-watch
                            (fn [k r old-val new-val]
                              (println "Dynamic DSL updated. Updating dynamic transformation fn:" new-val)
-                             (swap! dynamic-transformation-fn (get-dsl-fn new-val))))
+                             (let [dsl-fn (get-dsl-fn new-val)]
+                               (reset! dynamic-transformation-fn dsl-fn))))
               processing-fn (let [f-tmp (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
                                   f (if (= 'packet (first (first (:arglists (meta f-tmp)))))
                                       f-tmp
@@ -252,7 +253,7 @@
                             (= cmd "sdtf")
                             (= cmd "set-dsl-transformation-fn")) (let [read-data (binding [*read-eval* false] (read-string args))
                                                                        new-dsl-t-fn (get-dsl-fn read-data)]
-                                                                   (swap! dynamic-transformation-fn (fn [_] new-dsl-t-fn)))
+                                                                   (reset! dynamic-transformation-fn new-dsl-t-fn))
                           :default (when (not= cmd "")
                                      (println "Unknown command:" cmd)
                                      (println "Valid commands are: add-filter (af), get-filters (gf), remove-last-filter (rlf), remove-all-filters (raf), replace-filter old with-filter new")))

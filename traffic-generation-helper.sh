@@ -12,7 +12,7 @@ fi
 echo "Using destination: $DESTINATION"
 
 CHAR='.'
-PACKET_INTERVAL=200
+PACKET_INTERVAL=2000
 PACKET_INTERVAL_STEP_SIZE=5
 
 echo "Press any key to start packet generation."

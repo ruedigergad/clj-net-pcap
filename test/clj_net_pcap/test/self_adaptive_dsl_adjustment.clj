@@ -249,3 +249,35 @@
     (self-adpt-ctrlr stat-6)
     (is (= initial-dsl-expr @dynamic-dsl-expr))))
 
+(deftest self-adaptation-controller-limit-dsl-on-speedup-test
+  (let [initial-dsl-expr [{:a "A"} {:b "B"} {:c "C"}]
+        dynamic-dsl-expr (atom nil)
+        threshold 0.01
+        interpolation 3
+        inactivity 2
+        stat-1 {"forwarder-failed" 0, "out-dropped" 2000, "out-queued" 0, "recv" 10000, "drop" 0, "ifdrop" 0}
+        stat-2 {"forwarder-failed" 0, "out-dropped" 4000, "out-queued" 0, "recv" 20000, "drop" 0, "ifdrop" 0}
+        stat-3 {"forwarder-failed" 0, "out-dropped" 6000, "out-queued" 0, "recv" 30000, "drop" 0, "ifdrop" 0}
+        stat-4 {"forwarder-failed" 0, "out-dropped" 6000, "out-queued" 0, "recv" 36000, "drop" 0, "ifdrop" 0}
+        stat-5 {"forwarder-failed" 0, "out-dropped" 6000, "out-queued" 0, "recv" 42000, "drop" 0, "ifdrop" 0}
+        stat-6 {"forwarder-failed" 0, "out-dropped" 6000, "out-queued" 0, "recv" 48000, "drop" 0, "ifdrop" 0}
+        stat-7 {"forwarder-failed" 0, "out-dropped" 6000, "out-queued" 0, "recv" 54000, "drop" 0, "ifdrop" 0}
+        stat-8 {"forwarder-failed" 0, "out-dropped" 6000, "out-queued" 0, "recv" 60000, "drop" 0, "ifdrop" 0}
+        stat-9 {"forwarder-failed" 0, "out-dropped" 6000, "out-queued" 0, "recv" 70000, "drop" 0, "ifdrop" 0}
+        self-adpt-ctrlr (create-self-adaptation-controller initial-dsl-expr dynamic-dsl-expr threshold interpolation inactivity)]
+    (is (= initial-dsl-expr @dynamic-dsl-expr))
+    (self-adpt-ctrlr stat-1)
+    (self-adpt-ctrlr stat-2)
+    (self-adpt-ctrlr stat-3)
+    (is (= [{:b "B"} {:c "C"}] @dynamic-dsl-expr))
+    (self-adpt-ctrlr stat-4)
+    (self-adpt-ctrlr stat-5)
+    (is (= [{:b "B"} {:c "C"}] @dynamic-dsl-expr))
+    (self-adpt-ctrlr stat-6)
+    (is (= initial-dsl-expr @dynamic-dsl-expr))
+    (self-adpt-ctrlr stat-7)
+    (self-adpt-ctrlr stat-8)
+    (is (= initial-dsl-expr @dynamic-dsl-expr))
+    (self-adpt-ctrlr stat-9)
+    (is (= [{:b "B"} {:c "C"}] @dynamic-dsl-expr))))
+

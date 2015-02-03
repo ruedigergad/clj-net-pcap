@@ -114,5 +114,11 @@
                   (do
                     (println "Restoring DSL for state:" (dec @current-state))
                     (dosync (alter current-state dec)))
+          (and
+            (< 1 (count (get-in @state-map [@current-state :dsl])))
+            (> (deltas "recv") (get-in @state-map [@current-state :max-cap-rate])))
+                  (do
+                    (println "Using next simpler DSL sub part:" (inc @current-state))
+                    (dosync (alter current-state inc)))
           :default (println "Undefined state in self-adaptation-controller."))))))
 

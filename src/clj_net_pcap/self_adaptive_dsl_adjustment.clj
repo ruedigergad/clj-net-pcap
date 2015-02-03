@@ -91,7 +91,7 @@
                  (reset-inact)))
     (fn
       [stat-data]
-      (println "State:" @current-state "State map:" @state-map)
+;      (println "State:" @current-state "State map:" @state-map)
       (let [deltas (stat-delta-cntr stat-data)]
         (cond
           (< 0 (inact-ctr)) (do (println "Decrementing inact-ctr:" (inact-ctr)) (inact-ctr dec))
@@ -116,9 +116,11 @@
                     (dosync (alter current-state dec)))
           (and
             (< 1 (count (get-in @state-map [@current-state :dsl])))
+            (contains? @state-map (inc @current-state))
             (> (deltas "recv") (get-in @state-map [@current-state :max-cap-rate])))
                   (do
                     (println "Using next simpler DSL sub part:" (inc @current-state))
                     (dosync (alter current-state inc)))
-          :default (println "Undefined state in self-adaptation-controller."))))))
+;          :default (println "Undefined state in self-adaptation-controller."))))))
+          :default nil)))))
 

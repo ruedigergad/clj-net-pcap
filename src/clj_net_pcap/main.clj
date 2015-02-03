@@ -120,6 +120,7 @@
         (let [pcap-file-name (arg-map :read-file)
               dsl-expr-string (arg-map :dsl-expression)
               bulk-size (arg-map :bulk-size)
+              cap-if (arg-map :interface)
               dsl-expression (let [expr (resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" dsl-expr-string)))]
                                (if expr
                                  (var-get expr)
@@ -140,7 +141,8 @@
               dynamic-dsl-expression (atom nil)
               sa-opts (arg-map :self-adaptation-opts)
               self-adapt-ctrlr (create-self-adaptation-controller dsl-expression dynamic-dsl-expression
-                                                                 (sa-opts :threshold) (sa-opts :interpolation) (sa-opts :inactivity)) 
+                                                                  (sa-opts :threshold) (sa-opts :interpolation)
+                                                                  (sa-opts :inactivity) (= "lo" cap-if))
               _ (add-watch dynamic-dsl-expression :dsl-fn-update-watch
                            (fn [k r old-val new-val]
                              (println "Dynamic DSL updated. Updating dynamic transformation fn:" new-val)
@@ -169,7 +171,7 @@
                            (if (= "" pcap-file-name)
                              (create-and-start-online-cljnetpcap
                                processing-fn
-                               (arg-map :interface)
+                               cap-if
                                (arg-map :filter))
                              (process-pcap-file
                                pcap-file-name

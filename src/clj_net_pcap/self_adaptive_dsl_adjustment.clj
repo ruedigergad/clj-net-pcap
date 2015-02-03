@@ -97,7 +97,7 @@
           (< 0 (inact-ctr)) (do (println "Decrementing inact-ctr:" (inact-ctr)) (inact-ctr dec))
           (and
             (< 0 (get-dropped-sum deltas))
-            ;  ^- Using zero here may be too restrictive.
+            ;  ^- TODO: Is zero here OK? Do we need this additional check at all?
             (> 0 (get-in @state-map [@current-state :max-cap-rate])))
                   (let [cur-max-cap-rate (max-cap-rate-det stat-data)]
                     (println "Determined max. capture rate:" cur-max-cap-rate)

@@ -145,7 +145,8 @@
                                                                   (sa-opts :inactivity) (= "lo" cap-if))
               _ (add-watch dynamic-dsl-expression :dsl-fn-update-watch
                            (fn [k r old-val new-val]
-                             (println "Dynamic DSL updated. Updating dynamic transformation fn:" new-val)
+                             (println "Dynamic DSL updated.")
+;                             (println Updating dynamic transformation fn:" new-val)
                              (let [dsl-fn (get-dsl-fn new-val)]
                                (reset! dynamic-transformation-fn dsl-fn))))
               processing-fn (let [f-tmp (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))

@@ -110,9 +110,9 @@
                           (if (< (.size ~queue) *queue-size*)
                             (if (.hasWaitingConsumer ~queue)
                               (.transfer ~queue ~op)
-                              (if (.put ~queue ~op)
-                                (.inc ~queued-cntr)
-                                (.inc ~dropped-cntr)))
+                              (.offer ~queue ~op))
+;                               (.inc ~queued-cntr)
+;                               (.inc ~dropped-cntr)))
                             (.inc ~dropped-cntr)))
     :default `(if ~force-put
                 (.put ~queue ~op)

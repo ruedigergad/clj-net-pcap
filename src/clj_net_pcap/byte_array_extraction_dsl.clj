@@ -90,11 +90,11 @@
 
 (defn create-extraction-fn
   [dsl-expression]
-  (println "Got DSL expression:" dsl-expression)
+;  (println "Got DSL expression:" dsl-expression)
   (let [ba-sym 'ba
         offset-sym 'offset
         fn-body-vec (reduce (create-parse-fn ba-sym offset-sym) '[doto (java.util.HashMap.)] dsl-expression)
-        _ (println "Created extraction function vector from DSL:" fn-body-vec)
+;        _ (println "Created extraction function vector from DSL:" fn-body-vec)
         fn-body (reverse (into '() fn-body-vec))
         extraction-fn (eval `(fn [~ba-sym ~offset-sym] ~fn-body))]
     extraction-fn))

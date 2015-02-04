@@ -62,15 +62,19 @@
   [threshold interpolation]
   (let [stats-delta-cntr (create-stat-delta-counter)
         rep-det (create-repetition-detector interpolation)
-        mvg-avg-calc (create-moving-average-calculator interpolation)]
+        drp-mvg-avg-calc (create-moving-average-calculator interpolation)
+        rcv-mvg-avg-calc (create-moving-average-calculator interpolation)]
     (fn
       [stat-data]
       (let [deltas (stats-delta-cntr stat-data)
+;            _ (println "deltas:" deltas)
             dropped (get-dropped-sum deltas)
-            recvd (deltas "recv")]
-        (mvg-avg-calc (- recvd dropped))
-        (if (rep-det #(> dropped (* recvd threshold)))
-          (mvg-avg-calc)
+            _ (rcv-mvg-avg-calc (deltas "recv"))
+            rcv (rcv-mvg-avg-calc)
+            _ (drp-mvg-avg-calc dropped)
+            drp (drp-mvg-avg-calc)]
+        (if (rep-det #(> dropped 0))
+          (* (- 1.0 threshold) rcv)
           -1)))))
 
 (defn create-self-adaptation-controller
@@ -97,14 +101,17 @@
         (let [s-data (if localhost
                        (update-in stat-data ["recv"] * 0.5)
                        stat-data)
-              deltas (stat-delta-cntr s-data)]
+              deltas (stat-delta-cntr s-data)
+              cur-max-cap-rate (double (max-cap-rate-det s-data))]
             (cond
-              (< 0 (inact-ctr)) (do (println "Decrementing inact-ctr:" (inact-ctr)) (inact-ctr dec))
+              (< 0 (inact-ctr)) (do
+;                                  (println "Decrementing inact-ctr:" (inact-ctr))
+                                  (inact-ctr dec))
               (and
                 (< 0 (get-dropped-sum deltas))
                 ;  ^- TODO: Is zero here OK? Do we need this additional check at all?
                 (> 0 (get-in @state-map [@current-state :max-cap-rate])))
-                      (let [cur-max-cap-rate (max-cap-rate-det s-data)]
+                      (do
                         (println "Determined max. capture rate:" cur-max-cap-rate)
                         (when (< 0 cur-max-cap-rate)
                           (println "Adjusting max. capture rate for current state.")
@@ -112,6 +119,7 @@
                             (alter state-map (fn [m] (-> m
                                                        (assoc-in [@current-state :max-cap-rate] cur-max-cap-rate)
                                                        (assoc (inc @current-state) {:dsl (subvec (get-in m [@current-state :dsl]) 1) :max-cap-rate -1})))))
+                          (println @state-map)
                           (dosync (alter current-state inc))))
               (and
                 (< 1 @current-state)

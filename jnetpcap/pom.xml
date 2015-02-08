@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>jnetpcap</groupId>
   <artifactId>jnetpcap</artifactId>
-  <version>1.4.r1425-1d</version>
+  <version>1.4.r1425-1e</version>
   <name>jnetpcap</name>
   <description>jNetPcap: http://jnetpcap.com/</description>
   <licenses>
@@ -19,4 +19,11 @@
       <url>http://clojars.org/repo/</url>
     </repository>
   </repositories>
+  <distributionManagement>
+    <repository>
+      <id>clojars</id>
+      <name>Clojars repository</name>
+      <url>https://clojars.org/repo</url>
+    </repository>
+  </distributionManagement>
 </project>

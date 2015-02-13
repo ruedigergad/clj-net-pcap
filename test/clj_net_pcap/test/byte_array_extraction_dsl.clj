@@ -272,6 +272,7 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
+    (is (= java.util.HashMap (type extracted-map)))
     (is (= expected-map extracted-map))))
 
 (deftest dsl-default-to-java-map-type-test
@@ -287,5 +288,6 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
+    (is (= java.util.HashMap (type extracted-map)))
     (is (= expected-map extracted-map))))
 

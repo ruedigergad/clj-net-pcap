@@ -99,6 +99,15 @@
                  (~(resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation e))))) ~ba (+ ~offset ~(get-offset e))))))
     '[-> {}] rules))
 
+(defn create-extraction-fn-body-for-csv-str-type
+  [ba offset rules]
+  (let [extracted-strings (reduce
+                            (fn [v e]
+                              (conj v `(~(resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation e))))) ~ba (+ ~offset ~(get-offset e)))))
+                            '[str] rules)
+        commas (reduce into [] ["." (repeat (- (count rules) 1) ",") "."])]
+    (vec (filter #(not= \. %) (interleave extracted-strings commas)))))
+
 (defn create-extraction-fn
   [dsl-expression]
 ;  (println "Got DSL expression:" dsl-expression)
@@ -113,6 +122,7 @@
                           (condp = (name t)
                             "java-map" (create-extraction-fn-body-for-java-map-type ba-sym offset-sym rules)
                             "clj-map" (create-extraction-fn-body-for-clj-map-type ba-sym offset-sym rules)
+                            "csv-str" (create-extraction-fn-body-for-csv-str-type ba-sym offset-sym rules)
                             (do
                               (println "Unknown type:" t)
                               (println "Defaulting to :java-maps")

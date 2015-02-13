@@ -90,6 +90,15 @@
                  (~(resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation e))))) ~ba (+ ~offset ~(get-offset e))))))
     '[doto (java.util.HashMap.)] rules))
 
+(defn create-extraction-fn-body-for-clj-map-type
+  [ba offset rules]
+  (reduce
+    (fn [v e]
+      (conj v `(assoc
+                 ~(name (:name e))
+                 (~(resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation e))))) ~ba (+ ~offset ~(get-offset e))))))
+    '[-> {}] rules))
+
 (defn create-extraction-fn
   [dsl-expression]
 ;  (println "Got DSL expression:" dsl-expression)
@@ -103,6 +112,7 @@
                               t (:type dsl-expression)]
                           (condp = (name t)
                             "java-map" (create-extraction-fn-body-for-java-map-type ba-sym offset-sym rules)
+                            "clj-map" (create-extraction-fn-body-for-clj-map-type ba-sym offset-sym rules)
                             (do
                               (println "Unknown type:" t)
                               (println "Defaulting to :java-maps")
@@ -113,6 +123,7 @@
 
 ;        _ (println "Created extraction function vector from DSL:" fn-body-vec)
         fn-body (reverse (into '() fn-body-vec))
+;        _ (println "Created extraction function body:" fn-body)
         extraction-fn (eval `(fn [~ba-sym ~offset-sym] ~fn-body))]
     extraction-fn))
 

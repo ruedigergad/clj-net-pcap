@@ -291,3 +291,19 @@
     (is (= java.util.HashMap (type extracted-map)))
     (is (= expected-map extracted-map))))
 
+(deftest dsl-with-type-clj-map-test
+  (let [expected-map {"udpSrc" 2048, "udpDst" 4096}
+        dsl-expression {:type :clj-map
+                        :rules [{:offset :udp-src :transformation :int16 :name :udpSrc}
+                                {:offset :udp-dst :transformation :int16 :name :udpDst}]}
+        pkt-raw-vec [-5 -106 -57 84   15 -54 14 0   77 0 0 0   77 0 0 0    ; 16 byte pcap header
+                     -1 -2 -3 -14 -15 -16 1 2 3 4 5 6 8 0                  ; 14 byte Ethernet header
+                     69 0 0 32 0 3 64 0 7 17 115 -57 1 2 3 4 -4 -3 -2 -1   ; 20 byte IP header
+                     8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
+                     97 98 99 100]                                         ; 4 byte data "abcd"
+        pkt-ba (byte-array (map byte pkt-raw-vec))
+        extraction-fn (create-extraction-fn dsl-expression)
+        extracted-map (extraction-fn pkt-ba 0)]
+    (is (map? extracted-map))
+    (is (= expected-map extracted-map))))
+

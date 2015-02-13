@@ -307,7 +307,7 @@
     (is (map? extracted-map))
     (is (= expected-map extracted-map))))
 
-(deftest dsl-with-type-csv-test
+(deftest dsl-with-type-csv-str-test
   (let [expected-str "2048,4096"
         dsl-expression {:type :csv-str
                         :rules [{:offset :udp-src :transformation :int16 :name :udpSrc}

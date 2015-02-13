@@ -81,7 +81,7 @@
                  (println "Error: Got unknown offset value" offset-val "from entry" e)
                  0))))
 
-(defn create-extraction-fn-body-for-java-maps-type
+(defn create-extraction-fn-body-for-java-map-type
   [ba offset rules]
   (reduce
     (fn [v e]
@@ -97,16 +97,16 @@
         offset-sym 'offset
         fn-body-vec (cond
                       (vector? dsl-expression)
-                        (create-extraction-fn-body-for-java-maps-type ba-sym offset-sym dsl-expression)
+                        (create-extraction-fn-body-for-java-map-type ba-sym offset-sym dsl-expression)
                       (map? dsl-expression)
                         (let [rules (:rules dsl-expression)
                               t (:type dsl-expression)]
                           (condp = (name t)
-                            "java-map" (create-extraction-fn-body-for-java-maps-type ba-sym offset-sym rules)
+                            "java-map" (create-extraction-fn-body-for-java-map-type ba-sym offset-sym rules)
                             (do
                               (println "Unknown type:" t)
                               (println "Defaulting to :java-maps")
-                              (create-extraction-fn-body-for-java-maps-type ba-sym offset-sym rules))))
+                              (create-extraction-fn-body-for-java-map-type ba-sym offset-sym rules))))
                       :default (println "Invalid DSL expression:" dsl-expression))
 
 

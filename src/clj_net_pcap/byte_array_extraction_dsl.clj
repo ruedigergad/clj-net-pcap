@@ -81,19 +81,36 @@
                  (println "Error: Got unknown offset value" offset-val "from entry" e)
                  0))))
 
-(defn create-parse-fn
-  [ba offset]
-  (fn [v e]
-    (conj v `(.put 
-               ~(name (:name e))
-               (~(resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation e))))) ~ba (+ ~offset ~(get-offset e)))))))
+(defn create-extraction-fn-body-for-java-maps-type
+  [ba offset rules]
+  (reduce
+    (fn [v e]
+      (conj v `(.put
+                 ~(name (:name e))
+                 (~(resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation e))))) ~ba (+ ~offset ~(get-offset e))))))
+    '[doto (java.util.HashMap.)] rules))
 
 (defn create-extraction-fn
   [dsl-expression]
 ;  (println "Got DSL expression:" dsl-expression)
   (let [ba-sym 'ba
         offset-sym 'offset
-        fn-body-vec (reduce (create-parse-fn ba-sym offset-sym) '[doto (java.util.HashMap.)] dsl-expression)
+        fn-body-vec (cond
+                      (vector? dsl-expression)
+                        (create-extraction-fn-body-for-java-maps-type ba-sym offset-sym dsl-expression)
+                      (map? dsl-expression)
+                        (let [rules (:rules dsl-expression)
+                              t (:type dsl-expression)]
+                          (condp = (name t)
+                            "java-map" (create-extraction-fn-body-for-java-maps-type ba-sym offset-sym rules)
+                            (do
+                              (println "Unknown type:" t)
+                              (println "Defaulting to :java-maps")
+                              (create-extraction-fn-body-for-java-maps-type ba-sym offset-sym rules))))
+                      :default (println "Invalid DSL expression:" dsl-expression))
+
+
+
 ;        _ (println "Created extraction function vector from DSL:" fn-body-vec)
         fn-body (reverse (into '() fn-body-vec))
         extraction-fn (eval `(fn [~ba-sym ~offset-sym] ~fn-body))]

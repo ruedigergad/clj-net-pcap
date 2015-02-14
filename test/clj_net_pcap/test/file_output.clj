@@ -81,7 +81,8 @@
     (cljnetpcap :send-bytes-packet pkt-ba)
     (sleep 1000)
     (file-out-forwarder)
-    (is (= expected-str (slurp test-out-file)))))
+    (is (= expected-str (slurp test-out-file)))
+    (stop-cljnetpcap cljnetpcap)))
 
 (deftest json-str-to-file-online-test
   (let [expected-str "{\"len\":46,\"ipId\":3,\"ipTtl\":7,\"ipChecksum\":29639,\"udpSrc\":2048,\"udpDst\":4096}\n"
@@ -103,7 +104,8 @@
     (cljnetpcap :send-bytes-packet pkt-ba)
     (sleep 1000)
     (file-out-forwarder)
-    (is (= expected-str (slurp test-out-file)))))
+    (is (= expected-str (slurp test-out-file)))
+    (stop-cljnetpcap cljnetpcap)))
 
 (deftest csv-str-to-file-online-three-packets-test
   (let [expected-str "46,3,7,29639,2048,4096\n46,3,7,29639,2048,4096\n46,3,7,29639,2048,4096\n"
@@ -127,7 +129,8 @@
     (cljnetpcap :send-bytes-packet pkt-ba)
     (sleep 1000)
     (file-out-forwarder)
-    (is (= expected-str (slurp test-out-file)))))
+    (is (= expected-str (slurp test-out-file)))
+    (stop-cljnetpcap cljnetpcap)))
 
 (deftest json-str-to-file-online-three-packets-test
   (let [expected-str (str
@@ -154,7 +157,8 @@
     (cljnetpcap :send-bytes-packet pkt-ba)
     (sleep 1000)
     (file-out-forwarder)
-    (is (= expected-str (slurp test-out-file)))))
+    (is (= expected-str (slurp test-out-file)))
+    (stop-cljnetpcap cljnetpcap)))
 
 (deftest csv-str-to-file-online-bs2-test
   (let [expected-str "46,3,7,29639,2048,4096\n46,3,7,29639,2048,4096\n"
@@ -177,5 +181,6 @@
     (cljnetpcap :send-bytes-packet pkt-ba)
     (sleep 1000)
     (file-out-forwarder)
-    (is (= expected-str (slurp test-out-file)))))
+    (is (= expected-str (slurp test-out-file)))
+    (stop-cljnetpcap cljnetpcap)))
 

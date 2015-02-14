@@ -79,7 +79,8 @@
                        (set-flag flag))
         cljnetpcap (binding [*emit-raw-data* true
                              *queue-size* 1]
-                     (create-and-start-online-cljnetpcap forwarder-fn lo))]
+                     (create-and-start-online-cljnetpcap forwarder-fn lo))
+        _ (add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
     (sleep 100)
     (cljnetpcap :send-bytes-packet ba)
     (await-flag flag)
@@ -100,7 +101,8 @@
                        (set-flag flag))
         cljnetpcap (binding [*emit-raw-data* false
                              *queue-size* 1]
-                     (create-and-start-online-cljnetpcap forwarder-fn lo))]
+                     (create-and-start-online-cljnetpcap forwarder-fn lo))
+        _ (add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
     (sleep 100)
     (cljnetpcap :send-bytes-packet ba)
     (await-flag flag)
@@ -113,7 +115,8 @@
         cntr (counter)
         forwarder-fn (fn [_]
                        (cntr inc))
-        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)]
+        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)
+        _ (add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
     (sleep 100)
     (doseq [_ (repeat 10 1)]
       (sleep 10)
@@ -127,7 +130,8 @@
         cntr (counter)
         forwarder-fn (fn [_]
                        (cntr inc))
-        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)]
+        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)
+        _ (add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
     (sleep 100)
     (cljnetpcap :send-bytes-packet ba 10 10)
     (sleep 300)
@@ -139,7 +143,8 @@
         cntr (counter)
         forwarder-fn (fn [_]
                        (cntr inc))
-        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)]
+        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)
+        _ (add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
     (sleep 100)
     (cljnetpcap :send-bytes-packet ba 10)
     (sleep 300)
@@ -158,7 +163,8 @@
                        (set-flag flag))
         cljnetpcap (binding [*emit-raw-data* false
                              *queue-size* 1]
-                     (create-and-start-online-cljnetpcap forwarder-fn lo))]
+                     (create-and-start-online-cljnetpcap forwarder-fn lo))
+        _ (add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
     (sleep 100)
     (cljnetpcap :send-packet-map test-pkt-descr-map)
     (await-flag flag)
@@ -170,7 +176,8 @@
   (let [cntr (counter)
         forwarder-fn (fn [_]
                        (cntr inc))
-        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)]
+        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)
+        _ (add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
     (sleep 100)
     (doseq [_ (repeat 10 1)]
       (sleep 10)
@@ -183,7 +190,8 @@
   (let [cntr (counter)
         forwarder-fn (fn [_]
                        (cntr inc))
-        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)]
+        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)
+        _ (add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
     (sleep 100)
     (cljnetpcap :send-packet-map test-pkt-descr-map 10 10)
     (sleep 300)
@@ -194,7 +202,8 @@
   (let [cntr (counter)
         forwarder-fn (fn [_]
                        (cntr inc))
-        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)]
+        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)
+        _ (add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
     (sleep 100)
     (cljnetpcap :send-packet-map test-pkt-descr-map 10)
     (sleep 300)

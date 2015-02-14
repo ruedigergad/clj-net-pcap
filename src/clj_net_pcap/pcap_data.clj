@@ -704,3 +704,8 @@ user=>
   [bb]
   (process-packet-byte-buffer-bulk packet-byte-array-extract-bean-ipv4-udp-be bb))
 
+(defn create-file-out-forwarder
+  [out-file]
+  (fn [data]
+    (spit out-file data)))
+

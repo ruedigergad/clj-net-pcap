@@ -118,7 +118,7 @@
                               '[str "{"] rules)
                             "}")
         commas (reduce into [] ["." "." "." "." "." (reduce into [] (repeat (- (count rules) 1) ["," "." "." "."])) "." "."])]
-    (println (interleave extracted-strings commas))
+;    (println (interleave extracted-strings commas))
     (vec (filter (fn [x] (and (not= \. x) (not= "." x))) (interleave extracted-strings commas)))))
 
 (defn create-extraction-fn

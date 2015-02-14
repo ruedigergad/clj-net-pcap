@@ -710,11 +710,11 @@ user=>
   ([out-file]
     (create-file-out-forwarder out-file false))
   ([out-file bulk]
-    (let [^BufferedWriter wrtr (writer out-file :append true)
+    (let [wrtr (atom (writer out-file :append true))
           closed (atom false)
           close-fn #(try
                       (reset! closed true)
-                      (.close wrtr)
+                      (.close ^BufferedWriter @wrtr)
                       (catch Exception e
                         (println e)))]
       (if bulk
@@ -722,23 +722,25 @@ user=>
           ([] (close-fn))
           ([^List data]
             (if (not @closed)
-              (try
-                (loop [it (.iterator data)]
-                  (.write wrtr ^String (.next it))
-                  (.newLine wrtr)
-                  (if (.hasNext it)
-                    (recur it)))
-                (.flush wrtr)
-                (catch Exception e
-                  (println e))))))
+              (let [^BufferedWriter w @wrtr]
+                (try
+                  (loop [it (.iterator data)]
+                    (.write ^BufferedWriter w ^String (.next it))
+                    (.newLine ^BufferedWriter w)
+                    (if (.hasNext it)
+                      (recur it)))
+                  (.flush ^BufferedWriter w)
+                  (catch Exception e
+                    (println e)))))))
         (fn
           ([] (close-fn))
           ([^String data]
             (if (not @closed)
-              (try
-                (.write wrtr data)
-                (.newLine wrtr)
-                (.flush wrtr)
-                (catch Exception e
-                  (println e))))))))))
+              (let [^BufferedWriter w @wrtr]
+                (try
+                  (.write ^BufferedWriter w data)
+                  (.newLine ^BufferedWriter w)
+                  (.flush ^BufferedWriter w)
+                  (catch Exception e
+                    (println e)))))))))))
 

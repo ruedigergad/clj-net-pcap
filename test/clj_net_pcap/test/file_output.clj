@@ -118,3 +118,30 @@
     (file-out-forwarder)
     (is (= expected-str (slurp test-out-file)))))
 
+(deftest json-str-to-file-online-three-packets-test
+  (let [expected-str (str
+                       "{\"len\":46,\"ipId\":3,\"ipTtl\":7,\"ipChecksum\":29639,\"udpSrc\":2048,\"udpDst\":4096}\n"
+                       "{\"len\":46,\"ipId\":3,\"ipTtl\":7,\"ipChecksum\":29639,\"udpSrc\":2048,\"udpDst\":4096}\n"
+                       "{\"len\":46,\"ipId\":3,\"ipTtl\":7,\"ipChecksum\":29639,\"udpSrc\":2048,\"udpDst\":4096}\n")
+        dsl-expression {:type :json-str
+                        :rules [{:offset 12 :transformation :int32be :name :len}
+                                {:offset :ipv4-id :transformation :int16 :name :ipId}
+                                {:offset :ipv4-ttl :transformation :int8 :name :ipTtl}
+                                {:offset :ipv4-checksum :transformation :int16 :name :ipChecksum}
+                                {:offset :udp-src :transformation :int16 :name :udpSrc}
+                                {:offset :udp-dst :transformation :int16 :name :udpDst}]}
+        pkt-raw-vec [-1 -2 -3 -14 -15 -16 1 2 3 4 5 6 8 0                  ; 14 byte Ethernet header
+                     69 0 0 32 0 3 64 0 7 17 115 -57 1 2 3 4 -4 -3 -2 -1   ; 20 byte IP header
+                     8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
+                     97 98 99 100]                                         ; 4 byte data "abcd"
+        pkt-ba (byte-array (map byte pkt-raw-vec))
+        file-out-forwarder (create-file-out-forwarder test-out-file)
+        cljnetpcap (create-test-cljnetpcap-single dsl-expression file-out-forwarder)]
+    (sleep 1000)
+    (cljnetpcap :send-bytes-packet pkt-ba)
+    (cljnetpcap :send-bytes-packet pkt-ba)
+    (cljnetpcap :send-bytes-packet pkt-ba)
+    (sleep 1000)
+    (file-out-forwarder)
+    (is (= expected-str (slurp test-out-file)))))
+

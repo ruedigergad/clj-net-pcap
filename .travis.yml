@@ -8,3 +8,4 @@ after_script:
 lein: lein2
 jdk:
   - openjdk7
+  - oraclejdk8

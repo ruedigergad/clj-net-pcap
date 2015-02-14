@@ -75,6 +75,9 @@
     ["-t" "--dynamic-transformation-fn"
      (str "If set, the transformation-fn can be changed dynamically at runtime.")
      :flag true]
+    ["-w" "--write-to-file"
+     "Write output to file with the given name."
+     :default nil]
     ["-A" "--self-adaptation-opts"
      "Options for self-adaptive adjustment of DSL expressions."
      :default {:threshold 0.01, :interpolation 2, :inactivity 1}
@@ -149,10 +152,15 @@
 ;                             (println Updating dynamic transformation fn:" new-val)
                              (let [dsl-fn (get-dsl-fn new-val)]
                                (reset! dynamic-transformation-fn dsl-fn))))
+              output-file (arg-map :write-to-file)
+              file-output-forwarder (when (not (nil? output-file))
+                                      (println "Writing data to file:" output-file)
+                                      (create-file-out-forwarder output-file))
               processing-fn (let [f-tmp (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
-                                  f (if (= 'packet (first (first (:arglists (meta f-tmp)))))
-                                      f-tmp
-                                      (f-tmp bulk-size))]
+                                  f (cond
+                                      (not (nil? file-output-forwarder)) file-output-forwarder
+                                      (= 'packet (first (first (:arglists (meta f-tmp))))) f-tmp
+                                      :default (f-tmp bulk-size))]
                               (println "Resolved forwarder fn:" f)
                               (if (arg-map :dynamic-transformation-fn)
                                 (do
@@ -186,6 +194,9 @@
                                      (println "Stopping stat output.")
                                      (shutdown stat-out-executor))
                                    (get-stats cljnetpcap)
+                                   (when (not (nil? file-output-forwarder))
+                                     (println "Closing file output forwarder...")
+                                     (file-output-forwarder))
                                    (stop-cljnetpcap cljnetpcap)
                                    (println "Removing temporarily extracted native libs...")
                                    (remove-native-libs)))

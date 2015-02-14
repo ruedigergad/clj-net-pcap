@@ -27,7 +27,7 @@
         clj-assorted-utils.util
         clj-net-pcap.native)
   (:require (clj-net-pcap [packet-offsets :as offsets]))
-  (:import (java.io BufferedWriter)
+  (:import (java.io BufferedWriter Writer)
            (java.net InetAddress)
            (java.nio ByteBuffer)
            (java.util Arrays ArrayList HashMap Iterator List Map)
@@ -710,7 +710,7 @@ user=>
   ([out-file]
     (create-file-out-forwarder out-file false))
   ([out-file bulk]
-    (let [wrtr (writer out-file :append true)
+    (let [^BufferedWriter wrtr (writer out-file :append true)
           closed (atom false)
           close-fn #(try
                       (reset! closed true)
@@ -724,7 +724,7 @@ user=>
             (if (not @closed)
               (try
                 (loop [it (.iterator data)]
-                  (.write wrtr (.next it))
+                  (.write wrtr ^String (.next it))
                   (.newLine wrtr)
                   (if (.hasNext it)
                     (recur it)))
@@ -733,7 +733,7 @@ user=>
                   (println e))))))
         (fn
           ([] (close-fn))
-          ([data]
+          ([^String data]
             (if (not @closed)
               (try
                 (.write wrtr data)

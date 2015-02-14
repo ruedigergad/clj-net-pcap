@@ -54,10 +54,11 @@
         cljnetpcap (binding [clj-net-pcap.core/*bulk-size* 10
                              clj-net-pcap.core/*emit-raw-data* true
                              clj-net-pcap.core/*use-intermediate-buffer* true]
-                     (create-and-start-online-cljnetpcap forwarder-fn lo))]
-    (sleep 500)
+                     (create-and-start-online-cljnetpcap forwarder-fn lo))
+        _ (add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
+    (sleep 1000)
     (cljnetpcap :send-bytes-packet ba 10 10)
-    (sleep 500)
+    (sleep 1000)
     (is (= 1 (cntr)))
     (is (not (.isDirect @received-data)))
     (is (.hasArray @received-data))
@@ -75,11 +76,12 @@
         cljnetpcap (binding [clj-net-pcap.core/*bulk-size* 10
                              clj-net-pcap.core/*emit-raw-data* true
                              clj-net-pcap.core/*use-intermediate-buffer* true]
-                     (create-and-start-online-cljnetpcap forwarder-fn lo))]
-    (sleep 500)
+                     (create-and-start-online-cljnetpcap forwarder-fn lo))
+        _ (add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
+    (sleep 1000)
     (doseq [x (range 0 10)]
       (cljnetpcap :send-packet-map (assoc test-pkt-descr-map "icmpSeqNo" x)))
-    (sleep 500)
+    (sleep 1000)
     (is (= 1 (cntr)))
     (doseq [x (range 0 10)]
       (is (= 123 (.get bb (+ (+ 40 15) (* x data-inst-len)))))
@@ -97,10 +99,11 @@
         cljnetpcap (binding [clj-net-pcap.core/*bulk-size* 10
                              clj-net-pcap.core/*emit-raw-data* true
                              clj-net-pcap.core/*use-intermediate-buffer* false]
-                     (create-and-start-online-cljnetpcap forwarder-fn lo))]
-    (sleep 500)
+                     (create-and-start-online-cljnetpcap forwarder-fn lo))
+        _ (add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
+    (sleep 1000)
     (cljnetpcap :send-bytes-packet ba 10 10)
-    (sleep 500)
+    (sleep 1000)
     (is (= 1 (cntr)))
     (is (= DirectBulkByteBufferWrapper (type @received-data)))
     (stop-cljnetpcap cljnetpcap)))
@@ -115,11 +118,12 @@
         cljnetpcap (binding [clj-net-pcap.core/*bulk-size* 10
                              clj-net-pcap.core/*emit-raw-data* true
                              clj-net-pcap.core/*use-intermediate-buffer* false]
-                     (create-and-start-online-cljnetpcap forwarder-fn lo))]
-    (sleep 500)
+                     (create-and-start-online-cljnetpcap forwarder-fn lo))
+        _ (add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
+    (sleep 1000)
     (doseq [x (range 0 10)]
       (cljnetpcap :send-packet-map (assoc test-pkt-descr-map "icmpSeqNo" x)))
-    (sleep 500)
+    (sleep 1000)
     (is (= 1 (cntr)))
     (is (.isDirect (.getBuffer @received-data)))
     (is (not (.hasArray (.getBuffer @received-data))))

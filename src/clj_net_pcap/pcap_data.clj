@@ -27,9 +27,10 @@
         clj-assorted-utils.util
         clj-net-pcap.native)
   (:require (clj-net-pcap [packet-offsets :as offsets]))
-  (:import (java.net InetAddress)
+  (:import (java.io BufferedWriter)
+           (java.net InetAddress)
            (java.nio ByteBuffer)
-           (java.util Arrays ArrayList HashMap Map)
+           (java.util Arrays ArrayList HashMap Iterator List Map)
            (java.util.concurrent ScheduledThreadPoolExecutor)
            (clj_net_pcap ByteArrayHelper Counter PacketHeaderDataBean PacketHeaderDataBeanIpv4UdpOnly PacketHeaderDataBeanWithIpv4Udp)
            (org.jnetpcap PcapHeader)
@@ -706,22 +707,38 @@ user=>
   (process-packet-byte-buffer-bulk packet-byte-array-extract-bean-ipv4-udp-be bb))
 
 (defn create-file-out-forwarder
-  [out-file]
-  (let [wrtr (writer out-file :append true)
-        closed (atom false)]
-    (fn
-      ([]
-        (try
-          (reset! closed true)
-          (.close wrtr)
-          (catch Exception e
-            (println e))))
-      ([data]
-        (if (not @closed)
-          (try
-            (.write wrtr data)
-            (.newLine wrtr)
-            (.flush wrtr)
-            (catch Exception e
-              (println e))))))))
+  ([out-file]
+    (create-file-out-forwarder out-file false))
+  ([out-file bulk]
+    (let [wrtr (writer out-file :append true)
+          closed (atom false)
+          close-fn #(try
+                      (reset! closed true)
+                      (.close wrtr)
+                      (catch Exception e
+                        (println e)))]
+      (if bulk
+        (fn
+          ([] (close-fn))
+          ([^List data]
+            (if (not @closed)
+              (try
+                (loop [it (.iterator data)]
+                  (.write wrtr (.next it))
+                  (.newLine wrtr)
+                  (if (.hasNext it)
+                    (recur it)))
+                (.flush wrtr)
+                (catch Exception e
+                  (println e))))))
+        (fn
+          ([] (close-fn))
+          ([data]
+            (if (not @closed)
+              (try
+                (.write wrtr data)
+                (.newLine wrtr)
+                (.flush wrtr)
+                (catch Exception e
+                  (println e))))))))))
 

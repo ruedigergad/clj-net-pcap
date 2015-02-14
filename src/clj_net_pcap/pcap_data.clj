@@ -27,7 +27,7 @@
         clj-assorted-utils.util
         clj-net-pcap.native)
   (:require (clj-net-pcap [packet-offsets :as offsets]))
-  (:import (java.io BufferedWriter Writer)
+  (:import (java.io BufferedWriter IOException Writer)
            (java.net InetAddress)
            (java.nio ByteBuffer)
            (java.util Arrays ArrayList HashMap Iterator List Map)
@@ -716,7 +716,17 @@ user=>
                       (reset! closed true)
                       (.close ^BufferedWriter @wrtr)
                       (catch Exception e
-                        (println e)))]
+                        (println e)))
+          handle-exception-fn #(if (and (= IOException (type %))
+                                        (= "Broken pipe" (.getMessage %)))
+                                 (do
+                                   (println "Pipe broke. Closing and re-opening writer...")
+                                   (try
+                                     (.close @wrtr)
+                                     (catch Exception e
+                                       (println e)))
+                                   (reset! wrtr (writer out-file :append true)))
+                                 (println %))]
       (if bulk
         (fn
           ([] (close-fn))
@@ -731,7 +741,7 @@ user=>
                       (recur it)))
                   (.flush ^BufferedWriter w)
                   (catch Exception e
-                    (println e)))))))
+                    (handle-exception-fn e)))))))
         (fn
           ([] (close-fn))
           ([^String data]
@@ -742,5 +752,5 @@ user=>
                   (.newLine ^BufferedWriter w)
                   (.flush ^BufferedWriter w)
                   (catch Exception e
-                    (println e)))))))))))
+                    (handle-exception-fn e)))))))))))
 

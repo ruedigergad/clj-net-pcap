@@ -735,11 +735,11 @@ user=>
               (let [^BufferedWriter w @wrtr]
                 (try
                   (loop [it (.iterator data)]
-                    (.write ^BufferedWriter w ^String (.next it))
-                    (.newLine ^BufferedWriter w)
+                    (.write w ^String (.next it))
+                    (.newLine w)
                     (if (.hasNext it)
                       (recur it)))
-                  (.flush ^BufferedWriter w)
+                  (.flush w)
                   (catch Exception e
                     (handle-exception-fn e)))))))
         (fn
@@ -748,9 +748,9 @@ user=>
             (if (not @closed)
               (let [^BufferedWriter w @wrtr]
                 (try
-                  (.write ^BufferedWriter w data)
-                  (.newLine ^BufferedWriter w)
-                  (.flush ^BufferedWriter w)
+                  (.write w data)
+                  (.newLine w)
+                  (.flush w)
                   (catch Exception e
                     (handle-exception-fn e)))))))))))
 

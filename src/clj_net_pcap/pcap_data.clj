@@ -21,7 +21,8 @@
   ^{:author "Ruediger Gad",
     :doc "Convenience functions for processing pcap data like packets and headers."}
   clj-net-pcap.pcap-data
-  (:use clojure.pprint
+  (:use clojure.java.io
+        clojure.pprint
         [clojure.string :only (join split)]
         clj-assorted-utils.util
         clj-net-pcap.native)
@@ -706,6 +707,21 @@ user=>
 
 (defn create-file-out-forwarder
   [out-file]
-  (fn [data]
-    (spit out-file data)))
+  (let [wrtr (writer out-file :append true)
+        closed (atom false)]
+    (fn
+      ([]
+        (try
+          (reset! closed true)
+          (.close wrtr)
+          (catch Exception e
+            (println e))))
+      ([data]
+        (if (not @closed)
+          (try
+            (.write wrtr data)
+            (.newLine wrtr)
+            (.flush wrtr)
+            (catch Exception e
+              (println e))))))))
 

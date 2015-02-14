@@ -710,29 +710,34 @@ user=>
   ([out-file]
     (create-file-out-forwarder out-file false))
   ([out-file bulk]
-    (let [wrtr (atom (writer out-file :append true))
+    (let [wrtr (atom nil)
+          open-wrtr-fn (fn []
+                         (reset! wrtr nil)
+                         (doto (Thread. #(reset! wrtr (writer out-file :append true)))
+                           (.setDaemon true)
+                           (.start)))
+          _ (open-wrtr-fn)
           closed (atom false)
-          close-fn #(try
-                      (reset! closed true)
-                      (.close ^BufferedWriter @wrtr)
-                      (catch Exception e
-                        (println e)))
+          close-fn (fn []
+                     (reset! closed true)
+                     (doto (Thread. #(try
+                                       (.close ^BufferedWriter @wrtr)
+                                       (catch Exception e
+                                       (println e))))
+                       (.setDaemon true)
+                       (.start)))
           handle-exception-fn #(if (and (= IOException (type %))
                                         (= "Broken pipe" (.getMessage %)))
                                  (do
                                    (println "Pipe broke. Closing and re-opening writer...")
-                                   (try
-                                     (.close @wrtr)
-                                     (catch Exception e
-                                       (println e)))
-                                   (reset! wrtr (writer out-file :append true)))
+                                   (open-wrtr-fn))
                                  (println %))]
       (if bulk
         (fn
           ([] (close-fn))
           ([^List data]
-            (if (not @closed)
-              (let [^BufferedWriter w @wrtr]
+            (let [^BufferedWriter w @wrtr]
+              (if (and (not (nil? w)) (not @closed))
                 (try
                   (loop [it (.iterator data)]
                     (.write w ^String (.next it))
@@ -745,8 +750,8 @@ user=>
         (fn
           ([] (close-fn))
           ([^String data]
-            (if (not @closed)
-              (let [^BufferedWriter w @wrtr]
+            (let [^BufferedWriter w @wrtr]
+              (if (and (not (nil? w)) (not @closed))
                 (try
                   (.write w data)
                   (.newLine w)

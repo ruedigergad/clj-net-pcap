@@ -45,6 +45,10 @@
   [ba idx]
   (ByteArrayHelper/getInt16 ba idx))
 
+(defn int16be
+  [ba idx]
+  (ByteArrayHelper/getInt16BigEndian ba idx))
+
 (defn int32
   [ba idx]
   (ByteArrayHelper/getInt ba idx))

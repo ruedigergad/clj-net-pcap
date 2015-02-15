@@ -61,6 +61,11 @@ public class ByteArrayHelper {
             (array[index] & 0xFF) << 8;
     }
 
+    public static int getInt16BigEndian(byte[] array, int index) {
+        return array[index] & 0xFF |
+            (array[index+1] & 0xFF) << 8;
+    }
+
     public static int getByte(byte[] array, int index) {
         return array[index] & 0xFF;
     }

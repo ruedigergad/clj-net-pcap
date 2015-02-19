@@ -85,6 +85,12 @@
                  (println "Error: Got unknown offset value" offset-val "from entry" e)
                  0))))
 
+(defn get-transformation-fn-ret-type
+  [transf-fn]
+  (let [dummy-ba (byte-array 1530 (byte 0))
+        ret (transf-fn dummy-ba 0)]
+    (type ret)))
+
 (defn create-extraction-fn-body-for-java-map-type
   [ba offset rules]
   (reduce
@@ -117,8 +123,12 @@
   (let [extracted-strings (conj
                             (reduce
                               (fn [v e]
-                                (conj v "\"" (name (:name e)) "\":"
-                                        `(~(resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation e))))) ~ba (+ ~offset ~(get-offset e)))))
+                                (let [transf-fn (resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation e)))))
+                                      transf-ret-type (get-transformation-fn-ret-type transf-fn)]
+                                  (conj v "\"" (name (:name e)) "\":"
+                                          (if (= java.lang.String transf-ret-type)
+                                            `(str "\"" (~transf-fn ~ba (+ ~offset ~(get-offset e))) "\"")
+                                            `(~transf-fn ~ba (+ ~offset ~(get-offset e)))))))
                               '[str "{"] rules)
                             "}")
         commas (reduce into [] ["." "." "." "." "." (reduce into [] (repeat (- (count rules) 1) ["," "." "." "."])) "." "."])]

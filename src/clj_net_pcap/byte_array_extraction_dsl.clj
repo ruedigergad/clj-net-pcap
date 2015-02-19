@@ -115,6 +115,16 @@
   [dsl]
   (get-arff-type-header dsl resovle-ba-transf-fn get-arff-type-from-ba-transformation-fn))
 
+(defn get-arff-header-for-ba
+  [dsl]
+  (str "% Packet Capture\n"
+       "% Created with clj-net-pcap:\n"
+       "% https://github.com/ruedigergad/clj-net-pcap\n"
+       "%\n"
+       "@RELATION pcap\n\n"
+       (get-arff-type-header-for-ba dsl)
+       "\n@DATA\n"))
+
 (defn create-extraction-fn-body-for-java-map-type
   [ba offset rules]
   (reduce

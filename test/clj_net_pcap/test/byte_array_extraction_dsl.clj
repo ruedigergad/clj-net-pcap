@@ -443,3 +443,22 @@
                                 {:offset :ipv4-dst :transformation :ipv4-address :name :ipDst}
                                 {:offset :udp-src :transformation :int16 :name :udpSrc}]}]
     (is (= expected-str (get-arff-type-header-for-ba dsl-expression)))))
+
+(deftest get-ba-arff-header-test
+  (let [expected-str (str "% Packet Capture\n"
+                          "% Created with clj-net-pcap:\n"
+                          "% https://github.com/ruedigergad/clj-net-pcap\n"
+                          "%\n"
+                          "@RELATION pcap\n\n"
+                          "@ATTRIBUTE ts NUMERIC\n"
+                          "@ATTRIBUTE ipTtl NUMERIC\n"
+                          "@ATTRIBUTE ipDst STRING\n"
+                          "@ATTRIBUTE udpSrc NUMERIC\n\n"
+                          "@DATA\n")
+        dsl-expression {:type :json-str
+                        :rules [{:offset 0 :transformation :timestamp :name :ts}
+                                {:offset :ipv4-ttl :transformation :int8 :name :ipTtl}
+                                {:offset :ipv4-dst :transformation :ipv4-address :name :ipDst}
+                                {:offset :udp-src :transformation :int16 :name :udpSrc}]}]
+    (is (= expected-str (get-arff-header-for-ba dsl-expression)))))
+

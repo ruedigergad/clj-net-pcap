@@ -91,6 +91,12 @@
         ret (transf-fn dummy-ba 0)]
     (type ret)))
 
+(defn get-arff-type-from-ba-transformation-fn
+  [transf-fn]
+  (condp = (get-ba-transformation-fn-ret-type transf-fn)
+    java.lang.String "STRING"
+    "NUMERIC"))
+
 (defn create-extraction-fn-body-for-java-map-type
   [ba offset rules]
   (reduce

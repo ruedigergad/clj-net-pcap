@@ -418,3 +418,17 @@
         extracted-str (extraction-fn pkt-ba 0)]
     (is (= expected-str extracted-str))))
 
+
+
+;;; ARFF File Format Output Tests
+;;; http://weka.wikispaces.com/ARFF+%28stable+version%29
+
+(deftest get-ba-arff-string-type-test
+  (= "STRING" (get-arff-type-from-ba-transformation-fn ipv4-address)))
+
+(deftest get-ba-arff-numeric-type-test
+  (= "NUMERIC" (get-arff-type-from-ba-transformation-fn int32)))
+
+(deftest get-ba-arff-numeric-type-test-2
+  (= "NUMERIC" (get-arff-type-from-ba-transformation-fn timestamp)))
+

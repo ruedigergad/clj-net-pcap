@@ -97,13 +97,17 @@
     java.lang.String "STRING"
     "NUMERIC"))
 
+(defn resolve-transf-fn
+  [extraction-rule]
+  (resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation extraction-rule))))))
+
 (defn create-extraction-fn-body-for-java-map-type
   [ba offset rules]
   (reduce
     (fn [v e]
       (conj v `(.put
                  ~(name (:name e))
-                 (~(resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation e))))) ~ba (+ ~offset ~(get-offset e))))))
+                 (~(resolve-transf-fn e) ~ba (+ ~offset ~(get-offset e))))))
     '[doto (java.util.HashMap.)] rules))
 
 (defn create-extraction-fn-body-for-clj-map-type
@@ -112,14 +116,14 @@
     (fn [v e]
       (conj v `(assoc
                  ~(name (:name e))
-                 (~(resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation e))))) ~ba (+ ~offset ~(get-offset e))))))
+                 (~(resolve-transf-fn e) ~ba (+ ~offset ~(get-offset e))))))
     '[-> {}] rules))
 
 (defn create-extraction-fn-body-for-csv-str-type
   [ba offset rules]
   (let [extracted-strings (reduce
                             (fn [v e]
-                              (let [transf-fn (resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation e)))))
+                              (let [transf-fn (resolve-transf-fn e)
                                     transf-ret-type (get-ba-transformation-fn-ret-type transf-fn)]
                               (conj v (if (= java.lang.String transf-ret-type)
                                         `(str "\"" (~transf-fn ~ba (+ ~offset ~(get-offset e))) "\"")
@@ -133,7 +137,7 @@
   (let [extracted-strings (conj
                             (reduce
                               (fn [v e]
-                                (let [transf-fn (resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation e)))))
+                                (let [transf-fn (resolve-transf-fn e)
                                       transf-ret-type (get-ba-transformation-fn-ret-type transf-fn)]
                                   (conj v "\"" (name (:name e)) "\":"
                                           (if (= java.lang.String transf-ret-type)

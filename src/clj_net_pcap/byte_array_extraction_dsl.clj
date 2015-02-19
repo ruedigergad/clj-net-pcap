@@ -85,7 +85,7 @@
                  (println "Error: Got unknown offset value" offset-val "from entry" e)
                  0))))
 
-(defn get-transformation-fn-ret-type
+(defn get-ba-transformation-fn-ret-type
   [transf-fn]
   (let [dummy-ba (byte-array 1530 (byte 0))
         ret (transf-fn dummy-ba 0)]
@@ -114,7 +114,7 @@
   (let [extracted-strings (reduce
                             (fn [v e]
                               (let [transf-fn (resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation e)))))
-                                    transf-ret-type (get-transformation-fn-ret-type transf-fn)]
+                                    transf-ret-type (get-ba-transformation-fn-ret-type transf-fn)]
                               (conj v (if (= java.lang.String transf-ret-type)
                                         `(str "\"" (~transf-fn ~ba (+ ~offset ~(get-offset e))) "\"")
                                         `(~transf-fn ~ba (+ ~offset ~(get-offset e)))))))
@@ -128,7 +128,7 @@
                             (reduce
                               (fn [v e]
                                 (let [transf-fn (resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation e)))))
-                                      transf-ret-type (get-transformation-fn-ret-type transf-fn)]
+                                      transf-ret-type (get-ba-transformation-fn-ret-type transf-fn)]
                                   (conj v "\"" (name (:name e)) "\":"
                                           (if (= java.lang.String transf-ret-type)
                                             `(str "\"" (~transf-fn ~ba (+ ~offset ~(get-offset e))) "\"")

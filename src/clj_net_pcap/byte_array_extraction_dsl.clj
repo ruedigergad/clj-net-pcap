@@ -113,7 +113,11 @@
   [ba offset rules]
   (let [extracted-strings (reduce
                             (fn [v e]
-                              (conj v `(~(resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation e))))) ~ba (+ ~offset ~(get-offset e)))))
+                              (let [transf-fn (resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation e)))))
+                                    transf-ret-type (get-transformation-fn-ret-type transf-fn)]
+                              (conj v (if (= java.lang.String transf-ret-type)
+                                        `(str "\"" (~transf-fn ~ba (+ ~offset ~(get-offset e))) "\"")
+                                        `(~transf-fn ~ba (+ ~offset ~(get-offset e)))))))
                             '[str] rules)
         commas (reduce into [] ["." (repeat (- (count rules) 1) ",") "."])]
     (vec (filter #(not= \. %) (interleave extracted-strings commas)))))

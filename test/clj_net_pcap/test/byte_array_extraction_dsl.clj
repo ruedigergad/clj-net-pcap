@@ -375,6 +375,27 @@
         extracted-str (extraction-fn pkt-ba 0)]
     (is (= expected-str extracted-str))))
 
+(deftest dsl-with-type-csv-str-test-3
+  (let [expected-str "77,3,7,29639,\"252.253.254.255\",\"1.2.3.4\",2048,4096"
+        dsl-expression {:type :csv-str
+                        :rules [{:offset 12 :transformation :int32be :name :len}
+                                {:offset :ipv4-id :transformation :int16 :name :ipId}
+                                {:offset :ipv4-ttl :transformation :int8 :name :ipTtl}
+                                {:offset :ipv4-checksum :transformation :int16 :name :ipChecksum}
+                                {:offset :ipv4-dst :transformation :ipv4-address :name :ipDst}
+                                {:offset :ipv4-src :transformation :ipv4-address :name :ipSrc}
+                                {:offset :udp-src :transformation :int16 :name :udpSrc}
+                                {:offset :udp-dst :transformation :int16 :name :udpDst}]}
+        pkt-raw-vec [-5 -106 -57 84   15 -54 14 0   77 0 0 0   77 0 0 0    ; 16 byte pcap header
+                     -1 -2 -3 -14 -15 -16 1 2 3 4 5 6 8 0                  ; 14 byte Ethernet header
+                     69 0 0 32 0 3 64 0 7 17 115 -57 1 2 3 4 -4 -3 -2 -1   ; 20 byte IP header
+                     8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
+                     97 98 99 100]                                         ; 4 byte data "abcd"
+        pkt-ba (byte-array (map byte pkt-raw-vec))
+        extraction-fn (create-extraction-fn dsl-expression)
+        extracted-str (extraction-fn pkt-ba 0)]
+    (is (= expected-str extracted-str))))
+
 (deftest dsl-with-type-json-str-test-3
   (let [expected-str (str "{\"len\":77,\"ipId\":3,\"ipTtl\":7,\"ipChecksum\":29639,"
                           "\"ipDst\":\"252.253.254.255\",\"ipSrc\":\"1.2.3.4\",\"udpSrc\":2048,\"udpDst\":4096}")

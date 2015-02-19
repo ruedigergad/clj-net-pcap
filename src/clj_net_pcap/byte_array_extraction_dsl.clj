@@ -101,6 +101,20 @@
   [extraction-rule]
   (resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation extraction-rule))))))
 
+(defn get-arff-type-header
+  [dsl transf-fn-resolver arff-type-fn]
+  (reduce
+    (fn [s r]
+      (let [attr-name (name (r :name)) 
+            arff-type (arff-type-fn (transf-fn-resolver r))]
+      (str s "@ATTRIBUTE " attr-name " " arff-type "\n")))
+    ""
+    (dsl :rules)))
+
+(defn get-arff-type-header-for-ba
+  [dsl]
+  (get-arff-type-header dsl resolve-transf-fn get-arff-type-from-ba-transformation-fn))
+
 (defn create-extraction-fn-body-for-java-map-type
   [ba offset rules]
   (reduce

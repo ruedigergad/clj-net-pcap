@@ -432,3 +432,14 @@
 (deftest get-ba-arff-numeric-type-test-2
   (= "NUMERIC" (get-arff-type-from-ba-transformation-fn timestamp)))
 
+(deftest get-ba-arff-type-header-test
+  (let [expected-str (str "@ATTRIBUTE ts NUMERIC\n"
+                          "@ATTRIBUTE ipTtl NUMERIC\n"
+                          "@ATTRIBUTE ipDst STRING\n"
+                          "@ATTRIBUTE udpSrc NUMERIC\n")
+        dsl-expression {:type :json-str
+                        :rules [{:offset 0 :transformation :timestamp :name :ts}
+                                {:offset :ipv4-ttl :transformation :int8 :name :ipTtl}
+                                {:offset :ipv4-dst :transformation :ipv4-address :name :ipDst}
+                                {:offset :udp-src :transformation :int16 :name :udpSrc}]}]
+    (is (= expected-str (get-arff-type-header-for-ba dsl-expression)))))

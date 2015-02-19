@@ -97,7 +97,7 @@
     java.lang.String "STRING"
     "NUMERIC"))
 
-(defn resolve-transf-fn
+(defn resovle-ba-transf-fn
   [extraction-rule]
   (resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation extraction-rule))))))
 
@@ -105,7 +105,7 @@
   [dsl transf-fn-resolver arff-type-fn]
   (reduce
     (fn [s r]
-      (let [attr-name (name (r :name)) 
+      (let [attr-name (name (r :name))
             arff-type (arff-type-fn (transf-fn-resolver r))]
       (str s "@ATTRIBUTE " attr-name " " arff-type "\n")))
     ""
@@ -113,7 +113,7 @@
 
 (defn get-arff-type-header-for-ba
   [dsl]
-  (get-arff-type-header dsl resolve-transf-fn get-arff-type-from-ba-transformation-fn))
+  (get-arff-type-header dsl resovle-ba-transf-fn get-arff-type-from-ba-transformation-fn))
 
 (defn create-extraction-fn-body-for-java-map-type
   [ba offset rules]
@@ -121,7 +121,7 @@
     (fn [v e]
       (conj v `(.put
                  ~(name (:name e))
-                 (~(resolve-transf-fn e) ~ba (+ ~offset ~(get-offset e))))))
+                 (~(resovle-ba-transf-fn e) ~ba (+ ~offset ~(get-offset e))))))
     '[doto (java.util.HashMap.)] rules))
 
 (defn create-extraction-fn-body-for-clj-map-type
@@ -130,14 +130,14 @@
     (fn [v e]
       (conj v `(assoc
                  ~(name (:name e))
-                 (~(resolve-transf-fn e) ~ba (+ ~offset ~(get-offset e))))))
+                 (~(resovle-ba-transf-fn e) ~ba (+ ~offset ~(get-offset e))))))
     '[-> {}] rules))
 
 (defn create-extraction-fn-body-for-csv-str-type
   [ba offset rules]
   (let [extracted-strings (reduce
                             (fn [v e]
-                              (let [transf-fn (resolve-transf-fn e)
+                              (let [transf-fn (resovle-ba-transf-fn e)
                                     transf-ret-type (get-ba-transformation-fn-ret-type transf-fn)]
                               (conj v (if (= java.lang.String transf-ret-type)
                                         `(str "\"" (~transf-fn ~ba (+ ~offset ~(get-offset e))) "\"")
@@ -151,7 +151,7 @@
   (let [extracted-strings (conj
                             (reduce
                               (fn [v e]
-                                (let [transf-fn (resolve-transf-fn e)
+                                (let [transf-fn (resovle-ba-transf-fn e)
                                       transf-ret-type (get-ba-transformation-fn-ret-type transf-fn)]
                                   (conj v "\"" (name (:name e)) "\":"
                                           (if (= java.lang.String transf-ret-type)

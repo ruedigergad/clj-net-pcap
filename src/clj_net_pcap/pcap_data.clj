@@ -710,10 +710,15 @@ user=>
   ([out-file]
     (create-file-out-forwarder out-file false))
   ([out-file bulk]
+    (create-file-out-forwarder out-file bulk ""))
+  ([out-file bulk hdr]
     (let [wrtr (atom nil)
           open-wrtr-fn (fn []
                          (reset! wrtr nil)
-                         (doto (Thread. #(reset! wrtr (writer out-file :append true)))
+                         (doto (Thread.
+                                 #(do
+                                    (reset! wrtr (writer out-file :append true))
+                                    (.write @wrtr hdr)))
                            (.setDaemon true)
                            (.start)))
           _ (open-wrtr-fn)

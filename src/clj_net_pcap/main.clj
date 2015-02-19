@@ -109,7 +109,10 @@
      :default "pcap-packet-to-bean"]
     ["-R" "--read-file"
      "Read from a pcap file instead of performing a live capture."
-     :default ""]))
+     :default ""]
+    ["-W" "--write-arff-header"
+     "Prefix write output with ARFF header: http://weka.wikispaces.com/ARFF+%28stable+version%29"
+     :flag true]))
 
 (defn -main [& args]
   (let [cli-args (parse-args args)
@@ -155,7 +158,11 @@
               output-file (arg-map :write-to-file)
               file-output-forwarder (when (not (nil? output-file))
                                       (println "Writing data to file:" output-file)
-                                      (create-file-out-forwarder output-file))
+                                      (create-file-out-forwarder output-file
+                                                                 (> bulk-size 1)
+                                                                 (if (arg-map :write-arff-header)
+                                                                   (get-arff-header-for-ba dsl-expression)
+                                                                   "")))
               processing-fn (let [f-tmp (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
                                   f (cond
                                       (not (nil? file-output-forwarder)) file-output-forwarder

@@ -49,6 +49,42 @@
                    "flags" #{"ACK" "SYN"}}}
            (first my-maps)))))
 
+(deftest test-extract-http-nested-maps-from-pcap-file
+  (let [my-maps (extract-nested-maps-from-pcap-file "test/clj_net_pcap/test/data/http-get.pcap")]
+    (is (= 1 (count my-maps)))
+    (is (= {"PcapHeader" {"timestampInNanos" 1424526893748322000, "wirelen" 203},
+            "DataLinkLayer" {"index" 0, "ProtocolType" "Ethernet", "destination" "00:24:FE:B1:8F:DC",
+                             "source" "74:DE:2B:08:78:09", "next" 2},
+            "NetworkLayer" {"next" 4, "destination" "198.145.20.140", "index" 1, "ProtocolType" "Ip4",
+                            "id" 37874, "source" "10.0.0.101", "type" 6, "ttl" 64, "tos" 0},
+            "Tcp" {"index" 2, "destination" 80, "source" 53575, "ack" 438696410, "seq" 2996233046,
+                   "flags" #{"PSH" "ACK"}, "next" 13},
+            "Http" {"index" 3, "RequestUrl" "/", "RequestMethod" "GET", "RequestVersion" "HTTP/1.1"}}
+           (first my-maps)))))
+
+(deftest test-extract-tcp-nested-maps-from-pcap-file-dns
+  (let [my-maps (extract-nested-maps-from-pcap-file "test/clj_net_pcap/test/data/dns-query-response.pcap")]
+    (is (= 2 (count my-maps)))
+    (is (= {"PcapHeader" {"timestampInNanos" 1385804494276477000, "wirelen" 77},
+            "DataLinkLayer" {"index" 0, "ProtocolType" "Ethernet", "destination" "00:24:FE:B1:8F:DC",
+                             "source" "74:DE:2B:08:78:09", "next" 2},
+            "NetworkLayer" {"next" 5, "destination" "192.168.0.1", "index" 1,
+                            "ProtocolType" "Ip4", "id" 20831, "source" "192.168.0.51", "type" 17,
+                            "ttl" 64, "tos" 0},
+            "Udp" {"index" 2, "destination" 53, "source" 34904}}
+           (first my-maps)))))
+
+(deftest test-extract-tcp-nested-maps-from-pcap-file-icmpv6
+  (let [my-maps (extract-nested-maps-from-pcap-file "test/clj_net_pcap/test/data/icmpv6-router-solicitation.pcap")]
+    (is (= 1 (count my-maps)))
+    (is (= {"PcapHeader" {"timestampInNanos" 1403685403642220000, "wirelen" 62},
+            "DataLinkLayer" {"index" 0, "ProtocolType" "Ethernet", "destination" "33:33:00:00:00:02",
+                             "source" "E8:9D:87:B1:45:2F", "next" 3},
+            "NetworkLayer" {"index" 1, "ProtocolType" "Ip6", "destination" "FF02:0000:0000:0000:0000:0000:0000:0002",
+                            "source" "FE80:0000:0000:0000:EA9D:87FF:FEB1:452F", "flowLabel" 0, "hopLimit" 255,
+                            "trafficClass" 0, "next" 0}}
+           (first my-maps)))))
+
 (deftest test-extract-tcp-beans-from-pcap-file
   (let [my-beans (extract-beans-from-pcap-file "test/clj_net_pcap/test/data/tcp-syn-ack.pcap")
         expected (doto (PacketHeaderDataBean.)

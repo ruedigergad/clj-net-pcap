@@ -47,6 +47,11 @@
   (let [pcap (create-online-pcap lo)]
     (is (= org.jnetpcap.Pcap (type pcap)))))
 
+(deftest test-activate-online-pcap-exception
+  (println "Please note that this test is supposed to print an error message like: Error activating pcap: SIOCGIFHWADDR: No such device")
+  (is (thrown-with-msg? RuntimeException #"Error activating pcap: .*"
+                        (activate-online-pcap (create-online-pcap "non-existant-device-foo")))))
+
 (deftest test-create-and-activate-online-pcap
   (let [pcap (create-and-activate-online-pcap lo)]
     (is (= org.jnetpcap.Pcap (type (pcap))))
@@ -87,5 +92,10 @@
 (deftest throw-exception-on-invalid-operation-single-arg-test
   (let [pcap (create-and-activate-online-pcap lo)]
     (is (thrown-with-msg? RuntimeException #"Unsupported operation for online pcap: :this-operation-does-not-exist argument: 123" (pcap :this-operation-does-not-exist 123)))
+    (close-pcap pcap)))
+
+(deftest throw-exception-on-invalid-operation-three-args-test
+  (let [pcap (create-and-activate-online-pcap lo)]
+    (is (thrown-with-msg? RuntimeException #"Unsupported operation for online pcap: :this-operation-does-not-exist arguments: .*" (pcap :this-operation-does-not-exist 123 "blub" :foo)))
     (close-pcap pcap)))
 

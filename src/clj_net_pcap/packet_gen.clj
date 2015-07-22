@@ -44,6 +44,10 @@
 (def ip-type-udp 17)
 
 (defn get-data-length
+  "Calculate the length of the provided data.
+   If counted? is true for data, the count is returned.
+   If data is a String, the String length is returned.
+   For unknown types, 0 is returned."
   [data]
   (cond
     (counted? data) (count data)
@@ -51,6 +55,10 @@
     :default 0))
 
 (defn get-data-val
+  "Get the byte-array representation of the supplied data.
+   If counted? is true for data, all elements will be coerced to byte.
+   If data is a String, the byte-array representation of the String is returned.
+   Otherwise, a zero length byte-array is returned."
   [data]
   (cond
     (counted? data) (byte-array (map byte data))
@@ -58,6 +66,7 @@
     :default (byte-array 0)))
 
 (defn generate-packet-data
+  "Generate a byte-array representation of the packet according to the given packet description map."
   [^Map pkt-desc-map]
   (let [len (if (.containsKey pkt-desc-map "len")
               (.get pkt-desc-map "len")

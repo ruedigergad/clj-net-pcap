@@ -30,50 +30,64 @@
 
 
 (defn int4low
+  "Get the lower 4 bits (nibble) of the byte at the given index idx in the provided byte-array ba."
   [ba idx]
   (ByteArrayHelper/getNibbleLow ba idx))
 
 (defn int4high
+  "Get the higher 4 bits (nibble) of the byte at the given index idx in the provided byte-array ba."
   [ba idx]
   (ByteArrayHelper/getNibbleHigh ba idx))
 
 (defn int8
+  "Get the byte at the index idx in the byte-array ba."
   [ba idx]
   (ByteArrayHelper/getByte ba idx))
 
 (defn int16
+  "Get the Int16 value of the two bytes starting at index idx in the byte-array ba."
   [ba idx]
   (ByteArrayHelper/getInt16 ba idx))
 
 (defn int16be
+  "Get the big endian Int16 value of the two bytes starting at index idx in the byte-array ba."
   [ba idx]
   (ByteArrayHelper/getInt16BigEndian ba idx))
 
 (defn int32
+  "Get the Int32 value of the four bytes starting at index idx in the byte-array ba."
   [ba idx]
   (ByteArrayHelper/getInt ba idx))
 
 (defn int32be
+  "Get the big endian Int32 value of the four bytes starting at index idx in the byte-array ba."
   [ba idx]
   (ByteArrayHelper/getIntBigEndian ba idx))
 
 (defn timestamp
+  "Get the pcap timestamp value of the four bytes starting at index idx in the byte-array ba."
   [ba idx]
   (+ (* (ByteArrayHelper/getInt ba idx) 1000000000) (* (ByteArrayHelper/getInt ba (+ idx 4)) 1000)))
 
 (defn timestamp-be
+  "Get the pcap big endian timestamp value of the four bytes starting at index idx in the byte-array ba."
   [ba idx]
   (+ (* (ByteArrayHelper/getIntBigEndian ba idx) 1000000000) (* (ByteArrayHelper/getIntBigEndian ba (+ idx 4)) 1000)))
 
 (defn ethernet-address
+  "Get the formated ethernet address String starting at index idx in the byte-array ba."
   [ba idx]
   (FormatUtils/asStringZeroPad ba \: 16 idx 6))
 
 (defn ipv4-address
+  "Get the formated IPv4 address String starting at index idx in the byte-array ba."
   [ba idx]
   (FormatUtils/asString ba \. 10 idx 4))
 
 (defn get-offset
+  "Get the offset value for the given DSL expression e.
+   If the offset is no numeric value this function tries to resolve the offset by its name.
+   If the name is not found, an error message is printed and 0 is returned."
   [e]
   (let [offset-val (:offset e)]
     (cond
@@ -86,22 +100,27 @@
                  0))))
 
 (defn get-ba-transformation-fn-ret-type
+  "Get the return type of a transformation function transf-fn.
+   For determining the type, this function calls trans-fn with a 1530 byte dummy byte-array filled with 0."
   [transf-fn]
   (let [dummy-ba (byte-array 1530 (byte 0))
         ret (transf-fn dummy-ba 0)]
     (type ret)))
 
 (defn get-arff-type-from-ba-transformation-fn
+  "Get the ARFF return value type for the given transformation function transf-fn."
   [transf-fn]
   (condp = (get-ba-transformation-fn-ret-type transf-fn)
     java.lang.String "STRING"
     "NUMERIC"))
 
 (defn resovle-ba-transf-fn
+  "Resovle the transofrmation function for the given extraction-rule."
   [extraction-rule]
   (resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation extraction-rule))))))
 
 (defn get-arff-type-header
+  "Create the ARFF type header."
   [dsl transf-fn-resolver arff-type-fn]
   (reduce
     (fn [s r]
@@ -126,6 +145,7 @@
        "\n@DATA\n"))
 
 (defn create-extraction-fn-body-for-java-map-type
+  "Create the body of an extraction function that extracts data into a Java map."
   [ba offset rules]
   (reduce
     (fn [v e]
@@ -135,6 +155,7 @@
     '[doto (java.util.HashMap.)] rules))
 
 (defn create-extraction-fn-body-for-clj-map-type
+  "Create the body of an extraction function that extracts data into a Clojure map."
   [ba offset rules]
   (reduce
     (fn [v e]
@@ -144,6 +165,7 @@
     '[-> {}] rules))
 
 (defn create-extraction-fn-body-for-csv-str-type
+  "Create the body of an extraction function that extracts data into a CSV String."
   [ba offset rules]
   (let [extracted-strings (reduce
                             (fn [v e]
@@ -157,6 +179,7 @@
     (vec (filter #(not= \. %) (interleave extracted-strings commas)))))
 
 (defn create-extraction-fn-body-for-json-str-type
+  "Create the body of an extraction function that extracts data into a JSON String."
   [ba offset rules]
   (let [extracted-strings (conj
                             (reduce
@@ -174,6 +197,7 @@
     (vec (filter (fn [x] (and (not= \. x) (not= "." x))) (interleave extracted-strings commas)))))
 
 (defn create-extraction-fn
+  "Create an extraction function based on the given dsl-expression."
   [dsl-expression]
 ;  (println "Got DSL expression:" dsl-expression)
   (let [ba-sym 'ba

@@ -45,32 +45,42 @@ Detailed results of unit tests are available:
 http://ruedigergad.github.io/clj-net-pcap/test-results/html/
 
 ## Publications
-We published a paper in which we describe the current clj-net-pcap architecture and assess the performance.
-The publisher is IEEE and the paper is available via IEEE Xplore: [Bridging the Gap between Low-Level Network Traffic Data Acquisition and Higher-Level Frameworks](http://ieeexplore.ieee.org/xpl/articleDetails.jsp?tp=&arnumber=6903107), Ruediger Gad, Martin Kappes, and Inmaculada Medina-Bulo.
+We published two papers in which we describe the clj-net-pcap architecture and implementation and assess the performance:
+
+* Improving Network Traffic Acquisition and Processing with the Java Virtual Machine, Ruediger Gad, Martin Kappes, and Inmaculada Medina-Bulo, 20th IEEE ISCC 2015, in press
+* [Bridging the Gap between Low-Level Network Traffic Data Acquisition and Higher-Level Frameworks](http://ieeexplore.ieee.org/xpl/articleDetails.jsp?tp=&arnumber=6903107), Ruediger Gad, Martin Kappes, and Inmaculada Medina-Bulo, 38th IEEE COMPSACW 2014.
 
 ### Referencing
 If you want to reference clj-net-pcap, you can refer to our paper, e.g., in LaTeX:
 
-    @INPROCEEDINGS{6903107,
-    author={Gad, Ruediger and Kappes, Martin and Medina-Bulo, Inmaculada},
-    booktitle={Computer Software and Applications Conference Workshops (COMPSACW), 2014 IEEE 38th International},
-    title={Bridging the Gap between Low-Level Network Traffic Data Acquisition and Higher-Level Frameworks},
-    year={2014},
-    month={July},
-    pages={67-72},
-    keywords={Data acquisition;Instruction sets;Java;Libraries;Pipelines;Prototypes;Surveillance;Java Virtual Machine;Networks;Packet Capturing;Performance},
-    doi={10.1109/COMPSACW.2014.15},}
+    @inproceedings{gad_improving_2015,
+	    title = {Improving {Network} {Traffic} {Acquisition} and {Processing} with the {Java} {Virtual} {Machine}},
+	    booktitle = {2015 {IEEE} 20th {Symposium} on {Computers} and {Communications} ({ISCC})},
+	    author = {Gad, Ruediger and Kappes, Martin and Medina-Bulo, Immaculada},
+	    month = jul,
+	    year = {2015},
+        note = {in press},
+    }
 
-This Bibtex entry was taken from the IEEE Xplore site of our paper linked above.
+    @INPROCEEDINGS{gad_bridging_2015,
+        author={Gad, Ruediger and Kappes, Martin and Medina-Bulo, Inmaculada},
+        booktitle={Computer Software and Applications Conference Workshops (COMPSACW), 2014 IEEE 38th International},
+        title={Bridging the Gap between Low-Level Network Traffic Data Acquisition and Higher-Level Frameworks},
+        year={2014},
+        month={July},
+        pages={67-72},
+        keywords={Data acquisition;Instruction sets;Java;Libraries;Pipelines;Prototypes;Surveillance;Java Virtual Machine;Networks;Packet Capturing;Performance},
+        doi={10.1109/COMPSACW.2014.15},
+    }
 
 ## Building etc.
 clj-net-pcap uses Leiningen.
 Please note that Leiningen version 2.x is used.
 
 ## History & Acknowledgements
-clj-net-pcap was created and is still mainly developed and maintained as a "personal fun project".
+clj-net-pcap was created and is still developed and maintained as a personal project.
 However, I am in the fortunate situation that it showed after some time that clj-net-pcap could also be used for my PhD and research work.
-Thus, I had the lucky chance to partially also work on clj-net-pcap in scope of my employment as research assistant and during my current studies as PhD student.
+While I did the actual development in my spare time, I worked on the scientific evaluation of the clj-net-pcap and published these results in scientific papers in scope of my employment as researcher.
 Consequently, acknowledgements go to my employer the [Frankfurt University of Applied Sciences](http://frankfurt-university.de) and the [Universidad de Cádiz](http://uca.es) where I am currently enrolled as PhD student.
 
 While the project name was initially "cljNetPcap", it was renamed to "clj-net-pcap" in order to adhere to common package naming conventions.

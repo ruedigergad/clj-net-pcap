@@ -114,7 +114,7 @@
     java.lang.String "STRING"
     "NUMERIC"))
 
-(defn resovle-ba-transf-fn
+(defn resovle-transf-fn
   "Resovle the transofrmation function for the given extraction-rule."
   [extraction-rule]
   (resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation extraction-rule))))))
@@ -132,7 +132,7 @@
 
 (defn get-arff-type-header-for-ba
   [dsl]
-  (get-arff-type-header dsl resovle-ba-transf-fn get-arff-type-from-ba-transformation-fn))
+  (get-arff-type-header dsl resovle-transf-fn get-arff-type-from-ba-transformation-fn))
 
 (defn get-arff-header-for-ba
   [dsl]
@@ -151,7 +151,7 @@
     (fn [v e]
       (conj v `(.put
                  ~(name (:name e))
-                 (~(resovle-ba-transf-fn e) ~ba (+ ~offset ~(get-offset e))))))
+                 (~(resovle-transf-fn e) ~ba (+ ~offset ~(get-offset e))))))
     '[doto (java.util.HashMap.)] rules))
 
 (defn create-extraction-fn-body-for-clj-map-type
@@ -161,7 +161,7 @@
     (fn [v e]
       (conj v `(assoc
                  ~(name (:name e))
-                 (~(resovle-ba-transf-fn e) ~ba (+ ~offset ~(get-offset e))))))
+                 (~(resovle-transf-fn e) ~ba (+ ~offset ~(get-offset e))))))
     '[-> {}] rules))
 
 (defn create-extraction-fn-body-for-csv-str-type
@@ -169,7 +169,7 @@
   [ba offset rules]
   (let [extracted-strings (reduce
                             (fn [v e]
-                              (let [transf-fn (resovle-ba-transf-fn e)
+                              (let [transf-fn (resovle-transf-fn e)
                                     transf-ret-type (get-transformation-fn-ret-type transf-fn)]
                               (conj v (if (= java.lang.String transf-ret-type)
                                         `(str "\"" (~transf-fn ~ba (+ ~offset ~(get-offset e))) "\"")
@@ -184,7 +184,7 @@
   (let [extracted-strings (conj
                             (reduce
                               (fn [v e]
-                                (let [transf-fn (resovle-ba-transf-fn e)
+                                (let [transf-fn (resovle-transf-fn e)
                                       transf-ret-type (get-transformation-fn-ret-type transf-fn)]
                                   (conj v "\"" (name (:name e)) "\":"
                                           (if (= java.lang.String transf-ret-type)

@@ -107,7 +107,7 @@
         ret (transf-fn dummy-ba 0)]
     (type ret)))
 
-(defn get-arff-type-from-ba-transformation-fn
+(defn get-arff-type-for-transformation-fn
   "Get the ARFF return value type for the given transformation function transf-fn."
   [transf-fn]
   (condp = (get-transformation-fn-ret-type transf-fn)
@@ -132,7 +132,7 @@
 
 (defn get-arff-type-header-for-ba
   [dsl]
-  (get-arff-type-header dsl resovle-transf-fn get-arff-type-from-ba-transformation-fn))
+  (get-arff-type-header dsl resovle-transf-fn get-arff-type-for-transformation-fn))
 
 (defn get-arff-header-for-ba
   [dsl]

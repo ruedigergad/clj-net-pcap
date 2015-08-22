@@ -423,16 +423,16 @@
 ;;; ARFF File Format Output Tests
 ;;; http://weka.wikispaces.com/ARFF+%28stable+version%29
 
-(deftest get-ba-arff-string-type-test
-  (= "STRING" (get-arff-type-from-ba-transformation-fn ipv4-address)))
+(deftest get-arff-string-type-test
+  (= "STRING" (get-arff-type-for-transformation-fn ipv4-address)))
 
-(deftest get-ba-arff-numeric-type-test
-  (= "NUMERIC" (get-arff-type-from-ba-transformation-fn int32)))
+(deftest get-arff-numeric-type-test
+  (= "NUMERIC" (get-arff-type-for-transformation-fn int32)))
 
-(deftest get-ba-arff-numeric-type-test-2
-  (= "NUMERIC" (get-arff-type-from-ba-transformation-fn timestamp)))
+(deftest get-arff-numeric-type-test-2
+  (= "NUMERIC" (get-arff-type-for-transformation-fn timestamp)))
 
-(deftest get-ba-arff-type-header-test
+(deftest get-arff-type-header-test
   (let [expected-str (str "@ATTRIBUTE ts NUMERIC\n"
                           "@ATTRIBUTE ipTtl NUMERIC\n"
                           "@ATTRIBUTE ipDst STRING\n"
@@ -444,7 +444,7 @@
                                 {:offset :udp-src :transformation :int16 :name :udpSrc}]}]
     (is (= expected-str (get-arff-type-header-for-ba dsl-expression)))))
 
-(deftest get-ba-arff-header-test
+(deftest get-arff-header-test
   (let [expected-str (str "% Packet Capture\n"
                           "% Created with clj-net-pcap:\n"
                           "% https://github.com/ruedigergad/clj-net-pcap\n"

@@ -24,6 +24,8 @@
   (:use clojure.test
         clj-net-pcap.pcap))
 
+(def non-existant-pcap-device "non-existant-device-foo")
+
 (deftest test-get-devices
   (let [devices (get-devices)]
     (is (vector? devices)
@@ -40,17 +42,19 @@
     (is (= (.getName dev) lo))))
 
 (deftest test-device-exists
-  (let [dev lo]
-    (is (device-exists? dev))))
+  (is (device-exists? lo)))
+
+(deftest test-device-does-not-exist
+  (is (not (device-exists? non-existant-pcap-device))))
 
 (deftest test-create-online-pcap
   (let [pcap (create-online-pcap lo)]
     (is (= org.jnetpcap.Pcap (type pcap)))))
 
 (deftest test-activate-online-pcap-exception
-  (println "Please note that this test is supposed to print an error message like: Error activating pcap: SIOCGIFHWADDR: No such device")
-  (is (thrown-with-msg? RuntimeException #"Error activating pcap: .*"
-                        (activate-online-pcap (create-online-pcap "non-existant-device-foo")))))
+  (println "Please note that this test is supposed to print an error message like: \"Error creating online pcap. ...\"")
+  (is (thrown-with-msg? RuntimeException #"Error creating online pcap. Device .* does not exist."
+                        (create-online-pcap non-existant-pcap-device))))
 
 (deftest test-create-and-activate-online-pcap
   (let [pcap (create-and-activate-online-pcap lo)]

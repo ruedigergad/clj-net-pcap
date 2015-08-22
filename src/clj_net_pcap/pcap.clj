@@ -67,6 +67,10 @@
    by \"re-binding\" those vars.
    Please note: *flags* is currently only passed to Pcap.setPromisc()."
   [dev-name]
+  (if (not (device-exists? dev-name))
+    (let [errmsg (str "Error creating online pcap. Device " dev-name " does not exist.")]
+      (println-err errmsg)
+      (throw (RuntimeException. errmsg))))
   (let [err (StringBuilder.)
         _ (println-err "Creating pcap with: buffer size =" *buffer-size*
                        "; snaplen =" *snap-len*

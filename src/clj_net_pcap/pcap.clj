@@ -145,7 +145,7 @@
                ;;; all packets. See also the jNetPcap docs for more information
                ;;; about the behavior of Pcap.breakloop().
                   (create-and-set-filter (fn [] pcap) "")
-                  (.inject pcap (byte-array 1 (byte 0)))
+                  (.inject pcap (byte-array 128 (byte 0)))
                   (.join @pcap-thread)
                   (.close pcap)
                   (dosync ref-set pcap-thread nil))

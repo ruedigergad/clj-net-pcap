@@ -122,7 +122,7 @@
   "Resovle the transofrmation function for the given extraction-rule."
   [e]
   (if (is-new-dsl? e)
-    (ns-resolve 'clj-net-pcap.byte-array-extraction-dsl (first (second e)))
+    (ns-resolve 'clj-net-pcap.byte-array-extraction-dsl (symbol (name (first (second e)))))
     (ns-resolve 'clj-net-pcap.byte-array-extraction-dsl (symbol (name (:transformation e))))))
 ;  ([e ba ba-offset]
 ;    (let [expr (second e)

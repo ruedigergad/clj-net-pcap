@@ -114,10 +114,24 @@
     java.lang.String "STRING"
     "NUMERIC"))
 
+(defn is-new-dsl?
+  [e]
+  (vector? e))
+
 (defn resolve-transf-fn
   "Resovle the transofrmation function for the given extraction-rule."
-  [extraction-rule]
-  (resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation extraction-rule))))))
+  [e]
+  (if (is-new-dsl? e)
+    (ns-resolve 'clj-net-pcap.byte-array-extraction-dsl (first (second e)))
+    (resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" (name (:transformation e)))))))
+;  ([e ba ba-offset]
+;    (let [expr (second e)
+;          f-sym (first expr)
+;          f (ns-resolve 'clj-net-pcap.byte-array-extraction-dsl f-sym)
+;          pkt-off-sym (second expr)
+;          pkt-off (var-get (ns-resolve 'clj-net-pcap.packet-offsets pkt-off-sym))]
+;      (println e expr f-sym f pkt-off ba ba-offset)
+;      (list f ba (+ ba-offset pkt-off)))))
 
 (defn get-arff-type-header
   "Create the ARFF type header."
@@ -147,9 +161,13 @@
   [ba offset rules]
   (reduce
     (fn [v e]
-      (conj v `(.put
-                 ~(name (:name e))
-                 (~(resolve-transf-fn e) ~ba (+ ~offset ~(get-offset e))))))
+      (if (is-new-dsl? e)
+        (conj v `(.put
+                   ~(name (first e))
+                   (~(resolve-transf-fn e) ~ba (+ ~offset ~(var-get (ns-resolve 'clj-net-pcap.packet-offsets (second (second e))))))))
+        (conj v `(.put
+                   ~(name (:name e))
+                   (~(resolve-transf-fn e) ~ba (+ ~offset ~(get-offset e)))))))
     '[doto (java.util.HashMap.)] rules))
 
 (defn create-extraction-fn-body-for-clj-map-type

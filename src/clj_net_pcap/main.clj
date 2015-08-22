@@ -161,7 +161,7 @@
                                       (create-file-out-forwarder output-file
                                                                  (> bulk-size 1)
                                                                  (if (arg-map :write-arff-header)
-                                                                   (get-arff-header-for-ba dsl-expression)
+                                                                   (get-arff-header dsl-expression)
                                                                    "")))
               processing-fn (let [f-tmp (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
                                   f (cond

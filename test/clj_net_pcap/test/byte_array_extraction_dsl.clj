@@ -442,7 +442,7 @@
                                 {:offset :ipv4-ttl :transformation :int8 :name :ipTtl}
                                 {:offset :ipv4-dst :transformation :ipv4-address :name :ipDst}
                                 {:offset :udp-src :transformation :int16 :name :udpSrc}]}]
-    (is (= expected-str (get-arff-type-header-for-ba dsl-expression)))))
+    (is (= expected-str (get-arff-type-header dsl-expression)))))
 
 (deftest get-arff-header-test
   (let [expected-str (str "% Packet Capture\n"
@@ -460,5 +460,5 @@
                                 {:offset :ipv4-ttl :transformation :int8 :name :ipTtl}
                                 {:offset :ipv4-dst :transformation :ipv4-address :name :ipDst}
                                 {:offset :udp-src :transformation :int16 :name :udpSrc}]}]
-    (is (= expected-str (get-arff-header-for-ba dsl-expression)))))
+    (is (= expected-str (get-arff-header dsl-expression)))))
 

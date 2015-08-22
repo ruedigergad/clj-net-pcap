@@ -121,27 +121,25 @@
 
 (defn get-arff-type-header
   "Create the ARFF type header."
-  [dsl transf-fn-resolver arff-type-fn]
-  (reduce
-    (fn [s r]
-      (let [attr-name (name (r :name))
-            arff-type (arff-type-fn (transf-fn-resolver r))]
-      (str s "@ATTRIBUTE " attr-name " " arff-type "\n")))
-    ""
-    (dsl :rules)))
+  ([dsl]
+    (get-arff-type-header dsl resovle-transf-fn get-arff-type-for-transformation-fn))
+  ([dsl transf-fn-resolver arff-type-fn]
+    (reduce
+      (fn [s r]
+        (let [attr-name (name (r :name))
+              arff-type (arff-type-fn (transf-fn-resolver r))]
+        (str s "@ATTRIBUTE " attr-name " " arff-type "\n")))
+      ""
+      (dsl :rules))))
 
-(defn get-arff-type-header-for-ba
-  [dsl]
-  (get-arff-type-header dsl resovle-transf-fn get-arff-type-for-transformation-fn))
-
-(defn get-arff-header-for-ba
+(defn get-arff-header
   [dsl]
   (str "% Packet Capture\n"
        "% Created with clj-net-pcap:\n"
        "% https://github.com/ruedigergad/clj-net-pcap\n"
        "%\n"
        "@RELATION pcap\n\n"
-       (get-arff-type-header-for-ba dsl)
+       (get-arff-type-header dsl)
        "\n@DATA\n"))
 
 (defn create-extraction-fn-body-for-java-map-type

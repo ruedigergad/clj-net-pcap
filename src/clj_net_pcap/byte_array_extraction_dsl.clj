@@ -99,7 +99,7 @@
                  (println "Error: Got unknown offset value" offset-val "from entry" e)
                  0))))
 
-(defn get-ba-transformation-fn-ret-type
+(defn get-transformation-fn-ret-type
   "Get the return type of a transformation function transf-fn.
    For determining the type, this function calls trans-fn with a 1530 byte dummy byte-array filled with 0."
   [transf-fn]
@@ -110,7 +110,7 @@
 (defn get-arff-type-from-ba-transformation-fn
   "Get the ARFF return value type for the given transformation function transf-fn."
   [transf-fn]
-  (condp = (get-ba-transformation-fn-ret-type transf-fn)
+  (condp = (get-transformation-fn-ret-type transf-fn)
     java.lang.String "STRING"
     "NUMERIC"))
 
@@ -170,7 +170,7 @@
   (let [extracted-strings (reduce
                             (fn [v e]
                               (let [transf-fn (resovle-ba-transf-fn e)
-                                    transf-ret-type (get-ba-transformation-fn-ret-type transf-fn)]
+                                    transf-ret-type (get-transformation-fn-ret-type transf-fn)]
                               (conj v (if (= java.lang.String transf-ret-type)
                                         `(str "\"" (~transf-fn ~ba (+ ~offset ~(get-offset e))) "\"")
                                         `(~transf-fn ~ba (+ ~offset ~(get-offset e)))))))
@@ -185,7 +185,7 @@
                             (reduce
                               (fn [v e]
                                 (let [transf-fn (resovle-ba-transf-fn e)
-                                      transf-ret-type (get-ba-transformation-fn-ret-type transf-fn)]
+                                      transf-ret-type (get-transformation-fn-ret-type transf-fn)]
                                   (conj v "\"" (name (:name e)) "\":"
                                           (if (= java.lang.String transf-ret-type)
                                             `(str "\"" (~transf-fn ~ba (+ ~offset ~(get-offset e))) "\"")

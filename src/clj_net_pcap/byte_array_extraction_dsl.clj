@@ -110,9 +110,17 @@
           (cond
             (or
               (keyword? transf-el)
-              (symbol? transf-el)) (do
-                                     (println "k/s")
-                                     (conj v transf-el))
+              (symbol? transf-el)) (let [s (symbol (name transf-el))]
+                                     (condp not= nil
+                                       (ns-resolve 'clojure.core s)
+                                         (conj v (ns-resolve 'clojure.core s))
+                                       (ns-resolve 'clj-net-pcap.dsl.transformation s)
+                                         (conj v (ns-resolve 'clj-net-pcap.dsl.transformation s) 'ba)
+                                       (ns-resolve 'clj-net-pcap.packet-offsets s)
+                                         (conj v `(+ ~(var-get (ns-resolve 'clj-net-pcap.packet-offsets s)) ~off))
+                                       (do
+                                         (println "Could not resolve keyword/symbol:" s)
+                                         v)))
             (list? transf-el) (conj v (into '() (reverse (create-transf-fn transf-el ba off))))
             :default (conj v transf-el)))
         [] transf-def))))
@@ -123,11 +131,9 @@
   (reduce
     (fn [v rule]
       (if (is-new-dsl? rule)
-        (do
-          (println (create-transf-fn (second rule) ba offset))
-          (conj v `(.put
-                    ~(name (first rule))
-                   (~(resolve-transf-fn rule) ~ba (+ ~offset ~(var-get (ns-resolve 'clj-net-pcap.packet-offsets (second (second rule)))))))))
+        (conj v `(.put
+                  ~(name (first rule))
+                  ~(create-transf-fn (second rule) ba offset)))
         (conj v `(.put
                    ~(name (:name rule))
                    (~(resolve-transf-fn rule) ~ba (+ ~offset ~(get-offset rule)))))))

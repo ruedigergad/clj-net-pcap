@@ -100,15 +100,34 @@
        (get-arff-type-header dsl)
        "\n@DATA\n"))
 
+(defn create-transf-fn
+  [transf-def ba off]
+  (into 
+    '()
+    (reverse
+      (reduce
+        (fn [v transf-el]
+          (cond
+            (or
+              (keyword? transf-el)
+              (symbol? transf-el)) (do
+                                     (println "k/s")
+                                     (conj v transf-el))
+            (list? transf-el) (conj v (into '() (reverse (create-transf-fn transf-el ba off))))
+            :default (conj v transf-el)))
+        [] transf-def))))
+
 (defn create-extraction-fn-body-for-java-map-type
   "Create the body of an extraction function that extracts data into a Java map."
   [ba offset rules]
   (reduce
     (fn [v rule]
       (if (is-new-dsl? rule)
-        (conj v `(.put
-                   ~(name (first rule))
-                   (~(resolve-transf-fn rule) ~ba (+ ~offset ~(var-get (ns-resolve 'clj-net-pcap.packet-offsets (second (second rule))))))))
+        (do
+          (println (create-transf-fn (second rule) ba offset))
+          (conj v `(.put
+                    ~(name (first rule))
+                   (~(resolve-transf-fn rule) ~ba (+ ~offset ~(var-get (ns-resolve 'clj-net-pcap.packet-offsets (second (second rule)))))))))
         (conj v `(.put
                    ~(name (:name rule))
                    (~(resolve-transf-fn rule) ~ba (+ ~offset ~(get-offset rule)))))))

@@ -144,9 +144,13 @@
   [ba offset rules]
   (reduce
     (fn [v rule]
-      (conj v `(assoc
-                 ~(name (:name rule))
-                 (~(resolve-transf-fn rule) ~ba (+ ~offset ~(get-offset rule))))))
+      (if (is-new-dsl? rule)
+        (conj v `(assoc
+                   ~(name (first rule))
+                   ~(create-transf-fn (second rule) ba offset)))
+        (conj v `(assoc
+                   ~(name (:name rule))
+                   (~(resolve-transf-fn rule) ~ba (+ ~offset ~(get-offset rule)))))))
     '[-> {}] rules))
 
 (defn create-extraction-fn-body-for-csv-str-type

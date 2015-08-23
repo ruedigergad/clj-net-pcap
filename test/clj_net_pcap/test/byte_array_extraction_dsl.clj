@@ -24,6 +24,7 @@
   (:use clojure.test
         clj-net-pcap.byte-array-extraction-dsl
         clj-net-pcap.core
+        clj-net-pcap.dsl.transformation
         clj-net-pcap.pcap-data
         clj-assorted-utils.util)
   (:import (clj_net_pcap PacketHeaderDataBeanIpv4UdpOnly)))
@@ -469,7 +470,7 @@
 ;;;
 
 (deftest resolve-transf-fn-old-syntax-test
-  (is (= (resolve 'clj-net-pcap.byte-array-extraction-dsl/int16)
+  (is (= (resolve 'clj-net-pcap.dsl.transformation/int16)
          (resolve-transf-fn {:offset :udp-src :transformation :int16 :name :udpSrc}))))
 
 (deftest new-dsl-with-type-java-map-test

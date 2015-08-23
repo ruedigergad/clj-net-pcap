@@ -86,7 +86,7 @@
       (fn [s r]
         (let [attr-name (name (r :name))
               arff-type (arff-type-fn (transf-fn-resolver r))]
-        (str s "@ATTRIBUTE " attr-name " " arff-type "\n")))
+          (str s "@ATTRIBUTE " attr-name " " arff-type "\n")))
       ""
       (dsl :rules))))
 

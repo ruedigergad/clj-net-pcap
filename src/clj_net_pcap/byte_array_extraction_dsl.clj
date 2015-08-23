@@ -83,9 +83,9 @@
     (get-arff-type-header dsl resolve-transf-fn get-arff-type-for-transformation-fn))
   ([dsl transf-fn-resolver arff-type-fn]
     (reduce
-      (fn [s r]
-        (let [attr-name (name (r :name))
-              arff-type (arff-type-fn (transf-fn-resolver r))]
+      (fn [s rule]
+        (let [attr-name (name (rule :name))
+              arff-type (arff-type-fn (transf-fn-resolver rule))]
           (str s "@ATTRIBUTE " attr-name " " arff-type "\n")))
       ""
       (dsl :rules))))

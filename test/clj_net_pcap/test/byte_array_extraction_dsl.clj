@@ -554,3 +554,33 @@
     (is (map? extracted-map))
     (is (= expected-map extracted-map))))
 
+(deftest new-dsl-with-type-csv-str-test
+  (let [expected-str "0.031250477,0.06250095"
+        dsl-expression {:type :csv-str
+                        :rules [['udpSrc '(float (/ (int16 udp-src) 65535))]
+                                ['udpDst '(float (/ (int16 udp-dst) 65535))]]}
+        pkt-raw-vec [-5 -106 -57 84   15 -54 14 0   77 0 0 0   77 0 0 0    ; 16 byte pcap header
+                     -1 -2 -3 -14 -15 -16 1 2 3 4 5 6 8 0                  ; 14 byte Ethernet header
+                     69 0 0 32 0 3 64 0 7 17 115 -57 1 2 3 4 -4 -3 -2 -1   ; 20 byte IP header
+                     8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
+                     97 98 99 100]                                         ; 4 byte data "abcd"
+        pkt-ba (byte-array (map byte pkt-raw-vec))
+        extraction-fn (create-extraction-fn dsl-expression)
+        extracted-str (extraction-fn pkt-ba 0)]
+    (is (= expected-str extracted-str))))
+
+(deftest new-dsl-with-type-json-str-test
+  (let [expected-str "{\"udpSrc\":0.031250477,\"udpDst\":0.06250095}"
+        dsl-expression {:type :json-str
+                        :rules [['udpSrc '(float (/ (int16 udp-src) 65535))]
+                                ['udpDst '(float (/ (int16 udp-dst) 65535))]]}
+        pkt-raw-vec [-5 -106 -57 84   15 -54 14 0   77 0 0 0   77 0 0 0    ; 16 byte pcap header
+                     -1 -2 -3 -14 -15 -16 1 2 3 4 5 6 8 0                  ; 14 byte Ethernet header
+                     69 0 0 32 0 3 64 0 7 17 115 -57 1 2 3 4 -4 -3 -2 -1   ; 20 byte IP header
+                     8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
+                     97 98 99 100]                                         ; 4 byte data "abcd"
+        pkt-ba (byte-array (map byte pkt-raw-vec))
+        extraction-fn (create-extraction-fn dsl-expression)
+        extracted-str (extraction-fn pkt-ba 0)]
+    (is (= expected-str extracted-str))))
+

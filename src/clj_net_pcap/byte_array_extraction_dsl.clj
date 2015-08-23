@@ -158,11 +158,17 @@
   [ba offset rules]
   (let [extracted-strings (reduce
                             (fn [v rule]
-                              (let [transf-fn (resolve-transf-fn rule)
-                                    transf-ret-type (get-transformation-fn-ret-type transf-fn)]
-                                (conj v (if (= java.lang.String transf-ret-type)
-                                          `(str "\"" (~transf-fn ~ba (+ ~offset ~(get-offset rule))) "\"")
-                                          `(~transf-fn ~ba (+ ~offset ~(get-offset rule)))))))
+                              (if (is-new-dsl? rule)
+                                (let [transf-fn (create-transf-fn (second rule) ba offset)
+                                      transf-ret-type (get-transformation-fn-ret-type (eval `(fn [~ba ~offset] ~transf-fn)))]
+                                  (conj v (if (= java.lang.String transf-ret-type)
+                                            `(str "\"" ~transf-fn "\"")
+                                            transf-fn)))
+                                (let [transf-fn (resolve-transf-fn rule)
+                                      transf-ret-type (get-transformation-fn-ret-type transf-fn)]
+                                  (conj v (if (= java.lang.String transf-ret-type)
+                                            `(str "\"" (~transf-fn ~ba (+ ~offset ~(get-offset rule))) "\"")
+                                            `(~transf-fn ~ba (+ ~offset ~(get-offset rule))))))))
                             '[str] rules)
         commas (reduce into [] ["." (repeat (- (count rules) 1) ",") "."])]
     (vec (filter #(not= \. %) (interleave extracted-strings commas)))))
@@ -173,12 +179,20 @@
   (let [extracted-strings (conj
                             (reduce
                               (fn [v rule]
-                                (let [transf-fn (resolve-transf-fn rule)
-                                      transf-ret-type (get-transformation-fn-ret-type transf-fn)]
-                                  (conj v "\"" (name (:name rule)) "\":"
-                                          (if (= java.lang.String transf-ret-type)
-                                            `(str "\"" (~transf-fn ~ba (+ ~offset ~(get-offset rule))) "\"")
-                                            `(~transf-fn ~ba (+ ~offset ~(get-offset rule)))))))
+                                (if (is-new-dsl? rule)
+                                  (let [transf-fn (create-transf-fn (second rule) ba offset)
+                                        _ (println transf-fn)
+                                        transf-ret-type (get-transformation-fn-ret-type (eval `(fn [~ba ~offset] ~transf-fn)))]
+                                    (conj v "\"" (name (first rule)) "\":"
+                                            (if (= java.lang.String transf-ret-type)
+                                              `(str "\"" ~transf-fn "\"")
+                                              transf-fn)))
+                                  (let [transf-fn (resolve-transf-fn rule)
+                                        transf-ret-type (get-transformation-fn-ret-type transf-fn)]
+                                    (conj v "\"" (name (:name rule)) "\":"
+                                            (if (= java.lang.String transf-ret-type)
+                                              `(str "\"" (~transf-fn ~ba (+ ~offset ~(get-offset rule))) "\"")
+                                              `(~transf-fn ~ba (+ ~offset ~(get-offset rule))))))))
                               '[str "{"] rules)
                             "}")
         commas (reduce into [] ["." "." "." "." "." (reduce into [] (repeat (- (count rules) 1) ["," "." "." "."])) "." "."])]

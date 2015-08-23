@@ -160,36 +160,36 @@
   "Create the body of an extraction function that extracts data into a Java map."
   [ba offset rules]
   (reduce
-    (fn [v e]
-      (if (is-new-dsl? e)
+    (fn [v rule]
+      (if (is-new-dsl? rule)
         (conj v `(.put
-                   ~(name (first e))
-                   (~(resolve-transf-fn e) ~ba (+ ~offset ~(var-get (ns-resolve 'clj-net-pcap.packet-offsets (second (second e))))))))
+                   ~(name (first rule))
+                   (~(resolve-transf-fn rule) ~ba (+ ~offset ~(var-get (ns-resolve 'clj-net-pcap.packet-offsets (second (second rule))))))))
         (conj v `(.put
-                   ~(name (:name e))
-                   (~(resolve-transf-fn e) ~ba (+ ~offset ~(get-offset e)))))))
+                   ~(name (:name rule))
+                   (~(resolve-transf-fn rule) ~ba (+ ~offset ~(get-offset rule)))))))
     '[doto (java.util.HashMap.)] rules))
 
 (defn create-extraction-fn-body-for-clj-map-type
   "Create the body of an extraction function that extracts data into a Clojure map."
   [ba offset rules]
   (reduce
-    (fn [v e]
+    (fn [v rule]
       (conj v `(assoc
-                 ~(name (:name e))
-                 (~(resolve-transf-fn e) ~ba (+ ~offset ~(get-offset e))))))
+                 ~(name (:name rule))
+                 (~(resolve-transf-fn rule) ~ba (+ ~offset ~(get-offset rule))))))
     '[-> {}] rules))
 
 (defn create-extraction-fn-body-for-csv-str-type
   "Create the body of an extraction function that extracts data into a CSV String."
   [ba offset rules]
   (let [extracted-strings (reduce
-                            (fn [v e]
-                              (let [transf-fn (resolve-transf-fn e)
+                            (fn [v rule]
+                              (let [transf-fn (resolve-transf-fn rule)
                                     transf-ret-type (get-transformation-fn-ret-type transf-fn)]
                               (conj v (if (= java.lang.String transf-ret-type)
-                                        `(str "\"" (~transf-fn ~ba (+ ~offset ~(get-offset e))) "\"")
-                                        `(~transf-fn ~ba (+ ~offset ~(get-offset e)))))))
+                                        `(str "\"" (~transf-fn ~ba (+ ~offset ~(get-offset rule))) "\"")
+                                        `(~transf-fn ~ba (+ ~offset ~(get-offset rule)))))))
                             '[str] rules)
         commas (reduce into [] ["." (repeat (- (count rules) 1) ",") "."])]
     (vec (filter #(not= \. %) (interleave extracted-strings commas)))))
@@ -199,13 +199,13 @@
   [ba offset rules]
   (let [extracted-strings (conj
                             (reduce
-                              (fn [v e]
-                                (let [transf-fn (resolve-transf-fn e)
+                              (fn [v rule]
+                                (let [transf-fn (resolve-transf-fn rule)
                                       transf-ret-type (get-transformation-fn-ret-type transf-fn)]
-                                  (conj v "\"" (name (:name e)) "\":"
+                                  (conj v "\"" (name (:name rule)) "\":"
                                           (if (= java.lang.String transf-ret-type)
-                                            `(str "\"" (~transf-fn ~ba (+ ~offset ~(get-offset e))) "\"")
-                                            `(~transf-fn ~ba (+ ~offset ~(get-offset e)))))))
+                                            `(str "\"" (~transf-fn ~ba (+ ~offset ~(get-offset rule))) "\"")
+                                            `(~transf-fn ~ba (+ ~offset ~(get-offset rule)))))))
                               '[str "{"] rules)
                             "}")
         commas (reduce into [] ["." "." "." "." "." (reduce into [] (repeat (- (count rules) 1) ["," "." "." "."])) "." "."])]

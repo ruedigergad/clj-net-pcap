@@ -463,6 +463,18 @@
                                 {:offset :udp-src :transformation :int16 :name :udpSrc}]}]
     (is (= expected-str (get-arff-header dsl-expression)))))
 
+(deftest get-arff-type-header-new-dsl-test
+  (let [expected-str (str "@ATTRIBUTE ts NUMERIC\n"
+                          "@ATTRIBUTE ipTtl NUMERIC\n"
+                          "@ATTRIBUTE ipDst STRING\n"
+                          "@ATTRIBUTE udpSrc NUMERIC\n")
+        dsl-expression {:type :json-str
+                        :rules [['ts '(timestamp 0)]
+                                ['ipTtl '(int8 ipv4-ttl)]
+                                ['ipDst '(ipv4-address ipv4-dst)]
+                                ['udpSrc '(int16 udp-src)]]}]
+    (is (= expected-str (get-arff-type-header dsl-expression)))))
+
 
 
 ;;;

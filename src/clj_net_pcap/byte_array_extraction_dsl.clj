@@ -62,44 +62,6 @@
   [e]
   (vector? e))
 
-(defn resolve-transf-fn
-  "Resovle the transofrmation function for the given extraction-rule."
-  [e]
-  (if (is-new-dsl? e)
-    (ns-resolve 'clj-net-pcap.dsl.transformation (symbol (name (first (second e)))))
-    (ns-resolve 'clj-net-pcap.dsl.transformation (symbol (name (:transformation e))))))
-;  ([e ba ba-offset]
-;    (let [expr (second e)
-;          f-sym (first expr)
-;          f (ns-resolve 'clj-net-pcap.byte-array-extraction-dsl f-sym)
-;          pkt-off-sym (second expr)
-;          pkt-off (var-get (ns-resolve 'clj-net-pcap.packet-offsets pkt-off-sym))]
-;      (println e expr f-sym f pkt-off ba ba-offset)
-;      (list f ba (+ ba-offset pkt-off)))))
-
-(defn get-arff-type-header
-  "Create the ARFF type header."
-  ([dsl]
-    (get-arff-type-header dsl resolve-transf-fn get-arff-type-for-transformation-fn))
-  ([dsl transf-fn-resolver arff-type-fn]
-    (reduce
-      (fn [s rule]
-        (let [attr-name (name (rule :name))
-              arff-type (arff-type-fn (transf-fn-resolver rule))]
-          (str s "@ATTRIBUTE " attr-name " " arff-type "\n")))
-      ""
-      (dsl :rules))))
-
-(defn get-arff-header
-  [dsl]
-  (str "% Packet Capture\n"
-       "% Created with clj-net-pcap:\n"
-       "% https://github.com/ruedigergad/clj-net-pcap\n"
-       "%\n"
-       "@RELATION pcap\n\n"
-       (get-arff-type-header dsl)
-       "\n@DATA\n"))
-
 (defn create-transf-fn
   [transf-def ba off]
   (into 
@@ -124,6 +86,50 @@
             (list? transf-el) (conj v (into '() (reverse (create-transf-fn transf-el ba off))))
             :default (conj v transf-el)))
         [] transf-def))))
+
+(defn resolve-transf-fn
+  "Resovle the transofrmation function for the given extraction-rule."
+  [e]
+  (if (is-new-dsl? e)
+    (let [ba-sym 'ba
+          offset-sym 'offset]
+      (eval `(fn [~ba-sym ~offset-sym] ~(create-transf-fn (second e) ba-sym offset-sym))))
+    (ns-resolve 'clj-net-pcap.dsl.transformation (symbol (name (:transformation e))))))
+;  ([e ba ba-offset]
+;    (let [expr (second e)
+;          f-sym (first expr)
+;          f (ns-resolve 'clj-net-pcap.byte-array-extraction-dsl f-sym)
+;          pkt-off-sym (second expr)
+;          pkt-off (var-get (ns-resolve 'clj-net-pcap.packet-offsets pkt-off-sym))]
+;      (println e expr f-sym f pkt-off ba ba-offset)
+;      (list f ba (+ ba-offset pkt-off)))))
+
+(defn get-arff-type-header
+  "Create the ARFF type header."
+  ([dsl]
+    (get-arff-type-header dsl resolve-transf-fn get-arff-type-for-transformation-fn))
+  ([dsl transf-fn-resolver arff-type-fn]
+    (reduce
+      (fn [s rule]
+        (if (is-new-dsl? rule)
+          (let [attr-name (name (first rule))
+                arff-type (arff-type-fn (transf-fn-resolver rule))]
+            (str s "@ATTRIBUTE " attr-name " " arff-type "\n"))
+          (let [attr-name (name (rule :name))
+                arff-type (arff-type-fn (transf-fn-resolver rule))]
+            (str s "@ATTRIBUTE " attr-name " " arff-type "\n"))))
+      ""
+      (dsl :rules))))
+
+(defn get-arff-header
+  [dsl]
+  (str "% Packet Capture\n"
+       "% Created with clj-net-pcap:\n"
+       "% https://github.com/ruedigergad/clj-net-pcap\n"
+       "%\n"
+       "@RELATION pcap\n\n"
+       (get-arff-type-header dsl)
+       "\n@DATA\n"))
 
 (defn create-extraction-fn-body-for-java-map-type
   "Create the body of an extraction function that extracts data into a Java map."
@@ -181,7 +187,6 @@
                               (fn [v rule]
                                 (if (is-new-dsl? rule)
                                   (let [transf-fn (create-transf-fn (second rule) ba offset)
-                                        _ (println transf-fn)
                                         transf-ret-type (get-transformation-fn-ret-type (eval `(fn [~ba ~offset] ~transf-fn)))]
                                     (conj v "\"" (name (first rule)) "\":"
                                             (if (= java.lang.String transf-ret-type)

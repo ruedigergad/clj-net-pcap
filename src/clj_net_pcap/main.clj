@@ -28,6 +28,7 @@
         clojure.tools.cli
         clj-net-pcap.byte-array-extraction-dsl
         clj-net-pcap.core
+        clj-net-pcap.dsl.transformation
         clj-net-pcap.native
         clj-net-pcap.packet-gen
         clj-net-pcap.pcap-data
@@ -61,7 +62,7 @@
     ["-h" "--help" "Print this help." :flag true]
     ["-i" "--interface"
      "Interface on which the packets are captured"
-     :default "eth0"]
+     :default "lo"]
     ["-r" "--raw"
      (str "Emit raw data instead of decoded packets."
           " Be careful, not all transformation and forwarder functions support this.")
@@ -252,10 +253,10 @@
                             (= cmd "get-filters")) (pprint (get-filters cljnetpcap))
                           (or
                             (= cmd "rlf")
-                            (= cmd "remove-last-filter")) (remove-last-filter cljnetpcap)
+                            (= cmd "rm-last-filter")) (remove-last-filter cljnetpcap)
                           (or
                             (= cmd "raf")
-                            (= cmd "remove-all-filters")) (remove-all-filters cljnetpcap)
+                            (= cmd "rm-all-filters")) (remove-all-filters cljnetpcap)
                           (= cmd "replace-filter") (let [filters (split args #" with-filter ")]
                                                      (replace-filter cljnetpcap (first filters) (second filters)))
                           (or
@@ -270,12 +271,44 @@
                                                        (cljnetpcap :send-bytes-packet (byte-array (map byte read-data)))))
                           (or
                             (= cmd "sdtf")
-                            (= cmd "set-dsl-transformation-fn")) (let [read-data (binding [*read-eval* false] (read-string args))
+                            (= cmd "set-dsl-tr-fn")) (let [read-data (binding [*read-eval* false] (read-string args))
                                                                        new-dsl-t-fn (get-dsl-fn read-data)]
                                                                    (reset! dynamic-transformation-fn new-dsl-t-fn))
+                          (or
+                            (= cmd "?")
+                            (= cmd "help")) (println
+                                              (str "clj-net-pcap help:\n"
+                                                   "add-filter (af)\t\tAdd a new pcap filter.\n"
+                                                   "               \t\tTwo situations have to be distinguished:\n"
+                                                   "               \t\tthe initial filter addition and subsequent additions.\n"
+                                                   "               \t\tE.g. (initial filter): \"af tcp\"\n"
+                                                   "               \t\tE.g. (subsequent filter): \"af or udp\"\n"
+                                                   "               \t\tNote the \"or\" (also possible \"and\") statement for chaining the filter expressions.\n\n"
+                                                   "get-filter (gf)\t\tReturns the currently active filter(s).\n\n"
+                                                   "rm-last-filter(rlf)\tRemoves the last filter expression.\n\n"
+                                                   "rm-all-filter(rlf)\tRemove all filter expressions.\n\n"
+                                                   "replace-filter\t\tReplace an existing filter with another one.\n"
+                                                   "              \t\tE.g.: replace-filter or udp with or icmp\n\n"
+                                                   "gen-packet (gp)\t\tGenerates a vector with raw packet data.\n"
+                                                   "               \t\tThe input is a packet description as clojure map.\n"
+                                                   "               \t\tE.g.: gp {\"len\" 20, \"ethSrc\" \"01:02:03:04:05:06\", \"ethDst\" \"FF:FE:FD:F2:F1:F0\"}\n"
+                                                   "               \t\tE.g.: gp {\"len\" 54, \"ethSrc\" \"01:02:03:04:05:06\", \"ethDst\" \"FF:FE:FD:F2:F1:F0\", \"ipVer\" 4, \"ipDst\" \"252.253.254.255\", \"ipId\" 3, \"ipType\" 1, \"ipTtl\" 7, \"ipSrc\" \"1.2.3.4\", \"icmpType\" 8, \"icmpId\" 123, \"icmpSeqNo\" 12, \"data\" \"abcd\"}\n\n"
+                                                   "send-packet (sp)\tSend a generated packet via the current capture device.\n"
+                                                   "                \tThe packet to be sent can be either defined as map like shown for \"gen-packet\"\n"
+                                                   "                \tor can be a raw packet data vector like emitted by \"gen-packet\".\n\n"
+                                                   "set-dsl-tr-fn (sdtf)\tSet the transformation function based on the provided DSL expression.\n"
+                                                   "                    \tPlease note: this requires DSL-based processing\n"
+                                                   "                    \t             AND the dynamic transformation function to be enabled.\n"
+                                                   "                    \tE.g.: sdtf {:type :json-str :rules [[udpSrc (int16 udp-src)] [udpDst (int16 udp-dst)]]}\n"
+                                                   "                    \tE.g.: sdtf {:type :csv-str :rules [[udpSrc (float (/ (int16 udp-src) 65535))] [udpDst (float (/ (int16 udp-dst) 65535))]]}\n"
+                                                   "                    \tE.g. (old syntax): sdtf {:type :clj-map :rules [{:offset :udp-src :transformation :int16 :name :udpSrc} {:offset :udp-dst :transformation :int16 :name :udpDst}]}\n"))
                           :default (when (not= cmd "")
                                      (println "Unknown command:" cmd)
-                                     (println "Valid commands are: add-filter (af), get-filters (gf), remove-last-filter (rlf), remove-all-filters (raf), replace-filter old with-filter new")))
+                                     (println (str "Valid commands are: "
+                                                   "quit (q), help (?), "
+                                                   "add-filter (af), get-filters (gf), rm-last-filter (rlf), "
+                                                   "rm-all-filters (raf), replace-filter <OLD> with-filter <NEW>, "
+                                                   "gen-packet (gp), send-packet (sp), set-dsl-tr-fn (sdtf)"))))
                         (catch Exception e
                           (println "Error while processing input:" (.getMessage e))))
                       (print "cljnetpcap=> ")

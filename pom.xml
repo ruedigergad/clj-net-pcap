@@ -3,14 +3,14 @@
   <groupId>clj-net-pcap</groupId>
   <artifactId>clj-net-pcap</artifactId>
   <packaging>jar</packaging>
-  <version>1.6.9995</version>
+  <version>1.7.0</version>
   <name>clj-net-pcap</name>
   <description>clj-net-pcap is a wrapper/adapter/facade (No matter how you want to call it.)
                 around jNetPcap that enables and eases packet capturing and processing with Clojure.</description>
   <scm>
     <connection>scm:git:git://github.com/ruedigergad/clj-net-pcap.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/ruedigergad/clj-net-pcap.git</developerConnection>
-    <tag>5662153714d48568bd67c36db5c9eca150974263
+    <tag>3f3bcb683d3ea6005af247223633dabc675c7294
 </tag>
     <url>https://github.com/ruedigergad/clj-net-pcap</url>
   </scm>
@@ -57,7 +57,7 @@
   <repositories>
     <repository>
       <id>central</id>
-      <url>http://repo1.maven.org/maven2/</url>
+      <url>https://repo1.maven.org/maven2/</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
@@ -80,7 +80,7 @@
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>clojure</artifactId>
-      <version>1.6.0</version>
+      <version>1.7.0</version>
     </dependency>
     <dependency>
       <groupId>org.clojure</groupId>
@@ -90,17 +90,17 @@
     <dependency>
       <groupId>clj-assorted-utils</groupId>
       <artifactId>clj-assorted-utils</artifactId>
-      <version>1.7.0</version>
+      <version>1.9.1</version>
     </dependency>
     <dependency>
       <groupId>jnetpcap</groupId>
       <artifactId>jnetpcap</artifactId>
-      <version>1.4.r1425-1d</version>
+      <version>1.4.r1425-1f</version>
     </dependency>
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>tools.nrepl</artifactId>
-      <version>0.2.3</version>
+      <version>0.2.6</version>
       <exclusions>
         <exclusion>
           <groupId>org.clojure</groupId>

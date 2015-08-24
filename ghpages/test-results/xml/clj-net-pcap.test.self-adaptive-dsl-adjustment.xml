@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="clj-net-pcap.test.self-adaptive-dsl-adjustment" errors="0" failures="0" tests="15" time="0.0268" timestamp="2015-08-24_13:10:01+0200">
+    <testcase name="self-adaptation-controller-restore-full-dsl-on-slowdown-test" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0083">
+    </testcase>
+    <testcase name="stat-delta-test" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0005">
+    </testcase>
+    <testcase name="moving-average-calculator-test-2" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0001">
+    </testcase>
+    <testcase name="determine-max-capture-rate-test-1" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0010">
+    </testcase>
+    <testcase name="self-adaptation-controller-cap-rate-calc-test-1" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0016">
+    </testcase>
+    <testcase name="simple-repetition-detection-test-1" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0009">
+    </testcase>
+    <testcase name="simple-repetition-detection-test-2" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0016">
+    </testcase>
+    <testcase name="determine-max-capture-rate-test-5" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0019">
+    </testcase>
+    <testcase name="moving-average-calculator-test-3" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0002">
+    </testcase>
+    <testcase name="moving-average-calculator-test-1" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0009">
+    </testcase>
+    <testcase name="get-dropped-sum-test" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0001">
+    </testcase>
+    <testcase name="self-adaptation-controller-initialization-test" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0002">
+    </testcase>
+    <testcase name="determine-max-capture-rate-test-4" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0009">
+    </testcase>
+    <testcase name="self-adaptation-controller-limit-dsl-on-speedup-test" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0038">
+    </testcase>
+    <testcase name="self-adaptation-controller-cap-rate-calc-test-2" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0022">
+    </testcase>
+</testsuite>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="clj-net-pcap.test.pcap-bulk" errors="0" failures="0" tests="4" time="9.3233" timestamp="2015-08-24_13:09:50+0200">
+    <testcase name="cljnetpcap-send-and-receive-bytes-packet-without-intermediate-buffer-count-test" classname="clj-net-pcap.test.pcap-bulk" time="2.3858">
+    </testcase>
+    <testcase name="cljnetpcap-send-and-receive-packet-maps-without-intermediate-buffer-count-test" classname="clj-net-pcap.test.pcap-bulk" time="2.2736">
+    </testcase>
+    <testcase name="cljnetpcap-send-and-receive-packet-maps-via-intermediate-buffer-count-test" classname="clj-net-pcap.test.pcap-bulk" time="2.3017">
+    </testcase>
+    <testcase name="cljnetpcap-send-and-receive-bytes-packet-via-intermediate-buffer-count-test" classname="clj-net-pcap.test.pcap-bulk" time="2.3608">
+    </testcase>
+</testsuite>

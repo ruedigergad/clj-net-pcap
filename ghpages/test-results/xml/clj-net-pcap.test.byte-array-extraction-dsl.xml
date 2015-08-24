@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="clj-net-pcap.test.byte-array-extraction-dsl" errors="0" failures="0" tests="35" time="0.0577" timestamp="2015-08-24_13:09:21+0200">
+    <testcase name="timestamp-extraction-be-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0022">
+    </testcase>
+    <testcase name="full-ipv4-udp-dsl-be-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0020">
+    </testcase>
+    <testcase name="new-dsl-with-type-java-map-and-operation-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0017">
+    </testcase>
+    <testcase name="get-arff-type-header-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0007">
+    </testcase>
+    <testcase name="simple-hardcoded-offsets-dsl-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0010">
+    </testcase>
+    <testcase name="dsl-with-type-json-str-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0026">
+    </testcase>
+    <testcase name="get-arff-type-header-new-dsl-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0021">
+    </testcase>
+    <testcase name="dsl-with-type-clj-map-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0014">
+    </testcase>
+    <testcase name="simple-packet-offsets-name-dsl-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0010">
+    </testcase>
+    <testcase name="new-dsl-with-type-json-str-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0027">
+    </testcase>
+    <testcase name="extended-packet-offsets-name-dsl-le-strings-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0014">
+    </testcase>
+    <testcase name="new-dsl-with-type-java-map-and-operation-test-2" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0013">
+    </testcase>
+    <testcase name="dsl-with-type-java-map-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0012">
+    </testcase>
+    <testcase name="get-arff-numeric-type-test-2" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0001">
+    </testcase>
+    <testcase name="extended-packet-offsets-name-dsl-be-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0014">
+    </testcase>
+    <testcase name="new-dsl-with-type-csv-str-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0032">
+    </testcase>
+    <testcase name="dsl-with-type-csv-str-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0009">
+    </testcase>
+    <testcase name="get-arff-string-type-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0001">
+    </testcase>
+    <testcase name="dsl-with-type-json-str-test-3" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0018">
+    </testcase>
+    <testcase name="new-dsl-with-type-java-map-and-operation-test-3" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0017">
+    </testcase>
+    <testcase name="dsl-with-type-json-str-test-2" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0015">
+    </testcase>
+    <testcase name="dsl-default-to-java-map-type-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0014">
+    </testcase>
+    <testcase name="timestamp-extraction-le-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0013">
+    </testcase>
+    <testcase name="new-dsl-with-type-clj-map-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0015">
+    </testcase>
+    <testcase name="ipv4-version-extraction-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0018">
+    </testcase>
+    <testcase name="ipv4-address-extraction-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0018">
+    </testcase>
+    <testcase name="extended-packet-offsets-name-dsl-le-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0013">
+    </testcase>
+    <testcase name="new-dsl-with-type-java-map-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0013">
+    </testcase>
+    <testcase name="dsl-with-type-csv-str-test-2" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0013">
+    </testcase>
+    <testcase name="dsl-with-type-csv-str-test-3" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0016">
+    </testcase>
+    <testcase name="full-ipv4-udp-dsl-le-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0018">
+    </testcase>
+    <testcase name="get-arff-header-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0003">
+    </testcase>
+    <testcase name="resolve-transf-fn-old-syntax-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0001">
+    </testcase>
+    <testcase name="ethernet-address-extraction-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0016">
+    </testcase>
+    <testcase name="get-arff-numeric-type-test" classname="clj-net-pcap.test.byte-array-extraction-dsl" time="0.0001">
+    </testcase>
+</testsuite>

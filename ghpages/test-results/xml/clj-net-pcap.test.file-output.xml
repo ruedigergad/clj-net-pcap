@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="clj-net-pcap.test.file-output" errors="0" failures="0" tests="5" time="11.4267" timestamp="2015-08-24_13:09:35+0200">
+    <testcase name="csv-str-to-file-online-test" classname="clj-net-pcap.test.file-output" time="2.2885">
+    </testcase>
+    <testcase name="json-str-to-file-online-three-packets-test" classname="clj-net-pcap.test.file-output" time="2.2803">
+    </testcase>
+    <testcase name="csv-str-to-file-online-bs2-test" classname="clj-net-pcap.test.file-output" time="2.2917">
+    </testcase>
+    <testcase name="json-str-to-file-online-test" classname="clj-net-pcap.test.file-output" time="2.2807">
+    </testcase>
+    <testcase name="csv-str-to-file-online-three-packets-test" classname="clj-net-pcap.test.file-output" time="2.2827">
+    </testcase>
+</testsuite>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="clj-net-pcap.test.byte-array-extraction" errors="0" failures="0" tests="6" time="0.4186" timestamp="2015-08-24_13:09:21+0200">
+    <testcase name="test-extract-udp-maps-from-pcap-file-ipv4-udp-only-reference" classname="clj-net-pcap.test.byte-array-extraction" time="0.2089">
+    </testcase>
+    <testcase name="test-extract-data-from-byte-array-to-map-ipv4-udp-only-be" classname="clj-net-pcap.test.byte-array-extraction" time="0.0007">
+    </testcase>
+    <testcase name="test-extract-data-from-byte-array-to-bean-ipv4-udp-only-be" classname="clj-net-pcap.test.byte-array-extraction" time="0.0004">
+    </testcase>
+    <testcase name="test-extract-udp-beans-from-pcap-file-ipv4-udp-only-reference" classname="clj-net-pcap.test.byte-array-extraction" time="0.2020">
+    </testcase>
+    <testcase name="test-extract-data-from-byte-array-to-bean-ipv4-udp-only" classname="clj-net-pcap.test.byte-array-extraction" time="0.0005">
+    </testcase>
+    <testcase name="test-extract-data-from-byte-array-to-map-ipv4-udp-only" classname="clj-net-pcap.test.byte-array-extraction" time="0.0004">
+    </testcase>
+</testsuite>

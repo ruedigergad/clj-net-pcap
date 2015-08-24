@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="clj-net-pcap.test.pcap-send" errors="0" failures="0" tests="10" time="5.9200" timestamp="2015-08-24_13:09:59+0200">
+    <testcase name="cljnetpcap-send-and-receive-bytes-packet-with-count-and-delay-test" classname="clj-net-pcap.test.pcap-send" time="0.7765">
+    </testcase>
+    <testcase name="cljnetpcap-send-and-receive-packet-from-description-map-with-count-and-delay-test" classname="clj-net-pcap.test.pcap-send" time="0.7837">
+    </testcase>
+    <testcase name="cljnetpcap-send-and-receive-bytes-packet-raw-test" classname="clj-net-pcap.test.pcap-send" time="0.3788">
+    </testcase>
+    <testcase name="cljnetpcap-send-and-receive-packet-from-description-map-count-test" classname="clj-net-pcap.test.pcap-send" time="0.8008">
+    </testcase>
+    <testcase name="cljnetpcap-send-and-receive-bytes-packet-with-count-test" classname="clj-net-pcap.test.pcap-send" time="0.6878">
+    </testcase>
+    <testcase name="cljnetpcap-send-and-receive-bytes-packet-maps-test" classname="clj-net-pcap.test.pcap-send" time="0.3876">
+    </testcase>
+    <testcase name="pcap-send-and-sniff-byte-array-test" classname="clj-net-pcap.test.pcap-send" time="0.3758">
+    </testcase>
+    <testcase name="cljnetpcap-send-and-receive-bytes-packet-count-test" classname="clj-net-pcap.test.pcap-send" time="0.7718">
+    </testcase>
+    <testcase name="naive-pcap-send-byte-array-test" classname="clj-net-pcap.test.pcap-send" time="0.2808">
+    </testcase>
+    <testcase name="cljnetpcap-send-and-receive-packet-from-description-map-with-count-test" classname="clj-net-pcap.test.pcap-send" time="0.6737">
+    </testcase>
+</testsuite>

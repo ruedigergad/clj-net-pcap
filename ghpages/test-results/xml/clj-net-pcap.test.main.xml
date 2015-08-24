@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="clj-net-pcap.test.main" errors="0" failures="0" tests="9" time="2.2780" timestamp="2015-08-24_13:09:38+0200">
+    <testcase name="test-simple-timed-main-run-with-combined-output" classname="clj-net-pcap.test.main" time="0.3269">
+    </testcase>
+    <testcase name="test-simple-manual-main-run" classname="clj-net-pcap.test.main" time="0.2954">
+    </testcase>
+    <testcase name="test-simple-timed-main-run" classname="clj-net-pcap.test.main" time="0.2678">
+    </testcase>
+    <testcase name="test-simple-timed-main-run-with-no-op-counter-forwarder" classname="clj-net-pcap.test.main" time="0.2652">
+    </testcase>
+    <testcase name="test-simple-timed-main-run-with-byte-array-output" classname="clj-net-pcap.test.main" time="0.2685">
+    </testcase>
+    <testcase name="test-main-print-help" classname="clj-net-pcap.test.main" time="0.0077">
+    </testcase>
+    <testcase name="test-simple-main-read-file" classname="clj-net-pcap.test.main" time="0.2188">
+    </testcase>
+    <testcase name="test-manual-main-run-command-interaction" classname="clj-net-pcap.test.main" time="0.3272">
+    </testcase>
+    <testcase name="test-simple-timed-main-run-with-no-op-calls-per-second-forwarder" classname="clj-net-pcap.test.main" time="0.2983">
+    </testcase>
+</testsuite>

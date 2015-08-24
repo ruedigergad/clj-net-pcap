@@ -55,7 +55,7 @@ If you want to reference clj-net-pcap, you can refer to our paper, e.g., in LaTe
 
     @inproceedings{gad_improving_2015,
 	    title = {Improving {Network} {Traffic} {Acquisition} and {Processing} with the {Java} {Virtual} {Machine}},
-	    booktitle = {2015 {IEEE} 20th {Symposium} on {Computers} and {Communications} ({ISCC})},
+	    booktitle = {2015 20th {IEEE} {Symposium} on {Computers} and {Communications} ({ISCC})},
 	    author = {Gad, Ruediger and Kappes, Martin and Medina-Bulo, Immaculada},
 	    month = jul,
 	    year = {2015},

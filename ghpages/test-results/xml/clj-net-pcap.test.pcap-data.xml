@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.pcap-data" errors="0" failures="0" tests="4" time="0.0145" timestamp="2013-12-04_19:32:44+0100">
-    <testcase name="test-guess-class-b-net-2" classname="clj-net-pcap.test.pcap-data" time="0.0029">
+<testsuite name="clj-net-pcap.test.pcap-data" errors="0" failures="0" tests="7" time="0.3103" timestamp="2015-08-24_13:09:51+0200">
+    <testcase name="test-guess-class-b-net-2" classname="clj-net-pcap.test.pcap-data" time="0.0013">
     </testcase>
-    <testcase name="test-guess-class-c-net" classname="clj-net-pcap.test.pcap-data" time="0.0020">
+    <testcase name="test-timestamp-compare-to-2" classname="clj-net-pcap.test.pcap-data" time="0.1019">
     </testcase>
-    <testcase name="test-guess-class-a-net" classname="clj-net-pcap.test.pcap-data" time="0.0020">
+    <testcase name="test-timestamp-compare-to-1" classname="clj-net-pcap.test.pcap-data" time="0.1012">
     </testcase>
-    <testcase name="test-guess-class-b-net" classname="clj-net-pcap.test.pcap-data" time="0.0039">
+    <testcase name="test-guess-class-b-net" classname="clj-net-pcap.test.pcap-data" time="0.0010">
+    </testcase>
+    <testcase name="test-guess-class-c-net" classname="clj-net-pcap.test.pcap-data" time="0.0008">
+    </testcase>
+    <testcase name="test-timestamp-equals" classname="clj-net-pcap.test.pcap-data" time="0.1015">
+    </testcase>
+    <testcase name="test-guess-class-a-net" classname="clj-net-pcap.test.pcap-data" time="0.0010">
     </testcase>
 </testsuite>

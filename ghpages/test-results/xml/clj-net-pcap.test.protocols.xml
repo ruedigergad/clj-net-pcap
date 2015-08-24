@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.protocols" errors="0" failures="0" tests="4" time="0.0094" timestamp="2013-12-04_19:32:44+0100">
-    <testcase name="test-extract-udp-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.0016">
+<testsuite name="clj-net-pcap.test.protocols" errors="0" failures="0" tests="13" time="2.4287" timestamp="2015-08-24_13:10:01+0200">
+    <testcase name="test-extract-udp-beans-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.1020">
     </testcase>
-    <testcase name="test-extract-tcp-beans-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.0020">
+    <testcase name="test-extract-icmpv6-router-solicitation-beans-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.2019">
     </testcase>
-    <testcase name="test-extract-tcp-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.0013">
+    <testcase name="test-extract-tcp-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.2019">
     </testcase>
-    <testcase name="test-extract-udp-beans-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.0014">
+    <testcase name="test-extract-arp-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.2020">
+    </testcase>
+    <testcase name="test-extract-tcp-beans-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.2019">
+    </testcase>
+    <testcase name="test-extract-arp-nested-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.2028">
+    </testcase>
+    <testcase name="test-extract-arp-beans-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.2017">
+    </testcase>
+    <testcase name="test-extract-tcp-nested-maps-from-pcap-file-dns" classname="clj-net-pcap.test.protocols" time="0.2018">
+    </testcase>
+    <testcase name="test-extract-http-nested-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.2020">
+    </testcase>
+    <testcase name="test-extract-tcp-nested-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.2020">
+    </testcase>
+    <testcase name="test-extract-icmpv6-router-solicitation-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.2019">
+    </testcase>
+    <testcase name="test-extract-udp-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.2018">
+    </testcase>
+    <testcase name="test-extract-tcp-nested-maps-from-pcap-file-icmpv6" classname="clj-net-pcap.test.protocols" time="0.1018">
     </testcase>
 </testsuite>

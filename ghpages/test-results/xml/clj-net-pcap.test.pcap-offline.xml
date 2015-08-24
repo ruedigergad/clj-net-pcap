@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.pcap-offline" errors="0" failures="0" tests="8" time="0.2451" timestamp="2013-12-04_19:32:44+0100">
-    <testcase name="test-extract-nested-maps-from-pcap-file" classname="clj-net-pcap.test.pcap-offline" time="0.0027">
+<testsuite name="clj-net-pcap.test.pcap-offline" errors="0" failures="0" tests="9" time="2.3248" timestamp="2015-08-24_13:09:53+0200">
+    <testcase name="test-extract-byte-arrays-raw-data-from-pcap-file" classname="clj-net-pcap.test.pcap-offline" time="0.1028">
     </testcase>
-    <testcase name="test-process-pcap-file" classname="clj-net-pcap.test.pcap-offline" time="0.0061">
+    <testcase name="test-process-pcap-file-as-nested-maps" classname="clj-net-pcap.test.pcap-offline" time="0.2036">
     </testcase>
-    <testcase name="test-extract-beans-from-pcap-file" classname="clj-net-pcap.test.pcap-offline" time="0.0049">
+    <testcase name="test-process-pcap-file" classname="clj-net-pcap.test.pcap-offline" time="1.2048">
     </testcase>
-    <testcase name="test-process-pcap-file-as-nested-maps" classname="clj-net-pcap.test.pcap-offline" time="0.0055">
+    <testcase name="test-extract-maps-from-pcap-file" classname="clj-net-pcap.test.pcap-offline" time="0.2020">
     </testcase>
-    <testcase name="test-create-pcap-from-file-and-dispatch" classname="clj-net-pcap.test.pcap-offline" time="0.2043">
+    <testcase name="test-create-pcap-from-file-error" classname="clj-net-pcap.test.pcap-offline" time="0.0007">
     </testcase>
-    <testcase name="test-extract-maps-from-pcap-file" classname="clj-net-pcap.test.pcap-offline" time="0.0039">
+    <testcase name="test-create-pcap-from-file-and-dispatch" classname="clj-net-pcap.test.pcap-offline" time="0.2012">
     </testcase>
-    <testcase name="test-create-pcap-from-file" classname="clj-net-pcap.test.pcap-offline" time="0.0009">
+    <testcase name="test-extract-nested-maps-from-pcap-file" classname="clj-net-pcap.test.pcap-offline" time="0.2026">
     </testcase>
-    <testcase name="test-create-pcap-from-file-error" classname="clj-net-pcap.test.pcap-offline" time="0.0038">
+    <testcase name="test-extract-beans-from-pcap-file" classname="clj-net-pcap.test.pcap-offline" time="0.2032">
+    </testcase>
+    <testcase name="test-create-pcap-from-file" classname="clj-net-pcap.test.pcap-offline" time="0.0003">
     </testcase>
 </testsuite>

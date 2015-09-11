@@ -80,14 +80,14 @@ Please note that Leiningen version 2.x is used.
 ## History & Acknowledgements
 clj-net-pcap was created and is still developed and maintained as a personal project.
 However, I am in the fortunate situation that it showed after some time that clj-net-pcap could also be used for my PhD and research work.
-While I did the actual development in my spare time, I worked on the scientific evaluation of the clj-net-pcap and published these results in scientific papers in scope of my employment as researcher.
+While I did the actual development in my spare time, I worked on the scientific evaluation of clj-net-pcap and published these results in scientific papers in scope of my employment as PhD student and researcher.
 Consequently, acknowledgements go to my employer the [Frankfurt University of Applied Sciences](http://frankfurt-university.de) and the [Universidad de Cádiz](http://uca.es) where I am currently enrolled as PhD student.
 
 While the project name was initially "cljNetPcap", it was renamed to "clj-net-pcap" in order to adhere to common package naming conventions.
 Furthermore, I decided to upload clj-net-pcap to [clojars.org](http://clojars.org) in order to ease its application.
 
 ## License
-Copyright (C) 2012, 2013, 2014 Ruediger Gad
+Copyright (C) 2012, 2013, 2014, 2015 Ruediger Gad
 
 clj-net-pcap is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License (LGPL) as 

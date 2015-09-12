@@ -89,6 +89,21 @@ Furthermore, I decided to upload clj-net-pcap to [clojars.org](http://clojars.or
 ## License
 Copyright (C) 2012, 2013, 2014, 2015 Ruediger Gad
 
+
+clj-net-pcap is licensed under the terms of either
+
+- the GNU Lesser General Public License (LGPL) version 3 (http://www.gnu.org/licenses/lgpl-3.0.html) or later
+
+or, at your option,
+
+- the Eclipse Public License (EPL) 1.0 (http://opensource.org/licenses/eclipse-1.0.php).
+
+
+By contributing to clj-net-pcap, you agree that your contribution will be licensed under both licenses
+and that users of clj-net-pcap can chose any of these licenses.
+
+
+### LGPL
 clj-net-pcap is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License (LGPL) as 
 published by the Free Software Foundation, either version 3 of the License, 
@@ -101,4 +116,9 @@ GNU Lesser General Public License (LGPL) for more details.
 
 You should have received a copy of the GNU Lesser General Public License (LGPL)
 along with clj-net-pcap.  If not, see <http://www.gnu.org/licenses/>.
+
+### EPL
+clj-net-pcap is is released under the terms of the Eclipse Public License
+(EPL) 1.0. You can find a copy of the EPL at:
+http://opensource.org/licenses/eclipse-1.0.php
 

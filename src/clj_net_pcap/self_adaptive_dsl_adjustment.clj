@@ -2,19 +2,15 @@
 ;;; Copyright (C) 2015 Ruediger Gad
 ;;;
 ;;; This file is part of clj-net-pcap.
+;;; clj-net-pcap is licensed under the terms of either
+;;; - the GNU Lesser General Public License (LGPL) version 3 or later
+;;;   http://www.gnu.org/licenses/lgpl-3.0.html
+;;; or, at your option,
+;;; - the Eclipse Public License (EPL) 1.0.
+;;;   http://opensource.org/licenses/eclipse-1.0.php
 ;;;
-;;; clj-net-pcap is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU Lesser General Public License (LGPL) as
-;;; published by the Free Software Foundation, either version 3 of the License,
-;;; or (at your option any later version.
-;;;
-;;; clj-net-pcap is distributed in the hope that it will be useful,
-;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;; GNU Lesser General Public License (LGPL) for more details.
-;;;
-;;; You should have received a copy of the GNU Lesser General Public License (LGPL)
-;;; along with clj-net-pcap.  If not, see <http://www.gnu.org/licenses/>.
+;;; By contributing to clj-net-pcap, you agree that your contribution will be licensed under both licenses
+;;; and that users of clj-net-pcap can chose any of these licenses.
 ;;;
 
 (ns

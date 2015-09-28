@@ -54,15 +54,15 @@ We published two papers in which we describe the clj-net-pcap architecture and i
 If you want to reference clj-net-pcap, you can refer to our paper, e.g., in LaTeX:
 
     @inproceedings{gad_improving_2015,
-	    title = {Improving {Network} {Traffic} {Acquisition} and {Processing} with the {Java} {Virtual} {Machine}},
-	    booktitle = {2015 20th {IEEE} {Symposium} on {Computers} and {Communications} ({ISCC})},
-	    author = {Gad, Ruediger and Kappes, Martin and Medina-Bulo, Immaculada},
-	    month = jul,
-	    year = {2015},
+        title = {Improving {Network} {Traffic} {Acquisition} and {Processing} with the {Java} {Virtual} {Machine}},
+        booktitle = {2015 20th {IEEE} {Symposium} on {Computers} and {Communications} ({ISCC})},
+        author = {Gad, Ruediger and Kappes, Martin and Medina-Bulo, Immaculada},
+        month = jul,
+        year = {2015},
         note = {in press},
     }
 
-    @INPROCEEDINGS{gad_bridging_2015,
+    @INPROCEEDINGS{gad_bridging_2014,
         author={Gad, Ruediger and Kappes, Martin and Medina-Bulo, Inmaculada},
         booktitle={Computer Software and Applications Conference Workshops (COMPSACW), 2014 IEEE 38th International},
         title={Bridging the Gap between Low-Level Network Traffic Data Acquisition and Higher-Level Frameworks},

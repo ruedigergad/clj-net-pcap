@@ -275,7 +275,8 @@
                                                                                        "\tE.g.: sdtf {:type :json-str :rules [[udpSrc (int16 udp-src)] [udpDst (int16 udp-dst)]]}\n"
                                                                                        "\tE.g.: sdtf {:type :csv-str :rules [[udpSrc (float (/ (int16 udp-src) 65535))] [udpDst (float (/ (int16 udp-dst) 65535))]]}\n"
                                                                                        "\tE.g. (old syntax): sdtf {:type :clj-map :rules [{:offset :udp-src :transformation :int16 :name :udpSrc} {:offset :udp-dst :transformation :int16 :name :udpDst}]}\n")}
-                                     :sdtf :set-dsl-transformation-function}}]
+                                     :sdtf :set-dsl-transformation-function}
+                              :prompt #(print "clj-net-pcap> ")}]
                 (start-cli cli-opts)
                 (shutdown-fn)))
           (println "Leaving (-main [& args] ...)."))))))

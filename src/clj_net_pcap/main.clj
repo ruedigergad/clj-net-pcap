@@ -227,8 +227,6 @@
                 (println "Will automatically shut down in" run-duration "seconds.")
                 (run-once shutdown-timer-executor shutdown-fn (* 1000 run-duration)))
             :default
-              ;;; Running the main from, e.g., leiningen results in stdout not being properly accessible.
-              ;;; Hence, this will not work when run this way but works when run from a jar via "java -jar ...".
               (let [cli-opts {:cmds
                               {:add-filter
                                 {:fn #(try (add-filter cljnetpcap %)

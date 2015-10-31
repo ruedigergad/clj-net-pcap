@@ -116,171 +116,171 @@
   (let [cli-args (parse-args args)
         arg-map (cli-args 0)
         help-string (cli-args 2)]
-    (if (arg-map :help)
+    (when (arg-map :help)
       (println help-string)
-      (do
-        (println "Starting clj-net-pcap using the following options:")
-        (pprint arg-map)
-        (let [pcap-file-name (arg-map :read-file)
-              dsl-expr-string (arg-map :dsl-expression)
-              bulk-size (arg-map :bulk-size)
-              cap-if (arg-map :interface)
-              dsl-expression (let [expr (resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" dsl-expr-string)))]
-                               (if expr
-                                 (var-get expr)
-                                 (if (not= "" dsl-expr-string)
-                                   (read-string dsl-expr-string))))
-              _ (println "DSL expression from command line args:" dsl-expression)
-              get-dsl-fn (fn [dsl-expr]
-                           (let [extraction-fn (create-extraction-fn dsl-expr)]
-                             (if (> bulk-size 1)
-                               (partial process-packet-byte-buffer-bulk extraction-fn)
-                               (partial process-packet-byte-buffer extraction-fn))))
-              get-transformation-fn (fn []
-                                      (if dsl-expression
-                                        (get-dsl-fn dsl-expression)
-                                        (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))))
-              static-transformation-fn (get-transformation-fn)
-              dynamic-transformation-fn (atom (get-transformation-fn))
-              dynamic-dsl-expression (atom nil)
-              sa-opts (arg-map :self-adaptation-opts)
-              self-adapt-ctrlr (create-self-adaptation-controller dsl-expression dynamic-dsl-expression
-                                                                  (sa-opts :threshold) (sa-opts :interpolation)
-                                                                  (sa-opts :inactivity) (= "lo" cap-if))
-              _ (add-watch dynamic-dsl-expression :dsl-fn-update-watch
-                           (fn [k r old-val new-val]
-                             (println "Dynamic DSL updated.")
+      (System/exit 0))
+    (println "Starting clj-net-pcap using the following options:")
+    (pprint arg-map)
+    (let [pcap-file-name (arg-map :read-file)
+          dsl-expr-string (arg-map :dsl-expression)
+          bulk-size (arg-map :bulk-size)
+          cap-if (arg-map :interface)
+          dsl-expression (let [expr (resolve (symbol (str "clj-net-pcap.byte-array-extraction-dsl/" dsl-expr-string)))]
+                           (if expr
+                             (var-get expr)
+                             (if (not= "" dsl-expr-string)
+                               (read-string dsl-expr-string))))
+          _ (println "DSL expression from command line args:" dsl-expression)
+          get-dsl-fn (fn [dsl-expr]
+                       (let [extraction-fn (create-extraction-fn dsl-expr)]
+                         (if (> bulk-size 1)
+                           (partial process-packet-byte-buffer-bulk extraction-fn)
+                           (partial process-packet-byte-buffer extraction-fn))))
+          get-transformation-fn (fn []
+                                  (if dsl-expression
+                                    (get-dsl-fn dsl-expression)
+                                    (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :transformation-fn))))))
+          static-transformation-fn (get-transformation-fn)
+          dynamic-transformation-fn (atom (get-transformation-fn))
+          dynamic-dsl-expression (atom nil)
+          sa-opts (arg-map :self-adaptation-opts)
+          self-adapt-ctrlr (create-self-adaptation-controller dsl-expression dynamic-dsl-expression
+                                                              (sa-opts :threshold) (sa-opts :interpolation)
+                                                              (sa-opts :inactivity) (= "lo" cap-if))
+          _ (add-watch dynamic-dsl-expression :dsl-fn-update-watch
+                       (fn [k r old-val new-val]
+                         (println "Dynamic DSL updated.")
 ;                             (println Updating dynamic transformation fn:" new-val)
-                             (let [dsl-fn (get-dsl-fn new-val)]
-                               (reset! dynamic-transformation-fn dsl-fn))))
-              output-file (arg-map :write-to-file)
-              file-output-forwarder (when (not (nil? output-file))
-                                      (println "Writing data to file:" output-file)
-                                      (create-file-out-forwarder output-file
-                                                                 (> bulk-size 1)
-                                                                 (if (arg-map :write-arff-header)
-                                                                   (get-arff-header dsl-expression)
-                                                                   "")))
-              processing-fn (let [f-tmp (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
-                                  f (cond
-                                      (not (nil? file-output-forwarder)) file-output-forwarder
-                                      (= 'packet (first (first (:arglists (meta f-tmp))))) f-tmp
-                                      :default (f-tmp bulk-size))]
-                              (println "Resolved forwarder fn:" f)
-                              (if (arg-map :dynamic-transformation-fn)
-                                (do
-                                  (println "Using dynamic transformation-fn:" @dynamic-transformation-fn)
-                                  #(let [o (@dynamic-transformation-fn %)]
-                                     (if o
-                                       (f o))))
-                                (do
-                                  (println "Using static transformation-fn:" static-transformation-fn)
-                                  #(let [o (static-transformation-fn %)]
-                                     (if o
-                                       (f o))))))
-              cljnetpcap (binding [clj-net-pcap.core/*bulk-size* bulk-size
-                                   clj-net-pcap.core/*emit-raw-data* (arg-map :raw)
-                                   clj-net-pcap.core/*forward-exceptions* (arg-map :debug)
-                                   clj-net-pcap.pcap/*snap-len* (arg-map :snap-len)
-                                   clj-net-pcap.pcap/*buffer-size* (arg-map :buffer-size)]
-                           (if (= "" pcap-file-name)
-                             (create-and-start-online-cljnetpcap
-                               processing-fn
-                               cap-if
-                               (arg-map :filter))
-                             (process-pcap-file
-                               pcap-file-name
-                               processing-fn)))
-              stat-interval (arg-map :stats)
-              stat-out-executor (executor)
-              shutdown-fn (fn [] (do
-                                   (println "clj-net-pcap is shuting down...")
-                                   (when (> stat-interval 0)
-                                     (println "Stopping stat output.")
-                                     (shutdown stat-out-executor))
-                                   (get-stats cljnetpcap)
-                                   (when (not (nil? file-output-forwarder))
-                                     (println "Closing file output forwarder...")
-                                     (file-output-forwarder))
-                                   (stop-cljnetpcap cljnetpcap)
-                                   (println "Removing temporarily extracted native libs...")
-                                   (remove-native-libs)))
-              run-duration (arg-map :duration)
-              sa-interval (arg-map :self-adaptation)
-              sa-executor (executor)
-              shutdown-timer-executor (executor)]
-          (if (not= "" pcap-file-name)
-            (println "clj-net-pcap standalone executable started.\n"))
-          (when (> stat-interval 0)
-            (println "Printing stats to stderr in intervalls of" stat-interval "ms.")
-            (run-repeat stat-out-executor #(print-err-ln (get-stats cljnetpcap)) stat-interval))
-          (when (> sa-interval 0)
-            (println "Enabling self-adaptivity with interval:" sa-interval)
-            (run-repeat sa-executor #(self-adapt-ctrlr (get-stats cljnetpcap)) sa-interval))
-          (cond
-            (not= "" pcap-file-name)
-              (do
-                (println "Finished reading from pcap file.")
-                (sleep stat-interval))
-            (> run-duration 0)
-              (do
-                (println "Will automatically shut down in" run-duration "seconds.")
-                (run-once shutdown-timer-executor shutdown-fn (* 1000 run-duration)))
-            :default
-              (let [cli-opts {:cmds
-                              {:add-filter
-                                {:fn #(try (add-filter cljnetpcap %)
-                                        (catch Exception e
-                                          (println "Error adding filter:" e)
-                                          (.printStackTrace e)))
-                                 :short-info "Add a new pcap filter."
-                                 :long-info (str "Two situations have to be distinguished:\n"
-                                                  "\tthe initial filter addition and subsequent additions.\n"
-                                                  "\tE.g. (initial filter): \"af \"tcp\"\"\n"
-                                                  "\tE.g. (subsequent filter): \"af \"or udp\"\"\n"
-                                                  "\tNote the \"or\" (also possible \"and\") statement for chaining the filter expressions.")}
-                               :af :add-filter
-                               :get-filter {:fn #(pprint (get-filters cljnetpcap))
-                                            :short-info "Returns the currently active filter(s)."}
-                               :gf :get-filter
-                               :remove-last-filter {:fn #(remove-last-filter cljnetpcap)
-                                                    :short-info "Removes the last filter expression."}
-                               :rlf :remove-last-filter
-                               :remove-all-filters {:fn #(remove-all-filters cljnetpcap)
-                                                    :short-info "Remove all filter expressions."}
-                               :raf :remove-all-filters
-                               :replace-filter {:fn #(let [filters (split % #" with-filter ")]
-                                                       (replace-filter cljnetpcap (first filters) (second filters)))
-                                                :long-info (str "Replace an existing filter with another one.\n"
-                                                                "\tE.g.: replace-filter \"or udp with or icmp\"")}
-                               :generate-packet
-                                {:fn #(println (vec (generate-packet-data %)))
-                                 :short-info "Generates a vector with raw packet data."
-                                 :long-info (str "The input is a packet description as clojure map.\n"
-                                                 "\tE.g.: gp {\"len\" 20, \"ethSrc\" \"01:02:03:04:05:06\", \"ethDst\" \"FF:FE:FD:F2:F1:F0\"}\n"
-                                                 "\tE.g.: gp {\"len\" 54, \"ethSrc\" \"01:02:03:04:05:06\", \"ethDst\" \"FF:FE:FD:F2:F1:F0\", \"ipVer\" 4, \"ipDst\" \"252.253.254.255\", \"ipId\" 3, \"ipType\" 1, \"ipTtl\" 7, \"ipSrc\" \"1.2.3.4\", \"icmpType\" 8, \"icmpId\" 123, \"icmpSeqNo\" 12, \"data\" \"abcd\"}")}
-                               :gp :generate-packet
-                               :send-packet
-                                {:fn #(if (map? %)
-                                        (cljnetpcap :send-packet-map %)
-                                        (cljnetpcap :send-bytes-packet (byte-array (map byte %))))
-                                 :short-info "Send a generated packet via the current capture device."
-                                 :long-info (str "The packet to be sent can be either defined as map like shown for \"gen-packet\"\n"
-                                                 "\tor can be a raw packet data vector like emitted by \"gen-packet\".")}
-                               :sp :send-packet
-                               :set-dsl-transformation-function
-                                {:fn #(let [read-data (binding [*read-eval* false] (read-string args))
-                                            new-dsl-t-fn (get-dsl-fn read-data)]
-                                        (reset! dynamic-transformation-fn new-dsl-t-fn))
-                                 :short-info "Set the transformation function based on the provided DSL expression."
-                                 :long-info (str "Please note: this requires DSL-based processing\n"
-                                                 "\tAND the dynamic transformation function to be enabled.\n"
-                                                 "\tE.g.: sdtf {:type :json-str :rules [[udpSrc (int16 udp-src)] [udpDst (int16 udp-dst)]]}\n"
-                                                 "\tE.g.: sdtf {:type :csv-str :rules [[udpSrc (float (/ (int16 udp-src) 65535))] [udpDst (float (/ (int16 udp-dst) 65535))]]}\n"
-                                                 "\tE.g. (old syntax): sdtf {:type :clj-map :rules [{:offset :udp-src :transformation :int16 :name :udpSrc} {:offset :udp-dst :transformation :int16 :name :udpDst}]}\n")}
-                               :sdtf :set-dsl-transformation-function}
-                        :prompt-string "clj-net-pcap> "}]
-                (start-cli cli-opts)
-                (shutdown-fn)))
-          (println "Leaving (-main [& args] ...)."))))))
+                         (let [dsl-fn (get-dsl-fn new-val)]
+                           (reset! dynamic-transformation-fn dsl-fn))))
+          output-file (arg-map :write-to-file)
+          file-output-forwarder (when (not (nil? output-file))
+                                  (println "Writing data to file:" output-file)
+                                  (create-file-out-forwarder output-file
+                                                             (> bulk-size 1)
+                                                             (if (arg-map :write-arff-header)
+                                                               (get-arff-header dsl-expression)
+                                                               "")))
+          processing-fn (let [f-tmp (resolve (symbol (str "clj-net-pcap.pcap-data/" (arg-map :forwarder-fn))))
+                              f (cond
+                                  (not (nil? file-output-forwarder)) file-output-forwarder
+                                  (= 'packet (first (first (:arglists (meta f-tmp))))) f-tmp
+                                  :default (f-tmp bulk-size))]
+                          (println "Resolved forwarder fn:" f)
+                          (if (arg-map :dynamic-transformation-fn)
+                            (do
+                              (println "Using dynamic transformation-fn:" @dynamic-transformation-fn)
+                              #(let [o (@dynamic-transformation-fn %)]
+                                 (if o
+                                   (f o))))
+                            (do
+                              (println "Using static transformation-fn:" static-transformation-fn)
+                              #(let [o (static-transformation-fn %)]
+                                 (if o
+                                   (f o))))))
+          cljnetpcap (binding [clj-net-pcap.core/*bulk-size* bulk-size
+                               clj-net-pcap.core/*emit-raw-data* (arg-map :raw)
+                               clj-net-pcap.core/*forward-exceptions* (arg-map :debug)
+                               clj-net-pcap.pcap/*snap-len* (arg-map :snap-len)
+                               clj-net-pcap.pcap/*buffer-size* (arg-map :buffer-size)]
+                       (if (= "" pcap-file-name)
+                         (create-and-start-online-cljnetpcap
+                           processing-fn
+                           cap-if
+                           (arg-map :filter))
+                         (process-pcap-file
+                           pcap-file-name
+                           processing-fn)))
+          stat-interval (arg-map :stats)
+          stat-out-executor (executor)
+          shutdown-fn (fn [] (do
+                               (println "clj-net-pcap is shuting down...")
+                               (when (> stat-interval 0)
+                                 (println "Stopping stat output.")
+                                 (shutdown stat-out-executor))
+                               (get-stats cljnetpcap)
+                               (when (not (nil? file-output-forwarder))
+                                 (println "Closing file output forwarder...")
+                                 (file-output-forwarder))
+                               (stop-cljnetpcap cljnetpcap)
+                               (println "Removing temporarily extracted native libs...")
+                               (remove-native-libs)))
+          run-duration (arg-map :duration)
+          sa-interval (arg-map :self-adaptation)
+          sa-executor (executor)
+          shutdown-timer-executor (executor)]
+      (if (not= "" pcap-file-name)
+        (println "clj-net-pcap standalone executable started.\n"))
+      (when (> stat-interval 0)
+        (println "Printing stats to stderr in intervalls of" stat-interval "ms.")
+        (run-repeat stat-out-executor #(print-err-ln (get-stats cljnetpcap)) stat-interval))
+      (when (> sa-interval 0)
+        (println "Enabling self-adaptivity with interval:" sa-interval)
+        (run-repeat sa-executor #(self-adapt-ctrlr (get-stats cljnetpcap)) sa-interval))
+      (cond
+        (not= "" pcap-file-name)
+          (do
+            (println "Finished reading from pcap file.")
+            (sleep stat-interval))
+        (> run-duration 0)
+          (do
+            (println "Will automatically shut down in" run-duration "seconds.")
+            (run-once shutdown-timer-executor shutdown-fn (* 1000 run-duration)))
+        :default
+          (let [cli-opts {:cmds
+                          {:add-filter
+                            {:fn #(try (add-filter cljnetpcap %)
+                                    (catch Exception e
+                                      (println "Error adding filter:" e)
+                                      (.printStackTrace e)))
+                             :short-info "Add a new pcap filter."
+                             :long-info (str "Two situations have to be distinguished:\n"
+                                              "\tthe initial filter addition and subsequent additions.\n"
+                                              "\tE.g. (initial filter): \"af \"tcp\"\"\n"
+                                              "\tE.g. (subsequent filter): \"af \"or udp\"\"\n"
+                                              "\tNote the \"or\" (also possible \"and\") statement for chaining the filter expressions.")}
+                           :af :add-filter
+                           :get-filter {:fn #(pprint (get-filters cljnetpcap))
+                                        :short-info "Returns the currently active filter(s)."}
+                           :gf :get-filter
+                           :remove-last-filter {:fn #(remove-last-filter cljnetpcap)
+                                                :short-info "Removes the last filter expression."}
+                           :rlf :remove-last-filter
+                           :remove-all-filters {:fn #(remove-all-filters cljnetpcap)
+                                                :short-info "Remove all filter expressions."}
+                           :raf :remove-all-filters
+                           :replace-filter {:fn #(let [filters (split % #" with-filter ")]
+                                                   (replace-filter cljnetpcap (first filters) (second filters)))
+                                            :long-info (str "Replace an existing filter with another one.\n"
+                                                            "\tE.g.: replace-filter \"or udp with or icmp\"")}
+                           :generate-packet
+                            {:fn #(println (vec (generate-packet-data %)))
+                             :short-info "Generates a vector with raw packet data."
+                             :long-info (str "The input is a packet description as clojure map.\n"
+                                             "\tE.g.: gp {\"len\" 20, \"ethSrc\" \"01:02:03:04:05:06\", \"ethDst\" \"FF:FE:FD:F2:F1:F0\"}\n"
+                                             "\tE.g.: gp {\"len\" 54, \"ethSrc\" \"01:02:03:04:05:06\", \"ethDst\" \"FF:FE:FD:F2:F1:F0\", \"ipVer\" 4, \"ipDst\" \"252.253.254.255\", \"ipId\" 3, \"ipType\" 1, \"ipTtl\" 7, \"ipSrc\" \"1.2.3.4\", \"icmpType\" 8, \"icmpId\" 123, \"icmpSeqNo\" 12, \"data\" \"abcd\"}")}
+                           :gp :generate-packet
+                           :send-packet
+                            {:fn #(if (map? %)
+                                    (cljnetpcap :send-packet-map %)
+                                    (cljnetpcap :send-bytes-packet (byte-array (map byte %))))
+                             :short-info "Send a generated packet via the current capture device."
+                             :long-info (str "The packet to be sent can be either defined as map like shown for \"gen-packet\"\n"
+                                             "\tor can be a raw packet data vector like emitted by \"gen-packet\".")}
+                           :sp :send-packet
+                           :set-dsl-transformation-function
+                            {:fn #(let [read-data (binding [*read-eval* false] (read-string args))
+                                        new-dsl-t-fn (get-dsl-fn read-data)]
+                                    (reset! dynamic-transformation-fn new-dsl-t-fn))
+                             :short-info "Set the transformation function based on the provided DSL expression."
+                             :long-info (str "Please note: this requires DSL-based processing\n"
+                                             "\tAND the dynamic transformation function to be enabled.\n"
+                                             "\tE.g.: sdtf {:type :json-str :rules [[udpSrc (int16 udp-src)] [udpDst (int16 udp-dst)]]}\n"
+                                             "\tE.g.: sdtf {:type :csv-str :rules [[udpSrc (float (/ (int16 udp-src) 65535))] [udpDst (float (/ (int16 udp-dst) 65535))]]}\n"
+                                             "\tE.g. (old syntax): sdtf {:type :clj-map :rules [{:offset :udp-src :transformation :int16 :name :udpSrc} {:offset :udp-dst :transformation :int16 :name :udpDst}]}\n")}
+                           :sdtf :set-dsl-transformation-function}
+                    :prompt-string "clj-net-pcap> "}]
+            (start-cli cli-opts)
+            (shutdown-fn)))
+      (println "Leaving (-main [& args] ...)."))))
 

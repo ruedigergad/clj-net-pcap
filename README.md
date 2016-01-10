@@ -48,7 +48,11 @@ http://ruedigergad.github.io/clj-net-pcap/test-results/html/
 We published two papers in which we describe the clj-net-pcap architecture and implementation and assess the performance:
 
 * Improving Network Traffic Acquisition and Processing with the Java Virtual Machine, Ruediger Gad, Martin Kappes, and Inmaculada Medina-Bulo, 20th IEEE ISCC 2015, in press
+  [The full text of the authors accepted version is available via ResearchGate.](https://www.researchgate.net/publication/289637876_Improving_Network_Traffic_Acquisition_and_Processing_with_the_Java_Virtual_Machine)
+  The link to the final published version on IEEEXplore will be added once it is available.
 * [Bridging the Gap between Low-Level Network Traffic Data Acquisition and Higher-Level Frameworks](http://ieeexplore.ieee.org/xpl/articleDetails.jsp?tp=&arnumber=6903107), Ruediger Gad, Martin Kappes, and Inmaculada Medina-Bulo, 38th IEEE COMPSACW 2014.
+  [The full text of the authors accepted version is available via ResearchGate.](https://www.researchgate.net/publication/289638124_Monitoring_Traffic_in_Computer_Networks_with_Dynamic_Distributed_Remote_Packet_Capturing)
+  [The final published version is available via IEEEXplore.](http://ieeexplore.ieee.org/xpl/articleDetails.jsp?arnumber=7249240)
 
 ### Referencing
 If you want to reference clj-net-pcap, you can refer to our paper, e.g., in LaTeX:

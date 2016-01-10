@@ -1,7 +1,7 @@
 language: clojure
 before_install:
   - sudo apt-get install libpcap0.8 -qq
-  - sudo ls -al /usr/lib/libpcap*
+  - sudo find / -iname "*libpcap*"
 script:
   - sudo LEIN_ROOT=1 lein2 do javac, test
 after_script:

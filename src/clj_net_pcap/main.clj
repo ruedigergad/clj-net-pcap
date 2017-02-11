@@ -252,8 +252,8 @@
                      :raf :remove-all-filters
                      :replace-filter {:fn #(let [filters (split % #" with-filter ")]
                                              (replace-filter cljnetpcap (first filters) (second filters)))
-                                      :long-info (str "Replace an existing filter with another one.\n"
-                                                      "\tE.g.: replace-filter \"or udp with or icmp\"")}
+                                      :short-info "Replace an existing filter with another one."
+                                      :long-info "E.g.: replace-filter \"or udp with or icmp\""}
                      :generate-packet
                       {:fn #(println (vec (generate-packet-data %)))
                        :short-info "Generates a vector with raw packet data."

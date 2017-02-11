@@ -4,8 +4,8 @@
                 around jNetPcap that enables and eases packet capturing and processing with Clojure."
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/tools.cli "0.2.4"]
-                 [cli4clj "1.2.5"]
-                 [clj-assorted-utils "1.9.1"]
+                 [cli4clj "1.2.6"]
+                 [clj-assorted-utils "1.17.1"]
                  [jnetpcap "1.4.r1425-1f"]]
   :min-lein-version "2.0.0"
   :aot [#"^clj-net-pcap.*"]

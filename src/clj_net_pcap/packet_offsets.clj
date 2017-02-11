@@ -26,6 +26,7 @@
 (def eth-hdr-offset pcap-hdr-len)
 (def ipv4-hdr-offset (+ eth-hdr-offset eth-hdr-len))
 (def udp-hdr-offset (+ ipv4-hdr-offset ipv4-hdr-len))
+(def icmp-hdr-offset (+ ipv4-hdr-offset ipv4-hdr-len))
 
 (def eth-dst eth-hdr-offset)
 (def eth-src (+ eth-hdr-offset 6))
@@ -38,4 +39,9 @@
 (def ipv4-version ipv4-hdr-offset)
 (def udp-src udp-hdr-offset)
 (def udp-dst (+ udp-hdr-offset 2))
+
+(def icmp-type icmp-hdr-offset)
+(def icmp-code (+ icmp-hdr-offset 8))
+(def icmp-id (+ icmp-hdr-offset 32))
+(def icmp-seq-no (+ icmp-hdr-offset 48))
 

@@ -279,7 +279,9 @@
                        :short-info "Set the transformation function based on the provided DSL expression."
                        :long-info (str "Please note: this requires DSL-based processing\n"
                                        "\tAND the dynamic transformation function to be enabled.\n"
+                                       "\tE.g.: sdtf {:type :json-str :rules [[ipV4Src (ipv4-address ipv4-src)] [ipV4Dst (ipv4-address ipv4-dst)]]}\n"
                                        "\tE.g.: sdtf {:type :json-str :rules [[udpSrc (int16 udp-src)] [udpDst (int16 udp-dst)]]}\n"
+                                       "\tE.g.: sdtf {:type :csv-str :rules [[ipV4Src (ipv4-address ipv4-src)] [ipV4Dst (ipv4-address ipv4-dst)]]}\n"
                                        "\tE.g.: sdtf {:type :csv-str :rules [[udpSrc (float (/ (int16 udp-src) 65535))] [udpDst (float (/ (int16 udp-dst) 65535))]]}\n"
                                        "\tE.g. (old syntax): sdtf {:type :clj-map :rules [{:offset :udp-src :transformation :int16 :name :udpSrc} {:offset :udp-dst :transformation :int16 :name :udpDst}]}\n")}
                      :sdtf :set-dsl-transformation-function}

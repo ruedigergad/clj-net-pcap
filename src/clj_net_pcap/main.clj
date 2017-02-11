@@ -270,9 +270,12 @@
                                        "\tor can be a raw packet data vector like emitted by \"gen-packet\".")}
                      :sp :send-packet
                      :set-dsl-transformation-function
-                      {:fn #(let [read-data (binding [*read-eval* false] (read-string args))
-                                  new-dsl-t-fn (get-dsl-fn read-data)]
-                              (reset! dynamic-transformation-fn new-dsl-t-fn))
+                      {:fn (fn [dsl-definition]
+                             (let [new-dsl-def (if (string? dsl-definition)
+                                                 (binding [*read-eval* false] (read-string dsl-definition))
+                                                 dsl-definition)
+                                   new-dsl-t-fn (get-dsl-fn new-dsl-def)]
+                               (reset! dynamic-transformation-fn new-dsl-t-fn)))
                        :short-info "Set the transformation function based on the provided DSL expression."
                        :long-info (str "Please note: this requires DSL-based processing\n"
                                        "\tAND the dynamic transformation function to be enabled.\n"

@@ -41,7 +41,7 @@
 (def udp-dst (+ udp-hdr-offset 2))
 
 (def icmp-type icmp-hdr-offset)
-(def icmp-code (+ icmp-hdr-offset 8))
-(def icmp-id (+ icmp-hdr-offset 32))
-(def icmp-seq-no (+ icmp-hdr-offset 48))
+(def icmp-code (+ icmp-hdr-offset 1))
+(def icmp-id (+ icmp-hdr-offset 4))
+(def icmp-seq-no (+ icmp-hdr-offset 6))
 

@@ -227,69 +227,71 @@
             (println "Will automatically shut down in" run-duration "seconds.")
             (run-once shutdown-timer-executor shutdown-fn (* 1000 run-duration)))
         :default
-          (let [cli-opts
-                  {:cmds
-                    {:add-filter
-                      {:fn #(try (add-filter cljnetpcap %)
-                              (catch Exception e
-                                (println "Error adding filter:" e)
-                                (.printStackTrace e)))
-                       :short-info "Add a new pcap filter."
-                       :long-info (str "Two situations have to be distinguished:\n"
-                                        "\tthe initial filter addition and subsequent additions.\n"
-                                        "\tE.g. (initial filter): \"af \"tcp\"\"\n"
-                                        "\tE.g. (subsequent filter): \"af \"or udp\"\"\n"
-                                        "\tNote the \"or\" (also possible \"and\") statement for chaining the filter expressions.")}
-                     :af :add-filter
-                     :get-filter {:fn #(pprint (get-filters cljnetpcap))
-                                  :short-info "Returns the currently active filter(s)."}
-                     :gf :get-filter
-                     :remove-last-filter {:fn #(remove-last-filter cljnetpcap)
-                                          :short-info "Removes the last filter expression."}
-                     :rlf :remove-last-filter
-                     :remove-all-filters {:fn #(remove-all-filters cljnetpcap)
-                                          :short-info "Remove all filter expressions."}
-                     :raf :remove-all-filters
-                     :replace-filter {:fn #(let [filters (split % #" with-filter ")]
-                                             (replace-filter cljnetpcap (first filters) (second filters)))
-                                      :short-info "Replace an existing filter with another one."
-                                      :long-info "E.g.: replace-filter \"or udp with or icmp\""}
-                     :generate-packet
-                      {:fn #(println (vec (generate-packet-data %)))
-                       :short-info "Generates a vector with raw packet data."
-                       :long-info (str "The input is a packet description as clojure map.\n"
-                                       "\tE.g.: gp {\"len\" 20, \"ethSrc\" \"01:02:03:04:05:06\", \"ethDst\" \"FF:FE:FD:F2:F1:F0\"}\n"
-                                       "\tE.g.: gp {\"len\" 54, \"ethSrc\" \"01:02:03:04:05:06\", \"ethDst\" \"FF:FE:FD:F2:F1:F0\", \"ipVer\" 4, \"ipDst\" \"252.253.254.255\", \"ipId\" 3, \"ipType\" 1, \"ipTtl\" 7, \"ipSrc\" \"1.2.3.4\", \"icmpType\" 8, \"icmpId\" 123, \"icmpSeqNo\" 12, \"data\" \"abcd\"}")}
-                     :gp :generate-packet
-                     :send-packet
-                      {:fn #(if (map? %)
-                              (cljnetpcap :send-packet-map %)
-                              (cljnetpcap :send-bytes-packet (byte-array (map byte %))))
-                       :short-info "Send a generated packet via the current capture device."
-                       :long-info (str "The packet to be sent can be either defined as map like shown for \"gen-packet\"\n"
-                                       "\tor can be a raw packet data vector like emitted by \"gen-packet\".")}
-                     :sp :send-packet
-                     :set-dsl-transformation-function
-                      {:fn (fn [dsl-definition]
-                             (let [new-dsl-def (if (string? dsl-definition)
-                                                 (binding [*read-eval* false] (read-string dsl-definition))
-                                                 dsl-definition)
-                                   new-dsl-t-fn (get-dsl-fn new-dsl-def)]
-                               (reset! dynamic-transformation-fn new-dsl-t-fn)))
-                       :short-info "Set the transformation function based on the provided DSL expression."
-                       :long-info (str "Please note: this requires DSL-based processing\n"
-                                       "\tAND the dynamic transformation function to be enabled.\n"
-                                       "\tThis means that clj-net-pcap has to be started with at least \"-r -t\" as command line arguments.\n\n"
-                                       "\tExamples of expressions are:\n"
-                                       "\tsdtf {:type :json-str :rules [[ipV4Src (ipv4-address ipv4-src)] [ipV4Dst (ipv4-address ipv4-dst)]]}\n"
-                                       "\tsdtf {:type :json-str :rules [[udpSrc (int16 udp-src)] [udpDst (int16 udp-dst)]]}\n"
-                                       "\tsdtf {:type :json-str :rules [[ipV4Src (ipv4-address ipv4-src)] [ipV4Dst (ipv4-address ipv4-dst)] [icmpType (int8 icmp-type)] [icmpCode (int8 icmp-code)] [icmpSeqNo (int16 icmp-seq-no)]]}\n"
-                                       "\tsdtf {:type :csv-str :rules [[ipV4Src (ipv4-address ipv4-src)] [ipV4Dst (ipv4-address ipv4-dst)]]}\n"
-                                       "\tsdtf {:type :csv-str :rules [[udpSrc (float (/ (int16 udp-src) 65535))] [udpDst (float (/ (int16 udp-dst) 65535))]]}\n"
-                                       "\t(old syntax): sdtf {:type :clj-map :rules [{:offset :udp-src :transformation :int16 :name :udpSrc} {:offset :udp-dst :transformation :int16 :name :udpDst}]}\n")}
-                     :sdtf :set-dsl-transformation-function}
-              :prompt-string "clj-net-pcap> "}]
-            (start-cli cli-opts)
+          (do
+            (start-cli {:cmds
+                         {:add-filter
+                           {:fn (fn [filter-string]
+                                  (try (add-filter cljnetpcap filter-string)
+                                    (catch Exception e
+                                      (println "Error adding filter:" e)
+                                      (.printStackTrace e))))
+                            :short-info "Add a new pcap filter."
+                            :long-info (str "Two situations have to be distinguished:\n"
+                                             "\tthe initial filter addition and subsequent additions.\n"
+                                             "\tE.g. (initial filter): \"af \"tcp\"\"\n"
+                                             "\tE.g. (subsequent filter): \"af \"or udp\"\"\n"
+                                             "\tNote the \"or\" (also possible \"and\") statement for chaining the filter expressions.")}
+                          :af :add-filter
+                          :get-filter {:fn #(pprint (get-filters cljnetpcap))
+                                       :short-info "Returns the currently active filter(s)."}
+                          :gf :get-filter
+                          :remove-last-filter {:fn #(remove-last-filter cljnetpcap)
+                                               :short-info "Removes the last filter expression."}
+                          :rlf :remove-last-filter
+                          :remove-all-filters {:fn #(remove-all-filters cljnetpcap)
+                                               :short-info "Remove all filter expressions."}
+                          :raf :remove-all-filters
+                          :replace-filter {:fn #(let [filters (split % #" with-filter ")]
+                                                  (replace-filter cljnetpcap (first filters) (second filters)))
+                                           :short-info "Replace an existing filter with another one."
+                                           :long-info "E.g.: replace-filter \"or udp with or icmp\""}
+                          :generate-packet
+                           {:fn (fn [packet-definition]
+                                  (println (vec (generate-packet-data packet-definition))))
+                            :short-info "Generates a vector with raw packet data."
+                            :long-info (str "The input is a packet description as clojure map.\n"
+                                            "\tE.g.: gp {\"len\" 20, \"ethSrc\" \"01:02:03:04:05:06\", \"ethDst\" \"FF:FE:FD:F2:F1:F0\"}\n"
+                                            "\tE.g.: gp {\"len\" 54, \"ethSrc\" \"01:02:03:04:05:06\", \"ethDst\" \"FF:FE:FD:F2:F1:F0\", \"ipVer\" 4, \"ipDst\" \"252.253.254.255\", \"ipId\" 3, \"ipType\" 1, \"ipTtl\" 7, \"ipSrc\" \"1.2.3.4\", \"icmpType\" 8, \"icmpId\" 123, \"icmpSeqNo\" 12, \"data\" \"abcd\"}")}
+                          :gp :generate-packet
+                          :send-packet
+                           {:fn (fn [packet-definition]
+                                  (if (map? packet-definition)
+                                    (cljnetpcap :send-packet-map packet-definition)
+                                    (cljnetpcap :send-bytes-packet (byte-array (map byte packet-definition)))))
+                            :short-info "Send a generated packet via the current capture device."
+                            :long-info (str "The packet to be sent can be either defined as map like shown for \"gen-packet\"\n"
+                                            "\tor can be a raw packet data vector like emitted by \"gen-packet\".")}
+                          :sp :send-packet
+                          :set-dsl-transformation-function
+                           {:fn (fn [dsl-definition]
+                                  (let [new-dsl-def (if (string? dsl-definition)
+                                                      (binding [*read-eval* false] (read-string dsl-definition))
+                                                      dsl-definition)
+                                        new-dsl-t-fn (get-dsl-fn new-dsl-def)]
+                                    (reset! dynamic-transformation-fn new-dsl-t-fn)))
+                            :short-info "Set the transformation function based on the provided DSL expression."
+                            :long-info (str "Please note: this requires DSL-based processing\n"
+                                            "\tAND the dynamic transformation function to be enabled.\n"
+                                            "\tThis means that clj-net-pcap has to be started with at least \"-r -t\" as command line arguments.\n\n"
+                                            "\tExamples of expressions are:\n"
+                                            "\tsdtf {:type :json-str :rules [[ipV4Src (ipv4-address ipv4-src)] [ipV4Dst (ipv4-address ipv4-dst)]]}\n"
+                                            "\tsdtf {:type :json-str :rules [[udpSrc (int16 udp-src)] [udpDst (int16 udp-dst)]]}\n"
+                                            "\tsdtf {:type :json-str :rules [[ipV4Src (ipv4-address ipv4-src)] [ipV4Dst (ipv4-address ipv4-dst)] [icmpType (int8 icmp-type)] [icmpCode (int8 icmp-code)] [icmpSeqNo (int16 icmp-seq-no)]]}\n"
+                                            "\tsdtf {:type :csv-str :rules [[ipV4Src (ipv4-address ipv4-src)] [ipV4Dst (ipv4-address ipv4-dst)]]}\n"
+                                            "\tsdtf {:type :csv-str :rules [[udpSrc (float (/ (int16 udp-src) 65535))] [udpDst (float (/ (int16 udp-dst) 65535))]]}\n"
+                                            "\t(old syntax): sdtf {:type :clj-map :rules [{:offset :udp-src :transformation :int16 :name :udpSrc} {:offset :udp-dst :transformation :int16 :name :udpDst}]}\n")}
+                          :sdtf :set-dsl-transformation-function}
+                   :prompt-string "clj-net-pcap> "})
             (shutdown-fn)))
       (println "Leaving (-main [& args] ...)."))))
 

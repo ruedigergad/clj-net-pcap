@@ -88,6 +88,7 @@
     ["-F" "--forwarder-fn"
      (str "Use the specified function as forwarder function for processing packets.\n"
           "Available function names are:\n"
+          "stdout-forwarder-fn, stderr-forwarder-fn, "
           "stdout-combined-forwarder-fn, stdout-byte-array-forwarder-fn, "
           "stdout-forwarder-fn, no-op-converter-forwarder-fn, "
           "counting-no-op-forwarder-fn, calls-per-second-no-op-forwarder-fn")

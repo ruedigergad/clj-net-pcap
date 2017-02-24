@@ -553,6 +553,12 @@ user=>
   (pprint packet)
   (println "---"))
 
+(defn stderr-forwarder-fn
+  "Pre-defined forwarder function which outputs information about org.jnetpcap.packet.PcapPacket to *out*."
+  [packet]
+  (println-err (str packet))
+  (println-err "---"))
+
 (defn stdout-byte-array-forwarder-fn
   "Print the byte vector representation of a org.jnetpcap.packet.PcapPacket as returned by pcap-packet-to-byte-vector to *out*."
   [^PcapPacket packet]

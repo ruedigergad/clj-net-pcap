@@ -18,7 +18,7 @@ jobs:
             - $HOME/.m2
             - $HOME/.lein
           key: << checksum "project.clj" >>
-          #      - run: .circleci/bin/lein do test, uberjar
+      - run: .circleci/bin/lein do test, uberjar
       - store_artifacts:
           path: target/uberjar/clj-net-pcap.jar
 destination: uberjar

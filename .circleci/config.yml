@@ -2,8 +2,7 @@ version: 2
 jobs:
   build:
     working_directory: ~/clj-net-pcap
-    docker:
-      - image: openjdk:8
+    machine: true
     environment:
       LEIN_ROOT=nbd
     steps:

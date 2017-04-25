@@ -12,7 +12,6 @@ jobs:
           key: << checksum "project.clj" >>
       - run: apt-get update; apt-get install libpcap0.8 -qq
       - run: ln -s /usr/lib/x86_64-linux-gnu/libpcap.so.0.8 /usr/lib/x86_64-linux-gnu/libpcap.so
-      - run: find / -iname "*libpcap*"
       - run: .circleci/bin/lein deps
       - save_cache:
           paths:

@@ -1,0 +1,25 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/clj-net-pcap
+    docker:
+      - image: openjdk:8
+    environment:
+      LEIN_ROOT=nbd
+    steps:
+      - checkout
+      - restore_cache:
+          key: << checksum "project.clj" >>
+      - run: sudo apt-get update; sudo apt-get install libpcap0.8 -qq
+      - run: sudo ln -s /usr/lib/x86_64-linux-gnu/libpcap.so.1.1.1 /usr/lib/x86_64-linux-gnu/libpcap.so
+      - run: sudo find / -iname "*libpcap*"
+      - run: .circleci/bin/lein deps
+      - save_cache:
+          paths:
+            - $HOME/.m2
+            - $HOME/.lein
+          key: << checksum "project.clj" >>
+          #      - run: .circleci/bin/lein do test, uberjar
+      - store_artifacts:
+          path: target/uberjar/clj-net-pcap.jar
+destination: uberjar

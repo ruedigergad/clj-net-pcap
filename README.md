@@ -1,8 +1,6 @@
 # clj-net-pcap
 clj-net-pcap is a wrapper/adapter/facade (No matter how you want to call it.) around [jNetPcap](http://jnetpcap.com/) that enables and eases packet capturing with [Clojure](http://clojure.org/).
 
-clj-net-pcap is available via clojars.org:
-
 [![Clojars Project](https://img.shields.io/clojars/v/clj-net-pcap.svg)](http://clojars.org/clj-net-pcap)
 [![Build Status](https://travis-ci.org/ruedigergad/clj-net-pcap.png?branch=master)](https://travis-ci.org/ruedigergad/clj-net-pcap)
 [![Build Status CircleCI](https://circleci.com/gh/ruedigergad/clj-net-pcap.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/ruedigergad/clj-net-pcap.svg?style=shield&circle-token=:circle-token)

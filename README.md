@@ -3,7 +3,7 @@ clj-net-pcap is a wrapper/adapter/facade (No matter how you want to call it.) ar
 
 clj-net-pcap is available via clojars.org:
 
-[![Clojars Project](http://clojars.org/clj-net-pcap/latest-version.svg)](http://clojars.org/clj-net-pcap)
+[![Clojars Project](https://img.shields.io/clojars/v/clj-net-pcap.svg)](http://clojars.org/clj-net-pcap)
 [![Build Status](https://travis-ci.org/ruedigergad/clj-net-pcap.png?branch=master)](https://travis-ci.org/ruedigergad/clj-net-pcap)
 [![Build Status CircleCI](https://circleci.com/gh/ruedigergad/clj-net-pcap.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/ruedigergad/clj-net-pcap.svg?style=shield&circle-token=:circle-token)
 [![Coverage Status](https://img.shields.io/coveralls/ruedigergad/clj-net-pcap.svg)](https://coveralls.io/r/ruedigergad/clj-net-pcap?branch=master)

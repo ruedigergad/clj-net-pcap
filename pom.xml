@@ -3,14 +3,14 @@
   <groupId>clj-net-pcap</groupId>
   <artifactId>clj-net-pcap</artifactId>
   <packaging>jar</packaging>
-  <version>1.7.0</version>
+  <version>1.7.1</version>
   <name>clj-net-pcap</name>
   <description>clj-net-pcap is a wrapper/adapter/facade (No matter how you want to call it.)
                 around jNetPcap that enables and eases packet capturing and processing with Clojure.</description>
   <scm>
     <connection>scm:git:git://github.com/ruedigergad/clj-net-pcap.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/ruedigergad/clj-net-pcap.git</developerConnection>
-    <tag>3f3bcb683d3ea6005af247223633dabc675c7294
+    <tag>57db4b5ee0a6fee90b52786f4a98e1e1121cdf19
 </tag>
     <url>https://github.com/ruedigergad/clj-net-pcap</url>
   </scm>
@@ -23,9 +23,6 @@
       </resource>
     </resources>
     <testResources>
-      <testResource>
-        <directory>dev-resources</directory>
-      </testResource>
       <testResource>
         <directory>resources</directory>
       </testResource>
@@ -76,11 +73,14 @@
       </releases>
     </repository>
   </repositories>
+  <dependencyManagement>
+    <dependencies/>
+  </dependencyManagement>
   <dependencies>
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>clojure</artifactId>
-      <version>1.7.0</version>
+      <version>1.8.0</version>
     </dependency>
     <dependency>
       <groupId>org.clojure</groupId>
@@ -88,38 +88,19 @@
       <version>0.2.4</version>
     </dependency>
     <dependency>
+      <groupId>cli4clj</groupId>
+      <artifactId>cli4clj</artifactId>
+      <version>1.2.7</version>
+    </dependency>
+    <dependency>
       <groupId>clj-assorted-utils</groupId>
       <artifactId>clj-assorted-utils</artifactId>
-      <version>1.9.1</version>
+      <version>1.17.1</version>
     </dependency>
     <dependency>
       <groupId>jnetpcap</groupId>
       <artifactId>jnetpcap</artifactId>
       <version>1.4.r1425-1f</version>
-    </dependency>
-    <dependency>
-      <groupId>org.clojure</groupId>
-      <artifactId>tools.nrepl</artifactId>
-      <version>0.2.6</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.clojure</groupId>
-          <artifactId>clojure</artifactId>
-        </exclusion>
-      </exclusions>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>clojure-complete</groupId>
-      <artifactId>clojure-complete</artifactId>
-      <version>0.2.3</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.clojure</groupId>
-          <artifactId>clojure</artifactId>
-        </exclusion>
-      </exclusions>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

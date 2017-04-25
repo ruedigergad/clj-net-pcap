@@ -11,13 +11,13 @@ jobs:
           key: << checksum "project.clj" >>
       - run: sudo apt-get update; sudo apt-get install libpcap0.8 -qq
       - run: sudo ln -s /usr/lib/x86_64-linux-gnu/libpcap.so.0.8 /usr/lib/x86_64-linux-gnu/libpcap.so
-      - run: sudo .circleci/bin/lein deps
+      - run: sudo LEIN_ROOT=1 .circleci/bin/lein deps
       - save_cache:
           paths:
             - $HOME/.m2
             - $HOME/.lein
           key: << checksum "project.clj" >>
-      - run: sudo .circleci/bin/lein do test, uberjar
+      - run: sudo LEIN_ROOT=1 .circleci/bin/lein do test, uberjar
       - store_artifacts:
           path: target/uberjar/clj-net-pcap.jar
 destination: uberjar

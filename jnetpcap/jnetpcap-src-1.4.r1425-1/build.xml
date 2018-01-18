@@ -842,7 +842,7 @@
 				<include name="api_*.cpp" />
 			</fileset>
 			<includepath location="${build.include.dir}" />
-j			<includepath location="${src.c.dir}" />
+			<includepath location="${src.c.dir}" />
 			<sysincludepath location="/usr/local/openjdk8/include" />
             <sysincludepath location="/usr/local/openjdk8/include/freebsd" />
 			<defineset define="LIBPCAP_VERSION=0x${compiler.LIBPCAP_VERSION}" if="compiler.LIBPCAP_VERSION" />

@@ -342,6 +342,12 @@ public class FormatUtils {
 
 			if (buf.length() != 0 && (i % 2) == 0) {
 				buf.append(':');
+
+                if (b == 0 && array[i+1] == 0) {
+                    buf.append('0');
+                    i++;
+                    continue;
+                }
 			}
 			
 			/*

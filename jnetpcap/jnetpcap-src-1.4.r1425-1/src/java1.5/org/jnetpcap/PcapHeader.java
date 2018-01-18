@@ -86,6 +86,28 @@ public class PcapHeader
 	}
 
 	/**
+	 * Creates a header structure with initial values.
+	 * 
+	 * @param caplen
+	 *          buffer size
+	 * @param wirelen
+	 *          original packet length
+     * @param s
+     *          original hdr_sec value
+     * @param us
+     *          original hdr_usec value
+	 */
+	public PcapHeader(int caplen, int wirelen, long s, int us) {
+		super(STRUCT_NAME, LENGTH);
+
+		hdr_len(caplen);
+		hdr_wirelen(wirelen);
+
+		hdr_sec(s);
+		hdr_usec(us);
+	}
+
+	/**
 	 * Creates an empty pcap header suitable for peering.
 	 * 
 	 * @param type

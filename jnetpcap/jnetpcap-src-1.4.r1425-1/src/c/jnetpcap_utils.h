@@ -90,6 +90,26 @@ typedef struct pcap_user_data_t {
 	
 } pcap_user_data_t;
 
+typedef struct bulk_buffer_t {
+    void *data;
+    long bytes;
+    long packets;
+} bulk_buffer_t;
+
+typedef struct cb_bulk_byte_buffer_t {
+	pcap_t *p;
+	jmethodID mid;
+	JNIEnv *env;    // thread
+	jobject obj;    // ByteBufferHandler
+	jobject pcap;
+	jthrowable  exception; // Any exceptions to rethrow
+	jobject user;
+    bulk_buffer_t *write_buffer;
+    bulk_buffer_t *read_buffer;
+    int bulk_size;
+    int bulk_buffer_entry_size;
+} cb_bulk_byte_buffer_t;
+
 typedef struct cb_byte_buffer_t {
 	pcap_t *p;
 	jmethodID mid;
@@ -135,6 +155,10 @@ typedef struct cb_packet_t {
 
 extern "C"
 void pcap_callback(u_char*, const pcap_pkthdr*, const u_char*);
+void cb_bulk_byte_buffer_dispatch_int_ts(u_char*, const pcap_pkthdr*, const u_char*);
+void cb_bulk_byte_buffer_dispatch(u_char*, const pcap_pkthdr*, const u_char*);
+void cb_bulk_byte_buffer_dispatch_direct_int_ts(u_char*, const pcap_pkthdr*, const u_char*);
+void cb_bulk_byte_buffer_dispatch_direct(u_char*, const pcap_pkthdr*, const u_char*);
 void cb_byte_buffer_dispatch(u_char*, const pcap_pkthdr*, const u_char*);
 void cb_jbuffer_dispatch(u_char*, const pcap_pkthdr*, const u_char*);
 void cb_pcap_packet_dispatch(u_char*, const pcap_pkthdr*, const u_char*);

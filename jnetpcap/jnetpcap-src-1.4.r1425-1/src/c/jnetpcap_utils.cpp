@@ -737,6 +737,228 @@ void pcap_callback(u_char *user, const pcap_pkthdr *pkt_header,
 }
 
 /**
+ * Bulk dispatcher that allocates a new java.nio.ByteBuffer and dispatches
+ * it to java listener. This version casts the timestamp values to int.
+ */
+void cb_bulk_byte_buffer_dispatch_int_ts(u_char *user, const pcap_pkthdr *pkt_header,
+		const u_char *pkt_data) {
+
+	cb_bulk_byte_buffer_t *data = (cb_bulk_byte_buffer_t *)user;
+
+    int offset = 0;
+    char *data_ptr = (char *) data->write_buffer->data;
+    int tv_sec = (int) pkt_header->ts.tv_sec;
+    memcpy((void *) (data_ptr + data->write_buffer->bytes), &(tv_sec), sizeof(tv_sec));
+    offset += sizeof(tv_sec);
+    int tv_usec = (int) pkt_header->ts.tv_usec;
+    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(tv_usec), sizeof(tv_usec));
+    offset += sizeof(tv_usec);
+    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(pkt_header->caplen), sizeof(pkt_header->caplen));
+    offset += sizeof(pkt_header->caplen);
+    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(pkt_header->len), sizeof(pkt_header->len));
+    offset += sizeof(pkt_header->len);
+    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), (void *) pkt_data, pkt_header->caplen);
+    data->write_buffer->bytes += offset + pkt_header->caplen;
+    data->write_buffer->packets++;
+
+    if (data->write_buffer->packets < data->bulk_size) {
+        return;
+    }
+
+    bulk_buffer_t *tmp_buffer = data->read_buffer;
+    data->read_buffer = data->write_buffer;
+    data->write_buffer = tmp_buffer;
+    data->write_buffer->bytes = 0;
+    data->write_buffer->packets = 0;
+
+	JNIEnv *env = data->env;
+
+    jobject buffer = env->NewDirectByteBuffer((void *) data->read_buffer->data,
+			data->read_buffer->bytes);
+	if (buffer == NULL) {
+		return;
+	}
+
+	env->CallVoidMethod(
+			data->obj,
+			data->mid,
+			(jobject) buffer,
+			(jobject) data->user);
+
+	env->DeleteLocalRef(buffer);
+
+	if (env->ExceptionCheck() == JNI_TRUE) {
+		data->exception = env->ExceptionOccurred();
+		pcap_breakloop(data->p);
+	}
+}
+
+/**
+ * Bulk dispatcher that allocates a new java.nio.ByteBuffer and dispatches
+ * it to java listener.
+ */
+void cb_bulk_byte_buffer_dispatch(u_char *user, const pcap_pkthdr *pkt_header,
+		const u_char *pkt_data) {
+
+	cb_bulk_byte_buffer_t *data = (cb_bulk_byte_buffer_t *)user;
+
+    int offset = 0;
+    char *data_ptr = (char *) data->write_buffer->data;
+    memcpy((void *) (data_ptr + data->write_buffer->bytes), &(pkt_header->ts.tv_sec), sizeof(pkt_header->ts.tv_sec));
+    offset += sizeof(pkt_header->ts.tv_sec);
+    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(pkt_header->ts.tv_usec), sizeof(pkt_header->ts.tv_usec));
+    offset += sizeof(pkt_header->ts.tv_usec);
+    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(pkt_header->caplen), sizeof(pkt_header->caplen));
+    offset += sizeof(pkt_header->caplen);
+    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(pkt_header->len), sizeof(pkt_header->len));
+    offset += sizeof(pkt_header->len);
+    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), (void *) pkt_data, pkt_header->caplen);
+    data->write_buffer->bytes += offset + pkt_header->caplen;
+    data->write_buffer->packets++;
+
+    if (data->write_buffer->packets < data->bulk_size) {
+        return;
+    }
+
+    bulk_buffer_t *tmp_buffer = data->read_buffer;
+    data->read_buffer = data->write_buffer;
+    data->write_buffer = tmp_buffer;
+    data->write_buffer->bytes = 0;
+    data->write_buffer->packets = 0;
+
+	JNIEnv *env = data->env;
+
+    jobject buffer = env->NewDirectByteBuffer((void *) data->read_buffer->data,
+			data->read_buffer->bytes);
+	if (buffer == NULL) {
+		return;
+	}
+
+	env->CallVoidMethod(
+			data->obj,
+			data->mid,
+			(jobject) buffer,
+			(jobject) data->user);
+
+	env->DeleteLocalRef(buffer);
+
+	if (env->ExceptionCheck() == JNI_TRUE) {
+		data->exception = env->ExceptionOccurred();
+		pcap_breakloop(data->p);
+	}
+}
+
+/**
+ * Bulk dispatcher that allocates a new java.nio.ByteBuffer and dispatches
+ * it to java listener. This version casts the timestamp values to int.
+ */
+void cb_bulk_byte_buffer_dispatch_direct_int_ts(u_char *user, const pcap_pkthdr *pkt_header,
+		const u_char *pkt_data) {
+
+	cb_bulk_byte_buffer_t *data = (cb_bulk_byte_buffer_t *)user;
+
+    int offset = 0;
+    char *data_ptr = (char *) data->write_buffer->data;
+    int tv_sec = (int) pkt_header->ts.tv_sec;
+    memcpy((void *) (data_ptr + data->write_buffer->bytes), &(tv_sec), sizeof(tv_sec));
+    offset += sizeof(tv_sec);
+    int tv_usec = (int) pkt_header->ts.tv_usec;
+    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(tv_usec), sizeof(tv_usec));
+    offset += sizeof(tv_usec);
+    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(pkt_header->caplen), sizeof(pkt_header->caplen));
+    offset += sizeof(pkt_header->caplen);
+    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(pkt_header->len), sizeof(pkt_header->len));
+    offset += sizeof(pkt_header->len);
+    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), (void *) pkt_data, pkt_header->caplen);
+    data->write_buffer->bytes += offset + pkt_header->caplen;
+    data->write_buffer->packets++;
+
+    if (data->write_buffer->packets < data->bulk_size) {
+        return;
+    }
+
+	JNIEnv *env = data->env;
+
+    jobject buffer = env->NewDirectByteBuffer((void *) data->write_buffer->data,
+			data->write_buffer->bytes);
+
+    data->write_buffer->data = malloc(data->bulk_buffer_entry_size * data->bulk_size);
+    data->write_buffer->bytes = 0;
+    data->write_buffer->packets = 0;
+
+	if (buffer == NULL) {
+		return;
+	}
+
+	env->CallVoidMethod(
+			data->obj,
+			data->mid,
+			(jobject) buffer,
+			(jobject) data->user);
+
+	env->DeleteLocalRef(buffer);
+
+	if (env->ExceptionCheck() == JNI_TRUE) {
+		data->exception = env->ExceptionOccurred();
+		pcap_breakloop(data->p);
+	}
+}
+
+/**
+ * Bulk dispatcher that allocates a new java.nio.ByteBuffer and dispatches
+ * it to java listener.
+ */
+void cb_bulk_byte_buffer_dispatch_direct(u_char *user, const pcap_pkthdr *pkt_header,
+		const u_char *pkt_data) {
+
+	cb_bulk_byte_buffer_t *data = (cb_bulk_byte_buffer_t *)user;
+
+    int offset = 0;
+    char *data_ptr = (char *) data->write_buffer->data;
+    memcpy((void *) (data_ptr + data->write_buffer->bytes), &(pkt_header->ts.tv_sec), sizeof(pkt_header->ts.tv_sec));
+    offset += sizeof(pkt_header->ts.tv_sec);
+    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(pkt_header->ts.tv_usec), sizeof(pkt_header->ts.tv_usec));
+    offset += sizeof(pkt_header->ts.tv_usec);
+    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(pkt_header->caplen), sizeof(pkt_header->caplen));
+    offset += sizeof(pkt_header->caplen);
+    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), &(pkt_header->len), sizeof(pkt_header->len));
+    offset += sizeof(pkt_header->len);
+    memcpy((void *) (data_ptr + data->write_buffer->bytes + offset), (void *) pkt_data, pkt_header->caplen);
+    data->write_buffer->bytes += offset + pkt_header->caplen;
+    data->write_buffer->packets++;
+
+    if (data->write_buffer->packets < data->bulk_size) {
+        return;
+    }
+
+	JNIEnv *env = data->env;
+
+    jobject buffer = env->NewDirectByteBuffer((void *) data->write_buffer->data,
+			data->write_buffer->bytes);
+
+    data->write_buffer->data = malloc(data->bulk_buffer_entry_size * data->bulk_size);
+    data->write_buffer->bytes = 0;
+    data->write_buffer->packets = 0;
+
+	if (buffer == NULL) {
+		return;
+	}
+
+	env->CallVoidMethod(
+			data->obj,
+			data->mid,
+			(jobject) buffer,
+			(jobject) data->user);
+
+	env->DeleteLocalRef(buffer);
+
+	if (env->ExceptionCheck() == JNI_TRUE) {
+		data->exception = env->ExceptionOccurred();
+		pcap_breakloop(data->p);
+	}
+}
+
+/**
  * ByteBuffer dispatcher that allocates a new java.nio.ByteBuffer and dispatches
  * it to java listener.
  */

@@ -2289,6 +2289,26 @@ public class Pcap {
 	private native <T> int loop(int cnt, ByteBufferHandler<T> handler, T user,
 			PcapHeader header);
 
+
+	public int loop_direct(int cnt, int bulkSize, int snapLength, boolean useIntTs, final DirectBulkByteBufferHandler handler, Object user) {
+        BulkByteBufferHandler hdlr = new BulkByteBufferHandler() {
+            @Override
+            public void nextPacket(ByteBuffer buffer, Object userData) {
+                handler.nextPacket(new DirectBulkByteBufferWrapper(buffer), userData);
+            }
+        };
+        return loop(cnt, bulkSize, snapLength, useIntTs, false, hdlr, user);
+    }
+
+	public <T> int loop(int cnt, int bulkSize, int snapLength, boolean useIntTs, BulkByteBufferHandler<T> handler, T user) {
+        return loop(cnt, bulkSize, snapLength, useIntTs, true, handler, user);
+    }
+	/**
+	 * Start a pcap loop for bulk processing.
+	 */
+	@LibraryMember("pcap_loop")
+	public native <T> int loop(int cnt, int bulkSize, int snapLength, boolean useIntTs, boolean useIntermediateBuffer, BulkByteBufferHandler<T> handler, T user);
+
 	/**
 	 * Collect a group of packets. pcap_loop() is similar to pcap_dispatch()
 	 * except it keeps reading packets until cnt packets are processed or an

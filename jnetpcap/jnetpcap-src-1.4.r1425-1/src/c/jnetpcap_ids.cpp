@@ -42,11 +42,13 @@ jmethodID appendMID = 0;
 jmethodID setLengthMID = 0;
 
 jclass JBufferHandlerClass;
+jclass BulkByteBufferHandlerClass;
 jclass ByteBufferHandlerClass;
 jclass JPacketHandlerClass;
 jclass PcapPacketHandlerClass;
 
 jmethodID JBufferHandlerNextPacketMID;
+jmethodID BulkByteBufferHandlerNextPacketMID;
 jmethodID ByteBufferHandlerNextPacketMID;
 jmethodID JPacketHandlerNextPacketMID;
 jmethodID PcapPacketHandlerNextPacketMID;
@@ -112,6 +114,10 @@ JNIEXPORT void JNICALL JNICALL Java_org_jnetpcap_Pcap_initIDs
 		return;
 	}
 
+	if ( (BulkByteBufferHandlerClass = findClass(env, 
+			"org/jnetpcap/BulkByteBufferHandler")) == NULL) {
+		return;
+	}
 	if ( (ByteBufferHandlerClass = findClass(env, 
 			"org/jnetpcap/ByteBufferHandler")) == NULL) {
 		return;
@@ -128,6 +134,11 @@ JNIEXPORT void JNICALL JNICALL Java_org_jnetpcap_Pcap_initIDs
 	if ( (JBufferHandlerNextPacketMID = 
 		env->GetMethodID(JBufferHandlerClass, "nextPacket",
 			"(Lorg/jnetpcap/PcapHeader;Lorg/jnetpcap/nio/JBuffer;Ljava/lang/Object;)V")) == NULL) {
+		return;
+	}
+	if ( (BulkByteBufferHandlerNextPacketMID = 
+		env->GetMethodID(BulkByteBufferHandlerClass, "nextPacket",
+			"(Ljava/nio/ByteBuffer;Ljava/lang/Object;)V")) == NULL) {
 		return;
 	}
 	if ( (ByteBufferHandlerNextPacketMID = 

@@ -116,7 +116,7 @@
      -->
 	<taskdef resource="cpptasks.tasks" classpathref="ant.cpptask.classpath" />
 	<typedef resource="cpptasks.types" classpathref="ant.cpptask.classpath" />
-	<taskdef name="deb" classpathref="ant.deb.classpath" classname="org.vafer.jdeb.ant.DebAntTask" />
+    <!--	<taskdef name="deb" classpathref="ant.deb.classpath" classname="org.vafer.jdeb.ant.DebAntTask" />-->
 	<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="ant.svnant.classpath" />
 
 
@@ -600,11 +600,15 @@
 		<exec executable="locate" outputproperty="result.locate_out" >
 			<arg value="libpcap.so"/>
 		</exec>
-		
+
+        <!--
 		<exec executable="grep" inputstring="${result.locate_out}" outputproperty="result.grep_out">
 			<arg value="libpcap.so$" />
-		</exec>
+        </exec>
+        -->
 		
+        <property name="result.grep_out" value="/home/rc/repositories/work/src/dane.dmf/lib/jnetpcap/native/Linux/x86_64/libpcap.so" />
+
 		<echo message="Located libpcap.so file: ${result.grep_out}" />
 		
 		<property name="build.libpcap.so" value="${build.lib.dir}/libpcap.so" />
@@ -723,17 +727,17 @@
 
 		<echo message="Using pcap version ${compiler.LIBPCAP_VERSION}" />
 		<echo message="compiling JNI C++ files to object code" />
-		<echo message="using ${compiler.cc.cmd} compiler" />
+        <echo message="using ${compiler.cc.cmd} compiler" />
 		<echo message="system include = ${java.sdk.include.dir}" />
 		<cc runtime="dynamic" outtype="shared" outfile="${build.lib.dir}/${lib.pcap.basename}" debug="${compiler.debug}" objdir="${build.obj.dir}" multithreaded="compiler.multithreaded" exceptions="compiler.exceptions" warnings="${compiler.warnings}">
 
 			<env key="PATH" path="${compiler.cc.bin.dir};${env.PATH}" />
 
-			<fileset dir="${src.c.dir}" />
+			<fileset dir="${src.c.dir}" includes="*.cpp" />
 			<includepath location="${build.include.dir}" />
 			<includepath location="${src.c.dir}" />
-			<sysincludepath location="${java.sdk.include.dir}" />
-			<sysincludepath location="${java.sdk.include.dir}/linux" />
+			<sysincludepath location="/usr/lib/jvm/java/include" />
+			<sysincludepath location="/usr/lib/jvm/java/include/linux" />
 			<defineset define="LIBPCAP_VERSION=0x${compiler.LIBPCAP_VERSION}" if="compiler.LIBPCAP_VERSION" />
 			<defineset define="DEBUG" if="DEBUG" />
 
@@ -757,8 +761,8 @@
 			</fileset>
 			<includepath location="${build.include.dir}" />
 			<includepath location="${src.c.dir}" />
-			<sysincludepath location="${java.sdk.include.dir}" />
-			<sysincludepath location="${java.sdk.include.dir}/linux" />
+			<sysincludepath location="/usr/lib/jvm/java/include" />
+			<sysincludepath location="/usr/lib/jvm/java/include/linux" />
 			<defineset define="LIBPCAP_VERSION=0x${compiler.LIBPCAP_VERSION}" if="compiler.LIBPCAP_VERSION" />
 			<defineset define="DEBUG" if="DEBUG" />
 			<defineset define="Linux" />

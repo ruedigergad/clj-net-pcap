@@ -1,0 +1,449 @@
+<body>
+<h1>Table of Contents</h1>
+
+<ul>
+	<li><a href="#intro">Introduction</a>
+	<ul>
+		<li><a href="#quick_start">Quick Start</a></li>
+	</ul>
+	</li>
+
+	<li><a href="#connection">Project website and the native <em>libpcap</em>
+	connection</a>
+	<ul>
+		<li><a href="#native_libpcap"><em>libpcap</em> native library</a></li>
+		<li><a href="#native_winpcap"><em>WinPcap</em> windows <em>libpcap</em>
+		implementation</a></li>
+	</ul>
+	</li>
+
+	<li><a href="#about_wrapper">About <em>jNetPcap</em> a java
+	wrapper</a>
+	<ul>
+		<li><a href="#implementation_notes"><em>jNetPcap</em>
+		implementation notes</a>
+		<ul>
+			<li><a href="#implementation_multithreading">Multithreading
+			support</a>
+		</ul>
+		</li>
+		<li><a href="#winpcap_extension"><em>jNetPcap</em>'s <em>WinPcap</em>
+		extension</a>
+		<ul>
+			<li><a href="#checking_winpcap">Checking for <em>WinPcap</em>
+			extension support</a></li>
+		</ul>
+		</li>
+	</ul>
+	</li>
+	<li><a href="#packet_framework">Packet Decoding Framework</a></li>
+
+	<li><a href="#other_extensions">Other extensions?</a>
+	<li><a href="#requirements">Java requirements</a>
+	<li><a href="#other_wrappers">Other java <em>libpcap</em>
+	wrappers</a>
+</ul>
+
+<h1><a name="into">Introduction</a></h1>
+
+<p><em>jNetPcap</em> is a java wrapper around <em>libpcap</em> and <em>WinPcap</em>
+native libraries found on various unix and windows platforms. <em>jNetPcap</em>
+exposes the functionality as a java programming interface (API) which
+this documentation describes.
+<p><b> Feature highlights:</b>
+<ul>
+	<li>Follows native <em>libpcap</em> programming model. This makes
+	learning <em>jNetPcap</em> API easy.</li>
+	<li><b> No packet buffer copies between <em>libpcap</em> and
+	java space. </b>Existing native in-memory buffer is wrapped inside a <code>java.nio.ByteBuffer</code>
+	object with not data copies.</li>
+	<li>Low level and efficient JNI implementation.</li>
+	<li>Provides some very low level functions previously not
+	available in Java space. i.e. <code>setBuffer</code> for changing
+	buffer size on windows platform and others.</li>
+	<li>Packet decoding and protocol analysis using stateful analyzers</li>
+	<li>An extensible library of protocols</li>
+</ul>
+The API follows the C
+<em>libpcap</em>
+counter part very closely in order to expose all of the functionality
+and even quirks of
+<em>libpcap</em>
+. For example old style integer status codes are returned and
+warning/error messages are filled into a java
+<code>StringBuilder</code>
+buffer and no java exceptions are thrown outside the usual
+mismatched/invalid arguments.
+
+<h2><a name="quick_start">Quick start</a></h2>
+
+The starting place is to read over the
+<a href="org/jnetpcap/Pcap.html">Pcap.class</a>
+documentation and
+<a href="org/jnetpcap/package-summary.html">org.jnetpcap</a>
+package overview. There are several examples there to show the reader
+how to utilize
+<em>jNetPcap</em>
+java library. Make sure that you have the
+<em>libpcap</em>
+library installed. On
+<em>windows</em>
+platforms that would be the
+<em>WinPcap</em>
+driver and on unix systems one of
+<em>libpcap</em>
+or
+<em>libpcap-dev</em>
+depending on exact flavor of unix. Lastly follow the installation
+instructions carefully to make sure that native
+<em>jnetpcap</em>
+shared C library is installed in the proper place.
+
+<h1><a name="connection">Project website and the native <em>libpcap</em>
+connection</a></h1>
+
+<p>Since <em>jNetPcap</em> is very closely mapped to native <em>libpcap</em>
+library functions, users are encouraged to read <em>libpcap</em>
+documentation at <a href="http://en.wikipedia.org/wiki/Tcpdump"><em>libpcap</em>
+on wikipedia</a> and visit <em>libpcap</em>'s homepage at <a
+	href="http://tcpdump.org">http://tcpdump.org</a>. You can also visit <em>jNetPcap</em>
+project website for more information and a user guide with tutorials at
+<a href="http://jnetpcap.org">http://jnetpcap.org</a> .</p>
+
+<h2><a name="native_libpcap"><em>libpcap</em> native library</a></h2>
+
+<p>Pcap (which stands for <u>P</u>acket <u>Cap</u>ture) is an
+application programming interface for packet capturing from a live
+network interface. The implementation of pcap for Unix-like systems is
+known as <em>libpcap</em>; the Windows port of <em>libpcap</em> is
+called <em>WinPcap</em>. <em>libpcap</em> and <em>WinPcap</em> may be
+used by a program to capture packets traveling over a network and, in
+newer versions, to transmit packets on a network at the link layer, as
+well as to get a list of network interfaces that can be used with <em>libpcap</em>
+or <em>WinPcap</em>. <em>libpcap</em> and <em>WinPcap</em> are the
+packet capture and filtering engines of many open source and commercial
+network tools, including protocol analyzers, network monitors, network
+intrusion detection systems, packet sniffers, traffic generators and
+network testers. The pcap API is designed for use from C and C++, so,
+for other languages such as scripting languages, Java, and .NET
+languages, a wrapper is generally used. (<em>Credit: wikipedia.org</em>)</p>
+
+<h2><a name="native_winpcap"><em>WinPcap</em> windows <em>libpcap</em>
+implementation</a></h2>
+
+<em>WinPcap</em>
+consists of:
+<ul>
+	<li>drivers for Windows 95/98/Me, and for the Windows NT family
+	(Windows NT 4.0, Windows 2000, Windows XP, Windows Server 2003, Windows
+	Vista, etc.), that use NDIS to read packets directly from a network
+	adapter</li>
+
+	<li>implementations of a lower-level library for those OSes, to
+	communicate with those drivers</li>
+
+	<li>a port of <em>libpcap</em> that uses the API offered by the
+	low-level library implementations. It was originally created at the
+	Politecnico di Torino. Now it's maintained by CACE Technologies, a
+	company created by some of the <em>WinPcap</em> developers.</li>
+</ul>
+(
+<em>Credit: wikipedia.org</em>
+)
+
+<h1><a name="about_wrapper">About <em>jNetPcap</em> a java
+wrapper</a></h1>
+
+<b><em>jNetPcap</em></b>
+is a java wrapper based on both
+<em>libpcap</em>
+and
+<em>WinPcap</em>
+.
+<em>jNetPcap</em>
+'s API provides core implementation based on unix
+<em>libpcap</em>
+API library (
+<code>org.jnetpcap</code>
+) while also providing the
+<em>WinPcap</em>
+extra functionality as an extension (
+<code>org.jnetpcap.winpcap</code>
+). The main classes which implement
+<em>libpcap</em>
+and
+<em>WinPcap</em>
+functionality are:
+<ul>
+	<li><code>org.jnetpcap.Pcap</code> class - core <em>libpcap</em>
+	methods available on all platforms</li>
+	<li><code>org.jnetpcap.winpcap.winpcap</code> class - extensions
+	based on <em>WinPcap</em> library typically only available on windows
+	based system</li>
+</ul>
+The core
+<em>libpcap</em>
+implementation of
+<em>jNetPcap</em>
+, provides methods to do the following functions
+<ul>
+	<li>Find a complete list of network interfaces the system has</li>
+	<li>Open either a network interface or a PCAP capture file for
+	reading packets</li>
+	<li>Apply a packet filter</li>
+	<li>Dump packets into a PCAP capture file</li>
+	<li>Transmit raw link layer packets over a network interface</li>
+	<li>Gather statistics on network interface and report counters</li>
+</ul>
+
+<h2><a name="implementation_notes"><em>jNetPcap</em>
+implementation notes</a></h2>
+
+Without disclosing too much technical implementation detail, here is a
+little description of how
+<em>jNetPcap</em>
+is implemented in general.
+<em>jNetPcap</em>
+on the java side, is made up of several java classes. These classes are
+peered with native C structures provided by libpcap. So for example when
+you retrieve an instance of
+<code>Pcap</code>
+object, the object contains a memory pointer to a C pcap_t structure.
+When any non-static method call on the java class, will use the stored
+reference to the native C structure to execute the requested function.
+Same thing applies to all other structures such as
+<code>PcapIf</code>
+and the remaining. They are all peered and retain a memory reference to
+their corresponding C structure. For safety purposes and java
+protections, the reader is not allowed to access these C structures
+directly and all the comparible
+<em>libpcap</em>
+library functions are provided as java methods. Therefore the is a very
+close relationshipt between each java object and its corresponding
+native C strucutre, the same applies to
+<em>libpcap</em>
+functions and their corresponding java methods.
+
+<h3><a name="implementation_multithreading">Multithreading
+support</a></h3>
+
+<p>The native <em>libpcap</em> library is not multithread safe. It
+does not support reentrant function calls from multiple threads. <em>jNetPcap</em>
+wrapper does not provide any addition multithreading support than what
+is provided by <em>libpcap</em> itself.</p>
+<p>It is however safe to interact with various <code>Pcap</code>
+objects from multiple threads, as long as access is externally
+synchronized.</p>
+
+<h4>Pseudo code example: Breaking out of <code>Pcap.loop()</code>
+using 2 threads</h4>
+(
+<b>Weblink:</b>
+<a
+	href="http://jnetpcap.svn.sourceforge.net/viewvc/jnetpcap/trunk/tests/java/org/jnetpcap/TestOpenCloseMultiThreaded.java?view=markup">link
+to a complete example.</a>
+)
+<p>The following example demonstrates, using pseudo code, how to
+capture packets from network interface in one thread while providing
+control of the capture session from another thread. The example
+specifically shows the neccessary synchronization needed to break a
+capture loop from another thread and closing the capture session. Thread
+#1 is a control thread and Thread #2 is the packet capture loop thread.</p>
+
+<i>Thread #1 - control thread</i>
+
+<pre style="border: 1px;">
+_start Thread #2
+_receive Pcap object reference from Thread #2 
+_issue Pcap.breakLoop call
+_wait for Thread #2 to exit
+_issue Pcap.close call
+_goto start
+</pre>
+
+<i>Thread #2 - open live capture and loop thread</i>
+
+<pre style="border: "1px;>
+_issue Pcap.findAllDevs and retrieve all network devices
+_issue Pcap.openLive using one of the network devices
+_create PcapHandler, a callback object for the Pcap.loop, user data is Pcap object
+_issue Pcap.loop call with our PcapHandler, Thread #2 control is passed to libpcap
+
+// In Thread #2 libpcap supplies buffers to our PcapHandler
+// On first call to PcapHandler, we exchange Pcap object with Thread #1
+// One possible implementation of the exchange is java.util.concurrent.Exchanger
+</pre>
+<p>In the above example, once Thread #1 issues a <code>Pcap.breakLoop()</code>
+call, the loop in Thread #2 may not terminate immediately. Exactly how
+the loop terminates is native <em>libpcap</em> library dependent. You
+can see <a
+	href="http://jnetpcap.com/docs/javadoc/jnetpcap-1.1-javadoc/index.html">Pcap.breakLoop()</a>
+javadoc page for more specific implementation details. Thread #1 must
+then wait for Thread #2 to break out of the loop and gracefully exit.
+The wait can be accomplished using <code>java.lang.Thread.join()</code>
+method on Thread #2 object reference. Once Thread #2 exits, it is safe
+to call <code>Pcap.close()</code> on the exchanged <code>Pcap</code>
+object.</p>
+<p><b>Note #1:</b> it is imperative to wait for Thread #2 to exit,
+or some other way of synchronization, to ensure that Thread #2 has
+broken out of the <code>Pcap.loop()</code> otherwise a premature call to
+<code>Pcap.close()</code> while Thread #2 is still in the loop will
+cause a coredump and the entire Java VM to crash. The coredump or crash
+stems from the fact that <em>libpcap</em> is not multithreaded and a
+single threaded execution is assumed. In a single thread, it is
+impossible to issue a <code>Pcap.close()</code> at the same time <code>Pcap.loop()</code>
+is still executing, since a <code>Pcap.loop()</code> is a blocking call.</p>
+<p><b>Note #2:</b>As a convenience, starting with version 1.2,
+jNetPcap provides 2 methods to run loops in a background thread. The
+methods are found in the <code>Pcap</code> and <code>PcapUtils</code>
+classes. The names are <code>dispatchInBackground()</code> and <code>loopInBackground()</code>.
+These methods return a <code>PcapTask</code> handle which allows the
+user to interact with the background thread such as aquire error codes
+and issue <code>breakLoop</code> safely to terminate any background
+tasks nicely.</p>
+
+
+<h2><a name="winpcap_extension"><em>jNetPcap</em>'s <em>WinPcap</em>
+extension</a></h2>
+
+<em>WinPcap</em>
+library from
+<a href="http://winpcap.org">http://winpcap.org</a>
+, provides support for all of the core
+<em>libpcap</em>
+functions as well as, numerous functions that are not part of the core
+<em>libpcap</em>
+functionality and are only available on platforms that support
+<em>WinPcap</em>
+. These extra functions greatly enhance
+<em>libpcap</em>
+calls, and generally don't provide features not found in the core. They
+simply provide enhanced versions of the functions that are more
+efficient or provide greater control over lets say the behavior of the
+NPF driver within a windows kernel. This is great news for windows
+platforms.
+
+<h3><a name="checking_winpcap">Checking for <em>WinPcap</em>
+extension support</a></h3>
+
+Since java can be run on nearly any platform and
+<em>WinPcap</em>
+extensions are only available on certain platforms (i.e. windows based
+platforms), the user must check first if the extension is available
+before using it. The check is done using a static method call
+<code>WinPcap.isSupported()</code>
+which will return a boolean value. Returned value of
+<code>true</code>
+means that the extension is supported otherwise
+<code>false</code>
+.
+<em>WinPcap</em>
+extension can not be used on a platform that does not support the
+extension. Any method used with
+<code>WinPcap</code>
+on an unsupported platform, will throw an immediate unchecked
+<code>PcapExtensionNotAvailableException</code>
+, to indicate that this extension is not available on this particular
+platform. Therefore, it is very important to always do a check first
+before relying on an extension function (i.e. org.jnetpcap.winpcap.)
+
+<h1><a name="packet_framework">Packet decoding</a></h1>
+Packets can be decoded using the included "packet decoding framework".
+The frame work resides in
+<code>org.jnetpcap.packet</code>
+package and provides limited decoding capabilities. A
+<code>JPacketHandler</code>
+dispatcher handler is used with
+<code>Pcap.loop(), Pcap.dispatch()</code>
+methods which receives JPacket objects. JPackets are fully decoded
+packets and provide a packet API that allows the user to query which
+protocol headers exist in the packet and access those headers. Each
+header then provides a method for each network header field found in the
+header and any logic that goes into decoding that protocol header.
+<p>Various formatters are also provided which allow a packet to be
+reformatted to various textual forms such as a plain text that is human
+readable and less human readable Xml format which is great for computer
+applications.</p>
+<p>jNetPcap is supplied with a core set of protocol headers, but the
+list is not complete. The API provides a mechanism for extending and
+adding additional protocols to the framework. Protocol header
+contributions are welcome.</p>
+
+<h1><a name="other_extensions">Other extensions?</a></h1>
+
+<p>Currently no other extensions are supported, but can easily be
+added once suitable candidates are found such as <em>AirPcap</em> from <a
+	href="http://cacetech.com">http://cacetech.com</a> , as long licensing
+terms permit it.</p>
+<small>Note: currently there are no plans to support <em>AirPcap</em>
+as an extension. The name was arbitrarily chosen as an example of
+another <em>libpcap</em> extension.</small>
+
+<h1><a name="requirements">Java requirements</a></h1>
+
+Requires the binary
+<em>libpcap</em>
+,
+<em>libpcap-dev</em>
+or
+<em>WinPcap</em>
+packages to be installed, as appropriate for each platform, on any given
+system (downloadable from
+<a href="http://winpcap.org"><em>WinPcap</em> website</a>
+or appropriate package repository for unix systems.) jUnit tests are
+distributed in source form found in the
+<em>tests/java</em>
+directory. No compiled classes are currently supplied of jUnit tests
+with the binary release. Any
+<a href="junit.org">jUnit library</a>
+is sufficient to compile and run all jUnit test cases. Build environment
+requires ANT, ANT's contrib
+<a href="http://ant-contrib.sourceforge.net">cpptasks</a>
+, and a C++ compiler. Currently
+<em>jNetPcap</em>
+compiles using
+<a href="http://mingw.org">MinGW</a>
+gcc compiler and environment on win32 platform and under regular gnu
+gcc/g++ on linux. No
+<em>Makefiles</em>
+are used nor required.
+
+<h1><a name="other_wrappers">Other java <em>libpcap</em>
+wrappers</a></h1>
+
+<p>Here is a little introduction to other java wrappers (unrelated
+to <em>jNetPcap</em>), in order to clear up the confusion between
+various like sounding projects in relation to a java wrapper for native
+<em>libpcap</em>. The <em>jNetPcap</em> is completely independent
+project from all other java <em>libpcap</em> wrappers. The names of the
+projects may sound similar but the implementation and goals of each
+project were much different.</p>
+<p>Two non related projects that <em>jNetPcap</em> team is aware of
+are both named the same <b>jPcap</b> and they both provide two different
+APIs and implementations. Please see each project's website for more
+detail:
+<ul>
+	<li>jPcap on SourceForge: <a href="http://jpcap.sourceforge.net">homepage</a></li>
+	<li>jPcap by Mr. Keita Fujii: <a
+		href="http://netresearch.ics.uci.edu/kfujii/jpcap/doc/">homepage</a>
+</ul>
+<p>(<b>Note:</b> for the most upto date list of all wrappers for <em>libpcap</em>
+library look at <a
+	href="http://en.wikipedia.org/wiki/Libpcap#Wrappers_for_use_of_libpcap.2FWinPcap_in_languages_other_than_C_and_C.2B.2B">Wikipedia
+webpage for libpcap</a> .)</p>
+Both of
+<em>jPcap</em>
+projects provide some kind of packet decoding facility, but are limited
+on the
+<em>libpcap</em>
+features they expose. Starting with release 1.2,
+<em>jNetPcap</em>
+also provides limited packet decoding capabilities. If you require
+higher level API that is object oriented, follows java programming
+paradigm, provides full packet decoding and capture file manipulation,
+we also recommend
+<a href="http://jnetstream.org"><em>jNetStream</em></a>
+, a sister project, that is built on top of
+<em>jNetPcap</em>
+.
+</body>

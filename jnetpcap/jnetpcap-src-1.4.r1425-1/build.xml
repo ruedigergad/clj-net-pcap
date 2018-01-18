@@ -729,6 +729,7 @@
 		<echo message="compiling JNI C++ files to object code" />
         <echo message="using ${compiler.cc.cmd} compiler" />
 		<echo message="system include = ${java.sdk.include.dir}" />
+
 		<cc runtime="dynamic" outtype="shared" outfile="${build.lib.dir}/${lib.pcap.basename}" debug="${compiler.debug}" objdir="${build.obj.dir}" multithreaded="compiler.multithreaded" exceptions="compiler.exceptions" warnings="${compiler.warnings}">
 
 			<env key="PATH" path="${compiler.cc.bin.dir};${env.PATH}" />
@@ -788,6 +789,86 @@
 		<property name="jni.lib.file" value="${build.lib.dir}/${lib.pcap.name}" />
 		<property name="jni.lib.pcap100.file" value="${jni.build.pcap100.filepath}" />
 		
+		<echo message="Cleanup modified libpcap.so" />
+		<delete file="${build.libpcap.so}" />
+
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- Generates shared JNI library file from C++ sources                  -->
+	<!-- =================================================================== -->
+	<target name="comp-jni-freebsd" depends="check-libpcap-version,prep-checks,prep-jni,prep-lib,comp-javah,prep-libpcap" if="platform.freebsd">
+
+		<!-- Not supplying "outtype", disables the LINKER in CC tag
+			outtype="shared"
+			outfile="${build.library.filename.nosuffix}"
+				<linkerarg value="- -add-stdcall-alias" />
+		-->
+		<echo>arch=${os.arch}</echo>
+		<echo>name=${os.name}</echo>
+
+		<echo message="Using pcap version ${compiler.LIBPCAP_VERSION}" />
+		<echo message="compiling JNI C++ files to object code" />
+        <echo message="using ${compiler.cc.cmd} compiler" />
+		<echo message="system include = ${java.sdk.include.dir}" />
+
+		<cc runtime="dynamic" outtype="shared" outfile="${build.lib.dir}/${lib.pcap.basename}" debug="${compiler.debug}" objdir="${build.obj.dir}" multithreaded="compiler.multithreaded" exceptions="compiler.exceptions" warnings="${compiler.warnings}">
+
+			<env key="PATH" path="${compiler.cc.bin.dir};${env.PATH}" />
+
+			<fileset dir="${src.c.dir}" includes="*.cpp" />
+			<includepath location="${build.include.dir}" />
+			<includepath location="${src.c.dir}" />
+			<sysincludepath location="/usr/local/openjdk8/include" />
+            <sysincludepath location="/usr/local/openjdk8/include/freebsd" />
+			<defineset define="LIBPCAP_VERSION=0x${compiler.LIBPCAP_VERSION}" if="compiler.LIBPCAP_VERSION" />
+			<defineset define="DEBUG" if="DEBUG" />
+
+			<linker name="${compiler.ld.cmd}">
+				<syslibset libs=":../lib/libpcap.so" />
+
+				<linkerarg value="-Wl,-soname,lib${lib.pcap.basename}.so" />
+
+				<linkerarg value="-lstdc++" />
+			</linker>
+		</cc>
+
+		<cc runtime="dynamic" outtype="shared" outfile="${build.lib.dir}/${jni.pcap100.basename}" debug="${compiler.debug}" objdir="${build.obj.dir}" multithreaded="compiler.multithreaded" exceptions="compiler.exceptions" warnings="${compiler.warnings}">
+
+			<env key="PATH" path="${compiler.cc.bin.dir};${env.PATH}" />
+
+			<fileset dir="${src.c.dir}" >
+				<include name="*_pcap100.cpp" />
+				<include name="api_*.cpp" />
+			</fileset>
+			<includepath location="${build.include.dir}" />
+j			<includepath location="${src.c.dir}" />
+			<sysincludepath location="/usr/local/openjdk8/include" />
+            <sysincludepath location="/usr/local/openjdk8/include/freebsd" />
+			<defineset define="LIBPCAP_VERSION=0x${compiler.LIBPCAP_VERSION}" if="compiler.LIBPCAP_VERSION" />
+			<defineset define="DEBUG" if="DEBUG" />
+			<defineset define="FreeBSD" />
+
+			<linker name="${compiler.ld.cmd}">
+				<syslibset libs="jnetpcap,:../lib/libpcap.so" />
+				<libset dir="${build.lib.dir}" libs="jnetpcap" />
+
+				<linkerarg value="-Wl,-soname,${jni.pcap100.file}" />
+
+				<linkerarg value="-lstdc++" />
+			</linker>
+		</cc>
+
+		<echo message="Created shared JNI library: ${jni.build.pcap100.filepath}" />
+		<echo message="Created shared JNI library: ${jni.build.filepath}" />
+
+		<copy tofile="${build.lib.dir}/${lib.pcap.fullname}" file="${build.lib.dir}/${lib.pcap.name}" />
+
+		<echo message="Created shared JNI libary: ${build.lib.dir}/${lib.pcap.fullname}" />
+
+		<property name="jni.lib.file" value="${build.lib.dir}/${lib.pcap.name}" />
+		<property name="jni.lib.pcap100.file" value="${jni.build.pcap100.filepath}" />
+
 		<echo message="Cleanup modified libpcap.so" />
 		<delete file="${build.libpcap.so}" />
 
@@ -1057,7 +1138,7 @@ ed" exceptions="compiler.exceptions" warnings="${compiler.warnings}">
 	<!-- =================================================================== -->
 	<!-- Compiles java files using JavaDoc                                   -->
 	<!-- =================================================================== -->
-	<target name="comp-jni" depends="comp-jni-aix,comp-jni-rhel,comp-jni-linux,comp-jni-win32,comp-jni-win64">
+	<target name="comp-jni" depends="comp-jni-aix,comp-jni-rhel,comp-jni-linux,comp-jni-freebsd,comp-jni-win32,comp-jni-win64">
 	</target>
 
 

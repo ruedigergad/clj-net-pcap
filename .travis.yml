@@ -3,9 +3,9 @@ before_install:
   - sudo apt-get install libpcap0.8 -qq
   - sudo ln -s /usr/lib/x86_64-linux-gnu/libpcap.so.1.1.1 /usr/lib/x86_64-linux-gnu/libpcap.so
 script:
-  - sudo LEIN_ROOT=1 lein2 do javac, test
+  - sudo LEIN_ROOT=1 lein do javac, test
 after_script:
   - bash -ex test/coveralls.sh
-lein: lein2
+lein: lein
 jdk:
   - openjdk7

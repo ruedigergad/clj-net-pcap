@@ -30,6 +30,7 @@
   (let [user (System/getProperty "user.name")]
     (cond
       (is-os? "linux") (str "/tmp/" *lib-dir* "_" user "/")
+      (is-os? "freebsd") (str "/tmp/" *lib-dir* "_" user "/")
       (is-os? "windows") (str "C:\\TEMP\\" *lib-dir* "_" user "\\")
       :default (str "~/" *lib-dir* user "/"))))
 

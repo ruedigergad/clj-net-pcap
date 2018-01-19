@@ -30,9 +30,6 @@
 (def ^:dynamic *snap-len* 0x00080)
 
 
-(def lo "lo")
-(def any "any")
-
 
 (defn get-devices
   "Returns a vector containing all network devices found by Pcap or nil if an
@@ -56,6 +53,16 @@
   "Convenience function for checking if the device with dev-name exists."
   [dev-name]
   (not (nil? (get-device dev-name))))
+
+
+
+(def lo (cond
+          (device-exists? "lo") "lo"
+          (device-exists? "lo0") "lo0"
+          :default (println-err "Warning: Could not find name for loopback device.")))
+(def any "any")
+
+
 
 (defn create-online-pcap
   "Creates a Pcap instance and initializes it with the values for:

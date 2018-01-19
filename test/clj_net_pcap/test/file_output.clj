@@ -20,6 +20,7 @@
   (:use clojure.test
         clj-net-pcap.byte-array-extraction-dsl
         clj-net-pcap.core
+        clj-net-pcap.pcap
         clj-net-pcap.pcap-data
         clj-assorted-utils.util)
   (:import (clj_net_pcap PacketHeaderDataBeanIpv4UdpOnly)))
@@ -36,7 +37,7 @@
             clj-net-pcap.pcap/*snap-len* 64]
     (create-and-start-online-cljnetpcap
       #(file-out-forwarder ((partial process-packet-byte-buffer (create-extraction-fn dsl-expr)) %))
-      "lo"
+      lo
       "udp and (src port 2048) and (dst port 4096)")))
 
 (defn- create-test-cljnetpcap-bs2
@@ -47,7 +48,7 @@
             clj-net-pcap.pcap/*snap-len* 64]
     (create-and-start-online-cljnetpcap
       #(file-out-forwarder ((partial process-packet-byte-buffer-bulk (create-extraction-fn dsl-expr)) %))
-      "lo"
+      lo
       "udp and (src port 2048) and (dst port 4096)")))
 
 (defn stdout-formatter-fixture [f]

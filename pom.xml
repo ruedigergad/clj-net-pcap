@@ -3,16 +3,15 @@
   <groupId>clj-net-pcap</groupId>
   <artifactId>clj-net-pcap</artifactId>
   <packaging>jar</packaging>
-  <version>1.7.1</version>
+  <version>1.7.2</version>
   <name>clj-net-pcap</name>
   <description>clj-net-pcap is a wrapper/adapter/facade (No matter how you want to call it.)
                 around jNetPcap that enables and eases packet capturing and processing with Clojure.</description>
   <scm>
+    <url>https://github.com/ruedigergad/clj-net-pcap</url>
     <connection>scm:git:git://github.com/ruedigergad/clj-net-pcap.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/ruedigergad/clj-net-pcap.git</developerConnection>
-    <tag>57db4b5ee0a6fee90b52786f4a98e1e1121cdf19
-</tag>
-    <url>https://github.com/ruedigergad/clj-net-pcap</url>
+    <tag>c70578f6d39028db915eae4dd49567f90c976a0f</tag>
   </scm>
   <build>
     <sourceDirectory>src</sourceDirectory>
@@ -64,7 +63,7 @@
     </repository>
     <repository>
       <id>clojars</id>
-      <url>https://clojars.org/repo/</url>
+      <url>https://repo.clojars.org/</url>
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
@@ -80,27 +79,27 @@
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>clojure</artifactId>
-      <version>1.8.0</version>
+      <version>1.10.0</version>
     </dependency>
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>tools.cli</artifactId>
-      <version>0.2.4</version>
+      <version>0.4.1</version>
     </dependency>
     <dependency>
       <groupId>cli4clj</groupId>
       <artifactId>cli4clj</artifactId>
-      <version>1.2.7</version>
+      <version>1.7.1</version>
     </dependency>
     <dependency>
       <groupId>clj-assorted-utils</groupId>
       <artifactId>clj-assorted-utils</artifactId>
-      <version>1.17.1</version>
+      <version>1.18.3</version>
     </dependency>
     <dependency>
       <groupId>jnetpcap</groupId>
       <artifactId>jnetpcap</artifactId>
-      <version>1.4.r1425-1f</version>
+      <version>1.4.r1425-1g</version>
     </dependency>
   </dependencies>
 </project>

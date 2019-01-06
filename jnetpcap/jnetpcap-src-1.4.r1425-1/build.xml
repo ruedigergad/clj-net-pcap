@@ -744,8 +744,6 @@
 
 
 			<linker name="${compiler.ld.cmd}">
-				<syslibset libs=":../lib/libpcap.so" />
-
 				<linkerarg value="-Wl,-soname,lib${lib.pcap.basename}.so" />
 
 				<linkerarg value="-lstdc++" />

@@ -1,0 +1,24 @@
+set terminal pdfcairo font 'Times,18';
+set output "packet_per_second_plot.pdf";
+set yrange [0:1000]
+set xrange [0:1500]
+set xlabel "Ethernet Frame Size [x100 byte]"
+set ylabel "Packet Rate [Kpps]"
+set nokey
+set grid
+set xtics 0, 1, 15
+set key top right
+#set title "Theoratical, simplified estimate of expected throughput"; 
+# total_frame_size = payload_size + preamble + sfd + dst + src + type + crc
+#                  =       x      +     7    +  1  +  6  +  6  +  2   +  4
+#                  =       x      +    26 
+# total_on_wire = total_frame_size + inter_frame_gap
+#               = total_frame_size + 12
+# 
+# packet_rate = bandwidth / total_on_wire
+plot [0:15]  (x >= 1  && x <= 15) ? ((1000 / 8) / ((x*100) + 18 + 12)) * 1000 : 1/0 with lines linewidth 12 lt rgb "red" title "Theoretic",\
+     "baseline.data" using ($1/100):($2/1000) with linespoints linewidth 8 pointtype 2 ps 2 lt rgb "blue" title "Host B",\
+     "baseline.data" using ($1/100):($3/1000) with linespoints linewidth 8 pointtype 1 ps 2 lt rgb "green" title "Mirror Port";
+
+#     "baseline_test_setup_pps.data" using 1:($2/1000) with linespoints linewidth 4,\
+

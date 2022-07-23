@@ -1,0 +1,18 @@
+# -*- text -*-
+##############################################################################
+# Nexans Active Networking Systems dictionary  http://www.nexans.de/ans
+#
+# Version:      $Id: dictionary.nexans 28946 2009-07-06 12:39:58Z wmeier $
+#
+#               Hubert Theissen <h.theissen@nexans.com>
+#
+##############################################################################
+
+VENDOR		Nexans				266
+
+BEGIN-VENDOR	Nexans
+
+ATTRIBUTE	Nexans-Port-Default-VLAN-ID		1	integer
+ATTRIBUTE	Nexans-Port-Voice-VLAN-ID		2	integer
+
+END-VENDOR      Nexans

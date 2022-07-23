@@ -1,0 +1,6 @@
+#!/bin/sh
+
+rm -f /usr/lib/libjnetpcap.so
+rm -f /usr/share/java/jnetpcap.jar
+
+exit 0

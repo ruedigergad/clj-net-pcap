@@ -1,0 +1,102 @@
+################################################################################
+# File: BuildInstructions.txt
+# Author: Mark Bednarczyk
+# Description: the file describes in detail, the build process of this project.
+################################################################################
+
+
+The project contains very broad support for automatic builds, distributions,
+releases, deployments and testing. The build process is broken up into several
+stages all run by ANT build files. There are no make files, even to compile the
+C++ JNI code and create a dynamic JNI library.
+
+Each stage consists of its own ANT build file. Each build file reads in a
+separate "common.properties" file and a build file specific properties file with
+the same prefix as the build file and suffix of ".properties" 
+(i.e. dist.properties). 
+
+Below is the tree structure describing each stage of the build process and its 
+ANT targets. The tree structure uses EBNF syntax with the exception off 
+comments:
+
+----------------------------- BUILD STAGE --------------------------------------
+build.xml - compiles source code. All files go into build/ directory
+			Notice that in build stage, all the layed out build components 
+			utilize much flatter directory structure, then other stages 
+--------------------------------------------------------------------------------
+
+all: tests	comp-api	; tests actually kicks off all the targets, minus API
+
+clean: 					; cleans the main build/ directory 
+
+prep-build:				; creates main build/ directory
+prep-java: 	prep-build	; creates classes/ directory
+prep-jni:	prep-build	; creates obj/ and jni/ directories
+prep-pcap:	prep-build	; unzips the Libpcap SDK into the build/ directory
+prep-api:	prep-build	; creates api/ directory
+prep-tests:				; empty does nothing
+prep-javah:	prep-build	; creates includes/ directory
+
+compile:				; compiles all sources except jUnit tests
+	:	comp-java
+	:	comp-jni
+	
+comp-jni
+	:	prep-jni		; compiles src/c using gcc (mingw on Win32, gcc on unix)
+		comp-javah		
+		
+comp-javah:				; generates JNI header files using javah
+	:	prep-javah
+		comp-java		; needs compiled classes, not source
+		
+comp-java:	prep-java	; compiles src/java using javac
+
+tests:		comp-tests	; runs jUnit test suites and individual cases
+comp-tests:				; compiles jUnit test cases in tests/ directory
+	:	prep-tests
+		comp-java
+		comp-jni
+
+comp-api:	prep-api	; JavaDoc API
+
+----------------------------- DISTRIBUTION STAGE -------------------------------
+dist.xml - copies files into a sandbox that is ready for distribution in dist/
+--------------------------------------------------------------------------------
+all
+	:	tests
+		dist-bin
+		dist-src
+		dist-docs
+		
+prep-bin: 
+prep-src:
+prep-docs:				; creates the main docs/ directory
+prep-tests:				; prepares tests/ dir and jUnit jar file
+		
+tests:		dist-tests
+
+dist-bin:				; copies binary files for distribution, min docs
+	:	docs-notes
+		dist-lib		; need the 3rd party libraries
+		
+dist-src:				; copies source files for distribution
+	:	dist-src-tests
+		dist-notes
+		dist-lib		; need libraries inorder to allow user to build sources
+		
+dist-src-tests:			; copies jUnit test sources
+dist-tests:	dist-bin	; copies jUnit test classes, needs bin
+dist-lib:	prep-lib	; copies the prereq libraries 
+
+dist-docs				; comprehensive documentation package for distribution
+	:	docs-notes
+		docs-api		; very large disk size
+		
+docs-notes:				; license and copyright files, this file, etc...
+docs-api:				; All JavaDoc API files, very large
+
+
+
+
+
+

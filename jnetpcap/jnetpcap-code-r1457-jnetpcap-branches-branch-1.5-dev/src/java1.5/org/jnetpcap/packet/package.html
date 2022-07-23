@@ -1,0 +1,192 @@
+<body>
+Packet decoding framework. Packet buffers are scanned and decoded.
+
+<h2>Overview</h2>
+The package adds new
+<code>loop</code>
+and
+<code>dispatch</code>
+methods that deliver decoded packets to the registered handler. The
+class JPacket allows the programmer to check for existance of certain
+protocol headers within the packet's data buffer. The programmer can use
+a header to then access any of the fields and logic for that protocol.
+<p>Here is an example of what a JPacketHandler might look like:
+<pre>
+JPacketHandler<String> handler = new JPacketHandler<String>() {
+  private Ethernet eth = new Ethernet();
+  private Ip4 ip = new Ip4();
+  
+  public void nextPacket(JPacket packet, String user) {
+    if (packet.hasHeader(Ethernet.ID)) {
+      eth = packet.getHeader(eth);
+      byte[] dstMac = eth.destination();
+      byte[] srcMac = eth.source();
+      int type = eth.type();
+      // Do something
+    }
+    
+    /*
+     * For convenience there is a hasHeader method that takes a header instance
+     * and combines hasHeader with getHeader methods if the header exists.
+     */
+    if (packet.hasHeader(ip)) {      
+      int flags = ip.flags();
+      int offset = ip.offset();
+      byte[] srcIp = ip.source();
+      byte[] dstIp = ip.destination();
+      int protocol = ip.protocol();
+    }
+    
+    // Or can simply print out the contents of the packet
+    System.out.println(packet.toString());
+  }
+}
+</pre>
+The example demonstates a
+<code>JPacketHandler</code>
+implementation, which gets passed into
+<code>loop/dispatch</code>
+methods and receives packets. The handler's
+<code>nextPacket</code>
+method receives a fully decoded packet. The information about which
+headers exist, where in the buffer and how long they are is recorded in
+native structures which
+<code>JPacket, JPacket.State, JHeader, JHeader.State</code>
+classes access. The method
+<code>JPacket.hasHeader</code>
+is a simply bitwise operation on an unsigned integer that is very
+efficient and fast.
+</p>
+<p>The typical steps for working with the packet objects is first to
+check if the header the user is insterested in exists in the packet, has
+been found by the packet scanner, and then request that user supplied
+header instance is peered with the native structures that describe that
+header.(Peering means that the physical address of the native structure
+is recorded somewhere in the java class beeing peered and afterwards
+that class uses that pointer to access and retrieve data from the
+physical native structure or buffer.) 
+<h2><a
+	href="https://sourceforge.net/tracker2/?func=detail&aid=2292402&group_id=164277&atid=831086">Feature
+#2292402:</a> A packet decoding framework</h2>
+This feature "packet decoding framework" extends basic jNetPcap
+capabilities of capturing a network packet or reading it from an offline
+file, then delivering that packet as a raw byte buffer to a PcapHandler
+which is a user provided callback object. The packet framework adds
+additional capabilities where the raw byte buffer is decoded into an
+array of headers contained within a PcapPacket or more commonly a super
+class JPacket.
+<p>The framework provides additional <code>Pcap.loop and
+Pcap.dispatch</code> methods which allow the user to supply a <code>JPacketHandler</code>,
+as opposed to <code>PcapHandler</code>, which delivers a decoded <code>JPacket</code>
+object to the user's callback method <code>JPacketHandler.nextPacket(JPacket
+packet, Object user)</code></p>
+<p><code>JPacket</code> class is the main interface to the decoded
+packet information, specifically; which protocol headers exist in the
+packet, found by scanning the raw byte buffer, and detailed information
+on those headers. The user can query a <code>JPacket</code> using
+methods <code>JPacket.hasHeader(int id)</code>, <code>JPacket.getHeader(T
+header):&lt;T extends JHeader&gt; T</code> and <code>JPacket.getCaptureHeader()</code>
+which returns the capture information such as timestamp and wirele
+(length of the packet as seen on the network wire.)</p>
+<p>There are also numerous support and other implementation classes
+such as
+<ul>
+	<li>JRegistry - is a singleton class where all the protocol
+	headers and inter protocol bindings are registered. JRegistry also
+	maintains and assigns numerical protocol IDs. These are dynamically
+	assigned IDs that have no relationship to IDs in PcapDLT or libpcap
+	header files.</li>
+
+	<li>JScanner - concrete class that performs the actual scan of the
+	contents of the raw packet buffer. This class records this information
+	in native structures which are then associated with JPacket and JHeader
+	objects (peered with.)</li>
+
+	<li>JProtocol - an enum table that lists all of the core protocols
+	provided by jNetPcap API.</li>
+	<li>JBinding - class that allows new inter protocol bindings to be
+	registered or override any existing bindings already set, even on core
+	protocols. You use this class to define how one protocol is bound to
+	another. For example you can bind HTML protocol header on a different
+	port, other than the defacto standard 80. As a matter of fact you can
+	supply any kind of logic using this class which will determine the next
+	protocol header that should follow the one that the binding was bound
+	to.</li>
+</ul>
+<h3>Advanced: Scanner implementation details</h3>
+It is time to discuss the JScanner class and how it works behind the
+scenes. The scanner is actually implemented completely in native code.
+It is a tight loop that scans the raw packet buffer (an array of raw
+bytes or chars using C symantics) starting at the begining of the buffer
+and assuming what the first header is, which is specified to it from
+java space (can be automatically discovered using Pcap.datalink() method
+or user supplied). The scanner uses numerical ids, assigned and
+maintained by JRegistry, in the scanning and recoding process. As
+headers are discovered information about those headers is recorded.
+<p>The scanner implementation is almost completely in native code.
+The scanner when its initialized allocates a large native memory block
+to hold its state and state about every packet it decodes. A pointer
+into the buffer is maintained which points to memory space where packet
+state can be recorded. Pointer is advanced for each packet that is being
+scanned. When the buffer is exhausted and the end is reached, the buffer
+simply wraps around to the beginning and the buffer is reused. This is
+the same algorithm that native libpcap uses for its capture buffer. So
+both the raw packet buffer, maintained by libpcap, and the packet
+decoded state information, maintained by JScanner, are kept in
+temporary, roundrobin buffers. This is something that also applies to
+other Pcap.loop and Pcap.dispatch methods that only dispatch raw byte
+buffers.
+<p>As packets arrive and the scanner is asked to scan them, it
+increments a pointer to a packet_state_t structure, within its buffer.
+The packet_state_t structure is where information is recorded about each
+headers. First there is a compress bitmap which using header's numerical
+IDs, records information about the presence of a header by setting a bit
+in this bitmap (an unsigned integer). Calls to JPacket.hasHeader(int id)
+simply check if a bit is set for a specific header ID and return true or
+false. Therefore JPacket.hasHeader checks are very light and fast and
+can be made frequently without having to worry about performance.
+Secondly, the scanner also records header's position within the buffer
+and the header's length. That information is also recorded in
+packet_state_t which has a header_state_t array member. The last header
+is typically a payload header, a special header that is catch all and
+captures the remainder of the packet that was not matched with any
+protocol header.</p>
+<h3>Native JScanner structures</h3>
+<p>Before we begin on native structures, lets look at the class
+inheritance tree.
+<pre>
+jMemory
++-> JBuffer 
+|   +-> JPacket - peered with libpcap packet data buffer
+|
++-> JStruct
+    +-> JPacket.State - peered with JScanners packet_state_t structure
+    +-> JHeader.State - peered with JScanners header_state_t structure
+</pre>
+Further more, JPacket maintains an internal reference to a JPacket.State
+object as a private field. That is JPacket is peered with libpcap packet
+buffer, while a separate JPacket.State object is peered with the
+JScanner packet state structure. Notice that JPacket extends JBuffer,
+therefore any JPacket can be used as a normal JBuffer providing full
+access to all of the packets raw contents. The state information is
+allocated and maintained by JScanner.
+</p>
+<p>Packets are assigned a packet_state_t structure by peering a java
+class with this native memory structure. jNetPcap uses the concept of
+native peers by holding the physical memory address as a internal
+private field within the java object. Native functions when called upon,
+retrieve this address location, cast a local pointer to that physical
+memory location for the structure that the class is peered with and then
+access that information. So a JPacket.State object is peered with a
+packet_state_t structure (residing in native memory) by simply changing
+a single java field. Java objects that are peered, hold very little
+additional information about the structure. There are some additional
+fields that are maintained for security purposes such as the size of the
+memory block and who the java owner of that memory block is. This
+information is only maintained for security and deallocation of memory
+purposes when the java parent object is garbage collected. This peering
+mechanism allows previously allocated packets to be reused extrememly
+efficiently, by simply changing a single pointer to a packet_state_t
+structure within it and changing the state of the packet immediately.
+JHeaders also maintain their state in this way.</p>
+</body>

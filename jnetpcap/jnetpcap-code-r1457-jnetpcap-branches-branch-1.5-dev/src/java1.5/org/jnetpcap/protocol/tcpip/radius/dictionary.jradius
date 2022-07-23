@@ -1,0 +1,18 @@
+# -*- text -*-
+##############################################################################
+#
+#	jradius VSAs.  See http://jradius.org
+#
+#	$Id: dictionary.jradius 28946 2009-07-06 12:39:58Z wmeier $
+#
+##############################################################################
+
+VENDOR		JRadius				19211
+
+BEGIN-VENDOR	JRadius
+
+ATTRIBUTE	JRadius-Request-Id			1	string
+ATTRIBUTE	JRadius-Session-Id			2	string
+ATTRIBUTE	JRadius-Proxy-Client			3	octets
+
+END-VENDOR	JRadius

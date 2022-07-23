@@ -1,0 +1,114 @@
+<body>
+<p>WinPcap extensions to libpcap avialable on a limited set of
+platforms. This package adds additional functionality provided by
+WinPcap library widely available on win32 based platforms. These
+extensions are optional and are not available on unix based platforms.</p>
+<h1>Checking for WinPcap extension availability</h1>
+Before you utilize any of the extension in this package, the programmer
+must first check if the extensions are available on this particular
+platform. To do that use
+<code>WinPcap.isSupported()</code>
+method which returns a boolean value. A return value of
+<code>true</code>
+means that the extensions are supported and available, while a value of
+<code>false</code>
+means they are not. All methods will throw an
+<code>PcapExtensionNotAvailableException</code>
+if used and the extensions are not supported on this particular
+platform. Therefore it is essential to always perform this check before
+relying on these extensions.
+
+<h1>Main WinPcap Extension Highlights</h1>
+<p>WinPcap improves greatly on libpcap. Since WinPcap is more then
+just a libbrary (its actually a set of kernel drivers as well), it kind
+of holds keys to many key resources within the native platform it was
+designed to run on.</p>
+<p>Main features:
+<ul>
+	<li>Control of kernel buffer</li>
+	<li>Change of capture type from normal capture to sampling</li>
+	<li>For raw network statistics, can engage the kernel to collect
+	those statistics and deliver them to the application. Much more
+	efficient</li>
+	<li>Samples captures. Allows capturing only a sample of the
+	packets instead of every single one. Several sampling modes are
+	available.</li>
+	<li>Packet queues which allow the programmer to send, very
+	efficiently a larger set of packets. These packets are sent using raw
+	link layer where you have to supply even the link header, i.e.
+	Ethernet.</li>
+	<li>Remote network interface and file listing. List files and
+	interfaces on any WinPcap capable machine running WinPcaps's rpcapd
+	deamon.</li>
+	<li>Remote capture. Capture packets remotely with the same
+	flexibility as being local.</li>
+</ul>
+</p>
+<h1>WinPcap Source String Syntax</h1>
+WinPcap introduced a URI style syntax for addressing local and remote
+resources using a single
+<code>open</code>
+call, called a
+<em>source string</em>
+. The source string is used for both
+<code>open</code>
+and
+<code>findAllDevsEx</code>
+methods. A utility method is provided to help you build a
+<em>source string</em>
+from individual components,
+<code>createSrcStr(StringBuilder, int, String, String, String,
+StringBuilder)</code>
+. The method does take quiet a few parameters, but most of them are
+optional and null can be supplied instead. With the utility method you
+can build
+<em>source strings</em>
+based on user interactions. The result is stored in the first
+StringBuilder which is essentially a char buffer.
+<p>Here is a listing of various <em>source string</em> formats
+allowed by the <code>open</code> method:
+<ul>
+	<li>file://path_and_filename - opens a local file
+	<li>rpcap://devicename - opens the selected device devices
+	available on the local host, without using the RPCAP protocol
+	<li>rpcap://host/devicename - opens the selected device available
+	on a remote host
+	<li>rpcap://host:port/devicename - opens the selected device
+	available on a remote host, using a non-standard port for RPCAP
+	<li>adaptername - to open a local adapter; kept for compability,
+	but it is strongly discouraged
+	<li>null - to open the first local adapter; kept for compability,
+	but it is strongly discouraged
+</ul>
+</p>
+<p>The formats allowed by <code>findAllDevsEx</code> method are:
+<ul>
+	<li>file://folder/ - lists all the files in the given folder
+	<li>rpcap:// - lists all local adapters
+	<li>rpcap://host:port/ - lists the devices available on a remote
+	host
+</ul>
+</p>
+<p>And some examples:
+<ul>
+	<li>rpcap://host.foo.bar/devicename [everything literal, no port
+	number]
+	<li>rpcap://host.foo.bar:1234/devicename [everything literal, with
+	port number]
+	<li>rpcap://10.11.12.13/devicename [IPv4 numeric, no port number]
+
+	
+	<li>rpcap://10.11.12.13:1234/devicename [IPv4 numeric, with port
+	number]
+	<li>rpcap://[10.11.12.13]:1234/devicename [IPv4 numeric with IPv6
+	format, with port number]
+	<li>rpcap://[1:2:3::4]/devicename [IPv6 numeric, no port number]
+	<li>rpcap://[1:2:3::4]:1234/devicename [IPv6 numeric, with port
+	number]
+	<li>rpcap://[1:2:3::4]:http/devicename [IPv6 numeric, with literal
+	port number]
+</ul>
+</p>
+<em>(Credit for most doc comments: WinPcap manual)</em>
+
+</body>

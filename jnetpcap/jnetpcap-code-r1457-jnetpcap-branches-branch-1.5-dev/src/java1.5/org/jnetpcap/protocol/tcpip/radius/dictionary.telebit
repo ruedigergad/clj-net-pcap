@@ -1,0 +1,15 @@
+# -*- text -*-
+#
+#	Telebit dictionary
+#	$Id: dictionary.telebit 28996 2009-07-07 17:52:03Z wmeier $
+#
+VENDOR		Telebit				117
+
+BEGIN-VENDOR	Telebit
+
+ATTRIBUTE	Telebit-Login-Command			1	string
+ATTRIBUTE	Telebit-Port-Name			2	string
+ATTRIBUTE	Telebit-Activate-Command		3	string
+ATTRIBUTE	Telebit-Accounting-Info			4	string
+
+END-VENDOR	Telebit

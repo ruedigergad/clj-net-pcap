@@ -1,0 +1,91 @@
+### Eclipse Workspace Patch 1.0
+#P jnetpcap-1.3
+Index: src/java1.5/org/jnetpcap/nio/JMemory.java
+===================================================================
+--- src/java1.5/org/jnetpcap/nio/JMemory.java	(revision 1210)
++++ src/java1.5/org/jnetpcap/nio/JMemory.java	(working copy)
+@@ -13,6 +13,10 @@
+ package org.jnetpcap.nio;
+ 
+ import java.nio.ByteBuffer;
++import java.util.HashMap;
++import java.util.LinkedList;
++import java.util.List;
++import java.util.Map;
+ 
+ import org.jnetpcap.Pcap;
+ import org.jnetpcap.packet.PeeringException;
+@@ -322,9 +326,40 @@
+ 
+ 		this.ref = createReference(this.physical, size);
+ 
++		Entry e = used.get(physical);
++		if (e == null) {
++			used.put(physical, e = new Entry());
++		}
++		
++		e.count++;
++		e.list.add(toString());
++
++		if (e.count != 1) {
++			throw new IllegalStateException(
++					String.format("already allocated 0x%X=>%s",
++							physical,
++							e.toString()));
++		}
++
++		if (e.list.get(0).equals("struct null")) {
++			System.out.printf("FOUND: struct null 0x%X/%d%n", physical, size);
++			new IllegalStateException("FOUND: struct null").printStackTrace();
++//			throw new IllegalStateException("FOUND: struct null");
++		}
+ 		return physical;
+ 	}
+ 
++	public static class Entry {
++		public int count;
++		public List<String> list = new LinkedList<String>();
++		
++		public String toString() {
++			return String.format("count=%d %s", count, list.toString());
++		}
++	}
++
++	static Map<Long, Entry> used = new HashMap<Long, Entry>();
++
+ 	/**
+ 	 * Checks if this peered object is initialized. This method throws
+ 	 * IllegalStateException if not initialized and does not return any values.
+Index: src/java1.5/org/jnetpcap/nio/JMemoryReference.java
+===================================================================
+--- src/java1.5/org/jnetpcap/nio/JMemoryReference.java	(revision 1193)
++++ src/java1.5/org/jnetpcap/nio/JMemoryReference.java	(working copy)
+@@ -41,9 +41,19 @@
+ 	 * Does a native memory cleanup
+ 	 */
+ 	protected void disposeNative(long size) {
++
++		JMemory.Entry e = JMemory.used.get(address);
++		if (e == null || e.count != 1) {
++			throw new IllegalStateException(String.format("double freeing 0x%X=>%s",
++					address,
++					e.toString()));
++		}
+ 		disposeNative0(address, size);
++		
++		e.list.remove(0);
++		e.count --;
+ 	}
+-	
++
+ 	private native void disposeNative0(long address, long size);
+ 
+ 	/*
+@@ -62,7 +72,5 @@
+ 	public int size() {
+ 		return (int) size;
+ 	}
+-	
+-	
+ 
+ }

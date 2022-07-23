@@ -1,0 +1,18 @@
+# -*- text -*-
+##############################################################################
+#
+#	For Slipstream dialup accelerator servers
+#	Created based on
+# 	slipstream_sp_6.0_installation_and_configuration_guide.pdf
+#
+#	$Id: dictionary.slipstream 28946 2009-07-06 12:39:58Z wmeier $
+#
+##############################################################################
+
+VENDOR		Slipstream			7000
+
+BEGIN-VENDOR	Slipstream
+
+ATTRIBUTE	Slipstream-Auth				1	string
+
+END-VENDOR	Slipstream

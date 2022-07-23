@@ -1,0 +1,76 @@
+xlC 
+-D "AIX" 
+-o obj 
+-c 
+-g 
+-I. 
+-I/home/u0011723/sqlShark/libpcap-1.2.1  
+-I./include 
+-I../src/c 
+-I/usr/java6/include 
+../src/c/jnetpcap.cpp 
+../src/c/packet_flow.cpp 
+../src/c/packet_jheader.cpp 
+../src/c/jnetpcap_pcap_header.cpp 
+../src/c/nio_jbuffer.cpp 
+../src/c/winpcap_stat_ex.cpp 
+../src/c/winpcap_send_queue.cpp 
+../src/c/winpcap_ext.cpp 
+../src/c/util_debug.cpp 
+../src/c/util_crc16.c 
+../src/c/jnetpcap_ids.cpp 
+../src/c/jnetpcap_dumper.cpp 
+../src/c/jnetpcap_utils.cpp 
+../src/c/util_in_cksum.cpp 
+../src/c/jnetpcap_beta.cpp 
+../src/c/nio_jmemory.cpp 
+../src/c/util_crc32.c 
+../src/c/packet_jsmall_scanner.cpp 
+../src/c/mac_addr_sys.c 
+../src/c/packet_protocol.cpp 
+../src/c/nio_jnumber.cpp 
+../src/c/packet_jheader_scanner.cpp 
+../src/c/packet_jscan.cpp 
+../src/c/mac_addr_dlpi.c 
+../src/c/util_checksum.cpp 
+../src/c/packet_jpacket.cpp 
+../src/c/winpcap_ids.cpp 
+../src/c/jnetpcap_bpf.cpp 
+../src/c/library.cpp
+
+ 
+
+cc -L/usr/local/lib -lstdc++ -g -shared -o libjnetpcap.so ../obj/jnetpcap.o ../obj/packet_flow.o ../obj/packet_jheader.o ../obj/jnetpcap_pcap_header.o 
+../obj/nio_jbuffer.o ../obj/winpcap_stat_ex.o ../obj/winpcap_send_queue.o ../obj/winpcap_ext.o 
+../obj/util_debug.o ../obj/util_crc16.o ../obj/jnetpcap_ids.o ../obj/jnetpcap_dumper.o 
+../obj/jnetpcap_utils.o ../obj/util_in_cksum.o ../obj/jnetpcap_beta.o ../obj/nio_jmemory.o 
+../obj/util_crc32.o ../obj/packet_jsmall_scanner.o ../obj/mac_addr_sys.o ../obj/packet_protocol.o 
+../obj/nio_jnumber.o ../obj/packet_jheader_scanner.o ../obj/packet_jscan.o ../obj/mac_addr_dlpi.o 
+../obj/util_checksum.o ../obj/packet_jpacket.o ../obj/winpcap_ids.o ../obj/jnetpcap_bpf.o 
+../obj/library.o 
+-lpcap
+
+ 
+
+xlC 
+-o obj 
+-c 
+-g 
+-I. 
+-I/home/u0011723/sqlShark/libpcap-1.2.1  
+-I../build/include 
+-I../src/c -I/usr/java6/include 
+../src/c/jnetpcap_pcap100.cpp
+
+ 
+
+gcc 
+-L/usr/local/lib 
+-L. 
+-lstdc++ 
+libjnetpcap.so 
+-g 
+-shared 
+-o libjnetpcap-pcap100.so 
+../obj/jnetpcap_pcap100.o 
+-lpcap

@@ -669,7 +669,7 @@
 	<!-- =================================================================== -->
 	<!-- Generates shared JNI library file from C++ sources                  -->
 	<!-- =================================================================== -->
-	<target name="comp-jni-rhel" depends="prep-jni,prep-lib,comp-javah,prep-libpcap" if="platform.rhel">
+	<target name="comp-jni-rhel" depends="prep-jni,prep-lib,comp-javah" if="platform.rhel">
 
 		<!-- Not supplying "outtype", disables the LINKER in CC tag
      		outtype="shared"
@@ -839,7 +839,7 @@
 	<!-- =================================================================== -->
 	<!-- Generates shared JNI library file from C++ sources                  -->
 	<!-- =================================================================== -->
-	<target name="comp-jni-linux" depends="check-libpcap-version,prep-checks,prep-jni,prep-lib,comp-javah,prep-libpcap" if="platform.linux">
+	<target name="comp-jni-linux" depends="check-libpcap-version,prep-checks,prep-jni,prep-lib,comp-javah" if="platform.linux">
 
 		<!-- Not supplying "outtype", disables the LINKER in CC tag
      		outtype="shared"
@@ -923,7 +923,7 @@
 	<!-- =================================================================== -->
 	<!-- Generates shared JNI library file from C++ sources                  -->
 	<!-- =================================================================== -->
-	<target name="comp-jni-sunos" depends="check-libpcap-version,prep-checks,prep-jni,prep-lib,comp-javah,prep-libpcap" if="platform.sunox">
+	<target name="comp-jni-sunos" depends="check-libpcap-version,prep-checks,prep-jni,prep-lib,comp-javah" if="platform.sunox">
 
 		<!-- Not supplying "outtype", disables the LINKER in CC tag
      		outtype="shared"

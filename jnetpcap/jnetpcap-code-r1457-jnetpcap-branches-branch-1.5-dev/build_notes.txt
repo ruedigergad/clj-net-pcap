@@ -1,0 +1,4 @@
+Set JAVA_HOME
+Run: ant build-jar
+Run: ant comp-jni
+

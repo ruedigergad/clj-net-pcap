@@ -547,6 +547,107 @@ JNIEXPORT jint JNICALL Java_org_jnetpcap_Pcap_loop__ILorg_jnetpcap_PcapHandler_2
 }
 
 /*
+ * Class:     org_jnetpcap_DirectBulkByteBufferWrapper
+ * Method:    free
+ * Signature: (Ljava/nio/ByteBufferBuffer;)I
+ */
+JNIEXPORT jint JNICALL Java_org_jnetpcap_DirectBulkByteBufferWrapper_free__Ljava_nio_ByteBuffer_2
+(JNIEnv *env, jobject obj, jobject byteBuffer) {
+    void* addr = env->GetDirectBufferAddress(byteBuffer);
+
+    if (addr == NULL) {
+        return -1;
+    }
+
+    free(addr);
+    return 0;
+}
+
+/*
+ * Class:     org_jnetpcap_Pcap
+ * Method:    loop
+ * Signature: (IIIZZLorg/jnetpcap/BulkByteBufferHandler;Ljava/lang/Object;)I
+ */
+JNIEXPORT jint JNICALL Java_org_jnetpcap_Pcap_loop__IIIZZLorg_jnetpcap_BulkByteBufferHandler_2Ljava_lang_Object_2
+(JNIEnv *env, jobject obj, jint jcnt, jint bulkSize, jint snapLength, jboolean useIntTs, jboolean useIntermediateBuffer, jobject jhandler, jobject juser) {
+
+//	printf("LOOP-BulkByteBufferHandler\n"); fflush(stdout);
+	if (jhandler == NULL) {
+		throwException(env, NULL_PTR_EXCEPTION, NULL);
+		return -1;
+	}
+
+	pcap_t *p = getPcap(env, obj);
+	if (p == NULL) {
+		return -1; // Exception already thrown
+	}
+
+	/*
+	 * Structure to encapsulate user data object, and store our JNI information
+	 * so we can dispatch to Java land.
+	 */
+	cb_bulk_byte_buffer_t data;
+	data.env = env;
+	data.obj = jhandler;
+	data.pcap = obj;
+	data.user = juser;
+	data.p = p;
+	data.exception = NULL;
+	data.mid = BulkByteBufferHandlerNextPacketMID;
+
+    pcap_pkthdr dummyHdr;
+    int bulkBufferEntrySize = snapLength;
+    bulkBufferEntrySize += sizeof(dummyHdr.caplen);
+    bulkBufferEntrySize += sizeof(dummyHdr.len);
+    if (useIntTs) {
+        bulkBufferEntrySize += (2 * sizeof(int));
+    } else {
+        bulkBufferEntrySize += sizeof(dummyHdr.ts.tv_sec);
+        bulkBufferEntrySize += sizeof(dummyHdr.ts.tv_usec);
+    }
+
+
+    bulk_buffer_t wb_tmp;
+    wb_tmp.data = malloc(bulkBufferEntrySize * bulkSize);
+    wb_tmp.bytes = 0;
+    wb_tmp.packets = 0;
+    data.write_buffer = &wb_tmp;
+    if (useIntermediateBuffer) {
+        bulk_buffer_t rb_tmp;
+        rb_tmp.data = malloc(bulkBufferEntrySize * bulkSize);
+        rb_tmp.bytes = 0;
+        rb_tmp.packets = 0;
+        data.read_buffer = &rb_tmp;
+    } else {
+        data.read_buffer = NULL;
+    }
+    data.bulk_size = bulkSize;
+    data.bulk_buffer_entry_size = bulkBufferEntrySize;
+
+    int r = 0;
+
+    if (useIntermediateBuffer) {
+        if (useIntTs) {
+            r = pcap_loop(p, jcnt, cb_bulk_byte_buffer_dispatch_int_ts, (u_char *)&data);
+        } else {
+            r = pcap_loop(p, jcnt, cb_bulk_byte_buffer_dispatch, (u_char *)&data);
+        }
+    } else {
+        if (useIntTs) {
+            r = pcap_loop(p, jcnt, cb_bulk_byte_buffer_dispatch_direct_int_ts, (u_char *)&data);
+        } else {
+            r = pcap_loop(p, jcnt, cb_bulk_byte_buffer_dispatch_direct, (u_char *)&data);
+        }
+    }
+
+	if (data.exception != NULL) {
+		env->Throw(data.exception);
+	}
+
+	return r;
+}
+
+/*
  * Class:     org_jnetpcap_Pcap
  * Method:    loop
  * Signature: (ILorg/jnetpcap/ByteBufferHandler;Ljava/lang/Object;Lorg/jnetpcap/PcapHeader;)I

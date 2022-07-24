@@ -3437,6 +3437,19 @@ public class Pcap {
 	public native int setFilter(PcapBpfProgram program);
 
 	/**
+	 * Set immediate mode for a not-yet-activated capture handle. 
+	 *
+	 * @author Ruediger Gad
+	 * @param mode
+	 * @return returns 0 on success or {@link #ERROR_ACTIVATED} if called on a
+	 *         capture handle that has been activated
+	 * @see #isPcap100Supported()
+	 * @since 1.5
+	 */
+	@LibraryMember("pcap_set_immediate_mode")
+	public native int setImmediateMode(int mode);
+
+	/**
 	 * pcap_setnonblock() puts a capture descriptor, opened with
 	 * pcap_open_live(), into ``non-blocking'' mode, or takes it out of
 	 * ``non-blocking'' mode, depending on whether the nonblock argument is

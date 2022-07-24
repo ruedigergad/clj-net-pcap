@@ -1,1 +1,1 @@
-mvn deploy:deploy-file -Durl=https://clojars.org/repo -DrepositoryId=clojars -Dfile=jnetpcap-1.5.r1457-1a.jar -DpomFile=pom.xml
+mvn deploy:deploy-file -Durl=https://clojars.org/repo -DrepositoryId=clojars -Dfile=jnetpcap-1.5.r1457-1e.jar -DpomFile=pom.xml

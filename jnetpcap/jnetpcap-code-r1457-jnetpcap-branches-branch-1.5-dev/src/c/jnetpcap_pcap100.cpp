@@ -243,6 +243,27 @@ JNIEXPORT jint JNICALL Java_org_jnetpcap_Pcap_setDirection
 
 /*
  * Class:     org_jnetpcap
+ * Method:    setImmediateMode
+ * Signature: (I)I
+ */
+JNIEXPORT jint JNICALL Java_org_jnetpcap_Pcap_setImmediateMode
+  (JNIEnv *env, jobject obj, jint jmode) {
+#if (LIBPCAP_VERSION < LIBPCAP_PCAP_CREATE)
+	throwException(env, UNSUPPORTED_OPERATION_EXCEPTION, "");
+	return -1;
+#else
+	
+	pcap_t *p = getPcap(env, obj);
+	if (p == NULL) {
+		return -1; // Exception already thrown
+	}
+
+	return (jint) pcap_set_immediate_mode(p, (int) jmode);
+#endif
+}
+
+/*
+ * Class:     org_jnetpcap
  * Method:    setPromisc
  * Signature: (I)I
  */

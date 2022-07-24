@@ -6,13 +6,13 @@
                  [org.clojure/tools.cli "0.4.1"]
                  [cli4clj "1.7.1"]
                  [clj-assorted-utils "1.18.3"]
-                 [jnetpcap "1.4.r1425-1g"]]
+                 [jnetpcap "1.5.r1457-1e"]]
   :min-lein-version "2.0.0"
   :aot [#"^clj-net-pcap.*"]
   :global-vars {*warn-on-reflection* true}
   :main clj-net-pcap.main
   :java-source-paths ["src-java"]
-  :javac-options     ["-target" "1.6" "-source" "1.6"]
+  :javac-options     ["-target" "1.8" "-source" "1.8"]
 ;  :jvm-opts ["-Dnio.blocksize=1048576"]
   :omit-source true
   :html5-docs-docs-dir "ghpages/doc"

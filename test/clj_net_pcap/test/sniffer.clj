@@ -25,17 +25,17 @@
 
 (def receive-delay 1000)
 
-(deftest test-sniffer
-  (let [was-run (prepare-flag)
-        handler-fn (fn [_ _ _] (set-flag was-run))
-        pcap (create-and-activate-online-pcap lo)
-        sniffer (create-and-start-sniffer pcap handler-fn nil)]
-    (is (not (flag-set? was-run)))
-    (Thread/sleep receive-delay)
-    (.inject (pcap) (byte-array 1 (byte 0)))
-    (await-flag was-run)
-    (is (flag-set? was-run))
-    (stop-sniffer sniffer)))
+;(deftest test-sniffer
+;  (let [was-run (prepare-flag)
+;        handler-fn (fn [_ _ _] (set-flag was-run))
+;        pcap (create-and-activate-online-pcap lo)
+;        sniffer (create-and-start-sniffer pcap handler-fn nil)]
+;    (is (not (flag-set? was-run)))
+;    (Thread/sleep receive-delay)
+;    (.inject (pcap) (byte-array 1 (byte 0)))
+;    (await-flag was-run)
+;    (is (flag-set? was-run))
+;    (stop-sniffer sniffer)))
 
 (deftest test-forwarder
   (let [was-run (prepare-flag)
@@ -62,4 +62,3 @@
     (is (flag-set? was-run))
     (stop-sniffer sniffer)
     (stop-forwarder forwarder)))
-

@@ -75,13 +75,15 @@
       (println-err errmsg)
       (throw (RuntimeException. errmsg))))
   (let [err (StringBuilder.)
-        _ (println-err "Creating pcap with: buffer size =" *buffer-size*
+        _ (println-err "Creating pcap with: device =" dev-name
+                       "; buffer size =" *buffer-size*
                        "; snaplen =" *snap-len*
-                       "; and promiscuous mode (flags) = " *flags*)
+                       "; and promiscuous mode (flags) =" *flags*)
         pcap (doto (Pcap/create dev-name err)
                (.setBufferSize *buffer-size*)
                (.setPromisc *flags*)
-               (.setSnaplen *snap-len*))]
+               (.setSnaplen *snap-len*)
+               (.setImmediateMode 1))]
     (if (nil? pcap)
       (let [errmsg (str "An error occured while creating a pcap instance: " (str err))]
         (println-err errmsg)
@@ -161,7 +163,9 @@
         (condp = k
           :send-bytes-packet (.sendPacket ^Pcap pcap ^bytes arg)
           :start (let [run-fn (fn []
-                                (.loop pcap Pcap/LOOP_INFINITE arg nil))]
+                                (println "Starting pcap loop...")
+                                (.loop pcap Pcap/LOOP_INFINITE arg nil)
+                                (println "Leaving pcap loop..."))]
                    (dosync (ref-set pcap-thread (doto (Thread. run-fn) (.setName "PcapOnlineCaptureThread") (.setDaemon true) (.start)))))
           (throw (RuntimeException. (str "Unsupported operation for online pcap: " k " argument: " arg)))))
       ([k bulk-size use-intermediate-buffer handler]
@@ -173,7 +177,8 @@
                                   (.loop pcap Pcap/LOOP_INFINITE bulk-size 
                                          snap-len true handler nil)
                                   (.loop_direct pcap Pcap/LOOP_INFINITE bulk-size 
-                                         snap-len true handler nil)))]
+                                         snap-len true handler nil))
+                                (println "Leaving pcap loop..."))]
                    (dosync (ref-set pcap-thread (doto (Thread. run-fn) (.setName "PcapOnlineCaptureThread") (.start)))))
           (throw (RuntimeException. (str "Unsupported operation for online pcap: " k " arguments: " [bulk-size use-intermediate-buffer handler]))))))))
 

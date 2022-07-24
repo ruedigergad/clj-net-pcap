@@ -76,8 +76,8 @@
     (is (= {"PcapHeader" {"timestampInNanos" 1403685403642220000, "wirelen" 62},
             "DataLinkLayer" {"index" 0, "ProtocolType" "Ethernet", "destination" "33:33:00:00:00:02",
                              "source" "E8:9D:87:B1:45:2F", "next" 3},
-            "NetworkLayer" {"index" 1, "ProtocolType" "Ip6", "destination" "FF02:0000:0000:0000:0000:0000:0000:0002",
-                            "source" "FE80:0000:0000:0000:EA9D:87FF:FEB1:452F", "flowLabel" 0, "hopLimit" 255,
+            "NetworkLayer" {"index" 1, "ProtocolType" "Ip6", "destination" "FF02:0:0:0:0:0:0:0002",
+                            "source" "FE80:0:0:0:EA9D:87FF:FEB1:452F", "flowLabel" 0, "hopLimit" 255,
                             "trafficClass" 0, "next" 0}}
            (first my-maps)))))
 
@@ -150,7 +150,7 @@
   (let [my-maps (extract-maps-from-pcap-file "test/clj_net_pcap/test/data/icmpv6-router-solicitation.pcap")]
     (is (= 1 (count my-maps)))
     (is (= {"ipVer" 6,
-            "ipDst" "FF02:0000:0000:0000:0000:0000:0000:0002", "ipSrc" "FE80:0000:0000:0000:EA9D:87FF:FEB1:452F",
+            "ipDst" "FF02:0:0:0:0:0:0:0002", "ipSrc" "FE80:0:0:0:EA9D:87FF:FEB1:452F",
             "ethSrc" "E8:9D:87:B1:45:2F", "ethDst" "33:33:00:00:00:02",
             "ts" 1403685403642220000, "len" 62}
            (first my-maps)))))
@@ -160,7 +160,7 @@
         expected (doto (PacketHeaderDataBean.)
                    (.setTs 1403685403642220000) (.setLen 62)
                    (.setEthDst "33:33:00:00:00:02") (.setEthSrc "E8:9D:87:B1:45:2F")
-                   (.setIpDst "FF02:0000:0000:0000:0000:0000:0000:0002") (.setIpSrc "FE80:0000:0000:0000:EA9D:87FF:FEB1:452F")
+                   (.setIpDst "FF02:0:0:0:0:0:0:0002") (.setIpSrc "FE80:0:0:0:EA9D:87FF:FEB1:452F")
                    (.setIpVer 6))]
     (is (= 1 (count my-beans)))
     (is (= expected

@@ -286,10 +286,10 @@ typedef struct packet_state_t {
 	uint32_t pkt_caplen;    // Original packet size
 
 	int8_t pkt_header_count; // total number of main headers found
-	header_t *pkt_headers;  // One per header + 1 more for payload
+	header_t pkt_headers[8];  // One per header + 1 more for payload
 	
 	int8_t pkt_subheader_count;  // total number of sub headers found
-	header_t *pkt_subheaders;  // One per header + 1 more for payload
+	header_t pkt_subheaders[];  // One per header + 1 more for payload
 } packet_state_t;
 
 typedef struct scanner_t {

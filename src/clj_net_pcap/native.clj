@@ -32,17 +32,17 @@
       (is-os? "linux") (str "/tmp/" *lib-dir* "_" user "/")
       (is-os? "freebsd") (str "/tmp/" *lib-dir* "_" user "/")
       (is-os? "windows") (str "C:\\TEMP\\" *lib-dir* "_" user "\\")
-      :default (str "~/" *lib-dir* user "/"))))
+      :else (str "~/" *lib-dir* user "/"))))
 
 (defn pcap-lib-name
   "Get the pcap lib names depending on the OS."
   [p]
   (let [prefix (cond 
                  (is-os? "windows") ""
-                 :default "lib")
+                 :else "lib")
         suffix (cond
                  (is-os? "windows") ".dll"
-                 :default ".so")]
+                 :else ".so")]
     (str prefix p suffix)))
 (def pcap080
   (pcap-lib-name "jnetpcap"))
@@ -69,7 +69,7 @@
 (defn rm-native-lib-dir
   "Remove the native library temp directory."
   []
-  (if (dir-exists? (native-lib-dir))
+  (when (dir-exists? (native-lib-dir))
     (rmdir (native-lib-dir))))
 
 (defn copy-resource-to-file
@@ -89,21 +89,20 @@
 (defn remove-native-libs
   "Clean up native libs."
   []
-  (if (file-exists? (pcap-lib-path pcap080))
+  (when (file-exists? (pcap-lib-path pcap080))
     (rm (pcap-lib-path pcap080)))
-  (if (file-exists? (pcap-lib-path pcap100))
+  (when (file-exists? (pcap-lib-path pcap100))
     (rm (pcap-lib-path pcap100)))
   (rm-native-lib-dir))
 
 (defn extract-native-libs
   "Extract the native libraries."
   []
-  (do
-    (if (dir-exists? (native-lib-dir))
-      (remove-native-libs))
-    (mk-native-lib-dir)
-    (extract-native-lib pcap080)
-    (extract-native-lib pcap100)))
+  (when (dir-exists? (native-lib-dir))
+    (remove-native-libs))
+  (mk-native-lib-dir)
+  (extract-native-lib pcap080)
+  (extract-native-lib pcap100))
 
 (defn load-native-libs
   "Load the native libraries.

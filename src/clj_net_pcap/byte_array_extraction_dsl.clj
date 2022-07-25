@@ -16,11 +16,7 @@
 (ns
   ^{:author "Ruediger Gad",
     :doc "A simple DSL for extracting data from packets that are represented as byte arrays."}
-  clj-net-pcap.byte-array-extraction-dsl
-  (:require (clj-net-pcap [packet-offsets :as offsets]))
-  (:use clojure.pprint
-        clj-assorted-utils.util)
-  (:import (java.util HashMap Map)))
+  clj-net-pcap.byte-array-extraction-dsl)
 
 
 
@@ -35,7 +31,7 @@
       (or
         (keyword? offset-val)
         (string? offset-val)) (var-get (resolve (symbol (str "clj-net-pcap.packet-offsets/" (name offset-val)))))
-      :default (do
+      :else (do
                  (println "Error: Got unknown offset value" offset-val "from entry" e)
                  0))))
 
@@ -80,7 +76,7 @@
                                          (println "Could not resolve keyword/symbol:" s)
                                          v)))
             (list? transf-el) (conj v (into '() (reverse (create-transf-fn transf-el ba off))))
-            :default (conj v transf-el)))
+            :else (conj v transf-el)))
         [] transf-def))))
 
 (defn resolve-transf-fn
@@ -221,7 +217,7 @@
                               (println "Unknown type:" t)
                               (println "Defaulting to :java-maps")
                               (create-extraction-fn-body-for-java-map-type ba-sym offset-sym rules))))
-                      :default (println "Invalid DSL expression:" dsl-expression))
+                      :else (println "Invalid DSL expression:" dsl-expression))
 
 
 
@@ -258,4 +254,3 @@
    {:offset "ipv4-version" :transformation "int4high" :name "ipVer"}
    {:offset "udp-src" :transformation "int16" :name "udpSrc"}
    {:offset "udp-dst" :transformation "int16" :name "udpDst"}])
-

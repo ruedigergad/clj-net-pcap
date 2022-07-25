@@ -45,7 +45,7 @@
     (.startsWith ipv4-addr "192.168.") :class-c
     (.startsWith ipv4-addr "10.") :class-a
     (.startsWith ipv4-addr "172.") :class-b
-    :default nil))
+    :else nil))
 
 (defn guess-subnet
   "Try to guess the subnet address based on private network classes as defined in RFC 1918."
@@ -56,7 +56,7 @@
       (= :class-c n-class) (join "." (conj (vec (drop-last addr-bytes)) "0"))
       (= :class-a n-class) (join "." (reduce conj (vec (drop-last 3 addr-bytes)) (repeat 3 "0")))
       (= :class-b n-class) (join "." (reduce conj (vec (drop-last 2 addr-bytes)) (repeat 2 "0")))
-      :default nil)))
+      :else nil)))
 
 (defn guess-subnet-mask
   "Try to guess the subnet mask based on private network classes as defined in RFC 1918."
@@ -66,7 +66,7 @@
       (= :class-c n-class) "255.255.255.0"
       (= :class-a n-class) "255.0.0.0"
       (= :class-b n-class) "255.255.0.0"
-    :default nil)))
+    :else nil)))
 
 (defn guess-subnet-mask-bits
   "Try to guess the number of bits in the subnet mask based on private network classes as defined in RFC 1918."
@@ -76,7 +76,7 @@
       (= :class-c n-class) 24
       (= :class-a n-class) 8
       (= :class-b n-class) 16
-      :default nil)))
+      :else nil)))
 
 (defn prettify-addr-array
   "Convenience function to print addresses as strings."
@@ -86,7 +86,7 @@
       (= (alength a) 6) (FormatUtils/mac a)
       (= (alength a) 4) (FormatUtils/ip a)
       (= (alength a) 16) (FormatUtils/asStringIp6 a true)
-      :default (FormatUtils/asString a))
+      :else (FormatUtils/asString a))
     a))
 
 (defmacro process-protocol-headers-to-nested-maps
@@ -109,7 +109,7 @@
                                      {(cond
                                         (~'data-link-layer-protocols protocol-class#) "DataLinkLayer"
                                         (~'network-layer-protocols protocol-class#) "NetworkLayer"
-                                        :default protocol-class#)
+                                        :else protocol-class#)
                                       (reduce into
                                               [{}
                                                {"index" (.getIndex ~protocol-header)}
@@ -145,7 +145,7 @@
   [^Http http fields]
   (into {}
         (map (fn [f]
-               (if (.hasField http f)
+               (when (.hasField http f)
                  {(.toString f) (.fieldValue http f)}))
              fields)))
 
@@ -202,7 +202,7 @@
          (when (.hasSubHeader tcp tcp-timestamp)
            (into
              {"tsval" (.tsval tcp-timestamp)}
-             (if (.flags_ACK tcp)
+             (when (.flags_ACK tcp)
                {"tsecr" (.tsecr tcp-timestamp)})))]
         [udp
          (src-dst-to-map udp)]
@@ -241,10 +241,9 @@
   "Convenience function to parse a org.jnetpcap.packet.PcapPacket into a map.
    The result contains the pcap header and protocol header information."
   [^PcapPacket packet]
-  (try
-    (reduce into [{}
-                  (parse-pcap-header-to-nested-map packet)
-                  (parse-protocol-headers-to-nested-maps packet)])))
+  (reduce into [{}
+                (parse-pcap-header-to-nested-map packet)
+                (parse-protocol-headers-to-nested-maps packet)]))
 
 (defn- add-eth-fields
   [^Map m ^PcapPacket pkt ^Ethernet eth]
@@ -313,6 +312,7 @@
       (.put "tcpFlags" (.flags tcp)))
     m))
 
+#_{:clj-kondo/ignore [:unused-private-var]}
 (defn- add-tcp-timestamp-fields
   [^Map m ^Tcp$Timestamp tcp-timestamp]
   (doto m
@@ -330,6 +330,7 @@
 (def pcap-packet-to-map
   "Convenience function to parse a org.jnetpcap.packet.PcapPacket into a flat,
    non-nested map."
+  #_{:clj-kondo/ignore [:unused-binding]}
   (let [eth (Ethernet.)
         arp (Arp.)
         icmp (Icmp.)
@@ -457,6 +458,7 @@
 
 (def pcap-packet-to-bean
   "Convenience function to parse a org.jnetpcap.packet.PcapPacket into a bean."
+  #_{:clj-kondo/ignore [:unused-binding]}
   (let [eth (Ethernet.)
         arp (Arp.)
         icmp (Icmp.)
@@ -563,8 +565,8 @@ user=>
     (println "Packet Start (size:" (count buffer-seq) "):" buffer-seq "Packet End\n\n")))
 
 (defn stdout-combined-forwarder-fn
-  [^PcapPacket packet]
   "Print both, the parsed packet and the byte vector representations, of a org.jnetpcap.packet.PcapPacket to *out*."
+  [^PcapPacket packet]
   (let [buffer-seq (pcap-packet-to-byte-vector packet)]
     (pprint (pcap-packet-to-map packet))
     (println "Packet Start (size:" (count buffer-seq) "):" buffer-seq "Packet End\n\n")))
@@ -572,7 +574,7 @@ user=>
 (defn no-op-converter-forwarder-fn
   "Forwarder that does nothing.
    This is used for testing purposes."
-  [^PcapPacket packet])
+  [^PcapPacket _])
 
 (defn counting-no-op-forwarder-fn
   "No-op forwarder that counts how many times it was called.
@@ -580,12 +582,11 @@ user=>
   [bulk-size]
   (let [cntr (Counter.)
         printer #(let [val (.value cntr)]
-                   (if (>= val 0)
+                   (when (>= val 0)
                      (println (* (.value cntr) bulk-size))))
         _ (run-repeat (executor) printer 1000)]
     (fn [_]
-      (do
-        (.inc cntr)))))
+      (.inc cntr))))
 
 (defn calls-per-second-no-op-forwarder-fn
   "No-op forwarder that periodically prints how many times it was called per second.
@@ -595,7 +596,7 @@ user=>
         delta-cntr (delta-counter)
         time-tmp (ref (System/currentTimeMillis))
         pps-printer #(let [val (* bulk-size (.value cntr))]
-                       (if (>= val 0)
+                       (when (>= val 0)
                          (let [cur-time (System/currentTimeMillis)
                                time-delta (- cur-time @time-tmp)]
                            (when (> time-delta 0)
@@ -674,19 +675,19 @@ user=>
 
 (defn process-packet-byte-buffer-bulk
   [f ^ByteBuffer bb]
-  (if (.hasArray bb)
+  (when (.hasArray bb)
     (let [ba (.array bb)
           r (ArrayList.)]
       (loop [offset 0]
         (.add r (f ba offset))
         (let [new-offset (+ offset 16 (ByteArrayHelper/getIntBigEndian ba 8))]
-          (if (< new-offset (alength ba))
+          (when (< new-offset (alength ba))
             (recur new-offset))))
       r)))
 
 (defn process-packet-byte-buffer
   [f ^ByteBuffer bb]
-  (if (.hasArray bb)
+  (when (.hasArray bb)
     (f (.array bb) 0)))
 
 (defn packet-byte-buffer-extract-map-ipv4-udp-single
@@ -741,12 +742,12 @@ user=>
           ([] (close-fn))
           ([^List data]
             (let [^BufferedWriter w @wrtr]
-              (if (and (not (nil? w)) (not @closed))
+              (when (and (not (nil? w)) (not @closed))
                 (try
                   (loop [it (.iterator data)]
                     (.write w ^String (.next it))
                     (.newLine w)
-                    (if (.hasNext it)
+                    (when (.hasNext it)
                       (recur it)))
                   (.flush w)
                   (catch Exception e
@@ -755,11 +756,10 @@ user=>
           ([] (close-fn))
           ([^String data]
             (let [^BufferedWriter w @wrtr]
-              (if (and (not (nil? w)) (not @closed))
+              (when (and (not (nil? w)) (not @closed))
                 (try
                   (.write w data)
                   (.newLine w)
                   (.flush w)
                   (catch Exception e
                     (handle-exception-fn e)))))))))))
-

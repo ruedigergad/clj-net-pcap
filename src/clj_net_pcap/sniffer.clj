@@ -20,12 +20,10 @@
           for more details about the data flow and interaction."}
   clj-net-pcap.sniffer
   (:use clj-net-pcap.pcap)
-  (:import (clj_net_pcap PcapPacketWrapper ProcessingLoop)
-           (java.nio ByteBuffer)
-           (java.util ArrayList)
+  (:import (clj_net_pcap ProcessingLoop)
            (java.util.concurrent BlockingQueue)
-           (org.jnetpcap BulkByteBufferHandler ByteBufferHandler DirectBulkByteBufferHandler Pcap PcapHeader)
-           (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
+           (org.jnetpcap BulkByteBufferHandler ByteBufferHandler DirectBulkByteBufferHandler)
+           (org.jnetpcap.packet PcapPacket)))
 
 
 (defrecord Packet 
@@ -51,6 +49,7 @@
   [^PcapPacket p]
   (PcapPacket. p))
 
+#_{:clj-kondo/ignore [:unused-binding]}
 (defn create-and-start-sniffer
   "Creates a thread in which Pcap.loop() is called with Pcap/LOOP_INFINITE set.
    Each received packet is passed to the supplied handler-fn. 
@@ -99,15 +98,15 @@
   (let [running (ref true)
         run-fn (fn [] (try
                         (let [obj (.take queue)]
-                          (if obj
+                          (when obj
                             (forwarder-fn obj)))
                         (catch Exception e
                           ;;; Only print the exception if we still should be running. 
                           ;;; If we get this exception when @running is already
                           ;;; false then we ignore it.
-                          (if @running 
+                          (when @running
                             (.printStackTrace e))
-                          (if forward-exceptions
+                          (when forward-exceptions
                             (throw e)))))
         forwarder-thread (doto 
                            (ProcessingLoop. run-fn) 
@@ -125,4 +124,3 @@
   "Stops the given forwarder."
   [forwarder]
   (forwarder :stop))
-

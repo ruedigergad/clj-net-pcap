@@ -44,7 +44,7 @@
   (cond
     (counted? data) (count data)
     (= String (type data)) (.length ^String data)
-    :default 0))
+    :else 0))
 
 (defn get-data-val
   "Get the byte-array representation of the supplied data.
@@ -55,7 +55,7 @@
   (cond
     (counted? data) (byte-array (map byte data))
     (= String (type data)) (.getBytes ^String data)
-    :default (byte-array 0)))
+    :else (byte-array 0)))
 
 (defn generate-packet-data
   "Generate a byte-array representation of the packet according to the given packet description map."
@@ -114,7 +114,7 @@
                              (doto icmp-echo-req
                                (.id (get-with-default pkt-desc-map "icmpId" 0))
                                (.sequence (get-with-default pkt-desc-map "icmpSeqNo" 0)))
-                             (if (.containsKey pkt-desc-map "data")
+                             (when (.containsKey pkt-desc-map "data")
                                (let [data (get-with-default pkt-desc-map "data" "")
                                      data-val (get-data-val data)]
                                  (.setByteArray jpkt (+ (.getHeaderLength eth) 20 8 (.getHeaderLength icmp)) data-val))))
@@ -126,7 +126,7 @@
                         (.source (int (get-with-default pkt-desc-map "udpSrc" 2048)))
                         (.destination (int (get-with-default pkt-desc-map "udpDst" 2048)))
                         (.length (get-data-length data)))
-                      (if (not (nil? data))
+                      (when (not (nil? data))
                         (.setByteArray jpkt (+ (.getHeaderLength eth) def-hdr-len-ip4 (.getHeaderLength udp)) (get-data-val data)))
                       (.recalculateChecksum udp))
         nil))

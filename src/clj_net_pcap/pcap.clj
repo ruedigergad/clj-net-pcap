@@ -47,7 +47,7 @@
   "Returns the network device with the supplied dev-name or nil if the device 
    does not exist."
   [dev-name]
-  (some #(if (= (.getName %1) dev-name) %1) (get-devices)))
+  (some #(when (= (.getName %1) dev-name) %1) (get-devices)))
 
 (defn device-exists?
   "Convenience function for checking if the device with dev-name exists."
@@ -59,7 +59,7 @@
 (def lo (cond
           (device-exists? "lo") "lo"
           (device-exists? "lo0") "lo0"
-          :default (println-err "Warning: Could not find name for loopback device.")))
+          :else (println-err "Warning: Could not find name for loopback device.")))
 (def any "any")
 
 
@@ -70,7 +70,7 @@
    by \"re-binding\" those vars.
    Please note: *flags* is currently only passed to Pcap.setPromisc()."
   [dev-name]
-  (if (not (device-exists? dev-name))
+  (when (not (device-exists? dev-name))
     (let [errmsg (str "Error creating online pcap. Device " dev-name " does not exist.")]
       (println-err errmsg)
       (throw (RuntimeException. errmsg))))
@@ -218,6 +218,7 @@
     (fn
       ([]
         pcap)
+      #_{:clj-kondo/ignore [:unused-binding]}
       ([k])
       ([k opt]
         (condp = k

@@ -17,7 +17,6 @@
   ^{:author "Ruediger Gad",
     :doc "Transformation functions for the simple DSL for extracting data from packets that are represented as byte arrays."}
   clj-net-pcap.dsl.transformation
-  (:require (clj-net-pcap [packet-offsets :as offsets]))
   (:import (clj_net_pcap ByteArrayHelper)
            (org.jnetpcap.packet.format FormatUtils)))
 
@@ -76,4 +75,3 @@
   "Get the formated IPv4 address String starting at index idx in the byte-array ba."
   [ba idx]
   (FormatUtils/asString ba \. 10 idx 4))
-

@@ -59,17 +59,17 @@
    are prepended to the deep copy of the ByteBuffer.
    This is intended for being transferred as byte array."
   ([^ByteBuffer buf]
-    (doto (ByteBuffer/allocateDirect (.remaining buf))
-      (.put buf)
-      (.flip)))
+   (doto (ByteBuffer/allocateDirect (.remaining buf))
+     (.put buf)
+     (.flip)))
   ([^ByteBuffer buf ^PcapHeader ph]
-    (doto (ByteBuffer/allocate (+ (.remaining buf) 16))
-      (.putInt (int (.hdr_sec ph)))
-      (.putInt (.hdr_usec ph))
-      (.putInt (.caplen ph))
-      (.putInt (.wirelen ph))
-      (.put buf)
-      (.flip))))
+   (doto (ByteBuffer/allocate (+ (.remaining buf) 16))
+     (.putInt (int (.hdr_sec ph)))
+     (.putInt (.hdr_usec ph))
+     (.putInt (.caplen ph))
+     (.putInt (.wirelen ph))
+     (.put buf)
+     (.flip))))
 
 (defn create-buffer-record
   "Create a BufferRecord.
@@ -97,6 +97,7 @@
   [^PcapPacket pkt]
   (doto pkt (.scan (.value (PcapDLT/EN10MB)))))
 
+#_{:clj-kondo/ignore [:unused-binding]}
 (defmacro enqueue-data
   [queue op force-put queued-cntr dropped-cntr]
   (cond
@@ -109,7 +110,7 @@
 ;                               (.inc ~queued-cntr)
 ;                               (.inc ~dropped-cntr)))
                             (.inc ~dropped-cntr)))
-    :default `(if ~force-put
+    :else `(if ~force-put
                 (.put ~queue ~op)
                 (if (< (.size ~queue) *queue-size*)
                   (.offer ~queue ~op)))))
@@ -124,57 +125,61 @@
                               (.inc ~queued-cntr)
                               (.inc ~dropped-cntr))
                             (.inc ~dropped-cntr)))
-    :default `(if ~force-put
-                (.put ~queue ~op)
-                (if (< (.size ~queue) *queue-size*)
-                  (.offer ~queue ~op)))))
+    :else `(if ~force-put
+             (.put ~queue ~op)
+             (if (< (.size ~queue) *queue-size*)
+               (.offer ~queue ~op)))))
 
+#_{:clj-kondo/ignore [:unused-binding]}
 (defn create-raw-handler
-  ""
+  "Create handler for raw data of individual packets."
   [^LinkedTransferQueue out-queue ^Counter out-queued-counter ^Counter out-drop-counter force-put running]
   (fn
     ([]
-      (fn [ph buf _]
-        (if (not (nil? buf))
-          (enqueue-data-put
-            out-queue (deep-copy buf ph) force-put
-            out-queued-counter out-drop-counter))))
+     (fn [ph buf _]
+       (when (not (nil? buf))
+         (enqueue-data-put
+           out-queue (deep-copy buf ph) force-put
+           out-queued-counter out-drop-counter))))
     ([k]
-      (condp = k
-        :get-stats {"out-queued" (.value out-queued-counter) "out-dropped" (.value out-drop-counter)}
-        nil))))
+     (condp = k
+       :get-stats {"out-queued" (.value out-queued-counter) "out-dropped" (.value out-drop-counter)}
+       nil))))
 
+#_{:clj-kondo/ignore [:unused-binding]}
 (defn create-raw-bulk-handler
-  ""
+  "Create handler for raw bulk data."
   [^LinkedTransferQueue out-queue ^Counter out-queued-counter ^Counter out-drop-counter bulk-size force-put running use-intermediate-buffer]
   (fn
     ([]
-      (if use-intermediate-buffer
-        (fn [^ByteBuffer buf _]
-          (when (not (nil? buf))
-            (let [direct-bb (doto (ByteBuffer/allocate (.remaining buf))
-                              (.put buf)
-                              (.flip))]
-              (enqueue-data
-                out-queue
-                direct-bb
-                force-put
-                out-queued-counter out-drop-counter))))
-        (fn [^DirectBulkByteBufferWrapper buf _]
-          (when (not (nil? buf))
-            (enqueue-data
-              out-queue
-              buf
-              force-put
-              out-queued-counter out-drop-counter)))))
+     (if use-intermediate-buffer
+       (fn [^ByteBuffer buf _]
+         (when (not (nil? buf))
+           (let [direct-bb (doto (ByteBuffer/allocate (.remaining buf))
+                             (.put buf)
+                             (.flip))]
+             (enqueue-data
+               out-queue
+               direct-bb
+               force-put
+               out-queued-counter out-drop-counter))))
+       (fn [^DirectBulkByteBufferWrapper buf _]
+         (when (not (nil? buf))
+           (enqueue-data
+             out-queue
+             buf
+             force-put
+             out-queued-counter out-drop-counter)))))
     ([k]
-      (condp = k
-        :get-stats {"out-queued" (* (.value out-queued-counter) bulk-size) "out-dropped" (* (.value out-drop-counter) bulk-size)}
-        nil))))
+     (condp = k
+       :get-stats {"out-queued" (* (.value out-queued-counter) bulk-size) "out-dropped" (* (.value out-drop-counter) bulk-size)}
+       nil))))
 
 (defn create-packet-processing-handler
-  ""
+  "Create handler for processing packets.
+   Processing packets includes scanning (decoding) them."
   [^LinkedTransferQueue out-queue ^Counter out-queued-counter ^Counter out-drop-counter force-put running forward-exceptions]
+  #_{:clj-kondo/ignore [:unused-binding]}
   (let [buffer-queue (ArrayBlockingQueue. *queue-size*)
         buffer-drop-counter (Counter.) buffer-queued-counter (Counter.)
         failed-counter (Counter.)
@@ -188,7 +193,7 @@
                               (when @running
                                 (.inc failed-counter)
                                 (.printStackTrace e))
-                              (if forward-exceptions
+                              (when forward-exceptions
                                 (throw e))))
         buffer-processor-thread (doto (ProcessingLoop. buffer-processor)
                                   (.setName "ByteBufferProcessor") (.setDaemon true) (.start))
@@ -200,42 +205,41 @@
                     (when @running
                       (.inc failed-counter)
                       (.printStackTrace e))
-                    (if forward-exceptions
+                    (when forward-exceptions
                       (throw e))))
         scanner-thread (doto (ProcessingLoop. scanner)
                          (.setName "PacketScanner") (.setDaemon true) (.start))]
     (fn
       ([]
-        (fn [ph buf _]
-          (if (not (nil? buf))
-            (enqueue-data-put buffer-queue (create-buffer-record buf ph) force-put
-                              buffer-queued-counter buffer-drop-counter))))
+       (fn [ph buf _]
+         (when (not (nil? buf))
+           (enqueue-data-put buffer-queue (create-buffer-record buf ph) force-put
+                             buffer-queued-counter buffer-drop-counter))))
       ([k]
-        (condp = k
-          :get-stats {"buffer-queued" (.value buffer-queued-counter) "buffer-dropped" (.value buffer-drop-counter)
-                      "scanner-queued" (.value scanner-queued-counter) "scanner-dropped" (.value scanner-drop-counter)
-                      "out-queued" (.value out-queued-counter) "out-dropped" (.value out-drop-counter)
-                      "handler-failed" (.value failed-counter)}
-          :wait-for-completed (do
-                                (while (or (> (.size buffer-queue) 0) (> (.size scanner-queue) 0))
-                                  (sleep 100))))))))
+       (condp = k
+         :get-stats {"buffer-queued" (.value buffer-queued-counter) "buffer-dropped" (.value buffer-drop-counter)
+                     "scanner-queued" (.value scanner-queued-counter) "scanner-dropped" (.value scanner-drop-counter)
+                     "out-queued" (.value out-queued-counter) "out-dropped" (.value out-drop-counter)
+                     "handler-failed" (.value failed-counter)}
+         :wait-for-completed (while (or (> (.size buffer-queue) 0) (> (.size scanner-queue) 0))
+                               (sleep 100)))))))
 
 (defn send-bytes-packet
   "Send the packet as given in the byte array pkt-ba packets via the Pcap instance pcap.
    Optionally a repetition count rep as well as a delay d can be given."
   ([pcap pkt-ba]
-    (pcap :send-bytes-packet pkt-ba))
+   (pcap :send-bytes-packet pkt-ba))
   ([pcap pkt-ba rep]
-    (loop [cnt rep]
-      (pcap :send-bytes-packet pkt-ba)
-      (if (> cnt 1)
-        (recur (dec cnt)))))
+   (loop [cnt rep]
+     (pcap :send-bytes-packet pkt-ba)
+     (when (> cnt 1)
+       (recur (dec cnt)))))
   ([pcap pkt-ba rep d]
-    (loop [cnt rep]
-      (sleep d)
-      (pcap :send-bytes-packet pkt-ba)
-      (if (> cnt 1)
-        (recur (dec cnt))))))
+   (loop [cnt rep]
+     (sleep d)
+     (pcap :send-bytes-packet pkt-ba)
+     (when (> cnt 1)
+       (recur (dec cnt))))))
 
 (defn set-up-and-start-cljnetpcap
   "Takes a pcap instance, sets up the capture pipe line, and starts the capturing and processing.
@@ -255,7 +259,7 @@
                     (create-raw-bulk-handler out-queue out-queued-counter out-drop-counter bulk-size force-put running use-intermediate-buffer))
                   (create-packet-processing-handler out-queue out-queued-counter out-drop-counter force-put running forward-exceptions))
         filter-expressions (ref [])
-        _ (if (and (not (nil? filter-expr)) (not= "" filter-expr))
+        _ (when (and (not (nil? filter-expr)) (not= "" filter-expr))
             (dosync (alter filter-expressions conj filter-expr)))
         _ (create-and-set-filter pcap filter-expr)
         failed-packet-counter (Counter.)
@@ -263,66 +267,65 @@
                     #(try (forwarder-fn %)
                        (catch Exception e
                          (.inc failed-packet-counter)
-                         (if forward-exceptions
+                         (when forward-exceptions
                            (throw e))))
                     forward-exceptions)
         sniffer (if (and emit-raw-data (not force-put))
                   (create-and-start-sniffer pcap bulk-size use-intermediate-buffer (handler) nil)
                   (create-and-start-sniffer pcap (handler)))
-        stats-fn (create-stats-fn pcap)
-        ]
+        stats-fn (create-stats-fn pcap)]
+
     (fn 
       ([k]
-        (condp = k
-          :get-stats (merge (stats-fn) (handler :get-stats) {"forwarder-failed" (.value failed-packet-counter)})
-          :stop (do
-                  (dosync (ref-set running false))
-                  (stop-forwarder forwarder)
-                  (stop-sniffer sniffer))
-          :get-filters @filter-expressions
-          :remove-last-filter (do
-                                (dosync (alter filter-expressions pop))
-                                (create-and-set-filter pcap (join " " @filter-expressions)))
-          :remove-all-filters (do
-                                (dosync (alter filter-expressions empty))
-                                (create-and-set-filter pcap (join " " @filter-expressions)))
-          :wait-for-completed (do
-                                (println "Waiting till handler completed...")
-                                (handler :wait-for-completed)
-                                (while (or
-                                       (> (.size out-queue) 0))
-                                  (sleep 100))
-                                ;;; TODO: 
-                                ;;; Right now, we give it a little time to process the last data even when the queues are empty.
-                                ;;; We should actually use other means to indicate that the entire processing has finished.
-                                (sleep 100))
-          :default (throw (RuntimeException. (str "Unsupported operation: " k)))))
+       (condp = k
+         :get-stats (merge (stats-fn) (handler :get-stats) {"forwarder-failed" (.value failed-packet-counter)})
+         :stop (do
+                 (dosync (ref-set running false))
+                 (stop-forwarder forwarder)
+                 (stop-sniffer sniffer))
+         :get-filters @filter-expressions
+         :remove-last-filter (do
+                               (dosync (alter filter-expressions pop))
+                               (create-and-set-filter pcap (join " " @filter-expressions)))
+         :remove-all-filters (do
+                               (dosync (alter filter-expressions empty))
+                               (create-and-set-filter pcap (join " " @filter-expressions)))
+         :wait-for-completed (do
+                               (println "Waiting till handler completed...")
+                               (handler :wait-for-completed)
+                               (while (> (.size out-queue) 0)
+                                 (sleep 100))
+                               ;;; TODO:
+                               ;;; Right now, we give it a little time to process the last data even when the queues are empty.
+                               ;;; We should actually use other means to indicate that the entire processing has finished.
+                               (sleep 100))
+         :default (throw (RuntimeException. (str "Unsupported operation: " k)))))
       ([k arg]
-        (condp = k
-          :add-filter (when (and arg (not= arg ""))
-                        (dosync
-                          (alter filter-expressions conj arg))
-                        (create-and-set-filter pcap (join " " @filter-expressions)))
-          :remove-filter (do (dosync
-                               (alter filter-expressions (fn [fe] (vec (filter #(not= arg %) fe)))))
-                             (create-and-set-filter pcap (join " " @filter-expressions)))
-          :send-bytes-packet (send-bytes-packet pcap arg)
-          :send-packet-map (send-bytes-packet pcap (generate-packet-data arg))
-          :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " arg)))))
-      ([k arg1 arg2]
-        (condp = k
-          :replace-filter (when (some #(= arg1 %) @filter-expressions)
-                            (dosync
-                              (alter filter-expressions #(replace {arg1 arg2} %)))
+       (condp = k
+         :add-filter (when (and arg (not= arg ""))
+                       (dosync
+                         (alter filter-expressions conj arg))
+                       (create-and-set-filter pcap (join " " @filter-expressions)))
+         :remove-filter (do (dosync
+                              (alter filter-expressions (fn [fe] (vec (filter #(not= arg %) fe)))))
                             (create-and-set-filter pcap (join " " @filter-expressions)))
-          :send-bytes-packet (send-bytes-packet pcap arg1 arg2)
-          :send-packet-map (send-bytes-packet pcap (generate-packet-data arg1) arg2)
-          :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " [arg1 arg2])))))
+         :send-bytes-packet (send-bytes-packet pcap arg)
+         :send-packet-map (send-bytes-packet pcap (generate-packet-data arg))
+         :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " arg)))))
+      ([k arg1 arg2]
+       (condp = k
+         :replace-filter (when (some #(= arg1 %) @filter-expressions)
+                           (dosync
+                             (alter filter-expressions #(replace {arg1 arg2} %)))
+                           (create-and-set-filter pcap (join " " @filter-expressions)))
+         :send-bytes-packet (send-bytes-packet pcap arg1 arg2)
+         :send-packet-map (send-bytes-packet pcap (generate-packet-data arg1) arg2)
+         :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " [arg1 arg2])))))
       ([k arg1 arg2 arg3]
-        (condp = k
-          :send-bytes-packet (send-bytes-packet pcap arg1 arg2 arg3)
-          :send-packet-map (send-bytes-packet pcap (generate-packet-data arg1) arg2 arg3)
-          :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " [arg1 arg2 arg3]))))))))
+       (condp = k
+         :send-bytes-packet (send-bytes-packet pcap arg1 arg2 arg3)
+         :send-packet-map (send-bytes-packet pcap (generate-packet-data arg1) arg2 arg3)
+         :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " [arg1 arg2 arg3]))))))))
 
 (defn create-and-start-online-cljnetpcap
   "Convenience function for performing live online capturing.
@@ -331,12 +334,12 @@
    By default the 'any' device is used for capturing with no filter being applied.
    Please note that the returned handle should be stored as it is needed for stopping the capture."
   ([forwarder-fn]
-    (create-and-start-online-cljnetpcap forwarder-fn any))
+   (create-and-start-online-cljnetpcap forwarder-fn any))
   ([forwarder-fn device]
-    (create-and-start-online-cljnetpcap forwarder-fn device ""))
+   (create-and-start-online-cljnetpcap forwarder-fn device ""))
   ([forwarder-fn device filter-expr]
-    (let [pcap (create-and-activate-online-pcap device)]
-      (set-up-and-start-cljnetpcap pcap forwarder-fn filter-expr false))))
+   (let [pcap (create-and-activate-online-pcap device)]
+     (set-up-and-start-cljnetpcap pcap forwarder-fn filter-expr false))))
 
 (defn get-stats
   "Given a handle as returned by, e.g., create-and-start-online-cljnetpcap or process-pcap-file,
@@ -386,12 +389,12 @@
    handler-fn takes two arguments, the first is the org.jnetpcap.packet.PcapPacket instance, the second is the user data.
    By default nil is used as user data."
   ([file-name handler-fn]
-    (process-pcap-file file-name handler-fn nil))
-  ([file-name handler-fn user-data]
-    (let [pcap (create-offline-pcap file-name)
-          clj-net-pcap (set-up-and-start-cljnetpcap pcap handler-fn "" true)]
-      (clj-net-pcap :wait-for-completed)
-      (stop-cljnetpcap clj-net-pcap))))
+   (process-pcap-file file-name handler-fn nil))
+  ([file-name handler-fn _]
+   (let [pcap (create-offline-pcap file-name)
+         clj-net-pcap (set-up-and-start-cljnetpcap pcap handler-fn "" true)]
+     (clj-net-pcap :wait-for-completed)
+     (stop-cljnetpcap clj-net-pcap))))
 
 
 (defn extract-data-from-pcap-file
@@ -406,11 +409,11 @@
    extract-maps-from-pcap-file
    extract-beans-from-pcap-file"
   [file-name format-fn]
-    (let [extracted-data (ref [])]
-      (process-pcap-file
-        file-name
-        #(dosync (alter extracted-data conj (format-fn %))))
-      @extracted-data))
+  (let [extracted-data (ref [])]
+    (process-pcap-file
+      file-name
+      #(dosync (alter extracted-data conj (format-fn %))))
+    @extracted-data))
 
 (defn extract-nested-maps-from-pcap-file
   "Convenience function to extract the data from a pcap file in nested map format.

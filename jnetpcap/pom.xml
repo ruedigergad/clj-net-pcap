@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>jnetpcap</groupId>
   <artifactId>jnetpcap</artifactId>
-  <version>1.5.r1457-1e</version>
+  <version>1.5.r1457-1f</version>
   <name>jnetpcap</name>
   <description>jNetPcap: http://jnetpcap.com/</description>
   <licenses>

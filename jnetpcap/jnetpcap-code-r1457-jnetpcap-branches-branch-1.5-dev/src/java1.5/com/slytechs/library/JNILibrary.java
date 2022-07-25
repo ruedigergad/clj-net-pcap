@@ -181,9 +181,14 @@ public class JNILibrary extends NativeLibrary {
 	public static boolean loadLibrary(String name, List<Error> errors) {
 
 		Error error = null;
+		String clj_net_pcap_lib = System.getProperty("clj-net-pcap.lib." + name);
 
 		try {
-			System.loadLibrary(name);
+			if (clj_net_pcap_lib != null) {
+				System.load(clj_net_pcap_lib);
+			} else {
+				System.loadLibrary(name);
+			}
 		} catch (UnsatisfiedLinkError e) {
 			error = e;
 			String msg = e.getMessage();

@@ -120,5 +120,12 @@
   (load-native-libs)
   (add-shutdown-hook remove-native-libs))
 
-(extract-and-load-native-libs)
+(defn extract-and-reference-native-libs
+  "Convenience function for extracting and referencing the native libraries via System Properties: \"clj-net-pcap.lib.[jnetpcap, jnetpcap-pcap100]\"."
+  []
+  (extract-native-libs)
+  (System/setProperty "clj-net-pcap.lib.jnetpcap" (pcap-lib-path pcap080))
+  (System/setProperty "clj-net-pcap.lib.jnetpcap-pcap100" (pcap-lib-path pcap100))
+  (add-shutdown-hook remove-native-libs))
 
+(extract-and-reference-native-libs)

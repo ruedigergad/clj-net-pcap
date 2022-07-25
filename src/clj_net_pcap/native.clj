@@ -17,8 +17,9 @@
   ^{:author "Ruediger Gad",
     :doc "Functions etc. for extracting, loading etc. native libraries from the jar file."} 
   clj-net-pcap.native
-  (:use clojure.java.io 
-        clj-assorted-utils.util)
+  (:require
+    (clojure.java [io :as jio])
+    (clj-assorted-utils [util :as utils]))
   (:import (clj_net_pcap LibLoader)))
 
 (def ^:dynamic *lib-dir* "clj-net-pcap")
@@ -29,19 +30,19 @@
   []
   (let [user (System/getProperty "user.name")]
     (cond
-      (is-os? "linux") (str "/tmp/" *lib-dir* "_" user "/")
-      (is-os? "freebsd") (str "/tmp/" *lib-dir* "_" user "/")
-      (is-os? "windows") (str "C:\\TEMP\\" *lib-dir* "_" user "\\")
+      (utils/is-os? "linux") (str "/tmp/" *lib-dir* "_" user "/")
+      (utils/is-os? "freebsd") (str "/tmp/" *lib-dir* "_" user "/")
+      (utils/is-os? "windows") (str "C:\\TEMP\\" *lib-dir* "_" user "\\")
       :else (str "~/" *lib-dir* user "/"))))
 
 (defn pcap-lib-name
   "Get the pcap lib names depending on the OS."
   [p]
   (let [prefix (cond 
-                 (is-os? "windows") ""
+                 (utils/is-os? "windows") ""
                  :else "lib")
         suffix (cond
-                 (is-os? "windows") ".dll"
+                 (utils/is-os? "windows") ".dll"
                  :else ".so")]
     (str prefix p suffix)))
 (def pcap080
@@ -52,8 +53,8 @@
 (defn pcap-jar-path
   "Get the path of the jnetpcap libraries inside the clj-net-pcap jar."
   [p]
-  (let [os (.toLowerCase (get-os))
-        arch (.toLowerCase (get-arch))]
+  (let [os (.toLowerCase (utils/get-os))
+        arch (.toLowerCase (utils/get-arch))]
     (str "native/" os "/" arch "/" p)))
 
 (defn pcap-lib-path
@@ -64,20 +65,20 @@
 (defn mk-native-lib-dir
   "Create the dir for extracting the native libraries."
   []
-  (mkdir (native-lib-dir)))
+  (utils/mkdir (native-lib-dir)))
 
 (defn rm-native-lib-dir
   "Remove the native library temp directory."
   []
-  (when (dir-exists? (native-lib-dir))
-    (rmdir (native-lib-dir))))
+  (when (utils/dir-exists? (native-lib-dir))
+    (utils/rmdir (native-lib-dir))))
 
 (defn copy-resource-to-file
   "Copy from Jar to file."
   [source target]
-  (let [in (-> source (resource) (.openStream))
-        out (file target)]
-    (copy in out)))
+  (let [in (-> source (jio/resource) (.openStream))
+        out (jio/file target)]
+    (jio/copy in out)))
 
 (defn extract-native-lib
   "Extract a single native library l."
@@ -89,16 +90,16 @@
 (defn remove-native-libs
   "Clean up native libs."
   []
-  (when (file-exists? (pcap-lib-path pcap080))
-    (rm (pcap-lib-path pcap080)))
-  (when (file-exists? (pcap-lib-path pcap100))
-    (rm (pcap-lib-path pcap100)))
+  (when (utils/file-exists? (pcap-lib-path pcap080))
+    (utils/rm (pcap-lib-path pcap080)))
+  (when (utils/file-exists? (pcap-lib-path pcap100))
+    (utils/rm (pcap-lib-path pcap100)))
   (rm-native-lib-dir))
 
 (defn extract-native-libs
   "Extract the native libraries."
   []
-  (when (dir-exists? (native-lib-dir))
+  (when (utils/dir-exists? (native-lib-dir))
     (remove-native-libs))
   (mk-native-lib-dir)
   (extract-native-lib pcap080)
@@ -117,7 +118,7 @@
   []
   (extract-native-libs)
   (load-native-libs)
-  (add-shutdown-hook remove-native-libs))
+  (utils/add-shutdown-hook remove-native-libs))
 
 (defn extract-and-reference-native-libs
   "Convenience function for extracting and referencing the native libraries via System Properties: \"clj-net-pcap.lib.[jnetpcap, jnetpcap-pcap100]\"."
@@ -125,6 +126,6 @@
   (extract-native-libs)
   (System/setProperty "clj-net-pcap.lib.jnetpcap" (pcap-lib-path pcap080))
   (System/setProperty "clj-net-pcap.lib.jnetpcap-pcap100" (pcap-lib-path pcap100))
-  (add-shutdown-hook remove-native-libs))
+  (utils/add-shutdown-hook remove-native-libs))
 
 (extract-and-reference-native-libs)

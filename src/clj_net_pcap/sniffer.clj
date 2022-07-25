@@ -19,11 +19,11 @@
           sniffer. Please see the simple data flow diagram in the documentation
           for more details about the data flow and interaction."}
   clj-net-pcap.sniffer
-  (:use clj-net-pcap.pcap)
-  (:import (clj_net_pcap ProcessingLoop)
-           (java.util.concurrent BlockingQueue)
-           (org.jnetpcap BulkByteBufferHandler ByteBufferHandler DirectBulkByteBufferHandler)
-           (org.jnetpcap.packet PcapPacket)))
+  (:import
+    (clj_net_pcap ProcessingLoop)
+    (java.util.concurrent BlockingQueue)
+    (org.jnetpcap BulkByteBufferHandler ByteBufferHandler DirectBulkByteBufferHandler)
+    (org.jnetpcap.packet PcapPacket)))
 
 
 (defrecord Packet 
@@ -40,10 +40,10 @@
 ;;; Need to use type hints here as PcapPackets constructor/deep-copy mechanism 
 ;;; seems not to work otherwise.
   ([^PcapPacket pcap-packet]
-    (create-packet pcap-packet nil))
+   (create-packet pcap-packet nil))
   ([^PcapPacket pcap-packet ^java.lang.Object user-data]
-    (Packet. (PcapPacket. pcap-packet) 
-             user-data)))
+   (Packet. (PcapPacket. pcap-packet)
+            user-data)))
 
 (defn clone-packet
   [^PcapPacket p]
@@ -60,25 +60,25 @@
    Please note that the sniffer must be explicitly stopped using the 
    stop-sniffer function. Stopping the sniffer also takes care of closing pcap."
   ([pcap handler-fn]
-    (create-and-start-sniffer pcap handler-fn nil))
+   (create-and-start-sniffer pcap handler-fn nil))
   ([pcap handler-fn user-data]
 ;    (create-and-start-sniffer pcap 1 true handler-fn user-data))
-    (let [packet-handler (proxy [ByteBufferHandler] []
-                           (nextPacket [ph buf u] (handler-fn ph buf u)))]
+   (let [packet-handler (proxy [ByteBufferHandler] []
+                          (nextPacket [ph buf u] (handler-fn ph buf u)))]
 ;          packet-handler (proxy [PcapPacketHandler] []
 ;                           (nextPacket [^PcapPacket p ^Object u] (handler-fn p u)))
-      (pcap :start packet-handler)
-      (fn [k]
-        (pcap k))))
+     (pcap :start packet-handler)
+     (fn [k]
+       (pcap k))))
   ([pcap bulk-size use-intermediate-buffer handler-fn user-data]
-    (let [packet-handler (if use-intermediate-buffer
-                           (proxy [BulkByteBufferHandler] []
-                             (nextPacket [buf u] (handler-fn buf u)))
-                           (proxy [DirectBulkByteBufferHandler] []
-                             (nextPacket [buf u] (handler-fn buf u))))]
-      (pcap :start bulk-size use-intermediate-buffer packet-handler)
-      (fn [k]
-        (pcap k)))))
+   (let [packet-handler (if use-intermediate-buffer
+                          (proxy [BulkByteBufferHandler] []
+                            (nextPacket [buf u] (handler-fn buf u)))
+                          (proxy [DirectBulkByteBufferHandler] []
+                            (nextPacket [buf u] (handler-fn buf u))))]
+     (pcap :start bulk-size use-intermediate-buffer packet-handler)
+     (fn [k]
+       (pcap k)))))
 
 (defn stop-sniffer
   "Convenience function for stopping a sniffer that has been created with 

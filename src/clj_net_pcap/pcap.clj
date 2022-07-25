@@ -19,8 +19,9 @@
           such as listing network devices, creating and setting filters, or 
           creating, starting, and stopping an pcap instance."} 
   clj-net-pcap.pcap
-  (:use clj-assorted-utils.util
-        clj-net-pcap.native)
+  (:require (clj-assorted-utils [util :as utils]))
+  #_{:clj-kondo/ignore [:use]}
+  (:use clj-net-pcap.native)
   (:import (java.util ArrayList) 
            (org.jnetpcap Pcap PcapBpfProgram PcapStat)))
 
@@ -40,7 +41,7 @@
     (if (= (Pcap/findAllDevs devs err) Pcap/OK)
       (vec devs)
       (let [errmsg (str "An error occured while querying available devices:" (str err))]
-        (println-err errmsg)
+        (utils/println-err errmsg)
         (throw (RuntimeException. errmsg))))))
 
 (defn get-device
@@ -59,7 +60,7 @@
 (def lo (cond
           (device-exists? "lo") "lo"
           (device-exists? "lo0") "lo0"
-          :else (println-err "Warning: Could not find name for loopback device.")))
+          :else (utils/println-err "Warning: Could not find name for loopback device.")))
 (def any "any")
 
 
@@ -72,10 +73,10 @@
   [dev-name]
   (when (not (device-exists? dev-name))
     (let [errmsg (str "Error creating online pcap. Device " dev-name " does not exist.")]
-      (println-err errmsg)
+      (utils/println-err errmsg)
       (throw (RuntimeException. errmsg))))
   (let [err (StringBuilder.)
-        _ (println-err "Creating pcap with: device =" dev-name
+        _ (utils/println-err "Creating pcap with: device =" dev-name
                        "; buffer size =" *buffer-size*
                        "; snaplen =" *snap-len*
                        "; and promiscuous mode (flags) =" *flags*)
@@ -86,7 +87,7 @@
                (.setImmediateMode 1))]
     (if (nil? pcap)
       (let [errmsg (str "An error occured while creating a pcap instance: " (str err))]
-        (println-err errmsg)
+        (utils/println-err errmsg)
         (throw (RuntimeException. errmsg)))
       pcap)))
 
@@ -96,7 +97,7 @@
   (if (= (.activate pcap) Pcap/OK)
     pcap
     (let [errmsg (str "Error activating pcap: " (.getErr pcap))]
-      (println-err errmsg)
+      (utils/println-err errmsg)
       (throw (RuntimeException. errmsg)))))
 
 (defn create-filter
@@ -114,14 +115,14 @@
         f
         ;;; TODO: Should we throw an exception when something went wrong or is 
         ;;;       returning nil sufficient?
-        (println-err "Error compiling pcap filter: " (.getErr pcap))))))
+        (utils/println-err "Error compiling pcap filter: " (.getErr pcap))))))
 
 (defn set-filter
   "Sets the given filter f for the given Pcap instance pcap."
   [^Pcap pcap f]
   (when (not= (.setFilter pcap f) Pcap/OK)
     (let [errmsg (str "Error setting pcap filter: " (.getErr pcap))]
-      (println-err errmsg)
+      (utils/println-err errmsg)
       (throw (RuntimeException. errmsg)))))
 
 (defn create-and-set-filter
@@ -197,7 +198,7 @@
         {"recv" (.getRecv pcap-stats) 
          "drop" (.getDrop pcap-stats) 
          "ifdrop" (.getIfDrop pcap-stats)}
-        (print-err-ln (.getErr pcap))))))
+        (utils/print-err-ln (.getErr pcap))))))
 
 (defn create-pcap-from-file
   "Create an offline org.jnetpcap.Pcap from a file."
@@ -206,10 +207,11 @@
         pcap (Pcap/openOffline file-name err)]
     (if (nil? pcap)
       (let [errmsg (str "An error occured while opening the offline pcap file:" (str err))]
-        (println-err errmsg)
+        (utils/println-err errmsg)
         (throw (RuntimeException. errmsg)))
       pcap)))
 
+#_{:clj-kondo/ignore [:unused-binding]}
 (defn create-offline-pcap
   "Convenience function for creating and activating a Pcap instance in one step.
    See create-online-pcap and activate-online-pcap for details."
@@ -218,12 +220,9 @@
     (fn
       ([]
         pcap)
-      #_{:clj-kondo/ignore [:unused-binding]}
       ([k])
       ([k opt]
         (condp = k
-          :start (let [run-fn (fn [] 
-                                (.dispatch pcap -1 opt nil))]
+          :start (let [run-fn (fn [] (.dispatch pcap -1 opt nil))]
                    (doto (Thread. run-fn) (.setName "PcapOfflineCaptureThread") (.setDaemon true) (.start) (.join)))
           (println "Unsupported operation for online pcap:" k))))))
-

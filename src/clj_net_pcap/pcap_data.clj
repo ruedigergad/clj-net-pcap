@@ -23,19 +23,16 @@
         clj-assorted-utils.util
         clj-net-pcap.native)
   (:require (clj-net-pcap [packet-offsets :as offsets]))
-  (:import (java.io BufferedWriter IOException Writer)
-           (java.net InetAddress)
+  (:import (java.io BufferedWriter IOException)
            (java.nio ByteBuffer)
-           (java.util Arrays ArrayList HashMap Iterator List Map)
-           (java.util.concurrent ScheduledThreadPoolExecutor)
+           (java.util ArrayList HashMap List Map)
            (clj_net_pcap ByteArrayHelper Counter PacketHeaderDataBean PacketHeaderDataBeanIpv4UdpOnly PacketHeaderDataBeanWithIpv4Udp)
            (org.jnetpcap PcapHeader)
            (org.jnetpcap.packet PcapPacket)
            (org.jnetpcap.packet.format FormatUtils)
            (org.jnetpcap.protocol.lan Ethernet)
            (org.jnetpcap.protocol.network Arp Icmp Icmp$Echo Icmp$EchoReply Icmp$EchoRequest Ip4 Ip6)
-           (org.jnetpcap.protocol.tcpip Http Http$Request Http$Response
-                                        Tcp Tcp$Flag Tcp$Timestamp Udp)))
+           (org.jnetpcap.protocol.tcpip Http Http$Request Http$Response Tcp Tcp$Flag Tcp$Timestamp Udp)))
 
 
 (def ^:dynamic *tcp-flags-as-set* true)

@@ -29,13 +29,12 @@
         clj-net-pcap.pcap-data
         clj-net-pcap.sniffer
         clj-assorted-utils.util)
-  (:import (clj_net_pcap Counter JBufferWrapper PcapPacketWrapper ProcessingLoop)
-           (java.nio BufferUnderflowException ByteBuffer)
-           (java.util ArrayList)
+  (:import (clj_net_pcap Counter ProcessingLoop)
+           (java.nio ByteBuffer)
            (java.util.concurrent ArrayBlockingQueue LinkedTransferQueue)
-           (org.jnetpcap DirectBulkByteBufferWrapper Pcap PcapDLT PcapHeader)
-           (org.jnetpcap.nio JBuffer JMemory JMemory$Type)
-           (org.jnetpcap.packet PcapPacket PcapPacketHandler)))
+           (org.jnetpcap DirectBulkByteBufferWrapper PcapDLT PcapHeader)
+           (org.jnetpcap.nio JMemory$Type)
+           (org.jnetpcap.packet PcapPacket)))
 
 
 (def ^:dynamic *bulk-size* 1)

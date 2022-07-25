@@ -20,15 +20,11 @@
   (:use clj-net-pcap.pcap
         clj-assorted-utils.util)
   (:import (clj_net_pcap ByteArrayHelper)
-           (java.nio BufferUnderflowException ByteBuffer)
            (java.util Map)
-           (java.util.concurrent ArrayBlockingQueue)
-           (org.jnetpcap Pcap PcapDLT PcapHeader)
-           (org.jnetpcap.nio JBuffer JMemory JMemory$Type)
-           (org.jnetpcap.packet JPacket JMemoryPacket)
+           (org.jnetpcap.packet JMemoryPacket)
            (org.jnetpcap.protocol JProtocol)
            (org.jnetpcap.protocol.lan Ethernet Ethernet$EthernetType)
-           (org.jnetpcap.protocol.network Icmp Icmp$Echo Icmp$EchoReply Icmp$EchoRequest Icmp$IcmpType Ip4 Ip4$Flag Ip6)
+           (org.jnetpcap.protocol.network Icmp Icmp$EchoRequest Ip4)
            (org.jnetpcap.protocol.tcpip Udp)))
 
 (def def-hdr-len-eth 14)

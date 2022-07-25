@@ -22,7 +22,7 @@
   (:use clj-assorted-utils.util
         clj-net-pcap.native)
   (:import (java.util ArrayList) 
-           (org.jnetpcap Pcap PcapBpfProgram PcapIf PcapStat)))
+           (org.jnetpcap Pcap PcapBpfProgram PcapStat)))
 
 
 (def ^:dynamic *buffer-size* (int (Math/pow 2 26)))

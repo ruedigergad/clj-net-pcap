@@ -18,15 +18,13 @@
     :doc "Tests for extracting data from byte arrays."}  
   clj-net-pcap.test.byte-array-extraction
   (:require
-   (clojure [test :as test]))
-  (:use
-        clj-net-pcap.core
-        clj-net-pcap.pcap-data
-        clj-assorted-utils.util)
+   (clojure [test :as test])
+   (clj-net-pcap [core :as core])
+   (clj-net-pcap [pcap-data :as pcap-data]))
   (:import (clj_net_pcap PacketHeaderDataBeanIpv4UdpOnly)))
 
 (test/deftest test-extract-udp-maps-from-pcap-file-ipv4-udp-only-reference
-  (let [my-maps (extract-data-from-pcap-file "test/clj_net_pcap/test/data/dns-query-response.pcap" pcap-packet-to-map-ipv4-udp-only)]
+  (let [my-maps (core/extract-data-from-pcap-file "test/clj_net_pcap/test/data/dns-query-response.pcap" pcap-data/pcap-packet-to-map-ipv4-udp-only)]
     (test/is (= 2 (count my-maps)))
     (test/is (= {"ipVer" 4, "ipDst" "192.168.0.1",
             "ipSrc" "192.168.0.51", "ethDst" "00:24:FE:B1:8F:DC", 
@@ -36,7 +34,7 @@
            (first my-maps)))))
 
 (test/deftest test-extract-udp-beans-from-pcap-file-ipv4-udp-only-reference
-  (let [my-beans (extract-data-from-pcap-file "test/clj_net_pcap/test/data/dns-query-response.pcap" pcap-packet-to-bean-ipv4-udp-only)
+  (let [my-beans (core/extract-data-from-pcap-file "test/clj_net_pcap/test/data/dns-query-response.pcap" pcap-data/pcap-packet-to-bean-ipv4-udp-only)
         expected (doto (PacketHeaderDataBeanIpv4UdpOnly.)
                    (.setTs 1385804494276477000) (.setLen 77)
                    (.setEthDst "00:24:FE:B1:8F:DC") (.setEthSrc "74:DE:2B:08:78:09")
@@ -58,7 +56,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extracted-map (packet-byte-array-extract-map-ipv4-udp-be pkt-ba 0)]
+        extracted-map (pcap-data/packet-byte-array-extract-map-ipv4-udp-be pkt-ba 0)]
     (test/is (= expected-map extracted-map))))
 
 (test/deftest test-extract-data-from-byte-array-to-map-ipv4-udp-only
@@ -72,7 +70,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extracted-map (packet-byte-array-extract-map-ipv4-udp pkt-ba 0)]
+        extracted-map (pcap-data/packet-byte-array-extract-map-ipv4-udp pkt-ba 0)]
     (test/is (= expected-map extracted-map))))
 
 (test/deftest test-extract-data-from-byte-array-to-bean-ipv4-udp-only-be
@@ -89,7 +87,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extracted (packet-byte-array-extract-bean-ipv4-udp-be pkt-ba 0)]
+        extracted (pcap-data/packet-byte-array-extract-bean-ipv4-udp-be pkt-ba 0)]
     (test/is (= expected extracted))))
 
 (test/deftest test-extract-data-from-byte-array-to-bean-ipv4-udp-only
@@ -106,6 +104,5 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extracted (packet-byte-array-extract-bean-ipv4-udp pkt-ba 0)]
+        extracted (pcap-data/packet-byte-array-extract-bean-ipv4-udp pkt-ba 0)]
     (test/is (= expected extracted))))
-

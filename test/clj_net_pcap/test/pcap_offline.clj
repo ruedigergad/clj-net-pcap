@@ -18,12 +18,11 @@
     :doc "Clojure tests for reading from pcap files."}
   clj-net-pcap.test.pcap-offline
   (:require
-   (clojure [test :as test]))
-  (:use
-        clj-net-pcap.core
-        clj-net-pcap.pcap
-        clj-net-pcap.pcap-data
-        clj-assorted-utils.util)
+   (clojure [test :as test])
+   (clj-assorted-utils [util :as utils])
+   (clj-net-pcap [core :as core])
+   (clj-net-pcap [pcap :as pcap])
+   (clj-net-pcap [pcap-data :as pcap-data]))
   (:import (org.jnetpcap.packet PcapPacketHandler)
            (clj_net_pcap PacketHeaderDataBean)))
 
@@ -32,35 +31,35 @@
 (test/deftest test-create-pcap-from-file-error
   (let [_ (println "Please note: this test is supposed to emit an error message.\n"
                    "The error message should complain about the file 'this.file.does-not-exist' not being there.")
-        flag (prepare-flag)
+        flag (utils/prepare-flag)
         pcap (try
-               (create-pcap-from-file "this.file.does-not-exist")
-               (catch Exception e
-                 (set-flag flag)
+               (pcap/create-pcap-from-file "this.file.does-not-exist")
+               (catch Exception _
+                 (utils/set-flag flag)
                  nil))]
-    (test/is (flag-set? flag))
+    (test/is (utils/flag-set? flag))
     (test/is (nil? pcap))))
 
 (test/deftest test-create-pcap-from-file
-  (let [pcap (create-pcap-from-file test-file)]
+  (let [pcap (pcap/create-pcap-from-file test-file)]
     (test/is (not (nil? pcap)))))
 
 (test/deftest test-create-pcap-from-file-and-dispatch
-  (let [pcap (create-pcap-from-file test-file)
-        my-counter (prepare-counter)
+  (let [pcap (pcap/create-pcap-from-file test-file)
+        my-counter (utils/prepare-counter)
         packet-handler (proxy [PcapPacketHandler] []
-                         (nextPacket [p u] (inc-counter my-counter)))]
+                         (nextPacket [p u] (utils/inc-counter my-counter)))]
     (test/is (= 0 @my-counter))
     (.dispatch pcap -1 packet-handler nil)
-    (sleep 200)
+    (utils/sleep 200)
     (test/is (= 6 @my-counter))))
 
 (test/deftest test-process-pcap-file
-  (let [my-counter (counter)
+  (let [my-counter (utils/counter)
         handler-fn (fn [_] (my-counter inc))]
     (test/is (= 0 (my-counter)))
-    (process-pcap-file test-file handler-fn)
-    (sleep 1000)
+    (core/process-pcap-file test-file handler-fn)
+    (utils/sleep 1000)
     (test/is (= 6 (my-counter)))))
 
 (test/deftest test-process-pcap-file-as-nested-maps
@@ -68,9 +67,9 @@
         handler-fn (fn [m]
                      (dosync (ref-set my-map m)))]
     (test/is (= {} @my-map))
-    (process-pcap-file
+    (core/process-pcap-file
       "test/clj_net_pcap/test/data/icmp-echo-request.pcap"
-      #(handler-fn (pcap-packet-to-nested-maps %)))
+      #(handler-fn (pcap-data/pcap-packet-to-nested-maps %)))
 ; FIXME: The destination netmask and bits are wrong.
     (test/is (= {"PcapHeader" {"timestampInNanos" 1365516583196346000, "wirelen" 98},
             "DataLinkLayer" {"index" 0, "ProtocolType" "Ethernet", "destination" "E0:CB:4E:E3:38:46", "source" "90:E6:BA:3C:9A:47", "next" 2},
@@ -82,7 +81,7 @@
            @my-map))))
 
 (test/deftest test-extract-nested-maps-from-pcap-file
-  (let [my-maps (extract-nested-maps-from-pcap-file "test/clj_net_pcap/test/data/icmp-echo-request.pcap")]
+  (let [my-maps (core/extract-nested-maps-from-pcap-file "test/clj_net_pcap/test/data/icmp-echo-request.pcap")]
     (test/is (= 1 (count my-maps)))
     (test/is (= {"PcapHeader" {"timestampInNanos" 1365516583196346000, "wirelen" 98},
             "DataLinkLayer" {"index" 0, "ProtocolType" "Ethernet", "destination" "E0:CB:4E:E3:38:46", "source" "90:E6:BA:3C:9A:47", "next" 2},
@@ -94,7 +93,7 @@
             (first my-maps)))))
 
 (test/deftest test-extract-maps-from-pcap-file
-  (let [my-maps (extract-maps-from-pcap-file "test/clj_net_pcap/test/data/icmp-echo-request.pcap")]
+  (let [my-maps (core/extract-maps-from-pcap-file "test/clj_net_pcap/test/data/icmp-echo-request.pcap")]
     (test/is (= 1 (count my-maps)))
     (test/is (= {"ts" 1365516583196346000, "len" 98,
             "ethDst" "E0:CB:4E:E3:38:46", "ethSrc" "90:E6:BA:3C:9A:47",
@@ -104,7 +103,7 @@
             (first my-maps)))))
 
 (test/deftest test-extract-beans-from-pcap-file
-  (let [my-beans (extract-beans-from-pcap-file "test/clj_net_pcap/test/data/icmp-echo-request.pcap")
+  (let [my-beans (core/extract-beans-from-pcap-file "test/clj_net_pcap/test/data/icmp-echo-request.pcap")
         expected (doto (PacketHeaderDataBean.)
                    (.setTs 1365516583196346000) (.setLen 98)
                    (.setEthDst "E0:CB:4E:E3:38:46") (.setEthSrc "90:E6:BA:3C:9A:47")
@@ -116,7 +115,7 @@
            (first my-beans)))))
 
 (test/deftest test-extract-byte-arrays-raw-data-from-pcap-file
-  (let [my-raw-data (extract-byte-arrays-from-pcap-file test-file)]
+  (let [my-raw-data (core/extract-byte-arrays-from-pcap-file test-file)]
     (test/is (= 6 (count my-raw-data)))
     (test/is (vector? my-raw-data))
-    (test/is (= byte-array-type (type (my-raw-data 0))))))
+    (test/is (= utils/byte-array-type (type (my-raw-data 0))))))

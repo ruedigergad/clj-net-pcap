@@ -18,13 +18,12 @@
     :doc "Tests for writing data to a file."}
   clj-net-pcap.test.file-output
   (:require
-   (clojure [test :as test]))
-  (:use
-        clj-net-pcap.byte-array-extraction-dsl
-        clj-net-pcap.core
-        clj-net-pcap.pcap
-        clj-net-pcap.pcap-data
-        clj-assorted-utils.util))
+   (clojure [test :as test])
+   (clj-assorted-utils [util :as utils])
+   (clj-net-pcap [byte-array-extraction-dsl :as ba-dsl])
+   (clj-net-pcap [core :as core])
+   (clj-net-pcap [pcap :as pcap])
+   (clj-net-pcap [pcap-data :as pcap-data])))
 
 
 
@@ -32,29 +31,29 @@
 
 (defn- create-test-cljnetpcap-single
   [dsl-expr file-out-forwarder]
-  (binding [clj-net-pcap.core/*bulk-size* 1
-            clj-net-pcap.core/*emit-raw-data* true
-            clj-net-pcap.core/*forward-exceptions* true
-            clj-net-pcap.pcap/*snap-len* 64]
-    (create-and-start-online-cljnetpcap
-      #(file-out-forwarder ((partial process-packet-byte-buffer (create-extraction-fn dsl-expr)) %))
-      lo
+  (binding [core/*bulk-size* 1
+            core/*emit-raw-data* true
+            core/*forward-exceptions* true
+            pcap/*snap-len* 64]
+    (core/create-and-start-online-cljnetpcap
+      #(file-out-forwarder ((partial pcap-data/process-packet-byte-buffer (ba-dsl/create-extraction-fn dsl-expr)) %))
+      pcap/lo
       "udp and (src port 2048) and (dst port 4096)")))
 
 (defn- create-test-cljnetpcap-bs2
   [dsl-expr file-out-forwarder]
-  (binding [clj-net-pcap.core/*bulk-size* 2
-            clj-net-pcap.core/*emit-raw-data* true
-            clj-net-pcap.core/*forward-exceptions* true
-            clj-net-pcap.pcap/*snap-len* 64]
-    (create-and-start-online-cljnetpcap
-      #(file-out-forwarder ((partial process-packet-byte-buffer-bulk (create-extraction-fn dsl-expr)) %))
-      lo
+  (binding [core/*bulk-size* 2
+            core/*emit-raw-data* true
+            core/*forward-exceptions* true
+            pcap/*snap-len* 64]
+    (core/create-and-start-online-cljnetpcap
+      #(file-out-forwarder ((partial pcap-data/process-packet-byte-buffer-bulk (ba-dsl/create-extraction-fn dsl-expr)) %))
+      pcap/lo
       "udp and (src port 2048) and (dst port 4096)")))
 
 (defn stdout-formatter-fixture [f]
   (f)
-  (rm test-out-file))
+  (utils/rm test-out-file))
 (test/use-fixtures :each stdout-formatter-fixture)
 
 
@@ -73,14 +72,14 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        file-out-forwarder (create-file-out-forwarder test-out-file)
+        file-out-forwarder (pcap-data/create-file-out-forwarder test-out-file)
         cljnetpcap (create-test-cljnetpcap-single dsl-expression file-out-forwarder)]
-    (sleep 1000)
+    (utils/sleep 1000)
     (cljnetpcap :send-bytes-packet pkt-ba)
-    (sleep 1000)
+    (utils/sleep 1000)
     (file-out-forwarder)
     (test/is (= expected-str (slurp test-out-file)))
-    (stop-cljnetpcap cljnetpcap)))
+    (core/stop-cljnetpcap cljnetpcap)))
 
 (test/deftest json-str-to-file-online-test
   (let [expected-str "{\"len\":46,\"ipId\":3,\"ipTtl\":7,\"ipChecksum\":29639,\"udpSrc\":2048,\"udpDst\":4096}\n"
@@ -96,14 +95,14 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        file-out-forwarder (create-file-out-forwarder test-out-file)
+        file-out-forwarder (pcap-data/create-file-out-forwarder test-out-file)
         cljnetpcap (create-test-cljnetpcap-single dsl-expression file-out-forwarder)]
-    (sleep 1000)
+    (utils/sleep 1000)
     (cljnetpcap :send-bytes-packet pkt-ba)
-    (sleep 1000)
+    (utils/sleep 1000)
     (file-out-forwarder)
     (test/is (= expected-str (slurp test-out-file)))
-    (stop-cljnetpcap cljnetpcap)))
+    (core/stop-cljnetpcap cljnetpcap)))
 
 (test/deftest csv-str-to-file-online-three-packets-test
   (let [expected-str "46,3,7,29639,2048,4096\n46,3,7,29639,2048,4096\n46,3,7,29639,2048,4096\n"
@@ -119,16 +118,16 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        file-out-forwarder (create-file-out-forwarder test-out-file)
+        file-out-forwarder (pcap-data/create-file-out-forwarder test-out-file)
         cljnetpcap (create-test-cljnetpcap-single dsl-expression file-out-forwarder)]
-    (sleep 1000)
+    (utils/sleep 1000)
     (cljnetpcap :send-bytes-packet pkt-ba)
     (cljnetpcap :send-bytes-packet pkt-ba)
     (cljnetpcap :send-bytes-packet pkt-ba)
-    (sleep 1000)
+    (utils/sleep 1000)
     (file-out-forwarder)
     (test/is (= expected-str (slurp test-out-file)))
-    (stop-cljnetpcap cljnetpcap)))
+    (core/stop-cljnetpcap cljnetpcap)))
 
 (test/deftest json-str-to-file-online-three-packets-test
   (let [expected-str (str
@@ -147,16 +146,16 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        file-out-forwarder (create-file-out-forwarder test-out-file)
+        file-out-forwarder (pcap-data/create-file-out-forwarder test-out-file)
         cljnetpcap (create-test-cljnetpcap-single dsl-expression file-out-forwarder)]
-    (sleep 1000)
+    (utils/sleep 1000)
     (cljnetpcap :send-bytes-packet pkt-ba)
     (cljnetpcap :send-bytes-packet pkt-ba)
     (cljnetpcap :send-bytes-packet pkt-ba)
-    (sleep 1000)
+    (utils/sleep 1000)
     (file-out-forwarder)
     (test/is (= expected-str (slurp test-out-file)))
-    (stop-cljnetpcap cljnetpcap)))
+    (core/stop-cljnetpcap cljnetpcap)))
 
 (test/deftest csv-str-to-file-online-bs2-test
   (let [expected-str "46,3,7,29639,2048,4096\n46,3,7,29639,2048,4096\n"
@@ -172,13 +171,12 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        file-out-forwarder (create-file-out-forwarder test-out-file true)
+        file-out-forwarder (pcap-data/create-file-out-forwarder test-out-file true)
         cljnetpcap (create-test-cljnetpcap-bs2 dsl-expression file-out-forwarder)]
-    (sleep 1000)
+    (utils/sleep 1000)
     (cljnetpcap :send-bytes-packet pkt-ba)
     (cljnetpcap :send-bytes-packet pkt-ba)
-    (sleep 1000)
+    (utils/sleep 1000)
     (file-out-forwarder)
     (test/is (= expected-str (slurp test-out-file)))
-    (stop-cljnetpcap cljnetpcap)))
-
+    (core/stop-cljnetpcap cljnetpcap)))

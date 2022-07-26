@@ -18,13 +18,9 @@
     :doc "Tests for extracting data from byte arrays via a DSL."}
   clj-net-pcap.test.byte-array-extraction-dsl
   (:require
-   (clojure [test :as test]))
-  (:use
-        clj-net-pcap.byte-array-extraction-dsl
-        clj-net-pcap.core
-        clj-net-pcap.dsl.transformation
-        clj-net-pcap.pcap-data
-        clj-assorted-utils.util))
+   (clojure [test :as test])
+   (clj-net-pcap [byte-array-extraction-dsl :as ba-dsl])
+   (clj-net-pcap.dsl [transformation :as xform])))
 
 (test/deftest simple-hardcoded-offsets-dsl-test
   (let [expected-map {"udpSrc" 2048, "udpDst" 4096}
@@ -36,7 +32,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
     (test/is (= expected-map extracted-map))))
 
@@ -50,7 +46,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
     (test/is (= expected-map extracted-map))))
 
@@ -69,7 +65,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
     (test/is (= expected-map extracted-map))))
 
@@ -88,7 +84,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
     (test/is (= expected-map extracted-map))))
 
@@ -107,7 +103,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
     (test/is (= expected-map extracted-map))))
 
@@ -127,7 +123,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
     (test/is (= expected-map extracted-map))))
 
@@ -147,7 +143,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
     (test/is (= expected-map extracted-map))))
 
@@ -170,7 +166,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
     (test/is (= expected-map extracted-map))))
 
@@ -196,7 +192,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
     (test/is (= expected-map extracted-map))))
 
@@ -223,7 +219,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
     (test/is (= expected-map extracted-map))))
 
@@ -238,7 +234,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn ipv4-udp-be-dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn ba-dsl/ipv4-udp-be-dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
     (test/is (= expected-map extracted-map))))
 
@@ -253,7 +249,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn ipv4-udp-le-dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn ba-dsl/ipv4-udp-le-dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
     (test/is (= expected-map extracted-map))))
 
@@ -268,7 +264,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
     (test/is (= java.util.HashMap (type extracted-map)))
     (test/is (= expected-map extracted-map))))
@@ -284,7 +280,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
     (test/is (= java.util.HashMap (type extracted-map)))
     (test/is (= expected-map extracted-map))))
@@ -300,7 +296,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
     (test/is (map? extracted-map))
     (test/is (= expected-map extracted-map))))
@@ -316,7 +312,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-str (extraction-fn pkt-ba 0)]
     (test/is (= expected-str extracted-str))))
 
@@ -331,7 +327,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-str (extraction-fn pkt-ba 0)]
     (test/is (= expected-str extracted-str))))
 
@@ -350,7 +346,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-str (extraction-fn pkt-ba 0)]
     (test/is (= expected-str extracted-str))))
 
@@ -369,7 +365,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-str (extraction-fn pkt-ba 0)]
     (test/is (= expected-str extracted-str))))
 
@@ -390,7 +386,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-str (extraction-fn pkt-ba 0)]
     (test/is (= expected-str extracted-str))))
 
@@ -412,7 +408,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-str (extraction-fn pkt-ba 0)]
     (test/is (= expected-str extracted-str))))
 
@@ -422,13 +418,13 @@
 ;;; http://weka.wikispaces.com/ARFF+%28stable+version%29
 
 (test/deftest get-arff-string-type-test
-  (test/is (= "STRING" (get-arff-type-for-transformation-fn ipv4-address))))
+  (test/is (= "STRING" (ba-dsl/get-arff-type-for-transformation-fn xform/ipv4-address))))
 
 (test/deftest get-arff-numeric-type-test
-  (test/is (= "NUMERIC" (get-arff-type-for-transformation-fn int32))))
+  (test/is (= "NUMERIC" (ba-dsl/get-arff-type-for-transformation-fn xform/int32))))
 
 (test/deftest get-arff-numeric-type-test-2
-  (test/is (= "NUMERIC" (get-arff-type-for-transformation-fn timestamp))))
+  (test/is (= "NUMERIC" (ba-dsl/get-arff-type-for-transformation-fn xform/timestamp))))
 
 (test/deftest get-arff-type-header-test
   (let [expected-str (str "@ATTRIBUTE ts NUMERIC\n"
@@ -440,7 +436,7 @@
                                 {:offset :ipv4-ttl :transformation :int8 :name :ipTtl}
                                 {:offset :ipv4-dst :transformation :ipv4-address :name :ipDst}
                                 {:offset :udp-src :transformation :int16 :name :udpSrc}]}]
-    (test/is (= expected-str (get-arff-type-header dsl-expression)))))
+    (test/is (= expected-str (ba-dsl/get-arff-type-header dsl-expression)))))
 
 (test/deftest get-arff-header-test
   (let [expected-str (str "% Packet Capture\n"
@@ -458,7 +454,7 @@
                                 {:offset :ipv4-ttl :transformation :int8 :name :ipTtl}
                                 {:offset :ipv4-dst :transformation :ipv4-address :name :ipDst}
                                 {:offset :udp-src :transformation :int16 :name :udpSrc}]}]
-    (test/is (= expected-str (get-arff-header dsl-expression)))))
+    (test/is (= expected-str (ba-dsl/get-arff-header dsl-expression)))))
 
 (test/deftest get-arff-type-header-new-dsl-test
   (let [expected-str (str "@ATTRIBUTE ts NUMERIC\n"
@@ -470,7 +466,7 @@
                                 ['ipTtl '(int8 ipv4-ttl)]
                                 ['ipDst '(ipv4-address ipv4-dst)]
                                 ['udpSrc '(int16 udp-src)]]}]
-    (test/is (= expected-str (get-arff-type-header dsl-expression)))))
+    (test/is (= expected-str (ba-dsl/get-arff-type-header dsl-expression)))))
 
 
 
@@ -479,8 +475,9 @@
 ;;;
 
 (test/deftest resolve-transf-fn-old-syntax-test
-  (test/is (= (resolve 'clj-net-pcap.dsl.transformation/int16)
-         (resolve-transf-fn {:offset :udp-src :transformation :int16 :name :udpSrc}))))
+  (test/is (=
+            (resolve 'clj-net-pcap.dsl.transformation/int16)
+            (ba-dsl/resolve-transf-fn {:offset :udp-src :transformation :int16 :name :udpSrc}))))
 
 (test/deftest new-dsl-with-type-java-map-test
   (let [expected-map {"udpSrc" 2048, "udpDst" 4096}
@@ -493,7 +490,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
     (test/is (= java.util.HashMap (type extracted-map)))
     (test/is (= expected-map extracted-map))))
@@ -509,7 +506,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
     (test/is (= java.util.HashMap (type extracted-map)))
     (test/is (= expected-map extracted-map))))
@@ -525,7 +522,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
     (test/is (= java.util.HashMap (type extracted-map)))
     (test/is (= expected-map extracted-map))))
@@ -541,7 +538,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
     (test/is (= java.util.HashMap (type extracted-map)))
     (test/is (= expected-map extracted-map))))
@@ -558,7 +555,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
     (test/is (map? extracted-map))
     (test/is (= expected-map extracted-map))))
@@ -574,7 +571,7 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-str (extraction-fn pkt-ba 0)]
     (test/is (= expected-str extracted-str))))
 
@@ -589,6 +586,6 @@
                      8 0 16 0 0 4 -25 -26                                  ; 8 byte UDP header
                      97 98 99 100]                                         ; 4 byte data "abcd"
         pkt-ba (byte-array (map byte pkt-raw-vec))
-        extraction-fn (create-extraction-fn dsl-expression)
+        extraction-fn (ba-dsl/create-extraction-fn dsl-expression)
         extracted-str (extraction-fn pkt-ba 0)]
     (test/is (= expected-str extracted-str))))

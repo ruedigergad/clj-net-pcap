@@ -18,14 +18,12 @@
     :doc "Tests for sending packets via pcap."}
   clj-net-pcap.test.pcap-send
   (:require
-   (clojure [test :as test]))
-  (:use
-        clj-assorted-utils.util
-        clj-net-pcap.core
-        clj-net-pcap.packet-gen
-        clj-net-pcap.pcap
-        clj-net-pcap.pcap-data
-        clj-net-pcap.sniffer)
+   (clojure [test :as test])
+   (clj-assorted-utils [util :as utils])
+   (clj-net-pcap [core :as core])
+   (clj-net-pcap [pcap :as pcap])
+   (clj-net-pcap [pcap-data :as pcap-data])
+   (clj-net-pcap [sniffer :as sniffer]))
   (:import (java.util Arrays)
            (java.nio ByteBuffer)))
 
@@ -43,168 +41,167 @@
 
 (test/deftest naive-pcap-send-byte-array-test
   (let [ba (byte-array (map byte test-pkt-bytes))
-        pcap (create-and-activate-online-pcap lo)]
+        pcap (pcap/create-and-activate-online-pcap pcap/lo)]
     (pcap :send-bytes-packet ba)
-    (close-pcap pcap)))
+    (pcap/close-pcap pcap)))
 
 (test/deftest pcap-send-and-sniff-byte-array-test
   (let [ba (byte-array (map byte test-pkt-bytes))
         bb (ByteBuffer/allocate (alength ba))
-        pcap (create-and-activate-online-pcap lo)
-        flag (prepare-flag)
-        handler (fn [ph buf _]
+        pcap (pcap/create-and-activate-online-pcap pcap/lo)
+        flag(utils/prepare-flag)
+        handler (fn [_ buf _]
                   (doto bb
                     (.put buf)
                     (.flip))
-                  (set-flag flag))
-        sniffer (create-and-start-sniffer pcap handler)]
+                 (utils/set-flag flag))
+        sniffer (sniffer/create-and-start-sniffer pcap handler)]
     ; Give the sniffer a little time to start before we actually send the packet.
-    (sleep 100)
+   (utils/sleep 100)
     (pcap :send-bytes-packet ba)
-    (await-flag flag)
-    (test/is (flag-set? flag))
+   (utils/await-flag flag)
+    (test/is(utils/flag-set? flag))
     (test/is (Arrays/equals ba (.array bb)))
-    (stop-sniffer sniffer)))
+    (sniffer/stop-sniffer sniffer)))
 
 (test/deftest cljnetpcap-send-and-receive-bytes-packet-raw-test
   (let [ba (byte-array (map byte test-pkt-bytes))
         bb (ByteBuffer/allocate (+ (alength ba) 16))
-        flag (prepare-flag)
+        flag(utils/prepare-flag)
         forwarder-fn (fn [data]
                        (doto bb
                          (.put data)
                          (.flip))
-                       (set-flag flag))
-        cljnetpcap (binding [*emit-raw-data* true
-                             *queue-size* 1]
-                     (create-and-start-online-cljnetpcap forwarder-fn lo))
-        _ (add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
-    (sleep 100)
+                      (utils/set-flag flag))
+        cljnetpcap (binding [core/*emit-raw-data* true
+                             core/*queue-size* 1]
+                     (core/create-and-start-online-cljnetpcap forwarder-fn pcap/lo))
+        _ (core/add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
+   (utils/sleep 100)
     (cljnetpcap :send-bytes-packet ba)
-    (await-flag flag)
-    (test/is (flag-set? flag))
+   (utils/await-flag flag)
+    (test/is(utils/flag-set? flag))
     (test/is (= (vec ba) (subvec (vec (.array bb)) 16)))
-    (stop-cljnetpcap cljnetpcap)))
+    (core/stop-cljnetpcap cljnetpcap)))
 
-(test/deftest cljnetpcap-send-and-receive-bytes-packet-maps-test
+(test/deftest cljnetpcap-send-and-receive-bytes-packet-test
   (let [ba (byte-array (map byte test-pkt-bytes))
         expected {"len" 54, "ethSrc" "01:02:03:04:05:06", "ethDst" "FF:FE:FD:F2:F1:F0",
                   "ipVer" 4, "ipDst" "252.253.254.255", "ipId" 3,
                   "ipTtl" 7, "ipSrc" "1.2.3.4", "ipChecksum" 29647,
                   "icmpEchoSeq" 12, "icmpType" "echo request"}
         received (ref nil)
-        flag (prepare-flag)
+        flag(utils/prepare-flag)
         forwarder-fn (fn [data]
-                       (dosync (ref-set received (pcap-packet-to-map data)))
-                       (set-flag flag))
-        cljnetpcap (binding [*emit-raw-data* false
-                             *queue-size* 1]
-                     (create-and-start-online-cljnetpcap forwarder-fn lo))
-        _ (add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
-    (sleep 100)
+                       (dosync (ref-set received (pcap-data/pcap-packet-to-map data)))
+                      (utils/set-flag flag))
+        cljnetpcap (binding [core/*emit-raw-data* false
+                             core/*queue-size* 1]
+                     (core/create-and-start-online-cljnetpcap forwarder-fn pcap/lo))
+        _ (core/add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
+   (utils/sleep 100)
     (cljnetpcap :send-bytes-packet ba)
-    (await-flag flag)
-    (test/is (flag-set? flag))
+   (utils/await-flag flag)
+    (test/is(utils/flag-set? flag))
     (test/is (= expected (dissoc (merge {} @received) "ts")))
-    (stop-cljnetpcap cljnetpcap)))
+    (core/stop-cljnetpcap cljnetpcap)))
 
 (test/deftest cljnetpcap-send-and-receive-bytes-packet-count-test
   (let [ba (byte-array (map byte test-pkt-bytes))
-        cntr (counter)
+        cntr(utils/counter)
         forwarder-fn (fn [_]
                        (cntr inc))
-        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)
-        _ (add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
-    (sleep 100)
+        cljnetpcap (core/create-and-start-online-cljnetpcap forwarder-fn pcap/lo)
+        _ (core/add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
+   (utils/sleep 100)
     (doseq [_ (repeat 10 1)]
-      (sleep 10)
+     (utils/sleep 10)
       (cljnetpcap :send-bytes-packet ba))
-    (sleep 300)
+   (utils/sleep 300)
     (test/is (= 10 (cntr)))
-    (stop-cljnetpcap cljnetpcap)))
+    (core/stop-cljnetpcap cljnetpcap)))
 
 (test/deftest cljnetpcap-send-and-receive-bytes-packet-with-count-and-delay-test
   (let [ba (byte-array (map byte test-pkt-bytes))
-        cntr (counter)
+        cntr(utils/counter)
         forwarder-fn (fn [_]
                        (cntr inc))
-        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)
-        _ (add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
-    (sleep 100)
+        cljnetpcap (core/create-and-start-online-cljnetpcap forwarder-fn pcap/lo)
+        _ (core/add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
+   (utils/sleep 100)
     (cljnetpcap :send-bytes-packet ba 10 10)
-    (sleep 300)
+   (utils/sleep 300)
     (test/is (= 10 (cntr)))
-    (stop-cljnetpcap cljnetpcap)))
+    (core/stop-cljnetpcap cljnetpcap)))
 
 (test/deftest cljnetpcap-send-and-receive-bytes-packet-with-count-test
   (let [ba (byte-array (map byte test-pkt-bytes))
-        cntr (counter)
+        cntr(utils/counter)
         forwarder-fn (fn [_]
                        (cntr inc))
-        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)
-        _ (add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
-    (sleep 100)
+        cljnetpcap (core/create-and-start-online-cljnetpcap forwarder-fn pcap/lo)
+        _ (core/add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
+   (utils/sleep 100)
     (cljnetpcap :send-bytes-packet ba 10)
-    (sleep 300)
+   (utils/sleep 300)
     (test/is (= 10 (cntr)))
-    (stop-cljnetpcap cljnetpcap)))
+    (core/stop-cljnetpcap cljnetpcap)))
 
-(test/deftest cljnetpcap-send-and-receive-bytes-packet-maps-test
+(test/deftest cljnetpcap-send-and-receive-packet-maps-test
   (let [expected {"len" 54, "ethSrc" "01:02:03:04:05:06", "ethDst" "FF:FE:FD:F2:F1:F0",
                   "ipVer" 4, "ipDst" "252.253.254.255", "ipId" 3,
                   "ipTtl" 7, "ipSrc" "1.2.3.4", "ipChecksum" 29647,
                   "icmpEchoSeq" 12, "icmpType" "echo request"}
         received (ref nil)
-        flag (prepare-flag)
+        flag(utils/prepare-flag)
         forwarder-fn (fn [data]
-                       (dosync (ref-set received (pcap-packet-to-map data)))
-                       (set-flag flag))
-        cljnetpcap (binding [*emit-raw-data* false
-                             *queue-size* 1]
-                     (create-and-start-online-cljnetpcap forwarder-fn lo))
-        _ (add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
-    (sleep 100)
+                       (dosync (ref-set received (pcap-data/pcap-packet-to-map data)))
+                      (utils/set-flag flag))
+        cljnetpcap (binding [core/*emit-raw-data* false
+                             core/*queue-size* 1]
+                     (core/create-and-start-online-cljnetpcap forwarder-fn pcap/lo))
+        _ (core/add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
+   (utils/sleep 100)
     (cljnetpcap :send-packet-map test-pkt-descr-map)
-    (await-flag flag)
-    (test/is (flag-set? flag))
+   (utils/await-flag flag)
+    (test/is(utils/flag-set? flag))
     (test/is (= expected (dissoc (merge {} @received) "ts")))
-    (stop-cljnetpcap cljnetpcap)))
+    (core/stop-cljnetpcap cljnetpcap)))
 
 (test/deftest cljnetpcap-send-and-receive-packet-from-description-map-count-test
-  (let [cntr (counter)
+  (let [cntr(utils/counter)
         forwarder-fn (fn [_]
                        (cntr inc))
-        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)
-        _ (add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
-    (sleep 100)
+        cljnetpcap (core/create-and-start-online-cljnetpcap forwarder-fn pcap/lo)
+        _ (core/add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
+   (utils/sleep 100)
     (doseq [_ (repeat 10 1)]
-      (sleep 10)
+     (utils/sleep 10)
       (cljnetpcap :send-packet-map test-pkt-descr-map))
-    (sleep 300)
+   (utils/sleep 300)
     (test/is (= 10 (cntr)))
-    (stop-cljnetpcap cljnetpcap)))
+    (core/stop-cljnetpcap cljnetpcap)))
 
 (test/deftest cljnetpcap-send-and-receive-packet-from-description-map-with-count-and-delay-test
-  (let [cntr (counter)
+  (let [cntr(utils/counter)
         forwarder-fn (fn [_]
                        (cntr inc))
-        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)
-        _ (add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
-    (sleep 100)
+        cljnetpcap (core/create-and-start-online-cljnetpcap forwarder-fn pcap/lo)
+        _ (core/add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
+   (utils/sleep 100)
     (cljnetpcap :send-packet-map test-pkt-descr-map 10 10)
-    (sleep 300)
+   (utils/sleep 300)
     (test/is (= 10 (cntr)))
-    (stop-cljnetpcap cljnetpcap)))
+    (core/stop-cljnetpcap cljnetpcap)))
 
 (test/deftest cljnetpcap-send-and-receive-packet-from-description-map-with-count-test
-  (let [cntr (counter)
+  (let [cntr(utils/counter)
         forwarder-fn (fn [_]
                        (cntr inc))
-        cljnetpcap (create-and-start-online-cljnetpcap forwarder-fn lo)
-        _ (add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
-    (sleep 100)
+        cljnetpcap (core/create-and-start-online-cljnetpcap forwarder-fn pcap/lo)
+        _ (core/add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
+   (utils/sleep 100)
     (cljnetpcap :send-packet-map test-pkt-descr-map 10)
-    (sleep 300)
+   (utils/sleep 300)
     (test/is (= 10 (cntr)))
-    (stop-cljnetpcap cljnetpcap)))
-
+    (core/stop-cljnetpcap cljnetpcap)))

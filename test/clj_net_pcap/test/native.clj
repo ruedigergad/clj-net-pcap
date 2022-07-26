@@ -18,47 +18,46 @@
     :doc "Tests for extracting/loading the native libraries"} 
   clj-net-pcap.test.native
   (:require
-   (clojure [test :as test]))
-  (:use
-        clojure.java.io
-        clj-net-pcap.native
-        clj-assorted-utils.util))  
+   (clojure.java [io :as jio])
+   (clojure [test :as test])
+   (clj-assorted-utils [util :as utils])
+   (clj-net-pcap [native :as native])))
 
 (def test-filename "test-native-file-foo")
 
 (test/deftest get-url-for-lib
-  "Test if we can actually get the location of a file contained in the jnetpcap.jar.
-   For this to work jnetpcap.jar has to be on the classpath and the file we look
-   for has to be in the jnetpcap.jar. This should be the case for the jar we
-   created as we explicitly inlcuded the native libs there."
-  (test/is (resource "native/linux/amd64/libjnetpcap.so")))
+  ; Test if we can actually get the location of a file contained in the jnetpcap.jar.
+  ; For this to work jnetpcap.jar has to be on the classpath and the file we look
+  ; for has to be in the jnetpcap.jar. This should be the case for the jar we
+  ; created as we explicitly inlcuded the native libs there.
+  (test/is (jio/resource "native/linux/amd64/libjnetpcap.so")))
 
 (test/deftest get-url-for-lib-error
-  (test/is (not (resource "native/linux/amd64/doesnotexist.so"))))
+  (test/is (not (jio/resource "native/linux/amd64/doesnotexist.so"))))
 
 (test/deftest mk-rm-native-lib-dir
   ; TODO: Should we use something more elaborate here? (mocking/stubbing?)
-  (binding [*lib-dir* "clj-net-pcap-native-tests"]
-    (let [dir (native-lib-dir)]
-      (test/is (not (dir-exists? dir)))
-      (mk-native-lib-dir)
-      (test/is (dir-exists? dir))
-      (rm-native-lib-dir)
-      (test/is (not (dir-exists? dir))))))
+  (binding [native/*lib-dir* "clj-net-pcap-native-tests"]
+    (let [dir (native/native-lib-dir)]
+      (test/is (not (utils/dir-exists? dir)))
+      (native/mk-native-lib-dir)
+      (test/is (utils/dir-exists? dir))
+      (native/rm-native-lib-dir)
+      (test/is (not (utils/dir-exists? dir))))))
 
 (test/deftest extract-from-jar-to-file
   (let [jar-content "native/linux/amd64/libjnetpcap.so"
         target-file test-filename]
-    (test/is (not (file-exists? target-file)))
-    (test/is (resource jar-content))
-    (copy-resource-to-file jar-content target-file)
-    (test/is (file-exists? target-file))
-    (rm target-file)))
+    (test/is (not (utils/file-exists? target-file)))
+    (test/is (jio/resource jar-content))
+    (native/copy-resource-to-file jar-content target-file)
+    (test/is (utils/file-exists? target-file))
+    (utils/rm target-file)))
 
 (test/deftest find-lib-in-jar
-  (let [res (pcap-jar-path pcap080)]
+  (let [res (native/pcap-jar-path native/pcap080)]
     (println "\nUsing the following path to locate the library inside the JAR file: " res)
-    (test/is (resource res)
+    (test/is (jio/resource res)
         (str "This test failed either because: \n"
              "1) The path used for locating the library was not correct (see above).\n"
              "2) The JAR archive does not contain a library for the "
@@ -67,24 +66,23 @@
 
 (test/deftest extract-remove-native-libs
   ; TODO: Should we use something more elaborate here? (mocking/stubbing?)
-  (binding [*lib-dir* "clj-net-pcap-native-tests"]
-    (let [dir (native-lib-dir)
+  (binding [native/*lib-dir* "clj-net-pcap-native-tests"]
+    (let [dir (native/native-lib-dir)
           prefix (cond
-                   (is-os? "windows") ""
+                   (utils/is-os? "windows") ""
                    :else "lib")
           suffix (cond
-                   (is-os? "windows") ".dll"
+                   (utils/is-os? "windows") ".dll"
                    :else ".so")
           pcap080 (str dir prefix "jnetpcap" suffix)
           pcap100 (str dir prefix "jnetpcap-pcap100" suffix)]
-      (test/is (not (dir-exists? dir)))
-      (test/are [x] (not (file-exists? x))
+      (test/is (not (utils/dir-exists? dir)))
+      (test/are [x] (not (utils/file-exists? x))
         pcap080
         pcap100)
-      (extract-native-libs)
-      (test/are [x] (file-exists? x)
+      (native/extract-native-libs)
+      (test/are [x] (utils/file-exists? x)
         pcap080
         pcap100)
-      (remove-native-libs)
-      (test/is (not (dir-exists? dir))))))
-
+      (native/remove-native-libs)
+      (test/is (not (utils/dir-exists? dir))))))

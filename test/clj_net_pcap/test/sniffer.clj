@@ -17,48 +17,49 @@
   ^{:author "Ruediger Gad",
     :doc "Clojure jNetPcap sniffer tests"}
   clj-net-pcap.test.sniffer
-  (:use clojure.test
-        clj-net-pcap.pcap
-        clj-net-pcap.sniffer
-        clj-assorted-utils.util)
+  (:require
+   (clojure [test :as test])
+   (clj-assorted-utils [util :as utils])
+   (clj-net-pcap [pcap :as pcap])
+   (clj-net-pcap [sniffer :as sniffer]))
   (:import (java.util.concurrent LinkedBlockingQueue)))
 
 (def receive-delay 1000)
 
-;(deftest test-sniffer
-;  (let [was-run (prepare-flag)
-;        handler-fn (fn [_ _ _] (set-flag was-run))
+;(test/deftest test-sniffer
+;  (let [was-run (utils/prepare-flag)
+;        handler-fn (fn [_ _ _] (utils/set-flag was-run))
 ;        pcap (create-and-activate-online-pcap lo)
 ;        sniffer (create-and-start-sniffer pcap handler-fn nil)]
-;    (is (not (flag-set? was-run)))
+;    (test/is (not (utils/flag-set? was-run)))
 ;    (Thread/sleep receive-delay)
 ;    (.inject (pcap) (byte-array 1 (byte 0)))
-;    (await-flag was-run)
-;    (is (flag-set? was-run))
+;    (utils/await-flag was-run)
+;    (test/is (utils/flag-set? was-run))
 ;    (stop-sniffer sniffer)))
 
-(deftest test-forwarder
-  (let [was-run (prepare-flag)
-        forwarder-fn (fn [_] (set-flag was-run))
+(test/deftest test-forwarder
+  (let [was-run (utils/prepare-flag)
+        forwarder-fn (fn [_] (utils/set-flag was-run))
         queue (LinkedBlockingQueue.)
-        forwarder (create-and-start-forwarder queue forwarder-fn false)]
-    (is (not (flag-set? was-run)))
+        forwarder (sniffer/create-and-start-forwarder queue forwarder-fn false)]
+    (test/is (not (utils/flag-set? was-run)))
     (.offer queue 12345)
-    (await-flag was-run)
-    (is (flag-set? was-run))
-    (stop-forwarder forwarder)))
+    (utils/await-flag was-run)
+    (test/is (utils/flag-set? was-run))
+    (sniffer/stop-forwarder forwarder)))
 
-(deftest sniffer-forwarder-interaction
-  (let [was-run (prepare-flag)
+(test/deftest sniffer-forwarder-interaction
+  (let [was-run (utils/prepare-flag)
         queue (LinkedBlockingQueue.)
-        handler-fn (fn [ph bb u] (.offer queue 12345))
-        forwarder-fn (fn [_] (set-flag was-run))
-        forwarder (create-and-start-forwarder queue forwarder-fn false)
-        pcap (create-and-activate-online-pcap lo)
-        sniffer (create-and-start-sniffer pcap handler-fn)]
+        handler-fn (fn [_ _ _] (.offer queue 12345))
+        forwarder-fn (fn [_] (utils/set-flag was-run))
+        forwarder (sniffer/create-and-start-forwarder queue forwarder-fn false)
+        pcap (pcap/create-and-activate-online-pcap pcap/lo)
+        sniffer (sniffer/create-and-start-sniffer pcap handler-fn)]
     (Thread/sleep receive-delay)
-    (exec-blocking "ping -c 1 localhost")
-    (await-flag was-run)
-    (is (flag-set? was-run))
-    (stop-sniffer sniffer)
-    (stop-forwarder forwarder)))
+    (utils/exec-blocking "ping -c 1 localhost")
+    (utils/await-flag was-run)
+    (test/is (utils/flag-set? was-run))
+    (sniffer/stop-sniffer sniffer)
+    (sniffer/stop-forwarder forwarder)))

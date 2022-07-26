@@ -17,16 +17,16 @@
   ^{:author "Ruediger Gad",
     :doc "Tests for clj-net-pcap Java interoperability"}
   clj-net-pcap.test.java-interop
-  (:use clojure.test
-        clj-assorted-utils.util)
+  (:require
+   (clojure [test :as test]))
   (:import (clj_net_pcap CljNetPcapJavaAdapter PacketHeaderDataBean)))
 
 (def test-file "test/clj_net_pcap/test/data/offline-test.pcap")
 
-(deftest test-java-static-extract-nested-maps-from-pcap-file
+(test/deftest test-java-static-extract-nested-maps-from-pcap-file
   (let [my-map (CljNetPcapJavaAdapter/extractNestedMapsFromPcapFile "test/clj_net_pcap/test/data/icmp-echo-request.pcap")]
-    (is (= 1 (count my-map)))
-    (is (= {"PcapHeader" {"timestampInNanos" 1365516583196346000, "wirelen" 98},
+    (test/is (= 1 (count my-map)))
+    (test/is (= {"PcapHeader" {"timestampInNanos" 1365516583196346000, "wirelen" 98},
             "DataLinkLayer" {"index" 0, "ProtocolType" "Ethernet", "destination" "E0:CB:4E:E3:38:46", "source" "90:E6:BA:3C:9A:47", "next" 2},
             "NetworkLayer" {
 ;              "destinationNetmaskBits" 24, "destinationNetwork" "192.168.20.0", "sourceNetwork" "192.168.20.0", "sourceNetmaskBits" 24},
@@ -35,17 +35,17 @@
             "Icmp" {"index" 2, "typeDescription" "echo request", "next" 0}}
             (first my-map)))))
 
-(deftest test-java-static-extract-maps-from-pcap-file
+(test/deftest test-java-static-extract-maps-from-pcap-file
   (let [my-map (CljNetPcapJavaAdapter/extractMapsFromPcapFile "test/clj_net_pcap/test/data/icmp-echo-request.pcap")]
-    (is (= 1 (count my-map)))
-    (is (= {"ts" 1365516583196346000, "len" 98,
+    (test/is (= 1 (count my-map)))
+    (test/is (= {"ts" 1365516583196346000, "len" 98,
             "ethDst" "E0:CB:4E:E3:38:46", "ethSrc" "90:E6:BA:3C:9A:47",
             "ipDst" "173.194.69.94", "ipSrc" "192.168.20.126", "ipVer" 4,
             "ipId" 0, "ipTtl" 64, "ipChecksum" 29282,
             "icmpType" "echo request", "icmpEchoSeq" 21}
             (first my-map)))))
 
-(deftest test-java-static-extract-beans-from-pcap-file
+(test/deftest test-java-static-extract-beans-from-pcap-file
   (let [my-beans (CljNetPcapJavaAdapter/extractBeansFromPcapFile "test/clj_net_pcap/test/data/icmp-echo-request.pcap")
         expected (doto (PacketHeaderDataBean.)
                    (.setTs 1365516583196346000) (.setLen 98)
@@ -53,6 +53,6 @@
                    (.setIpDst "173.194.69.94") (.setIpSrc "192.168.20.126")
                    (.setIpId 0) (.setIpTtl 64) (.setIpChecksum 29282)
                    (.setIpVer 4) (.setIcmpType "echo request") (.setIcmpEchoSeq 21))]
-    (is (= 1 (count my-beans)))
-    (is (= expected
+    (test/is (= 1 (count my-beans)))
+    (test/is (= expected
            (first my-beans)))))

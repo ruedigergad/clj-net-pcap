@@ -17,7 +17,9 @@
   ^{:author "Ruediger Gad",
     :doc "Tests for sending packets via pcap."}
   clj-net-pcap.test.pcap-send
-  (:use clojure.test
+  (:require
+   (clojure [test :as test]))
+  (:use
         clj-assorted-utils.util
         clj-net-pcap.core
         clj-net-pcap.packet-gen
@@ -39,13 +41,13 @@
 
 
 
-(deftest naive-pcap-send-byte-array-test
+(test/deftest naive-pcap-send-byte-array-test
   (let [ba (byte-array (map byte test-pkt-bytes))
         pcap (create-and-activate-online-pcap lo)]
     (pcap :send-bytes-packet ba)
     (close-pcap pcap)))
 
-(deftest pcap-send-and-sniff-byte-array-test
+(test/deftest pcap-send-and-sniff-byte-array-test
   (let [ba (byte-array (map byte test-pkt-bytes))
         bb (ByteBuffer/allocate (alength ba))
         pcap (create-and-activate-online-pcap lo)
@@ -60,11 +62,11 @@
     (sleep 100)
     (pcap :send-bytes-packet ba)
     (await-flag flag)
-    (is (flag-set? flag))
-    (is (Arrays/equals ba (.array bb)))
+    (test/is (flag-set? flag))
+    (test/is (Arrays/equals ba (.array bb)))
     (stop-sniffer sniffer)))
 
-(deftest cljnetpcap-send-and-receive-bytes-packet-raw-test
+(test/deftest cljnetpcap-send-and-receive-bytes-packet-raw-test
   (let [ba (byte-array (map byte test-pkt-bytes))
         bb (ByteBuffer/allocate (+ (alength ba) 16))
         flag (prepare-flag)
@@ -80,11 +82,11 @@
     (sleep 100)
     (cljnetpcap :send-bytes-packet ba)
     (await-flag flag)
-    (is (flag-set? flag))
-    (is (= (vec ba) (subvec (vec (.array bb)) 16)))
+    (test/is (flag-set? flag))
+    (test/is (= (vec ba) (subvec (vec (.array bb)) 16)))
     (stop-cljnetpcap cljnetpcap)))
 
-(deftest cljnetpcap-send-and-receive-bytes-packet-maps-test
+(test/deftest cljnetpcap-send-and-receive-bytes-packet-maps-test
   (let [ba (byte-array (map byte test-pkt-bytes))
         expected {"len" 54, "ethSrc" "01:02:03:04:05:06", "ethDst" "FF:FE:FD:F2:F1:F0",
                   "ipVer" 4, "ipDst" "252.253.254.255", "ipId" 3,
@@ -102,11 +104,11 @@
     (sleep 100)
     (cljnetpcap :send-bytes-packet ba)
     (await-flag flag)
-    (is (flag-set? flag))
-    (is (= expected (dissoc (merge {} @received) "ts")))
+    (test/is (flag-set? flag))
+    (test/is (= expected (dissoc (merge {} @received) "ts")))
     (stop-cljnetpcap cljnetpcap)))
 
-(deftest cljnetpcap-send-and-receive-bytes-packet-count-test
+(test/deftest cljnetpcap-send-and-receive-bytes-packet-count-test
   (let [ba (byte-array (map byte test-pkt-bytes))
         cntr (counter)
         forwarder-fn (fn [_]
@@ -118,10 +120,10 @@
       (sleep 10)
       (cljnetpcap :send-bytes-packet ba))
     (sleep 300)
-    (is (= 10 (cntr)))
+    (test/is (= 10 (cntr)))
     (stop-cljnetpcap cljnetpcap)))
 
-(deftest cljnetpcap-send-and-receive-bytes-packet-with-count-and-delay-test
+(test/deftest cljnetpcap-send-and-receive-bytes-packet-with-count-and-delay-test
   (let [ba (byte-array (map byte test-pkt-bytes))
         cntr (counter)
         forwarder-fn (fn [_]
@@ -131,10 +133,10 @@
     (sleep 100)
     (cljnetpcap :send-bytes-packet ba 10 10)
     (sleep 300)
-    (is (= 10 (cntr)))
+    (test/is (= 10 (cntr)))
     (stop-cljnetpcap cljnetpcap)))
 
-(deftest cljnetpcap-send-and-receive-bytes-packet-with-count-test
+(test/deftest cljnetpcap-send-and-receive-bytes-packet-with-count-test
   (let [ba (byte-array (map byte test-pkt-bytes))
         cntr (counter)
         forwarder-fn (fn [_]
@@ -144,10 +146,10 @@
     (sleep 100)
     (cljnetpcap :send-bytes-packet ba 10)
     (sleep 300)
-    (is (= 10 (cntr)))
+    (test/is (= 10 (cntr)))
     (stop-cljnetpcap cljnetpcap)))
 
-(deftest cljnetpcap-send-and-receive-bytes-packet-maps-test
+(test/deftest cljnetpcap-send-and-receive-bytes-packet-maps-test
   (let [expected {"len" 54, "ethSrc" "01:02:03:04:05:06", "ethDst" "FF:FE:FD:F2:F1:F0",
                   "ipVer" 4, "ipDst" "252.253.254.255", "ipId" 3,
                   "ipTtl" 7, "ipSrc" "1.2.3.4", "ipChecksum" 29647,
@@ -164,11 +166,11 @@
     (sleep 100)
     (cljnetpcap :send-packet-map test-pkt-descr-map)
     (await-flag flag)
-    (is (flag-set? flag))
-    (is (= expected (dissoc (merge {} @received) "ts")))
+    (test/is (flag-set? flag))
+    (test/is (= expected (dissoc (merge {} @received) "ts")))
     (stop-cljnetpcap cljnetpcap)))
 
-(deftest cljnetpcap-send-and-receive-packet-from-description-map-count-test
+(test/deftest cljnetpcap-send-and-receive-packet-from-description-map-count-test
   (let [cntr (counter)
         forwarder-fn (fn [_]
                        (cntr inc))
@@ -179,10 +181,10 @@
       (sleep 10)
       (cljnetpcap :send-packet-map test-pkt-descr-map))
     (sleep 300)
-    (is (= 10 (cntr)))
+    (test/is (= 10 (cntr)))
     (stop-cljnetpcap cljnetpcap)))
 
-(deftest cljnetpcap-send-and-receive-packet-from-description-map-with-count-and-delay-test
+(test/deftest cljnetpcap-send-and-receive-packet-from-description-map-with-count-and-delay-test
   (let [cntr (counter)
         forwarder-fn (fn [_]
                        (cntr inc))
@@ -191,10 +193,10 @@
     (sleep 100)
     (cljnetpcap :send-packet-map test-pkt-descr-map 10 10)
     (sleep 300)
-    (is (= 10 (cntr)))
+    (test/is (= 10 (cntr)))
     (stop-cljnetpcap cljnetpcap)))
 
-(deftest cljnetpcap-send-and-receive-packet-from-description-map-with-count-test
+(test/deftest cljnetpcap-send-and-receive-packet-from-description-map-with-count-test
   (let [cntr (counter)
         forwarder-fn (fn [_]
                        (cntr inc))
@@ -203,6 +205,6 @@
     (sleep 100)
     (cljnetpcap :send-packet-map test-pkt-descr-map 10)
     (sleep 300)
-    (is (= 10 (cntr)))
+    (test/is (= 10 (cntr)))
     (stop-cljnetpcap cljnetpcap)))
 

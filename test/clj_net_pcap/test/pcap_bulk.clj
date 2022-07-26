@@ -17,15 +17,16 @@
   ^{:author "Ruediger Gad",
     :doc "Tests for the bulk capture mode."}
   clj-net-pcap.test.pcap-bulk
-  (:use clojure.test
+  (:require
+   (clojure [test :as test]))
+  (:use
         clj-assorted-utils.util
         clj-net-pcap.core
         clj-net-pcap.packet-gen
         clj-net-pcap.pcap
         clj-net-pcap.pcap-data
         clj-net-pcap.sniffer)
-  (:import (java.util Arrays)
-           (java.nio ByteBuffer)
+  (:import (java.nio ByteBuffer)
            (org.jnetpcap DirectBulkByteBufferWrapper)))
 
 (def test-pkt-bytes [-1 -2 -3 -14 -15 -16 1 2 3 4 5 6 8 0
@@ -40,7 +41,7 @@
 
 
 
-(deftest cljnetpcap-send-and-receive-bytes-packet-via-intermediate-buffer-count-test
+(test/deftest cljnetpcap-send-and-receive-bytes-packet-via-intermediate-buffer-count-test
   (let [ba (byte-array (map byte test-pkt-bytes))
         cntr (counter)
         received-data (ref nil)
@@ -55,12 +56,12 @@
     (sleep 1000)
     (cljnetpcap :send-bytes-packet ba 10 10)
     (sleep 1000)
-    (is (= 1 (cntr)))
-    (is (not (.isDirect @received-data)))
-    (is (.hasArray @received-data))
+    (test/is (= 1 (cntr)))
+    (test/is (not (.isDirect @received-data)))
+    (test/is (.hasArray @received-data))
     (stop-cljnetpcap cljnetpcap)))
 
-(deftest cljnetpcap-send-and-receive-packet-maps-via-intermediate-buffer-count-test
+(test/deftest cljnetpcap-send-and-receive-packet-maps-via-intermediate-buffer-count-test
   (let [cntr (counter)
         data-inst-len (+ 16 (count test-pkt-bytes))
         bb (ByteBuffer/allocate (* data-inst-len 10))
@@ -78,13 +79,13 @@
     (doseq [x (range 0 10)]
       (cljnetpcap :send-packet-map (assoc test-pkt-descr-map "icmpSeqNo" x)))
     (sleep 1000)
-    (is (= 1 (cntr)))
+    (test/is (= 1 (cntr)))
     (doseq [x (range 0 10)]
-      (is (= 123 (.get bb (+ (+ 40 15) (* x data-inst-len)))))
-      (is (= x (.get bb (+ (+ 42 15) (* x data-inst-len))))))
+      (test/is (= 123 (.get bb (+ (+ 40 15) (* x data-inst-len)))))
+      (test/is (= x (.get bb (+ (+ 42 15) (* x data-inst-len))))))
     (stop-cljnetpcap cljnetpcap)))
 
-(deftest cljnetpcap-send-and-receive-bytes-packet-without-intermediate-buffer-count-test
+(test/deftest cljnetpcap-send-and-receive-bytes-packet-without-intermediate-buffer-count-test
   (let [ba (byte-array (map byte test-pkt-bytes))
         cntr (counter)
         received-data (ref nil)
@@ -100,11 +101,11 @@
     (sleep 1000)
     (cljnetpcap :send-bytes-packet ba 10 10)
     (sleep 1000)
-    (is (= 1 (cntr)))
-    (is (= DirectBulkByteBufferWrapper (type @received-data)))
+    (test/is (= 1 (cntr)))
+    (test/is (= DirectBulkByteBufferWrapper (type @received-data)))
     (stop-cljnetpcap cljnetpcap)))
 
-(deftest cljnetpcap-send-and-receive-packet-maps-without-intermediate-buffer-count-test
+(test/deftest cljnetpcap-send-and-receive-packet-maps-without-intermediate-buffer-count-test
   (let [cntr (counter)
         data-inst-len (+ 16 (count test-pkt-bytes))
         received-data (ref nil)
@@ -120,12 +121,12 @@
     (doseq [x (range 0 10)]
       (cljnetpcap :send-packet-map (assoc test-pkt-descr-map "icmpSeqNo" x)))
     (sleep 1000)
-    (is (= 1 (cntr)))
-    (is (.isDirect (.getBuffer @received-data)))
-    (is (not (.hasArray (.getBuffer @received-data))))
+    (test/is (= 1 (cntr)))
+    (test/is (.isDirect (.getBuffer @received-data)))
+    (test/is (not (.hasArray (.getBuffer @received-data))))
     (doseq [x (range 0 10)]
-      (is (= 123 (.get (.getBuffer @received-data) (+ (+ 40 15) (* x data-inst-len)))))
-      (is (= x (.get (.getBuffer @received-data) (+ (+ 42 15) (* x data-inst-len))))))
+      (test/is (= 123 (.get (.getBuffer @received-data) (+ (+ 40 15) (* x data-inst-len)))))
+      (test/is (= x (.get (.getBuffer @received-data) (+ (+ 42 15) (* x data-inst-len))))))
     (.freeNativeMemory @received-data)
     (stop-cljnetpcap cljnetpcap)))
 

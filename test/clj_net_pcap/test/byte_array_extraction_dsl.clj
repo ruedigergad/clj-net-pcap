@@ -17,15 +17,16 @@
   ^{:author "Ruediger Gad",
     :doc "Tests for extracting data from byte arrays via a DSL."}
   clj-net-pcap.test.byte-array-extraction-dsl
-  (:use clojure.test
+  (:require
+   (clojure [test :as test]))
+  (:use
         clj-net-pcap.byte-array-extraction-dsl
         clj-net-pcap.core
         clj-net-pcap.dsl.transformation
         clj-net-pcap.pcap-data
-        clj-assorted-utils.util)
-  (:import (clj_net_pcap PacketHeaderDataBeanIpv4UdpOnly)))
+        clj-assorted-utils.util))
 
-(deftest simple-hardcoded-offsets-dsl-test
+(test/deftest simple-hardcoded-offsets-dsl-test
   (let [expected-map {"udpSrc" 2048, "udpDst" 4096}
         dsl-expression [{:offset 50 :transformation :int16 :name :udpSrc}
                         {:offset 52 :transformation :int16 :name :udpDst}]
@@ -37,9 +38,9 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
-    (is (= expected-map extracted-map))))
+    (test/is (= expected-map extracted-map))))
 
-(deftest simple-packet-offsets-name-dsl-test
+(test/deftest simple-packet-offsets-name-dsl-test
   (let [expected-map {"udpSrc" 2048, "udpDst" 4096}
         dsl-expression [{:offset :udp-src :transformation :int16 :name :udpSrc}
                         {:offset :udp-dst :transformation :int16 :name :udpDst}]
@@ -51,9 +52,9 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
-    (is (= expected-map extracted-map))))
+    (test/is (= expected-map extracted-map))))
 
-(deftest extended-packet-offsets-name-dsl-be-test
+(test/deftest extended-packet-offsets-name-dsl-be-test
   (let [expected-map {"ipId" 3, "ipTtl" 7, "ipChecksum" 29639,
                       "udpSrc" 2048, "udpDst" 4096, "len" 77}
         dsl-expression [{:offset 12 :transformation :int32be :name :len}
@@ -70,9 +71,9 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
-    (is (= expected-map extracted-map))))
+    (test/is (= expected-map extracted-map))))
 
-(deftest extended-packet-offsets-name-dsl-le-test
+(test/deftest extended-packet-offsets-name-dsl-le-test
   (let [expected-map {"ipId" 3, "ipTtl" 7, "ipChecksum" 29639,
                       "udpSrc" 2048, "udpDst" 4096, "len" 77}
         dsl-expression [{:offset 12 :transformation :int32 :name :len}
@@ -89,9 +90,9 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
-    (is (= expected-map extracted-map))))
+    (test/is (= expected-map extracted-map))))
 
-(deftest extended-packet-offsets-name-dsl-le-strings-test
+(test/deftest extended-packet-offsets-name-dsl-le-strings-test
   (let [expected-map {"ipId" 3, "ipTtl" 7, "ipChecksum" 29639,
                       "udpSrc" 2048, "udpDst" 4096, "len" 77}
         dsl-expression [{:offset 12 :transformation "int32" :name "len"}
@@ -108,9 +109,9 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
-    (is (= expected-map extracted-map))))
+    (test/is (= expected-map extracted-map))))
 
-(deftest timestamp-extraction-le-test
+(test/deftest timestamp-extraction-le-test
   (let [expected-map {"ipId" 3, "ipTtl" 7, "ipChecksum" 29639,
                       "udpSrc" 2048, "udpDst" 4096, "len" 77, "ts" 1422366459969231000}
         dsl-expression [{:offset 0 :transformation "timestamp" :name "ts"}
@@ -128,9 +129,9 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
-    (is (= expected-map extracted-map))))
+    (test/is (= expected-map extracted-map))))
 
-(deftest timestamp-extraction-be-test
+(test/deftest timestamp-extraction-be-test
   (let [expected-map {"ipId" 3, "ipTtl" 7, "ipChecksum" 29639,
                       "udpSrc" 2048, "udpDst" 4096, "len" 77, "ts" 1422366459969231000}
         dsl-expression [{:offset 0 :transformation "timestamp-be" :name "ts"}
@@ -148,9 +149,9 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
-    (is (= expected-map extracted-map))))
+    (test/is (= expected-map extracted-map))))
 
-(deftest ethernet-address-extraction-test
+(test/deftest ethernet-address-extraction-test
   (let [expected-map {"ethSrc" "01:02:03:04:05:06", "ethDst" "FF:FE:FD:F2:F1:F0",
                       "ipId" 3, "ipTtl" 7, "ipChecksum" 29639,
                       "udpSrc" 2048, "udpDst" 4096, "len" 77, "ts" 1422366459969231000}
@@ -171,9 +172,9 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
-    (is (= expected-map extracted-map))))
+    (test/is (= expected-map extracted-map))))
 
-(deftest ipv4-address-extraction-test
+(test/deftest ipv4-address-extraction-test
   (let [expected-map {"ethSrc" "01:02:03:04:05:06", "ethDst" "FF:FE:FD:F2:F1:F0",
                       "ipId" 3, "ipTtl" 7, "ipChecksum" 29639,
                       "ipDst" "252.253.254.255", "ipSrc" "1.2.3.4",
@@ -197,9 +198,9 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
-    (is (= expected-map extracted-map))))
+    (test/is (= expected-map extracted-map))))
 
-(deftest ipv4-version-extraction-test
+(test/deftest ipv4-version-extraction-test
   (let [expected-map {"ethSrc" "01:02:03:04:05:06", "ethDst" "FF:FE:FD:F2:F1:F0",
                       "ipId" 3, "ipTtl" 7, "ipChecksum" 29639, "ipVer" 4,
                       "ipDst" "252.253.254.255", "ipSrc" "1.2.3.4",
@@ -224,9 +225,9 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
-    (is (= expected-map extracted-map))))
+    (test/is (= expected-map extracted-map))))
 
-(deftest full-ipv4-udp-dsl-be-test
+(test/deftest full-ipv4-udp-dsl-be-test
   (let [expected-map {"ethSrc" "01:02:03:04:05:06", "ethDst" "FF:FE:FD:F2:F1:F0",
                       "ipId" 3, "ipTtl" 7, "ipChecksum" 29639, "ipVer" 4,
                       "ipDst" "252.253.254.255", "ipSrc" "1.2.3.4",
@@ -239,9 +240,9 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn ipv4-udp-be-dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
-    (is (= expected-map extracted-map))))
+    (test/is (= expected-map extracted-map))))
 
-(deftest full-ipv4-udp-dsl-le-test
+(test/deftest full-ipv4-udp-dsl-le-test
   (let [expected-map {"ethSrc" "01:02:03:04:05:06", "ethDst" "FF:FE:FD:F2:F1:F0",
                       "ipId" 3, "ipTtl" 7, "ipChecksum" 29639, "ipVer" 4,
                       "ipDst" "252.253.254.255", "ipSrc" "1.2.3.4",
@@ -254,9 +255,9 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn ipv4-udp-le-dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
-    (is (= expected-map extracted-map))))
+    (test/is (= expected-map extracted-map))))
 
-(deftest dsl-with-type-java-map-test
+(test/deftest dsl-with-type-java-map-test
   (let [expected-map {"udpSrc" 2048, "udpDst" 4096}
         dsl-expression {:type :java-map
                         :rules [{:offset :udp-src :transformation :int16 :name :udpSrc}
@@ -269,10 +270,10 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
-    (is (= java.util.HashMap (type extracted-map)))
-    (is (= expected-map extracted-map))))
+    (test/is (= java.util.HashMap (type extracted-map)))
+    (test/is (= expected-map extracted-map))))
 
-(deftest dsl-default-to-java-map-type-test
+(test/deftest dsl-default-to-java-map-type-test
   (let [expected-map {"udpSrc" 2048, "udpDst" 4096}
         dsl-expression {:type :invalid-type-name
                         :rules [{:offset :udp-src :transformation :int16 :name :udpSrc}
@@ -285,10 +286,10 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
-    (is (= java.util.HashMap (type extracted-map)))
-    (is (= expected-map extracted-map))))
+    (test/is (= java.util.HashMap (type extracted-map)))
+    (test/is (= expected-map extracted-map))))
 
-(deftest dsl-with-type-clj-map-test
+(test/deftest dsl-with-type-clj-map-test
   (let [expected-map {"udpSrc" 2048, "udpDst" 4096}
         dsl-expression {:type :clj-map
                         :rules [{:offset :udp-src :transformation :int16 :name :udpSrc}
@@ -301,10 +302,10 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
-    (is (map? extracted-map))
-    (is (= expected-map extracted-map))))
+    (test/is (map? extracted-map))
+    (test/is (= expected-map extracted-map))))
 
-(deftest dsl-with-type-csv-str-test
+(test/deftest dsl-with-type-csv-str-test
   (let [expected-str "2048,4096"
         dsl-expression {:type :csv-str
                         :rules [{:offset :udp-src :transformation :int16 :name :udpSrc}
@@ -317,9 +318,9 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-str (extraction-fn pkt-ba 0)]
-    (is (= expected-str extracted-str))))
+    (test/is (= expected-str extracted-str))))
 
-(deftest dsl-with-type-json-str-test
+(test/deftest dsl-with-type-json-str-test
   (let [expected-str "{\"udpSrc\":2048,\"udpDst\":4096}"
         dsl-expression {:type :json-str
                         :rules [{:offset :udp-src :transformation :int16 :name :udpSrc}
@@ -332,9 +333,9 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-str (extraction-fn pkt-ba 0)]
-    (is (= expected-str extracted-str))))
+    (test/is (= expected-str extracted-str))))
 
-(deftest dsl-with-type-csv-str-test-2
+(test/deftest dsl-with-type-csv-str-test-2
   (let [expected-str "77,3,7,29639,2048,4096"
         dsl-expression {:type :csv-str
                         :rules [{:offset 12 :transformation :int32be :name :len}
@@ -351,9 +352,9 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-str (extraction-fn pkt-ba 0)]
-    (is (= expected-str extracted-str))))
+    (test/is (= expected-str extracted-str))))
 
-(deftest dsl-with-type-json-str-test-2
+(test/deftest dsl-with-type-json-str-test-2
   (let [expected-str "{\"len\":77,\"ipId\":3,\"ipTtl\":7,\"ipChecksum\":29639,\"udpSrc\":2048,\"udpDst\":4096}"
         dsl-expression {:type :json-str
                         :rules [{:offset 12 :transformation :int32be :name :len}
@@ -370,9 +371,9 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-str (extraction-fn pkt-ba 0)]
-    (is (= expected-str extracted-str))))
+    (test/is (= expected-str extracted-str))))
 
-(deftest dsl-with-type-csv-str-test-3
+(test/deftest dsl-with-type-csv-str-test-3
   (let [expected-str "77,3,7,29639,\"252.253.254.255\",\"1.2.3.4\",2048,4096"
         dsl-expression {:type :csv-str
                         :rules [{:offset 12 :transformation :int32be :name :len}
@@ -391,9 +392,9 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-str (extraction-fn pkt-ba 0)]
-    (is (= expected-str extracted-str))))
+    (test/is (= expected-str extracted-str))))
 
-(deftest dsl-with-type-json-str-test-3
+(test/deftest dsl-with-type-json-str-test-3
   (let [expected-str (str "{\"len\":77,\"ipId\":3,\"ipTtl\":7,\"ipChecksum\":29639,"
                           "\"ipDst\":\"252.253.254.255\",\"ipSrc\":\"1.2.3.4\",\"udpSrc\":2048,\"udpDst\":4096}")
         dsl-expression {:type :json-str
@@ -413,23 +414,23 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-str (extraction-fn pkt-ba 0)]
-    (is (= expected-str extracted-str))))
+    (test/is (= expected-str extracted-str))))
 
 
 
 ;;; ARFF File Format Output Tests
 ;;; http://weka.wikispaces.com/ARFF+%28stable+version%29
 
-(deftest get-arff-string-type-test
-  (= "STRING" (get-arff-type-for-transformation-fn ipv4-address)))
+(test/deftest get-arff-string-type-test
+  (test/is (= "STRING" (get-arff-type-for-transformation-fn ipv4-address))))
 
-(deftest get-arff-numeric-type-test
-  (= "NUMERIC" (get-arff-type-for-transformation-fn int32)))
+(test/deftest get-arff-numeric-type-test
+  (test/is (= "NUMERIC" (get-arff-type-for-transformation-fn int32))))
 
-(deftest get-arff-numeric-type-test-2
-  (= "NUMERIC" (get-arff-type-for-transformation-fn timestamp)))
+(test/deftest get-arff-numeric-type-test-2
+  (test/is (= "NUMERIC" (get-arff-type-for-transformation-fn timestamp))))
 
-(deftest get-arff-type-header-test
+(test/deftest get-arff-type-header-test
   (let [expected-str (str "@ATTRIBUTE ts NUMERIC\n"
                           "@ATTRIBUTE ipTtl NUMERIC\n"
                           "@ATTRIBUTE ipDst STRING\n"
@@ -439,9 +440,9 @@
                                 {:offset :ipv4-ttl :transformation :int8 :name :ipTtl}
                                 {:offset :ipv4-dst :transformation :ipv4-address :name :ipDst}
                                 {:offset :udp-src :transformation :int16 :name :udpSrc}]}]
-    (is (= expected-str (get-arff-type-header dsl-expression)))))
+    (test/is (= expected-str (get-arff-type-header dsl-expression)))))
 
-(deftest get-arff-header-test
+(test/deftest get-arff-header-test
   (let [expected-str (str "% Packet Capture\n"
                           "% Created with clj-net-pcap:\n"
                           "% https://github.com/ruedigergad/clj-net-pcap\n"
@@ -457,9 +458,9 @@
                                 {:offset :ipv4-ttl :transformation :int8 :name :ipTtl}
                                 {:offset :ipv4-dst :transformation :ipv4-address :name :ipDst}
                                 {:offset :udp-src :transformation :int16 :name :udpSrc}]}]
-    (is (= expected-str (get-arff-header dsl-expression)))))
+    (test/is (= expected-str (get-arff-header dsl-expression)))))
 
-(deftest get-arff-type-header-new-dsl-test
+(test/deftest get-arff-type-header-new-dsl-test
   (let [expected-str (str "@ATTRIBUTE ts NUMERIC\n"
                           "@ATTRIBUTE ipTtl NUMERIC\n"
                           "@ATTRIBUTE ipDst STRING\n"
@@ -469,7 +470,7 @@
                                 ['ipTtl '(int8 ipv4-ttl)]
                                 ['ipDst '(ipv4-address ipv4-dst)]
                                 ['udpSrc '(int16 udp-src)]]}]
-    (is (= expected-str (get-arff-type-header dsl-expression)))))
+    (test/is (= expected-str (get-arff-type-header dsl-expression)))))
 
 
 
@@ -477,11 +478,11 @@
 ;;; Tests for new DSL approach
 ;;;
 
-(deftest resolve-transf-fn-old-syntax-test
-  (is (= (resolve 'clj-net-pcap.dsl.transformation/int16)
+(test/deftest resolve-transf-fn-old-syntax-test
+  (test/is (= (resolve 'clj-net-pcap.dsl.transformation/int16)
          (resolve-transf-fn {:offset :udp-src :transformation :int16 :name :udpSrc}))))
 
-(deftest new-dsl-with-type-java-map-test
+(test/deftest new-dsl-with-type-java-map-test
   (let [expected-map {"udpSrc" 2048, "udpDst" 4096}
         dsl-expression {:type :java-map
                         :rules [['udpSrc '(int16 udp-src)]
@@ -494,10 +495,10 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
-    (is (= java.util.HashMap (type extracted-map)))
-    (is (= expected-map extracted-map))))
+    (test/is (= java.util.HashMap (type extracted-map)))
+    (test/is (= expected-map extracted-map))))
 
-(deftest new-dsl-with-type-java-map-and-operation-test
+(test/deftest new-dsl-with-type-java-map-and-operation-test
   (let [expected-map {"udpSrc" 4096, "udpDst" 8192}
         dsl-expression {:type :java-map
                         :rules [['udpSrc '(* 2 (int16 udp-src))]
@@ -510,10 +511,10 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
-    (is (= java.util.HashMap (type extracted-map)))
-    (is (= expected-map extracted-map))))
+    (test/is (= java.util.HashMap (type extracted-map)))
+    (test/is (= expected-map extracted-map))))
 
-(deftest new-dsl-with-type-java-map-and-operation-test-2
+(test/deftest new-dsl-with-type-java-map-and-operation-test-2
   (let [expected-map {"udpSrc" 1024, "udpDst" 2048}
         dsl-expression {:type :java-map
                         :rules [['udpSrc '(/ (int16 udp-src) 2)]
@@ -526,10 +527,10 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
-    (is (= java.util.HashMap (type extracted-map)))
-    (is (= expected-map extracted-map))))
+    (test/is (= java.util.HashMap (type extracted-map)))
+    (test/is (= expected-map extracted-map))))
 
-(deftest new-dsl-with-type-java-map-and-operation-test-3
+(test/deftest new-dsl-with-type-java-map-and-operation-test-3
   (let [expected-map {"udpSrc" (float 0.031250477), "udpDst" (float 0.06250095)}
         dsl-expression {:type :java-map
                         :rules [['udpSrc '(float (/ (int16 udp-src) 65535))]
@@ -542,11 +543,11 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
-    (is (= java.util.HashMap (type extracted-map)))
-    (is (= expected-map extracted-map))))
+    (test/is (= java.util.HashMap (type extracted-map)))
+    (test/is (= expected-map extracted-map))))
 
 
-(deftest new-dsl-with-type-clj-map-test
+(test/deftest new-dsl-with-type-clj-map-test
   (let [expected-map {"udpSrc" (float 0.031250477), "udpDst" (float 0.06250095)}
         dsl-expression {:type :clj-map
                         :rules [['udpSrc '(float (/ (int16 udp-src) 65535))]
@@ -559,10 +560,10 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-map (extraction-fn pkt-ba 0)]
-    (is (map? extracted-map))
-    (is (= expected-map extracted-map))))
+    (test/is (map? extracted-map))
+    (test/is (= expected-map extracted-map))))
 
-(deftest new-dsl-with-type-csv-str-test
+(test/deftest new-dsl-with-type-csv-str-test
   (let [expected-str "0.031250477,0.06250095"
         dsl-expression {:type :csv-str
                         :rules [['udpSrc '(float (/ (int16 udp-src) 65535))]
@@ -575,9 +576,9 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-str (extraction-fn pkt-ba 0)]
-    (is (= expected-str extracted-str))))
+    (test/is (= expected-str extracted-str))))
 
-(deftest new-dsl-with-type-json-str-test
+(test/deftest new-dsl-with-type-json-str-test
   (let [expected-str "{\"udpSrc\":0.031250477,\"udpDst\":0.06250095}"
         dsl-expression {:type :json-str
                         :rules [['udpSrc '(float (/ (int16 udp-src) 65535))]
@@ -590,5 +591,4 @@
         pkt-ba (byte-array (map byte pkt-raw-vec))
         extraction-fn (create-extraction-fn dsl-expression)
         extracted-str (extraction-fn pkt-ba 0)]
-    (is (= expected-str extracted-str))))
-
+    (test/is (= expected-str extracted-str))))

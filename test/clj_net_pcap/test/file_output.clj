@@ -17,13 +17,14 @@
   ^{:author "Ruediger Gad",
     :doc "Tests for writing data to a file."}
   clj-net-pcap.test.file-output
-  (:use clojure.test
+  (:require
+   (clojure [test :as test]))
+  (:use
         clj-net-pcap.byte-array-extraction-dsl
         clj-net-pcap.core
         clj-net-pcap.pcap
         clj-net-pcap.pcap-data
-        clj-assorted-utils.util)
-  (:import (clj_net_pcap PacketHeaderDataBeanIpv4UdpOnly)))
+        clj-assorted-utils.util))
 
 
 
@@ -54,11 +55,11 @@
 (defn stdout-formatter-fixture [f]
   (f)
   (rm test-out-file))
-(use-fixtures :each stdout-formatter-fixture)
+(test/use-fixtures :each stdout-formatter-fixture)
 
 
 
-(deftest csv-str-to-file-online-test
+(test/deftest csv-str-to-file-online-test
   (let [expected-str "46,3,7,29639,2048,4096\n"
         dsl-expression {:type :csv-str
                         :rules [{:offset 12 :transformation :int32be :name :len}
@@ -78,10 +79,10 @@
     (cljnetpcap :send-bytes-packet pkt-ba)
     (sleep 1000)
     (file-out-forwarder)
-    (is (= expected-str (slurp test-out-file)))
+    (test/is (= expected-str (slurp test-out-file)))
     (stop-cljnetpcap cljnetpcap)))
 
-(deftest json-str-to-file-online-test
+(test/deftest json-str-to-file-online-test
   (let [expected-str "{\"len\":46,\"ipId\":3,\"ipTtl\":7,\"ipChecksum\":29639,\"udpSrc\":2048,\"udpDst\":4096}\n"
         dsl-expression {:type :json-str
                         :rules [{:offset 12 :transformation :int32be :name :len}
@@ -101,10 +102,10 @@
     (cljnetpcap :send-bytes-packet pkt-ba)
     (sleep 1000)
     (file-out-forwarder)
-    (is (= expected-str (slurp test-out-file)))
+    (test/is (= expected-str (slurp test-out-file)))
     (stop-cljnetpcap cljnetpcap)))
 
-(deftest csv-str-to-file-online-three-packets-test
+(test/deftest csv-str-to-file-online-three-packets-test
   (let [expected-str "46,3,7,29639,2048,4096\n46,3,7,29639,2048,4096\n46,3,7,29639,2048,4096\n"
         dsl-expression {:type :csv-str
                         :rules [{:offset 12 :transformation :int32be :name :len}
@@ -126,10 +127,10 @@
     (cljnetpcap :send-bytes-packet pkt-ba)
     (sleep 1000)
     (file-out-forwarder)
-    (is (= expected-str (slurp test-out-file)))
+    (test/is (= expected-str (slurp test-out-file)))
     (stop-cljnetpcap cljnetpcap)))
 
-(deftest json-str-to-file-online-three-packets-test
+(test/deftest json-str-to-file-online-three-packets-test
   (let [expected-str (str
                        "{\"len\":46,\"ipId\":3,\"ipTtl\":7,\"ipChecksum\":29639,\"udpSrc\":2048,\"udpDst\":4096}\n"
                        "{\"len\":46,\"ipId\":3,\"ipTtl\":7,\"ipChecksum\":29639,\"udpSrc\":2048,\"udpDst\":4096}\n"
@@ -154,10 +155,10 @@
     (cljnetpcap :send-bytes-packet pkt-ba)
     (sleep 1000)
     (file-out-forwarder)
-    (is (= expected-str (slurp test-out-file)))
+    (test/is (= expected-str (slurp test-out-file)))
     (stop-cljnetpcap cljnetpcap)))
 
-(deftest csv-str-to-file-online-bs2-test
+(test/deftest csv-str-to-file-online-bs2-test
   (let [expected-str "46,3,7,29639,2048,4096\n46,3,7,29639,2048,4096\n"
         dsl-expression {:type :csv-str
                         :rules [{:offset 12 :transformation :int32be :name :len}
@@ -178,6 +179,6 @@
     (cljnetpcap :send-bytes-packet pkt-ba)
     (sleep 1000)
     (file-out-forwarder)
-    (is (= expected-str (slurp test-out-file)))
+    (test/is (= expected-str (slurp test-out-file)))
     (stop-cljnetpcap cljnetpcap)))
 

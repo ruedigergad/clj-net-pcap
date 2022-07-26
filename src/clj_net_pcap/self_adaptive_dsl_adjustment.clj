@@ -17,12 +17,11 @@
   ^{:author "Ruediger Gad",
     :doc "A simple proof of concept for adjusting DSL statements with self-adaptivity."}
   clj-net-pcap.self-adaptive-dsl-adjustment
-  (:use clojure.pprint
-        clj-assorted-utils.util))
+  (:require (clj-assorted-utils [util :as utils])))
 
 (defn create-stat-delta-counter
   []
-  (let [delta-cntr (delta-counter)]
+  (let [delta-cntr (utils/delta-counter)]
     (doseq [e {"out-dropped" 0, "ifdrop" 0, "out-queued" 0, "drop" 0, "recv" 0, "forwarder-failed" 0}]
       (delta-cntr (keyword (key e)) (val e)))
     (fn [current-stats]
@@ -36,9 +35,9 @@
 
 (defn create-repetition-detector
   [repetitions]
-  (let [cntr (counter)]
+  (let [cntr (utils/counter)]
     (fn [pred-f]
-      (if (>= (cntr) repetitions)
+      (when (>= (cntr) repetitions)
         (cntr (fn [_] 0)))
       (if (pred-f)
         (cntr inc)
@@ -56,6 +55,7 @@
 
 (defn create-max-capture-rate-determinator
   [threshold interpolation]
+  #_{:clj-kondo/ignore [:unused-binding]}
   (let [stats-delta-cntr (create-stat-delta-counter)
         rep-det (create-repetition-detector interpolation)
         drp-mvg-avg-calc (create-moving-average-calculator interpolation)
@@ -80,17 +80,19 @@
     (let [state-map (ref {1 {:dsl init :max-cap-rate -1}})
           current-state (ref 1)
           max-cap-rate-det (create-max-capture-rate-determinator threshold interpolation)
-          inact-ctr (counter)
+          inact-ctr (utils/counter)
           reset-inact (fn []
                         (println "Resetting inact-ctr to" inactivity)
                         (inact-ctr (fn [_] inactivity)))
           stat-delta-cntr (create-stat-delta-counter)]
       (reset! dynamic-dsl init)
-      (add-watch current-state :dyn-dsl-update-watch
-                 (fn [k r old-state new-state]
-                   (println "self-adaptivity-controller state changed from" old-state "to" new-state)
-                   (reset! dynamic-dsl (get-in @state-map [new-state :dsl]))
-                   (reset-inact)))
+      (add-watch
+        current-state
+        :dyn-dsl-update-watch
+        (fn [_ _ old-state new-state]
+          (println "self-adaptivity-controller state changed from" old-state "to" new-state)
+          (reset! dynamic-dsl (get-in @state-map [new-state :dsl]))
+          (reset-inact)))
       (fn
         [stat-data]
 ;        (println "State:" @current-state "State map:" @state-map)
@@ -99,37 +101,34 @@
                        stat-data)
               deltas (stat-delta-cntr s-data)
               cur-max-cap-rate (double (max-cap-rate-det s-data))]
-            (cond
-              (< 0 (inact-ctr)) (do
-;                                  (println "Decrementing inact-ctr:" (inact-ctr))
-                                  (inact-ctr dec))
-              (and
-                (< 0 (get-dropped-sum deltas))
+          (cond
+            (< 0 (inact-ctr)) (inact-ctr dec)
+            (and
+             (< 0 (get-dropped-sum deltas))
                 ;  ^- TODO: Is zero here OK? Do we need this additional check at all?
-                (> 0 (get-in @state-map [@current-state :max-cap-rate])))
-                      (do
-                        (println "Determined max. capture rate:" cur-max-cap-rate)
-                        (when (< 0 cur-max-cap-rate)
-                          (println "Adjusting max. capture rate for current state.")
-                          (dosync
-                            (alter state-map (fn [m] (-> m
-                                                       (assoc-in [@current-state :max-cap-rate] cur-max-cap-rate)
-                                                       (assoc (inc @current-state) {:dsl (subvec (get-in m [@current-state :dsl]) 1) :max-cap-rate -1})))))
-                          (println @state-map)
-                          (dosync (alter current-state inc))))
-              (and
-                (< 1 @current-state)
-                (< (deltas "recv") (* (- 1.0 threshold) (get-in @state-map [(dec @current-state) :max-cap-rate]))))
-                      (do
-                        (println "Restoring DSL for state:" (dec @current-state))
-                        (dosync (alter current-state dec)))
-              (and
-                (< 1 (count (get-in @state-map [@current-state :dsl])))
-                (contains? @state-map (inc @current-state))
-                (> (deltas "recv") (get-in @state-map [@current-state :max-cap-rate])))
-                      (do
-                        (println "Using next simpler DSL sub part:" (inc @current-state))
-                        (dosync (alter current-state inc)))
+             (> 0 (get-in @state-map [@current-state :max-cap-rate])))
+            (do
+              (println "Determined max. capture rate:" cur-max-cap-rate)
+              (when (< 0 cur-max-cap-rate)
+                (println "Adjusting max. capture rate for current state.")
+                (dosync
+                 (alter state-map (fn [m] (-> m
+                                              (assoc-in [@current-state :max-cap-rate] cur-max-cap-rate)
+                                              (assoc (inc @current-state) {:dsl (subvec (get-in m [@current-state :dsl]) 1) :max-cap-rate -1})))))
+                (println @state-map)
+                (dosync (alter current-state inc))))
+            (and
+             (< 1 @current-state)
+             (< (deltas "recv") (* (- 1.0 threshold) (get-in @state-map [(dec @current-state) :max-cap-rate]))))
+            (do
+              (println "Restoring DSL for state:" (dec @current-state))
+              (dosync (alter current-state dec)))
+            (and
+             (< 1 (count (get-in @state-map [@current-state :dsl])))
+             (contains? @state-map (inc @current-state))
+             (> (deltas "recv") (get-in @state-map [@current-state :max-cap-rate])))
+            (do
+              (println "Using next simpler DSL sub part:" (inc @current-state))
+              (dosync (alter current-state inc)))
     ;          :default (println "Undefined state in self-adaptation-controller."))))))
-              :default nil))))))
-
+            :else nil))))))

@@ -17,22 +17,23 @@
   ^{:author "Ruediger Gad",
     :doc "Convenience functions for processing pcap data like packets and headers."}
   clj-net-pcap.pcap-data
-  (:use clojure.java.io
-        clojure.pprint
-        [clojure.string :only (join split)]
-        clj-assorted-utils.util
-        clj-net-pcap.native)
-  (:require (clj-net-pcap [packet-offsets :as offsets]))
-  (:import (java.io BufferedWriter IOException)
-           (java.nio ByteBuffer)
-           (java.util ArrayList HashMap List Map)
-           (clj_net_pcap ByteArrayHelper Counter PacketHeaderDataBean PacketHeaderDataBeanIpv4UdpOnly PacketHeaderDataBeanWithIpv4Udp)
-           (org.jnetpcap PcapHeader)
-           (org.jnetpcap.packet PcapPacket)
-           (org.jnetpcap.packet.format FormatUtils)
-           (org.jnetpcap.protocol.lan Ethernet)
-           (org.jnetpcap.protocol.network Arp Icmp Icmp$Echo Icmp$EchoReply Icmp$EchoRequest Ip4 Ip6)
-           (org.jnetpcap.protocol.tcpip Http Http$Request Http$Response Tcp Tcp$Flag Tcp$Timestamp Udp)))
+  (:require
+    (clojure [pprint :as pprint])
+    (clojure [string :as string])
+    (clojure.java [io :as jio])
+    (clj-assorted-utils [util :as utils])
+    (clj-net-pcap [packet-offsets :as offsets]))
+  (:import
+    (java.io BufferedWriter IOException)
+    (java.nio ByteBuffer)
+    (java.util ArrayList HashMap List Map)
+    (clj_net_pcap ByteArrayHelper Counter PacketHeaderDataBean PacketHeaderDataBeanIpv4UdpOnly PacketHeaderDataBeanWithIpv4Udp)
+    (org.jnetpcap PcapHeader)
+    (org.jnetpcap.packet PcapPacket)
+    (org.jnetpcap.packet.format FormatUtils)
+    (org.jnetpcap.protocol.lan Ethernet)
+    (org.jnetpcap.protocol.network Arp Icmp Icmp$Echo Icmp$EchoReply Icmp$EchoRequest Ip4 Ip6)
+    (org.jnetpcap.protocol.tcpip Http Http$Request Http$Response Tcp Tcp$Flag Tcp$Timestamp Udp)))
 
 
 (def ^:dynamic *tcp-flags-as-set* true)
@@ -50,12 +51,12 @@
 (defn guess-subnet
   "Try to guess the subnet address based on private network classes as defined in RFC 1918."
   [ipv4-addr]
-  (let [addr-bytes (split ipv4-addr #"\.")
+  (let [addr-bytes (string/split ipv4-addr #"\.")
         n-class (network-class ipv4-addr)]
     (cond
-      (= :class-c n-class) (join "." (conj (vec (drop-last addr-bytes)) "0"))
-      (= :class-a n-class) (join "." (reduce conj (vec (drop-last 3 addr-bytes)) (repeat 3 "0")))
-      (= :class-b n-class) (join "." (reduce conj (vec (drop-last 2 addr-bytes)) (repeat 2 "0")))
+      (= :class-c n-class) (string/join "." (conj (vec (drop-last addr-bytes)) "0"))
+      (= :class-a n-class) (string/join "." (reduce conj (vec (drop-last 3 addr-bytes)) (repeat 3 "0")))
+      (= :class-b n-class) (string/join "." (reduce conj (vec (drop-last 2 addr-bytes)) (repeat 2 "0")))
       :else nil)))
 
 (defn guess-subnet-mask
@@ -105,7 +106,7 @@
                               (let [protocol-header (first h)
                                     body (rest h)]
                                 `(if (.hasHeader ~packet ~protocol-header)
-                                   (let [protocol-class# (classname ~protocol-header)]
+                                   (let [protocol-class# (utils/classname ~protocol-header)]
                                      {(cond
                                         (~'data-link-layer-protocols protocol-class#) "DataLinkLayer"
                                         (~'network-layer-protocols protocol-class#) "NetworkLayer"
@@ -229,7 +230,7 @@
   [^PcapPacket packet]
   (try
     (let [header (.getCaptureHeader packet)]
-      {(classname header) {"timestampInNanos" (.timestampInNanos header)
+      {(utils/classname header) {"timestampInNanos" (.timestampInNanos header)
                            "wirelen" (.wirelen header)}})
     (catch Exception e
       (println "Error parsing the pcap packet header!")
@@ -486,7 +487,6 @@
   "Convenience function to parse a org.jnetpcap.packet.PcapPacket into a bean.
    Please note that this function only extracts data for IPv4 up to UDP."
   (let [eth (Ethernet.)
-        arp (Arp.)
         ip4 (Ip4.)
         udp (Udp.)]
     (fn [^PcapPacket pkt]
@@ -549,14 +549,14 @@ user=>
 (defn stdout-forwarder-fn
   "Pre-defined forwarder function which outputs information about org.jnetpcap.packet.PcapPacket to *out*."
   [packet]
-  (pprint packet)
+  (pprint/pprint packet)
   (println "---"))
 
 (defn stderr-forwarder-fn
   "Pre-defined forwarder function which outputs information about org.jnetpcap.packet.PcapPacket to *out*."
   [packet]
-  (println-err (str packet))
-  (println-err "---"))
+  (utils/println-err (str packet))
+  (utils/println-err "---"))
 
 (defn stdout-byte-array-forwarder-fn
   "Print the byte vector representation of a org.jnetpcap.packet.PcapPacket as returned by pcap-packet-to-byte-vector to *out*."
@@ -568,7 +568,7 @@ user=>
   "Print both, the parsed packet and the byte vector representations, of a org.jnetpcap.packet.PcapPacket to *out*."
   [^PcapPacket packet]
   (let [buffer-seq (pcap-packet-to-byte-vector packet)]
-    (pprint (pcap-packet-to-map packet))
+    (pprint/pprint (pcap-packet-to-map packet))
     (println "Packet Start (size:" (count buffer-seq) "):" buffer-seq "Packet End\n\n")))
 
 (defn no-op-converter-forwarder-fn
@@ -584,7 +584,7 @@ user=>
         printer #(let [val (.value cntr)]
                    (when (>= val 0)
                      (println (* (.value cntr) bulk-size))))
-        _ (run-repeat (executor) printer 1000)]
+        _ (utils/run-repeat (utils/executor) printer 1000)]
     (fn [_]
       (.inc cntr))))
 
@@ -593,7 +593,7 @@ user=>
    This is used for testing purposes."
   [bulk-size]
   (let [cntr (Counter.)
-        delta-cntr (delta-counter)
+        delta-cntr (utils/delta-counter)
         time-tmp (ref (System/currentTimeMillis))
         pps-printer #(let [val (* bulk-size (.value cntr))]
                        (when (>= val 0)
@@ -603,7 +603,7 @@ user=>
                              (println "pps" (float (/ (delta-cntr :val val) (/ time-delta 1000))) "total" val)
                              (dosync
                                (ref-set time-tmp cur-time))))))
-        _ (run-repeat (executor) pps-printer 1000)]
+        _ (utils/run-repeat (utils/executor) pps-printer 1000)]
     (fn [_]
       (.inc cntr))))
 
@@ -717,7 +717,7 @@ user=>
                          (reset! wrtr nil)
                          (doto (Thread.
                                  #(do
-                                    (reset! wrtr (writer out-file :append true))
+                                    (reset! wrtr (jio/writer out-file :append true))
                                     (.write @wrtr hdr)))
                            (.setDaemon true)
                            (.start)))

@@ -21,14 +21,13 @@
           The core namespace contains the external API. For most use-cases the 
           functionality provided in core should be sufficient."}  
   clj-net-pcap.core
-  (:use clojure.pprint 
-        [clojure.string :only [join]]
-        clj-net-pcap.native
-        clj-net-pcap.packet-gen
-        clj-net-pcap.pcap
-        clj-net-pcap.pcap-data
-        clj-net-pcap.sniffer
-        clj-assorted-utils.util)
+  (:require
+    (clojure [string :as string])
+    (clj-assorted-utils [util :as utils])
+    (clj-net-pcap [packet-gen :as pkt-gen])
+    (clj-net-pcap [pcap :as pcap])
+    (clj-net-pcap [pcap-data :as pcap-data])
+    (clj-net-pcap [sniffer :as sniffer]))
   (:import (clj_net_pcap Counter ProcessingLoop)
            (java.nio ByteBuffer)
            (java.util.concurrent ArrayBlockingQueue LinkedTransferQueue)
@@ -222,7 +221,7 @@
                      "out-queued" (.value out-queued-counter) "out-dropped" (.value out-drop-counter)
                      "handler-failed" (.value failed-counter)}
          :wait-for-completed (while (or (> (.size buffer-queue) 0) (> (.size scanner-queue) 0))
-                               (sleep 100)))))))
+                               (utils/sleep 100)))))))
 
 (defn send-bytes-packet
   "Send the packet as given in the byte array pkt-ba packets via the Pcap instance pcap.
@@ -236,7 +235,7 @@
        (recur (dec cnt)))))
   ([pcap pkt-ba rep d]
    (loop [cnt rep]
-     (sleep d)
+     (utils/sleep d)
      (pcap :send-bytes-packet pkt-ba)
      (when (> cnt 1)
        (recur (dec cnt))))))
@@ -261,9 +260,9 @@
         filter-expressions (ref [])
         _ (when (and (not (nil? filter-expr)) (not= "" filter-expr))
             (dosync (alter filter-expressions conj filter-expr)))
-        _ (create-and-set-filter pcap filter-expr)
+        _ (pcap/create-and-set-filter pcap filter-expr)
         failed-packet-counter (Counter.)
-        forwarder (create-and-start-forwarder out-queue
+        forwarder (sniffer/create-and-start-forwarder out-queue
                     #(try (forwarder-fn %)
                        (catch Exception e
                          (.inc failed-packet-counter)
@@ -271,9 +270,9 @@
                            (throw e))))
                     forward-exceptions)
         sniffer (if (and emit-raw-data (not force-put))
-                  (create-and-start-sniffer pcap bulk-size use-intermediate-buffer (handler) nil)
-                  (create-and-start-sniffer pcap (handler)))
-        stats-fn (create-stats-fn pcap)]
+                  (sniffer/create-and-start-sniffer pcap bulk-size use-intermediate-buffer (handler) nil)
+                  (sniffer/create-and-start-sniffer pcap (handler)))
+        stats-fn (pcap/create-stats-fn pcap)]
 
     (fn 
       ([k]
@@ -281,50 +280,50 @@
          :get-stats (merge (stats-fn) (handler :get-stats) {"forwarder-failed" (.value failed-packet-counter)})
          :stop (do
                  (dosync (ref-set running false))
-                 (stop-forwarder forwarder)
-                 (stop-sniffer sniffer))
+                 (sniffer/stop-forwarder forwarder)
+                 (sniffer/stop-sniffer sniffer))
          :get-filters @filter-expressions
          :remove-last-filter (do
                                (dosync (alter filter-expressions pop))
-                               (create-and-set-filter pcap (join " " @filter-expressions)))
+                               (pcap/create-and-set-filter pcap (string/join " " @filter-expressions)))
          :remove-all-filters (do
                                (dosync (alter filter-expressions empty))
-                               (create-and-set-filter pcap (join " " @filter-expressions)))
+                               (pcap/create-and-set-filter pcap (string/join " " @filter-expressions)))
          :wait-for-completed (do
                                (println "Waiting till handler completed...")
                                (handler :wait-for-completed)
                                (while (> (.size out-queue) 0)
-                                 (sleep 100))
+                                 (utils/sleep 100))
                                ;;; TODO:
                                ;;; Right now, we give it a little time to process the last data even when the queues are empty.
                                ;;; We should actually use other means to indicate that the entire processing has finished.
-                               (sleep 100))
+                               (utils/sleep 100))
          :default (throw (RuntimeException. (str "Unsupported operation: " k)))))
       ([k arg]
        (condp = k
          :add-filter (when (and arg (not= arg ""))
                        (dosync
                          (alter filter-expressions conj arg))
-                       (create-and-set-filter pcap (join " " @filter-expressions)))
+                       (pcap/create-and-set-filter pcap (string/join " " @filter-expressions)))
          :remove-filter (do (dosync
                               (alter filter-expressions (fn [fe] (vec (filter #(not= arg %) fe)))))
-                            (create-and-set-filter pcap (join " " @filter-expressions)))
+                            (pcap/create-and-set-filter pcap (string/join " " @filter-expressions)))
          :send-bytes-packet (send-bytes-packet pcap arg)
-         :send-packet-map (send-bytes-packet pcap (generate-packet-data arg))
+         :send-packet-map (send-bytes-packet pcap (pkt-gen/generate-packet-data arg))
          :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " arg)))))
       ([k arg1 arg2]
        (condp = k
          :replace-filter (when (some #(= arg1 %) @filter-expressions)
                            (dosync
                              (alter filter-expressions #(replace {arg1 arg2} %)))
-                           (create-and-set-filter pcap (join " " @filter-expressions)))
+                           (pcap/create-and-set-filter pcap (string/join " " @filter-expressions)))
          :send-bytes-packet (send-bytes-packet pcap arg1 arg2)
-         :send-packet-map (send-bytes-packet pcap (generate-packet-data arg1) arg2)
+         :send-packet-map (send-bytes-packet pcap (pkt-gen/generate-packet-data arg1) arg2)
          :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " [arg1 arg2])))))
       ([k arg1 arg2 arg3]
        (condp = k
          :send-bytes-packet (send-bytes-packet pcap arg1 arg2 arg3)
-         :send-packet-map (send-bytes-packet pcap (generate-packet-data arg1) arg2 arg3)
+         :send-packet-map (send-bytes-packet pcap (pkt-gen/generate-packet-data arg1) arg2 arg3)
          :default (throw (RuntimeException. (str "Unsupported operation: " k " Args: " [arg1 arg2 arg3]))))))))
 
 (defn create-and-start-online-cljnetpcap
@@ -334,11 +333,11 @@
    By default the 'any' device is used for capturing with no filter being applied.
    Please note that the returned handle should be stored as it is needed for stopping the capture."
   ([forwarder-fn]
-   (create-and-start-online-cljnetpcap forwarder-fn any))
+   (create-and-start-online-cljnetpcap forwarder-fn pcap/any))
   ([forwarder-fn device]
    (create-and-start-online-cljnetpcap forwarder-fn device ""))
   ([forwarder-fn device filter-expr]
-   (let [pcap (create-and-activate-online-pcap device)]
+   (let [pcap (pcap/create-and-activate-online-pcap device)]
      (set-up-and-start-cljnetpcap pcap forwarder-fn filter-expr false))))
 
 (defn get-stats
@@ -391,7 +390,7 @@
   ([file-name handler-fn]
    (process-pcap-file file-name handler-fn nil))
   ([file-name handler-fn _]
-   (let [pcap (create-offline-pcap file-name)
+   (let [pcap (pcap/create-offline-pcap file-name)
          clj-net-pcap (set-up-and-start-cljnetpcap pcap handler-fn "" true)]
      (clj-net-pcap :wait-for-completed)
      (stop-cljnetpcap clj-net-pcap))))
@@ -421,7 +420,7 @@
    So this is not suited for large amounts of data.
    Returns a vector that contains the extracted maps."
   [file-name]
-  (extract-data-from-pcap-file file-name pcap-packet-to-nested-maps))
+  (extract-data-from-pcap-file file-name pcap-data/pcap-packet-to-nested-maps))
 
 (defn extract-maps-from-pcap-file
   "Convenience function to extract the data from a pcap file in flat map format.
@@ -429,7 +428,7 @@
    So this is not suited for large amounts of data.
    Returns a vector that contains the extracted maps."
   [file-name]
-  (extract-data-from-pcap-file file-name pcap-packet-to-map))
+  (extract-data-from-pcap-file file-name pcap-data/pcap-packet-to-map))
 
 (defn extract-beans-from-pcap-file
   "Convenience function to extract the data from a pcap file in bean format.
@@ -437,7 +436,7 @@
    So this is not suited for large amounts of data.
    Returns a vector that contains the extracted beans."
   [file-name]
-  (extract-data-from-pcap-file file-name pcap-packet-to-bean))
+  (extract-data-from-pcap-file file-name pcap-data/pcap-packet-to-bean))
 
 (defn extract-byte-arrays-from-pcap-file
   "Convenience function to extract the raw data from a pcap file as byte arrays.

@@ -1,5 +1,5 @@
 ;;;
-;;; Copyright (C) 2012 Ruediger Gad
+;;; Copyright (C) 2012-2022 Ruediger Gad
 ;;;
 ;;; This file is part of clj-net-pcap.
 ;;; clj-net-pcap is licensed under the terms of either

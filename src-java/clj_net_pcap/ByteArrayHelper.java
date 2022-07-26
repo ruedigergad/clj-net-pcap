@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (C) 2014 Ruediger Gad
+ * Copyright (C) 2014-2022 Ruediger Gad
  *
  * This file is part of clj-net-pcap.
  *

@@ -248,7 +248,7 @@ JNIEXPORT jint JNICALL Java_org_jnetpcap_Pcap_setDirection
  */
 JNIEXPORT jint JNICALL Java_org_jnetpcap_Pcap_setImmediateMode
   (JNIEnv *env, jobject obj, jint jmode) {
-#if (LIBPCAP_VERSION < LIBPCAP_PCAP_CREATE)
+#if defined(WIN32) || defined(WIN64) || (LIBPCAP_VERSION < LIBPCAP_PCAP_CREATE)
 	throwException(env, UNSUPPORTED_OPERATION_EXCEPTION, "");
 	return -1;
 #else

@@ -689,6 +689,7 @@ int scanJPacket(JNIEnv *env, jobject obj, jobject jpacket, jobject jstate,
 	debug_exit("scanJPacket");
 #endif
 
+    return 0;
 }
 
 /****************************************************************

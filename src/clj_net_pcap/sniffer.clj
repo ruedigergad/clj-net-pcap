@@ -115,10 +115,7 @@
                            (.start))]
     (fn [k]
       (cond
-        (= k :stop) (do
-                      (dosync (ref-set running false))
-                      (.interrupt forwarder-thread)
-                      (.join forwarder-thread))))))
+        (= k :stop) (dosync (ref-set running false))))))
 
 (defn stop-forwarder
   "Stops the given forwarder."

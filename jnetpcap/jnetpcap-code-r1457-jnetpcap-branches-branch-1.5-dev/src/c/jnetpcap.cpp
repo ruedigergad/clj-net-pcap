@@ -1082,6 +1082,11 @@ JNIEXPORT jint JNICALL Java_org_jnetpcap_Pcap_sendPacket
 	size_t size = env->GetIntField(jbuffer, jmemorySizeFID);
 
 	int r = pcap_sendpacket(p, b, (int) size);
+
+	if (r != 0) {
+		pcap_perror(p, "JNICALL Java_org_jnetpcap_Pcap_sendPacket")
+	}
+
 	return r;
 #endif
 }
@@ -1117,6 +1122,11 @@ JNIEXPORT jint JNICALL Java_org_jnetpcap_Pcap_sendPacketPrivate
 	}
 
 	int r = pcap_sendpacket(p, b + (int) jstart, (int) jlength);
+
+	if (r != 0) {
+		pcap_perror(p, "JNICALL Java_org_jnetpcap_Pcap_sendPacketPrivate")
+	}
+
 	return r;
 
 #endif

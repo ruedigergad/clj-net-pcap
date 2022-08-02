@@ -35,6 +35,11 @@
                          "icmpType" 8, "icmpEchoSeq" "bar",
                          "icmpId" 123, "icmpSeqNo" 12, "data" "abcd"})
 
+(def test-device
+  (cond
+    (utils/is-os? "freebsd") pcap/first-wired-dev
+    :else pcap/lo))
+
 
 
 (test/deftest cljnetpcap-send-and-receive-bytes-packet-via-intermediate-buffer-count-test
@@ -47,7 +52,7 @@
         cljnetpcap (binding [clj-net-pcap.core/*bulk-size* 10
                              clj-net-pcap.core/*emit-raw-data* true
                              clj-net-pcap.core/*use-intermediate-buffer* true]
-                     (core/create-and-start-online-cljnetpcap forwarder-fn pcap/lo))
+                     (core/create-and-start-online-cljnetpcap forwarder-fn test-device))
         _ (core/add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
     (utils/sleep 1000)
     (cljnetpcap :send-bytes-packet ba 10 10)
@@ -69,7 +74,7 @@
         cljnetpcap (binding [clj-net-pcap.core/*bulk-size* 10
                              clj-net-pcap.core/*emit-raw-data* true
                              clj-net-pcap.core/*use-intermediate-buffer* true]
-                     (core/create-and-start-online-cljnetpcap forwarder-fn pcap/lo))
+                     (core/create-and-start-online-cljnetpcap forwarder-fn test-device))
         _ (core/add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
     (utils/sleep 1000)
     (doseq [x (range 0 10)]
@@ -92,7 +97,7 @@
         cljnetpcap (binding [clj-net-pcap.core/*bulk-size* 10
                              clj-net-pcap.core/*emit-raw-data* true
                              clj-net-pcap.core/*use-intermediate-buffer* false]
-                     (core/create-and-start-online-cljnetpcap forwarder-fn pcap/lo))
+                     (core/create-and-start-online-cljnetpcap forwarder-fn test-device))
         _ (core/add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
     (utils/sleep 1000)
     (cljnetpcap :send-bytes-packet ba 10 10)
@@ -111,7 +116,7 @@
         cljnetpcap (binding [clj-net-pcap.core/*bulk-size* 10
                              clj-net-pcap.core/*emit-raw-data* true
                              clj-net-pcap.core/*use-intermediate-buffer* false]
-                     (core/create-and-start-online-cljnetpcap forwarder-fn pcap/lo))
+                     (core/create-and-start-online-cljnetpcap forwarder-fn test-device))
         _ (core/add-filter cljnetpcap "icmp and (dst host 252.253.254.255) and (src host 1.2.3.4)")]
     (utils/sleep 1000)
     (doseq [x (range 0 10)]

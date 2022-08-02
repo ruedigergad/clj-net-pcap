@@ -28,6 +28,10 @@
 
 
 (def test-out-file "file-out.test.file")
+(def test-device
+  (cond
+    (utils/is-os? "freebsd") pcap/first-wired-dev
+    :else pcap/lo))
 
 (defn- create-test-cljnetpcap-single
   [dsl-expr file-out-forwarder]
@@ -37,7 +41,7 @@
             pcap/*snap-len* 64]
     (core/create-and-start-online-cljnetpcap
       #(file-out-forwarder ((partial pcap-data/process-packet-byte-buffer (ba-dsl/create-extraction-fn dsl-expr)) %))
-      pcap/lo
+      test-device
       "udp and (src port 2048) and (dst port 4096)")))
 
 (defn- create-test-cljnetpcap-bs2
@@ -48,7 +52,7 @@
             pcap/*snap-len* 64]
     (core/create-and-start-online-cljnetpcap
       #(file-out-forwarder ((partial pcap-data/process-packet-byte-buffer-bulk (ba-dsl/create-extraction-fn dsl-expr)) %))
-      pcap/lo
+      test-device
       "udp and (src port 2048) and (dst port 4096)")))
 
 (defn stdout-formatter-fixture [f]

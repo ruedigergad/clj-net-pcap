@@ -170,7 +170,11 @@
                ;;; all packets. See also the jNetPcap docs for more information
                ;;; about the behavior of Pcap.breakloop().
                   (create-and-set-filter (fn [] pcap) "")
-                  (.inject pcap (byte-array 128 (byte 0)))
+                  (cond
+                    (and (utils/is-os? "freebsd") (= dev-name lo))
+                      (.inject pcap (byte-array (map byte (concat [2 0 0 0] (repeat 128 0)))))
+                    :else
+                      (.inject pcap (byte-array 128 (byte 0))))
                   (.join @pcap-thread)
                   (.close pcap)
                   (dosync ref-set pcap-thread nil))

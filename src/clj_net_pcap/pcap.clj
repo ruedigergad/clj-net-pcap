@@ -20,6 +20,7 @@
           creating, starting, and stopping an pcap instance."} 
   clj-net-pcap.pcap
   (:require (clj-assorted-utils [util :as utils]))
+  (:require (clojure [string :as string]))
   #_{:clj-kondo/ignore [:use]}
   (:use clj-net-pcap.native)
   (:import (java.util ArrayList) 
@@ -62,6 +63,20 @@
           (device-exists? "lo0") "lo0"
           :else (utils/println-err "Warning: Could not find name for loopback device.")))
 (def any "any")
+(def first-wired-dev
+  "This is a somewhat approximation to get the first wired network device.
+   At the time of writing, this should be something like:
+   eth0 (historic default on many Linux distributions),
+   em0 (default on FreeBSD), or en* (CentOS, e.g., uses this naming scheme.).
+   However, this approximation may not be correct."
+  (->>
+   (get-devices)
+   (filter #(> (count (.getAddresses %)) 0))
+   (map #(.getName %))
+   sort
+   (remove #(= % lo))
+   (remove #(string/starts-with? % "w"))
+   first))
 
 
 

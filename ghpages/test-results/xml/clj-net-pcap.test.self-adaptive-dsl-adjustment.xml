@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.self-adaptive-dsl-adjustment" errors="0" failures="0" tests="15" time="0.1232" timestamp="2022-10-02_20:49:12+0200">
-    <testcase name="self-adaptation-controller-restore-full-dsl-on-slowdown-test" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0613">
+<testsuite name="clj-net-pcap.test.self-adaptive-dsl-adjustment" errors="0" failures="0" tests="15" time="0.0708" timestamp="2022-10-02_20:59:13+0200">
+    <testcase name="self-adaptation-controller-restore-full-dsl-on-slowdown-test" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0145">
     </testcase>
-    <testcase name="stat-delta-test" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0014">
+    <testcase name="stat-delta-test" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0009">
     </testcase>
-    <testcase name="moving-average-calculator-test-2" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0005">
+    <testcase name="moving-average-calculator-test-2" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0002">
     </testcase>
-    <testcase name="determine-max-capture-rate-test-1" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0019">
+    <testcase name="determine-max-capture-rate-test-1" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0010">
     </testcase>
-    <testcase name="self-adaptation-controller-cap-rate-calc-test-1" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0095">
+    <testcase name="self-adaptation-controller-cap-rate-calc-test-1" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0054">
     </testcase>
-    <testcase name="simple-repetition-detection-test-1" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0011">
+    <testcase name="simple-repetition-detection-test-1" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0008">
     </testcase>
-    <testcase name="simple-repetition-detection-test-2" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0020">
+    <testcase name="simple-repetition-detection-test-2" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0012">
     </testcase>
-    <testcase name="determine-max-capture-rate-test-5" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0030">
+    <testcase name="determine-max-capture-rate-test-5" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0024">
     </testcase>
-    <testcase name="moving-average-calculator-test-3" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0005">
+    <testcase name="moving-average-calculator-test-3" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0002">
     </testcase>
-    <testcase name="moving-average-calculator-test-1" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0013">
+    <testcase name="moving-average-calculator-test-1" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0009">
     </testcase>
     <testcase name="get-dropped-sum-test" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0002">
     </testcase>
-    <testcase name="self-adaptation-controller-initialization-test" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0005">
+    <testcase name="self-adaptation-controller-initialization-test" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0006">
     </testcase>
-    <testcase name="determine-max-capture-rate-test-4" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0015">
+    <testcase name="determine-max-capture-rate-test-4" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0018">
     </testcase>
-    <testcase name="self-adaptation-controller-limit-dsl-on-speedup-test" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0189">
+    <testcase name="self-adaptation-controller-limit-dsl-on-speedup-test" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0109">
     </testcase>
-    <testcase name="self-adaptation-controller-cap-rate-calc-test-2" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0116">
+    <testcase name="self-adaptation-controller-cap-rate-calc-test-2" classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" time="0.0201">
     </testcase>
     <system-err>
     </system-err>
@@ -87,7 +87,7 @@ Resetting inact-ctr to320
         </property>
         <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
         </property>
-        <property name="clj-net-pcap.version" value="1.8.0">
+        <property name="clj-net-pcap.version" value="1.8.1">
         </property>
         <property name="path.separator" value=":">
         </property>
@@ -180,7 +180,7 @@ Resetting inact-ctr to320
         </property>
         <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
         </property>
-        <property name="sun.java.command" value="clojure.main -i /tmp/form-init17313660210098136475.clj">
+        <property name="sun.java.command" value="clojure.main -i /tmp/form-init17133992086308769024.clj">
         </property>
         <property name="user.name" value="root">
         </property>

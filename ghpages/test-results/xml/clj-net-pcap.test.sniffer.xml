@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.sniffer" errors="0" failures="0" tests="2" time="1.0648" timestamp="2022-10-02_20:49:13+0200">
-    <testcase name="sniffer-forwarder-interaction" classname="clj-net-pcap.test.sniffer" time="1.0618">
+<testsuite name="clj-net-pcap.test.sniffer" errors="0" failures="0" tests="2" time="1.0763" timestamp="2022-10-02_20:59:14+0200">
+    <testcase name="sniffer-forwarder-interaction" classname="clj-net-pcap.test.sniffer" time="1.0704">
     </testcase>
-    <testcase name="test-forwarder" classname="clj-net-pcap.test.sniffer" time="0.0015">
+    <testcase name="test-forwarder" classname="clj-net-pcap.test.sniffer" time="0.0034">
     </testcase>
     <system-err>
 Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
@@ -20,7 +20,7 @@ Stopping online pcap.
         </property>
         <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
         </property>
-        <property name="clj-net-pcap.version" value="1.8.0">
+        <property name="clj-net-pcap.version" value="1.8.1">
         </property>
         <property name="path.separator" value=":">
         </property>
@@ -113,7 +113,7 @@ Stopping online pcap.
         </property>
         <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
         </property>
-        <property name="sun.java.command" value="clojure.main -i /tmp/form-init17313660210098136475.clj">
+        <property name="sun.java.command" value="clojure.main -i /tmp/form-init17133992086308769024.clj">
         </property>
         <property name="user.name" value="root">
         </property>

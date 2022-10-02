@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.pcap-send" errors="0" failures="0" tests="11" time="3.9504" timestamp="2022-10-02_20:49:10+0200">
-    <testcase name="cljnetpcap-send-and-receive-bytes-packet-with-count-and-delay-test" classname="clj-net-pcap.test.pcap-send" time="0.5581">
+<testsuite name="clj-net-pcap.test.pcap-send" errors="0" failures="0" tests="11" time="3.9584" timestamp="2022-10-02_20:59:11+0200">
+    <testcase name="cljnetpcap-send-and-receive-bytes-packet-with-count-and-delay-test" classname="clj-net-pcap.test.pcap-send" time="0.5764">
     </testcase>
-    <testcase name="cljnetpcap-send-and-receive-packet-from-description-map-with-count-and-delay-test" classname="clj-net-pcap.test.pcap-send" time="0.5716">
+    <testcase name="cljnetpcap-send-and-receive-packet-from-description-map-with-count-and-delay-test" classname="clj-net-pcap.test.pcap-send" time="0.5897">
     </testcase>
-    <testcase name="cljnetpcap-send-and-receive-bytes-packet-raw-test" classname="clj-net-pcap.test.pcap-send" time="0.1681">
+    <testcase name="cljnetpcap-send-and-receive-bytes-packet-raw-test" classname="clj-net-pcap.test.pcap-send" time="0.1682">
     </testcase>
-    <testcase name="cljnetpcap-send-and-receive-packet-from-description-map-count-test" classname="clj-net-pcap.test.pcap-send" time="0.5919">
+    <testcase name="cljnetpcap-send-and-receive-packet-from-description-map-count-test" classname="clj-net-pcap.test.pcap-send" time="0.5768">
     </testcase>
-    <testcase name="cljnetpcap-send-and-receive-bytes-packet-test" classname="clj-net-pcap.test.pcap-send" time="0.1581">
+    <testcase name="cljnetpcap-send-and-receive-bytes-packet-test" classname="clj-net-pcap.test.pcap-send" time="0.1681">
     </testcase>
-    <testcase name="cljnetpcap-send-and-receive-bytes-packet-with-count-test" classname="clj-net-pcap.test.pcap-send" time="0.4817">
+    <testcase name="cljnetpcap-send-and-receive-bytes-packet-with-count-test" classname="clj-net-pcap.test.pcap-send" time="0.4689">
     </testcase>
-    <testcase name="pcap-send-and-sniff-byte-array-test" classname="clj-net-pcap.test.pcap-send" time="0.1485">
+    <testcase name="pcap-send-and-sniff-byte-array-test" classname="clj-net-pcap.test.pcap-send" time="0.1685">
     </testcase>
-    <testcase name="cljnetpcap-send-and-receive-bytes-packet-count-test" classname="clj-net-pcap.test.pcap-send" time="0.5668">
+    <testcase name="cljnetpcap-send-and-receive-bytes-packet-count-test" classname="clj-net-pcap.test.pcap-send" time="0.5678">
     </testcase>
-    <testcase name="cljnetpcap-send-and-receive-packet-maps-test" classname="clj-net-pcap.test.pcap-send" time="0.1695">
+    <testcase name="cljnetpcap-send-and-receive-packet-maps-test" classname="clj-net-pcap.test.pcap-send" time="0.1644">
     </testcase>
-    <testcase name="naive-pcap-send-byte-array-test" classname="clj-net-pcap.test.pcap-send" time="0.0415">
+    <testcase name="naive-pcap-send-byte-array-test" classname="clj-net-pcap.test.pcap-send" time="0.0394">
     </testcase>
-    <testcase name="cljnetpcap-send-and-receive-packet-from-description-map-with-count-test" classname="clj-net-pcap.test.pcap-send" time="0.4859">
+    <testcase name="cljnetpcap-send-and-receive-packet-from-description-map-with-count-test" classname="clj-net-pcap.test.pcap-send" time="0.4617">
     </testcase>
     <system-err>
 Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
@@ -67,7 +67,7 @@ Stopping online pcap.
         </property>
         <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
         </property>
-        <property name="clj-net-pcap.version" value="1.8.0">
+        <property name="clj-net-pcap.version" value="1.8.1">
         </property>
         <property name="path.separator" value=":">
         </property>
@@ -160,7 +160,7 @@ Stopping online pcap.
         </property>
         <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
         </property>
-        <property name="sun.java.command" value="clojure.main -i /tmp/form-init17313660210098136475.clj">
+        <property name="sun.java.command" value="clojure.main -i /tmp/form-init17133992086308769024.clj">
         </property>
         <property name="user.name" value="root">
         </property>

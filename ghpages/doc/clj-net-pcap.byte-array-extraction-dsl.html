@@ -1,26 +1,7 @@
 <!DOCTYPE html><html><head><meta charset="utf-8" /><title>Namespace clj-net-pcap.byte-array-extraction-dsl</title><style type="text/css">body { margin: 10px;
           padding: 10px;
-          background-color: #F7F7F7;
-          font-family: serif; }
-
-  h1, h2, h3, h4 { color:#116275; }
-
-  code { font-size:12px;
-         font-family: monospace; }
-
-  pre { padding: 5px;
-        border: 2px dashed DarkGray;
-        background-color: #F7F7F7;
-        font-size:12px;
-        font-family: monospace; }
-
-  a { color: #116275; }
-  a:hover { background-color: #A8DFE6; }
-  a:visited { color: #276B86; }
-
-  td { padding-left: 5px; }
-
-  section, footer, header { float: left; }
+          background-color: #DFE9F5;
+          font-family: sans-serif; }
 
   #top { width: 800px;
          padding: 10px;
@@ -28,9 +9,30 @@
          margin-right: auto;
          overflow: hidden;
          background-color: #FFFFFF;
-         border: 3px solid DarkGray; }</style></head><body><div id="top"><header><h1>Namspace clj-net-pcap.byte-array-extraction-dsl</h1><h4>A simple DSL for extracting data from packets that are represented as byte arrays.</h4></header><section id="ns-toc"><h2>Other Namespaces</h2><table><tr><td><a href="clj-net-pcap.CljNetPcapJavaAdapter.html">clj-net-pcap.CljNetPcapJavaAdapter</a></td><td><div>Adapter class to enable usage of clj-net-pcap from Java.</div></td></tr><tr><td><a href="clj-net-pcap.core.html">clj-net-pcap.core</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.dsl.transformation.html">clj-net-pcap.dsl.transformation</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.main.html">clj-net-pcap.main</a></td><td><div>Main class and method for launching a simple clj-net-pcap based sniffer
-          that prints some i...</div></td></tr><tr><td><a href="clj-net-pcap.native.html">clj-net-pcap.native</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.packet-gen.html">clj-net-pcap.packet-gen</a></td><td><div>The packet-gen namespace contains functionality for generating and sending packets.</div></td></tr><tr><td><a href="clj-net-pcap.packet-offsets.html">clj-net-pcap.packet-offsets</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.pcap.html">clj-net-pcap.pcap</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.pcap-data.html">clj-net-pcap.pcap-data</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.self-adaptive-dsl-adjustment.html">clj-net-pcap.self-adaptive-dsl-adjustment</a></td><td><div>A simple proof of concept for adjusting DSL statements with self-adaptivity.</div></td></tr><tr><td><a href="clj-net-pcap.sniffer.html">clj-net-pcap.sniffer</a></td><td><div>Convenience functions for easing the implementation of a working
-          sniffer.</div></td></tr><tr><td><a href="index.html">Back to Index</a></td><td></td></tr></table></section><section id="pubvars-toc"><h2>Public Vars</h2><nav><a href="#IDcreate-extraction-fn">create-extraction-fn</a>, <a href="#IDcreate-extraction-fn-body-for-clj-map-type">create-extraction-fn-body-for-clj-map-type</a>, <a href="#IDcreate-extraction-fn-body-for-csv-str-type">create-extraction-fn-body-for-csv-str-type</a>, <a href="#IDcreate-extraction-fn-body-for-java-map-type">create-extraction-fn-body-for-java-map-type</a>, <a href="#IDcreate-extraction-fn-body-for-json-str-type">create-extraction-fn-body-for-json-str-type</a>, <a href="#IDcreate-transf-fn">create-transf-fn</a>, <a href="#IDget-arff-header">get-arff-header</a>, <a href="#IDget-arff-type-for-transformation-fn">get-arff-type-for-transformation-fn</a>, <a href="#IDget-arff-type-header">get-arff-type-header</a>, <a href="#IDget-offset">get-offset</a>, <a href="#IDget-transformation-fn-ret-type">get-transformation-fn-ret-type</a>, <a href="#IDipv4-udp-be-dsl-expression">ipv4-udp-be-dsl-expression</a>, <a href="#IDipv4-udp-le-dsl-expression">ipv4-udp-le-dsl-expression</a>, <a href="#IDis-new-dslQMARK">is-new-dsl?</a>, <a href="#IDresolve-transf-fn">resolve-transf-fn</a></nav></section><section><h2>Usage Documentation</h2><details open="open"><summary>Show/Hide</summary><pre>A simple DSL for extracting data from packets that are represented as byte arrays.</pre></details><a href="#top">Back to top</a></section><section id="details"><h2>Details of Public Vars</h2><div id="IDcreate-extraction-fn"><div><h3>Function: create-extraction-fn</h3><pre>Arglists:
+         color: #123154;
+         border: 3px solid #B4D3F5; }
+
+  pre { padding: 10px;
+        border: 2px dashed #B4D3F5;
+        background-color: #F0F6FD;
+        font-family: monospace; }
+
+  a { color: #4A6A8F; }
+  a:hover { background-color: #B4D3F5; }
+  a:visited { color: #425365; }
+
+  td, th { padding-left: 5px;
+           text-align: left; }
+
+  #ui-widget {
+    position: fixed;
+    top: 0em;
+    left: 0em;
+  }</style><link href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet" /></head><body><div id="ui-widget"><input autofocus="autofocus" id="api-search" placeholder="API Search" tabindex="1" /></div><div id="top"><header><h1>Namespace clj-net-pcap.byte-array-extraction-dsl</h1><p>A simple DSL for extracting data from packets that are represented as byte arrays.</p></header><section class="ns-toc" id="other-ns-toc"><h2>Other Namespaces</h2><details><summary>Show/Hide</summary><table><tr><td><a href="clj-net-pcap.CljNetPcapJavaAdapter.html">clj-net-pcap.CljNetPcapJavaAdapter</a></td><td><div>Adapter class to enable usage of clj-net-pcap from Java.</div></td></tr><tr><td><a href="clj-net-pcap.core.html">clj-net-pcap.core</a></td><td><div>clj-net-pcap is a wrapper/adapter/facade (whatever) around jNetPcap that 
+          enables and ease...</div></td></tr><tr><td><a href="clj-net-pcap.dsl.transformation.html">clj-net-pcap.dsl.transformation</a></td><td><div>Transformation functions for the simple DSL for extracting data from packets that are represented as...</div></td></tr><tr><td><a href="clj-net-pcap.main.html">clj-net-pcap.main</a></td><td><div>Main class and method for launching a simple clj-net-pcap based sniffer
+          that prints some i...</div></td></tr><tr><td><a href="clj-net-pcap.native.html">clj-net-pcap.native</a></td><td><div>Functions etc. for extracting, loading etc. native libraries from the jar file.</div></td></tr><tr><td><a href="clj-net-pcap.packet-gen.html">clj-net-pcap.packet-gen</a></td><td><div>The packet-gen namespace contains functionality for generating and sending packets.</div></td></tr><tr><td><a href="clj-net-pcap.packet-offsets.html">clj-net-pcap.packet-offsets</a></td><td><div>Common offsets of header fields etc.</div></td></tr><tr><td><a href="clj-net-pcap.pcap.html">clj-net-pcap.pcap</a></td><td><div>Functions for handling functionality related to org.jnetpcap.Pcap
+          such as listing network ...</div></td></tr><tr><td><a href="clj-net-pcap.pcap-data.html">clj-net-pcap.pcap-data</a></td><td><div>Convenience functions for processing pcap data like packets and headers.</div></td></tr><tr><td><a href="clj-net-pcap.self-adaptive-dsl-adjustment.html">clj-net-pcap.self-adaptive-dsl-adjustment</a></td><td><div>A simple proof of concept for adjusting DSL statements with self-adaptivity.</div></td></tr><tr><td><a href="clj-net-pcap.sniffer.html">clj-net-pcap.sniffer</a></td><td><div>Convenience functions for easing the implementation of a working
+          sniffer.</div></td></tr><tr><td><a href="index.html">Index Page</a></td><td></td></tr><tr><td><a href="var-index.html">Alphabetic Var Index</a></td><td></td></tr></table></details></section><section id="pubvars-toc"><h2>Public Vars</h2><nav><a href="#IDcreate-extraction-fn">create-extraction-fn</a>, <a href="#IDcreate-extraction-fn-body-for-clj-map-type">create-extraction-fn-body-for-clj-map-type</a>, <a href="#IDcreate-extraction-fn-body-for-csv-str-type">create-extraction-fn-body-for-csv-str-type</a>, <a href="#IDcreate-extraction-fn-body-for-java-map-type">create-extraction-fn-body-for-java-map-type</a>, <a href="#IDcreate-extraction-fn-body-for-json-str-type">create-extraction-fn-body-for-json-str-type</a>, <a href="#IDcreate-transf-fn">create-transf-fn</a>, <a href="#IDget-arff-header">get-arff-header</a>, <a href="#IDget-arff-type-for-transformation-fn">get-arff-type-for-transformation-fn</a>, <a href="#IDget-arff-type-header">get-arff-type-header</a>, <a href="#IDget-offset">get-offset</a>, <a href="#IDget-transformation-fn-ret-type">get-transformation-fn-ret-type</a>, <a href="#IDipv4-udp-be-dsl-expression">ipv4-udp-be-dsl-expression</a>, <a href="#IDipv4-udp-le-dsl-expression">ipv4-udp-le-dsl-expression</a>, <a href="#IDis-new-dslQMARK">is-new-dsl?</a>, <a href="#IDresolve-transf-fn">resolve-transf-fn</a></nav></section><section><h2>Usage Documentation</h2><details open="open"><summary>Show/Hide</summary><pre>A simple DSL for extracting data from packets that are represented as byte arrays.</pre></details><a href="#top">Back to top</a></section><section id="details"><h2>Details of Public Vars</h2><div id="IDcreate-extraction-fn"><div><h4>Function: create-extraction-fn</h4><pre>Arglists:
 =========
 
   (create-extraction-fn dsl-expression)
@@ -38,7 +40,7 @@
 Docstring:
 ==========
 
-  Create an extraction function based on the given dsl-expression.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L207">View Source</a></div><div id="IDcreate-extraction-fn-body-for-clj-map-type"><div><h3>Function: create-extraction-fn-body-for-clj-map-type</h3><pre>Arglists:
+  Create an extraction function based on the given dsl-expression.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L199">View Source</a></div><div id="IDcreate-extraction-fn-body-for-clj-map-type"><div><h4>Function: create-extraction-fn-body-for-clj-map-type</h4><pre>Arglists:
 =========
 
   (create-extraction-fn-body-for-clj-map-type ba offset rules)
@@ -46,7 +48,7 @@ Docstring:
 Docstring:
 ==========
 
-  Create the body of an extraction function that extracts data into a Clojure map.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L148">View Source</a></div><div id="IDcreate-extraction-fn-body-for-csv-str-type"><div><h3>Function: create-extraction-fn-body-for-csv-str-type</h3><pre>Arglists:
+  Create the body of an extraction function that extracts data into a Clojure map.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L140">View Source</a></div><div id="IDcreate-extraction-fn-body-for-csv-str-type"><div><h4>Function: create-extraction-fn-body-for-csv-str-type</h4><pre>Arglists:
 =========
 
   (create-extraction-fn-body-for-csv-str-type ba offset rules)
@@ -54,7 +56,7 @@ Docstring:
 Docstring:
 ==========
 
-  Create the body of an extraction function that extracts data into a CSV String.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L162">View Source</a></div><div id="IDcreate-extraction-fn-body-for-java-map-type"><div><h3>Function: create-extraction-fn-body-for-java-map-type</h3><pre>Arglists:
+  Create the body of an extraction function that extracts data into a CSV String.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L154">View Source</a></div><div id="IDcreate-extraction-fn-body-for-java-map-type"><div><h4>Function: create-extraction-fn-body-for-java-map-type</h4><pre>Arglists:
 =========
 
   (create-extraction-fn-body-for-java-map-type ba offset rules)
@@ -62,7 +64,7 @@ Docstring:
 Docstring:
 ==========
 
-  Create the body of an extraction function that extracts data into a Java map.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L134">View Source</a></div><div id="IDcreate-extraction-fn-body-for-json-str-type"><div><h3>Function: create-extraction-fn-body-for-json-str-type</h3><pre>Arglists:
+  Create the body of an extraction function that extracts data into a Java map.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L126">View Source</a></div><div id="IDcreate-extraction-fn-body-for-json-str-type"><div><h4>Function: create-extraction-fn-body-for-json-str-type</h4><pre>Arglists:
 =========
 
   (create-extraction-fn-body-for-json-str-type ba offset rules)
@@ -70,7 +72,7 @@ Docstring:
 Docstring:
 ==========
 
-  Create the body of an extraction function that extracts data into a JSON String.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L182">View Source</a></div><div id="IDcreate-transf-fn"><div><h3>Function: create-transf-fn</h3><pre>Arglists:
+  Create the body of an extraction function that extracts data into a JSON String.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L174">View Source</a></div><div id="IDcreate-transf-fn"><div><h4>Function: create-transf-fn</h4><pre>Arglists:
 =========
 
   (create-transf-fn transf-def ba off)
@@ -78,7 +80,7 @@ Docstring:
 Docstring:
 ==========
 
-  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L65">View Source</a></div><div id="IDget-arff-header"><div><h3>Function: get-arff-header</h3><pre>Arglists:
+  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L57">View Source</a></div><div id="IDget-arff-header"><div><h4>Function: get-arff-header</h4><pre>Arglists:
 =========
 
   (get-arff-header dsl)
@@ -86,7 +88,7 @@ Docstring:
 Docstring:
 ==========
 
-  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L124">View Source</a></div><div id="IDget-arff-type-for-transformation-fn"><div><h3>Function: get-arff-type-for-transformation-fn</h3><pre>Arglists:
+  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L116">View Source</a></div><div id="IDget-arff-type-for-transformation-fn"><div><h4>Function: get-arff-type-for-transformation-fn</h4><pre>Arglists:
 =========
 
   (get-arff-type-for-transformation-fn transf-fn)
@@ -94,7 +96,7 @@ Docstring:
 Docstring:
 ==========
 
-  Get the ARFF return value type for the given transformation function transf-fn.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L54">View Source</a></div><div id="IDget-arff-type-header"><div><h3>Function: get-arff-type-header</h3><pre>Arglists:
+  Get the ARFF return value type for the given transformation function transf-fn.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L46">View Source</a></div><div id="IDget-arff-type-header"><div><h4>Function: get-arff-type-header</h4><pre>Arglists:
 =========
 
   (get-arff-type-header dsl)
@@ -103,7 +105,7 @@ Docstring:
 Docstring:
 ==========
 
-  Create the ARFF type header.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L107">View Source</a></div><div id="IDget-offset"><div><h3>Function: get-offset</h3><pre>Arglists:
+  Create the ARFF type header.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L99">View Source</a></div><div id="IDget-offset"><div><h4>Function: get-offset</h4><pre>Arglists:
 =========
 
   (get-offset e)
@@ -113,7 +115,7 @@ Docstring:
 
   Get the offset value for the given DSL expression e.
    If the offset is no numeric value this function tries to resolve the offset by its name.
-   If the name is not found, an error message is printed and 0 is returned.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L31">View Source</a></div><div id="IDget-transformation-fn-ret-type"><div><h3>Function: get-transformation-fn-ret-type</h3><pre>Arglists:
+   If the name is not found, an error message is printed and 0 is returned.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L23">View Source</a></div><div id="IDget-transformation-fn-ret-type"><div><h4>Function: get-transformation-fn-ret-type</h4><pre>Arglists:
 =========
 
   (get-transformation-fn-ret-type transf-fn)
@@ -122,7 +124,7 @@ Docstring:
 ==========
 
   Get the return type of a transformation function transf-fn.
-   For determining the type, this function calls trans-fn with a 1530 byte dummy byte-array filled with 0.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L46">View Source</a></div><div id="IDipv4-udp-be-dsl-expression"><div><h3>Var: ipv4-udp-be-dsl-expression</h3><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L238">View Source</a></div><div id="IDipv4-udp-le-dsl-expression"><div><h3>Var: ipv4-udp-le-dsl-expression</h3><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L252">View Source</a></div><div id="IDis-new-dslQMARK"><div><h3>Function: is-new-dsl?</h3><pre>Arglists:
+   For determining the type, this function calls trans-fn with a 1530 byte dummy byte-array filled with 0.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L38">View Source</a></div><div id="IDipv4-udp-be-dsl-expression"><div><h4>Var: ipv4-udp-be-dsl-expression</h4><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L230">View Source</a></div><div id="IDipv4-udp-le-dsl-expression"><div><h4>Var: ipv4-udp-le-dsl-expression</h4><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L244">View Source</a></div><div id="IDis-new-dslQMARK"><div><h4>Function: is-new-dsl?</h4><pre>Arglists:
 =========
 
   (is-new-dsl? e)
@@ -130,7 +132,7 @@ Docstring:
 Docstring:
 ==========
 
-  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L61">View Source</a></div><div id="IDresolve-transf-fn"><div><h3>Function: resolve-transf-fn</h3><pre>Arglists:
+  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L53">View Source</a></div><div id="IDresolve-transf-fn"><div><h4>Function: resolve-transf-fn</h4><pre>Arglists:
 =========
 
   (resolve-transf-fn e)
@@ -138,4 +140,4 @@ Docstring:
 Docstring:
 ==========
 
-  Resovle the transofrmation function for the given extraction-rule.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L90">View Source</a></div></section><footer><p>These docs were generated by the <a href="https://github.com/tsdh/lein-html5-docs">Leiningen HTML5 Docs Plugin</a>.</p><a href="http://www.w3.org/html/logo/"><img alt="HTML5 Powered" height="64" src="http://www.w3.org/html/logo/badge/html5-badge-h-solo.png" title="HTML5 Powered" width="63" /></a></footer></div></body></html>
+  Resovle the transofrmation function for the given extraction-rule.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/byte_array_extraction_dsl.clj#L82">View Source</a></div></section></div><footer><p>These docs were generated by the <a href="https://github.com/tsdh/lein-html5-docs">Leiningen HTML5 Docs Plugin</a>, version 3.0.3.</p><a href="http://www.w3.org/html/logo/"><img alt="HTML5 Powered" height="64" src="http://www.w3.org/html/logo/badge/html5-badge-h-solo.png" title="HTML5 Powered" width="63" /></a><script src="http://code.jquery.com/jquery.min.js"></script><script src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script><script src="api-search.js"></script></footer></body></html>

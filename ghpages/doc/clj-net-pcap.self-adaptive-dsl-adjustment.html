@@ -1,26 +1,7 @@
 <!DOCTYPE html><html><head><meta charset="utf-8" /><title>Namespace clj-net-pcap.self-adaptive-dsl-adjustment</title><style type="text/css">body { margin: 10px;
           padding: 10px;
-          background-color: #F7F7F7;
-          font-family: serif; }
-
-  h1, h2, h3, h4 { color:#116275; }
-
-  code { font-size:12px;
-         font-family: monospace; }
-
-  pre { padding: 5px;
-        border: 2px dashed DarkGray;
-        background-color: #F7F7F7;
-        font-size:12px;
-        font-family: monospace; }
-
-  a { color: #116275; }
-  a:hover { background-color: #A8DFE6; }
-  a:visited { color: #276B86; }
-
-  td { padding-left: 5px; }
-
-  section, footer, header { float: left; }
+          background-color: #DFE9F5;
+          font-family: sans-serif; }
 
   #top { width: 800px;
          padding: 10px;
@@ -28,9 +9,30 @@
          margin-right: auto;
          overflow: hidden;
          background-color: #FFFFFF;
-         border: 3px solid DarkGray; }</style></head><body><div id="top"><header><h1>Namspace clj-net-pcap.self-adaptive-dsl-adjustment</h1><h4>A simple proof of concept for adjusting DSL statements with self-adaptivity.</h4></header><section id="ns-toc"><h2>Other Namespaces</h2><table><tr><td><a href="clj-net-pcap.CljNetPcapJavaAdapter.html">clj-net-pcap.CljNetPcapJavaAdapter</a></td><td><div>Adapter class to enable usage of clj-net-pcap from Java.</div></td></tr><tr><td><a href="clj-net-pcap.byte-array-extraction-dsl.html">clj-net-pcap.byte-array-extraction-dsl</a></td><td><div>A simple DSL for extracting data from packets that are represented as byte arrays.</div></td></tr><tr><td><a href="clj-net-pcap.core.html">clj-net-pcap.core</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.dsl.transformation.html">clj-net-pcap.dsl.transformation</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.main.html">clj-net-pcap.main</a></td><td><div>Main class and method for launching a simple clj-net-pcap based sniffer
-          that prints some i...</div></td></tr><tr><td><a href="clj-net-pcap.native.html">clj-net-pcap.native</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.packet-gen.html">clj-net-pcap.packet-gen</a></td><td><div>The packet-gen namespace contains functionality for generating and sending packets.</div></td></tr><tr><td><a href="clj-net-pcap.packet-offsets.html">clj-net-pcap.packet-offsets</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.pcap.html">clj-net-pcap.pcap</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.pcap-data.html">clj-net-pcap.pcap-data</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.sniffer.html">clj-net-pcap.sniffer</a></td><td><div>Convenience functions for easing the implementation of a working
-          sniffer.</div></td></tr><tr><td><a href="index.html">Back to Index</a></td><td></td></tr></table></section><section id="pubvars-toc"><h2>Public Vars</h2><nav><a href="#IDcreate-max-capture-rate-determinator">create-max-capture-rate-determinator</a>, <a href="#IDcreate-moving-average-calculator">create-moving-average-calculator</a>, <a href="#IDcreate-repetition-detector">create-repetition-detector</a>, <a href="#IDcreate-self-adaptation-controller">create-self-adaptation-controller</a>, <a href="#IDcreate-stat-delta-counter">create-stat-delta-counter</a>, <a href="#IDget-dropped-sum">get-dropped-sum</a></nav></section><section><h2>Usage Documentation</h2><details open="open"><summary>Show/Hide</summary><pre>A simple proof of concept for adjusting DSL statements with self-adaptivity.</pre></details><a href="#top">Back to top</a></section><section id="details"><h2>Details of Public Vars</h2><div id="IDcreate-max-capture-rate-determinator"><div><h3>Function: create-max-capture-rate-determinator</h3><pre>Arglists:
+         color: #123154;
+         border: 3px solid #B4D3F5; }
+
+  pre { padding: 10px;
+        border: 2px dashed #B4D3F5;
+        background-color: #F0F6FD;
+        font-family: monospace; }
+
+  a { color: #4A6A8F; }
+  a:hover { background-color: #B4D3F5; }
+  a:visited { color: #425365; }
+
+  td, th { padding-left: 5px;
+           text-align: left; }
+
+  #ui-widget {
+    position: fixed;
+    top: 0em;
+    left: 0em;
+  }</style><link href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet" /></head><body><div id="ui-widget"><input autofocus="autofocus" id="api-search" placeholder="API Search" tabindex="1" /></div><div id="top"><header><h1>Namespace clj-net-pcap.self-adaptive-dsl-adjustment</h1><p>A simple proof of concept for adjusting DSL statements with self-adaptivity.</p></header><section class="ns-toc" id="other-ns-toc"><h2>Other Namespaces</h2><details><summary>Show/Hide</summary><table><tr><td><a href="clj-net-pcap.CljNetPcapJavaAdapter.html">clj-net-pcap.CljNetPcapJavaAdapter</a></td><td><div>Adapter class to enable usage of clj-net-pcap from Java.</div></td></tr><tr><td><a href="clj-net-pcap.byte-array-extraction-dsl.html">clj-net-pcap.byte-array-extraction-dsl</a></td><td><div>A simple DSL for extracting data from packets that are represented as byte arrays.</div></td></tr><tr><td><a href="clj-net-pcap.core.html">clj-net-pcap.core</a></td><td><div>clj-net-pcap is a wrapper/adapter/facade (whatever) around jNetPcap that 
+          enables and ease...</div></td></tr><tr><td><a href="clj-net-pcap.dsl.transformation.html">clj-net-pcap.dsl.transformation</a></td><td><div>Transformation functions for the simple DSL for extracting data from packets that are represented as...</div></td></tr><tr><td><a href="clj-net-pcap.main.html">clj-net-pcap.main</a></td><td><div>Main class and method for launching a simple clj-net-pcap based sniffer
+          that prints some i...</div></td></tr><tr><td><a href="clj-net-pcap.native.html">clj-net-pcap.native</a></td><td><div>Functions etc. for extracting, loading etc. native libraries from the jar file.</div></td></tr><tr><td><a href="clj-net-pcap.packet-gen.html">clj-net-pcap.packet-gen</a></td><td><div>The packet-gen namespace contains functionality for generating and sending packets.</div></td></tr><tr><td><a href="clj-net-pcap.packet-offsets.html">clj-net-pcap.packet-offsets</a></td><td><div>Common offsets of header fields etc.</div></td></tr><tr><td><a href="clj-net-pcap.pcap.html">clj-net-pcap.pcap</a></td><td><div>Functions for handling functionality related to org.jnetpcap.Pcap
+          such as listing network ...</div></td></tr><tr><td><a href="clj-net-pcap.pcap-data.html">clj-net-pcap.pcap-data</a></td><td><div>Convenience functions for processing pcap data like packets and headers.</div></td></tr><tr><td><a href="clj-net-pcap.sniffer.html">clj-net-pcap.sniffer</a></td><td><div>Convenience functions for easing the implementation of a working
+          sniffer.</div></td></tr><tr><td><a href="index.html">Index Page</a></td><td></td></tr><tr><td><a href="var-index.html">Alphabetic Var Index</a></td><td></td></tr></table></details></section><section id="pubvars-toc"><h2>Public Vars</h2><nav><a href="#IDcreate-max-capture-rate-determinator">create-max-capture-rate-determinator</a>, <a href="#IDcreate-moving-average-calculator">create-moving-average-calculator</a>, <a href="#IDcreate-repetition-detector">create-repetition-detector</a>, <a href="#IDcreate-self-adaptation-controller">create-self-adaptation-controller</a>, <a href="#IDcreate-stat-delta-counter">create-stat-delta-counter</a>, <a href="#IDget-dropped-sum">get-dropped-sum</a></nav></section><section><h2>Usage Documentation</h2><details open="open"><summary>Show/Hide</summary><pre>A simple proof of concept for adjusting DSL statements with self-adaptivity.</pre></details><a href="#top">Back to top</a></section><section id="details"><h2>Details of Public Vars</h2><div id="IDcreate-max-capture-rate-determinator"><div><h4>Function: create-max-capture-rate-determinator</h4><pre>Arglists:
 =========
 
   (create-max-capture-rate-determinator threshold interpolation)
@@ -38,7 +40,7 @@
 Docstring:
 ==========
 
-  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/self_adaptive_dsl_adjustment.clj#L61">View Source</a></div><div id="IDcreate-moving-average-calculator"><div><h3>Function: create-moving-average-calculator</h3><pre>Arglists:
+  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/self_adaptive_dsl_adjustment.clj#L56">View Source</a></div><div id="IDcreate-moving-average-calculator"><div><h4>Function: create-moving-average-calculator</h4><pre>Arglists:
 =========
 
   (create-moving-average-calculator cnt)
@@ -46,7 +48,7 @@ Docstring:
 Docstring:
 ==========
 
-  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/self_adaptive_dsl_adjustment.clj#L52">View Source</a></div><div id="IDcreate-repetition-detector"><div><h3>Function: create-repetition-detector</h3><pre>Arglists:
+  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/self_adaptive_dsl_adjustment.clj#L47">View Source</a></div><div id="IDcreate-repetition-detector"><div><h4>Function: create-repetition-detector</h4><pre>Arglists:
 =========
 
   (create-repetition-detector repetitions)
@@ -54,7 +56,7 @@ Docstring:
 Docstring:
 ==========
 
-  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/self_adaptive_dsl_adjustment.clj#L41">View Source</a></div><div id="IDcreate-self-adaptation-controller"><div><h3>Function: create-self-adaptation-controller</h3><pre>Arglists:
+  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/self_adaptive_dsl_adjustment.clj#L36">View Source</a></div><div id="IDcreate-self-adaptation-controller"><div><h4>Function: create-self-adaptation-controller</h4><pre>Arglists:
 =========
 
   (create-self-adaptation-controller
@@ -74,7 +76,7 @@ Docstring:
 Docstring:
 ==========
 
-  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/self_adaptive_dsl_adjustment.clj#L80">View Source</a></div><div id="IDcreate-stat-delta-counter"><div><h3>Function: create-stat-delta-counter</h3><pre>Arglists:
+  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/self_adaptive_dsl_adjustment.clj#L76">View Source</a></div><div id="IDcreate-stat-delta-counter"><div><h4>Function: create-stat-delta-counter</h4><pre>Arglists:
 =========
 
   (create-stat-delta-counter)
@@ -82,7 +84,7 @@ Docstring:
 Docstring:
 ==========
 
-  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/self_adaptive_dsl_adjustment.clj#L27">View Source</a></div><div id="IDget-dropped-sum"><div><h3>Function: get-dropped-sum</h3><pre>Arglists:
+  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/self_adaptive_dsl_adjustment.clj#L22">View Source</a></div><div id="IDget-dropped-sum"><div><h4>Function: get-dropped-sum</h4><pre>Arglists:
 =========
 
   (get-dropped-sum data)
@@ -90,4 +92,4 @@ Docstring:
 Docstring:
 ==========
 
-  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/self_adaptive_dsl_adjustment.clj#L36">View Source</a></div></section><footer><p>These docs were generated by the <a href="https://github.com/tsdh/lein-html5-docs">Leiningen HTML5 Docs Plugin</a>.</p><a href="http://www.w3.org/html/logo/"><img alt="HTML5 Powered" height="64" src="http://www.w3.org/html/logo/badge/html5-badge-h-solo.png" title="HTML5 Powered" width="63" /></a></footer></div></body></html>
+  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/self_adaptive_dsl_adjustment.clj#L31">View Source</a></div></section></div><footer><p>These docs were generated by the <a href="https://github.com/tsdh/lein-html5-docs">Leiningen HTML5 Docs Plugin</a>, version 3.0.3.</p><a href="http://www.w3.org/html/logo/"><img alt="HTML5 Powered" height="64" src="http://www.w3.org/html/logo/badge/html5-badge-h-solo.png" title="HTML5 Powered" width="63" /></a><script src="http://code.jquery.com/jquery.min.js"></script><script src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script><script src="api-search.js"></script></footer></body></html>

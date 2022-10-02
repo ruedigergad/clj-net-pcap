@@ -1,26 +1,7 @@
 <!DOCTYPE html><html><head><meta charset="utf-8" /><title>Namespace clj-net-pcap.pcap-data</title><style type="text/css">body { margin: 10px;
           padding: 10px;
-          background-color: #F7F7F7;
-          font-family: serif; }
-
-  h1, h2, h3, h4 { color:#116275; }
-
-  code { font-size:12px;
-         font-family: monospace; }
-
-  pre { padding: 5px;
-        border: 2px dashed DarkGray;
-        background-color: #F7F7F7;
-        font-size:12px;
-        font-family: monospace; }
-
-  a { color: #116275; }
-  a:hover { background-color: #A8DFE6; }
-  a:visited { color: #276B86; }
-
-  td { padding-left: 5px; }
-
-  section, footer, header { float: left; }
+          background-color: #DFE9F5;
+          font-family: sans-serif; }
 
   #top { width: 800px;
          padding: 10px;
@@ -28,37 +9,30 @@
          margin-right: auto;
          overflow: hidden;
          background-color: #FFFFFF;
-         border: 3px solid DarkGray; }</style></head><body><div id="top"><header><h1>Namspace clj-net-pcap.pcap-data</h1><h4></h4></header><section id="ns-toc"><h2>Other Namespaces</h2><table><tr><td><a href="clj-net-pcap.CljNetPcapJavaAdapter.html">clj-net-pcap.CljNetPcapJavaAdapter</a></td><td><div>Adapter class to enable usage of clj-net-pcap from Java.</div></td></tr><tr><td><a href="clj-net-pcap.byte-array-extraction-dsl.html">clj-net-pcap.byte-array-extraction-dsl</a></td><td><div>A simple DSL for extracting data from packets that are represented as byte arrays.</div></td></tr><tr><td><a href="clj-net-pcap.core.html">clj-net-pcap.core</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.dsl.transformation.html">clj-net-pcap.dsl.transformation</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.main.html">clj-net-pcap.main</a></td><td><div>Main class and method for launching a simple clj-net-pcap based sniffer
-          that prints some i...</div></td></tr><tr><td><a href="clj-net-pcap.native.html">clj-net-pcap.native</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.packet-gen.html">clj-net-pcap.packet-gen</a></td><td><div>The packet-gen namespace contains functionality for generating and sending packets.</div></td></tr><tr><td><a href="clj-net-pcap.packet-offsets.html">clj-net-pcap.packet-offsets</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.pcap.html">clj-net-pcap.pcap</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.self-adaptive-dsl-adjustment.html">clj-net-pcap.self-adaptive-dsl-adjustment</a></td><td><div>A simple proof of concept for adjusting DSL statements with self-adaptivity.</div></td></tr><tr><td><a href="clj-net-pcap.sniffer.html">clj-net-pcap.sniffer</a></td><td><div>Convenience functions for easing the implementation of a working
-          sniffer.</div></td></tr><tr><td><a href="index.html">Back to Index</a></td><td></td></tr></table></section><section id="pubvars-toc"><h2>Public Vars</h2><nav><a href="#IDMULtcp-flags-as-setMUL">*tcp-flags-as-set*</a>, <a href="#IDcalls-per-second-no-op-forwarder-fn">calls-per-second-no-op-forwarder-fn</a>, <a href="#IDcounting-no-op-forwarder-fn">counting-no-op-forwarder-fn</a>, <a href="#IDcreate-file-out-forwarder">create-file-out-forwarder</a>, <a href="#IDextract-http-fields-to-map">extract-http-fields-to-map</a>, <a href="#IDextract-subnet-information-to-map">extract-subnet-information-to-map</a>, <a href="#IDguess-subnet">guess-subnet</a>, <a href="#IDguess-subnet-mask">guess-subnet-mask</a>, <a href="#IDguess-subnet-mask-bits">guess-subnet-mask-bits</a>, <a href="#IDnetwork-class">network-class</a>, <a href="#IDno-op">no-op</a>, <a href="#IDno-op-converter-forwarder-fn">no-op-converter-forwarder-fn</a>, <a href="#IDpacket-byte-array-extract-bean-ipv4-udp">packet-byte-array-extract-bean-ipv4-udp</a>, <a href="#IDpacket-byte-array-extract-bean-ipv4-udp-be">packet-byte-array-extract-bean-ipv4-udp-be</a>, <a href="#IDpacket-byte-array-extract-map-ipv4-udp">packet-byte-array-extract-map-ipv4-udp</a>, <a href="#IDpacket-byte-array-extract-map-ipv4-udp-be">packet-byte-array-extract-map-ipv4-udp-be</a>, <a href="#IDpacket-byte-buffer-extract-bean-ipv4-udp-bulk">packet-byte-buffer-extract-bean-ipv4-udp-bulk</a>, <a href="#IDpacket-byte-buffer-extract-bean-ipv4-udp-single">packet-byte-buffer-extract-bean-ipv4-udp-single</a>, <a href="#IDpacket-byte-buffer-extract-map-ipv4-udp-bulk">packet-byte-buffer-extract-map-ipv4-udp-bulk</a>, <a href="#IDpacket-byte-buffer-extract-map-ipv4-udp-single">packet-byte-buffer-extract-map-ipv4-udp-single</a>, <a href="#IDparse-pcap-header-to-nested-map">parse-pcap-header-to-nested-map</a>, <a href="#IDparse-protocol-headers-to-nested-maps">parse-protocol-headers-to-nested-maps</a>, <a href="#IDpcap-packet-to-bean">pcap-packet-to-bean</a>, <a href="#IDpcap-packet-to-bean-ipv4-udp-only">pcap-packet-to-bean-ipv4-udp-only</a>, <a href="#IDpcap-packet-to-byte-vector">pcap-packet-to-byte-vector</a>, <a href="#IDpcap-packet-to-map">pcap-packet-to-map</a>, <a href="#IDpcap-packet-to-map-ipv4-udp-only">pcap-packet-to-map-ipv4-udp-only</a>, <a href="#IDpcap-packet-to-nested-maps">pcap-packet-to-nested-maps</a>, <a href="#IDprettify-addr-array">prettify-addr-array</a>, <a href="#IDprocess-packet-byte-buffer">process-packet-byte-buffer</a>, <a href="#IDprocess-packet-byte-buffer-bulk">process-packet-byte-buffer-bulk</a>, <a href="#IDprocess-protocol-headers-to-nested-maps">process-protocol-headers-to-nested-maps</a>, <a href="#IDsrc-dst-to-map">src-dst-to-map</a>, <a href="#IDstdout-byte-array-forwarder-fn">stdout-byte-array-forwarder-fn</a>, <a href="#IDstdout-combined-forwarder-fn">stdout-combined-forwarder-fn</a>, <a href="#IDstdout-forwarder-fn">stdout-forwarder-fn</a></nav></section><section id="details"><h2>Details of Public Vars</h2><div id="IDMULtcp-flags-as-setMUL"><div><h3>Dynamic Var: *tcp-flags-as-set*</h3><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L45">View Source</a></div><div id="IDcalls-per-second-no-op-forwarder-fn"><div><h3>Function: calls-per-second-no-op-forwarder-fn</h3><pre>Arglists:
-=========
+         color: #123154;
+         border: 3px solid #B4D3F5; }
 
-  (calls-per-second-no-op-forwarder-fn bulk-size)
+  pre { padding: 10px;
+        border: 2px dashed #B4D3F5;
+        background-color: #F0F6FD;
+        font-family: monospace; }
 
-Docstring:
-==========
+  a { color: #4A6A8F; }
+  a:hover { background-color: #B4D3F5; }
+  a:visited { color: #425365; }
 
-  No-op forwarder that periodically prints how many times it was called per second.
-   This is used for testing purposes.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L591">View Source</a></div><div id="IDcounting-no-op-forwarder-fn"><div><h3>Function: counting-no-op-forwarder-fn</h3><pre>Arglists:
-=========
+  td, th { padding-left: 5px;
+           text-align: left; }
 
-  (counting-no-op-forwarder-fn bulk-size)
-
-Docstring:
-==========
-
-  No-op forwarder that counts how many times it was called.
-   This is used for testing purposes.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L578">View Source</a></div><div id="IDcreate-file-out-forwarder"><div><h3>Function: create-file-out-forwarder</h3><pre>Arglists:
-=========
-
-  (create-file-out-forwarder out-file)
-  (create-file-out-forwarder out-file bulk)
-  (create-file-out-forwarder out-file bulk hdr)
-
-Docstring:
-==========
-
-  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L709">View Source</a></div><div id="IDextract-http-fields-to-map"><div><h3>Function: extract-http-fields-to-map</h3><pre>Arglists:
+  #ui-widget {
+    position: fixed;
+    top: 0em;
+    left: 0em;
+  }</style><link href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet" /></head><body><div id="ui-widget"><input autofocus="autofocus" id="api-search" placeholder="API Search" tabindex="1" /></div><div id="top"><header><h1>Namespace clj-net-pcap.pcap-data</h1><p>Convenience functions for processing pcap data like packets and headers.</p></header><section class="ns-toc" id="other-ns-toc"><h2>Other Namespaces</h2><details><summary>Show/Hide</summary><table><tr><td><a href="clj-net-pcap.CljNetPcapJavaAdapter.html">clj-net-pcap.CljNetPcapJavaAdapter</a></td><td><div>Adapter class to enable usage of clj-net-pcap from Java.</div></td></tr><tr><td><a href="clj-net-pcap.byte-array-extraction-dsl.html">clj-net-pcap.byte-array-extraction-dsl</a></td><td><div>A simple DSL for extracting data from packets that are represented as byte arrays.</div></td></tr><tr><td><a href="clj-net-pcap.core.html">clj-net-pcap.core</a></td><td><div>clj-net-pcap is a wrapper/adapter/facade (whatever) around jNetPcap that 
+          enables and ease...</div></td></tr><tr><td><a href="clj-net-pcap.dsl.transformation.html">clj-net-pcap.dsl.transformation</a></td><td><div>Transformation functions for the simple DSL for extracting data from packets that are represented as...</div></td></tr><tr><td><a href="clj-net-pcap.main.html">clj-net-pcap.main</a></td><td><div>Main class and method for launching a simple clj-net-pcap based sniffer
+          that prints some i...</div></td></tr><tr><td><a href="clj-net-pcap.native.html">clj-net-pcap.native</a></td><td><div>Functions etc. for extracting, loading etc. native libraries from the jar file.</div></td></tr><tr><td><a href="clj-net-pcap.packet-gen.html">clj-net-pcap.packet-gen</a></td><td><div>The packet-gen namespace contains functionality for generating and sending packets.</div></td></tr><tr><td><a href="clj-net-pcap.packet-offsets.html">clj-net-pcap.packet-offsets</a></td><td><div>Common offsets of header fields etc.</div></td></tr><tr><td><a href="clj-net-pcap.pcap.html">clj-net-pcap.pcap</a></td><td><div>Functions for handling functionality related to org.jnetpcap.Pcap
+          such as listing network ...</div></td></tr><tr><td><a href="clj-net-pcap.self-adaptive-dsl-adjustment.html">clj-net-pcap.self-adaptive-dsl-adjustment</a></td><td><div>A simple proof of concept for adjusting DSL statements with self-adaptivity.</div></td></tr><tr><td><a href="clj-net-pcap.sniffer.html">clj-net-pcap.sniffer</a></td><td><div>Convenience functions for easing the implementation of a working
+          sniffer.</div></td></tr><tr><td><a href="index.html">Index Page</a></td><td></td></tr><tr><td><a href="var-index.html">Alphabetic Var Index</a></td><td></td></tr></table></details></section><section id="pubvars-toc"><h2>Public Vars</h2><nav><a href="#IDMULtcp-flags-as-setMUL">*tcp-flags-as-set*</a>, <a href="#IDextract-http-fields-to-map">extract-http-fields-to-map</a>, <a href="#IDextract-subnet-information-to-map">extract-subnet-information-to-map</a>, <a href="#IDguess-subnet">guess-subnet</a>, <a href="#IDguess-subnet-mask">guess-subnet-mask</a>, <a href="#IDguess-subnet-mask-bits">guess-subnet-mask-bits</a>, <a href="#IDnetwork-class">network-class</a>, <a href="#IDparse-protocol-headers-to-nested-maps">parse-protocol-headers-to-nested-maps</a>, <a href="#IDpcap-packet-to-bean">pcap-packet-to-bean</a>, <a href="#IDpcap-packet-to-map">pcap-packet-to-map</a>, <a href="#IDpcap-packet-to-nested-maps">pcap-packet-to-nested-maps</a>, <a href="#IDprettify-addr-array">prettify-addr-array</a>, <a href="#IDprocess-protocol-headers-to-nested-maps">process-protocol-headers-to-nested-maps</a>, <a href="#IDsrc-dst-to-map">src-dst-to-map</a></nav></section><section><h2>Usage Documentation</h2><details open="open"><summary>Show/Hide</summary><pre>Convenience functions for processing pcap data like packets and headers.</pre></details><a href="#top">Back to top</a></section><section id="details"><h2>Details of Public Vars</h2><div id="IDMULtcp-flags-as-setMUL"><div><h4>Dynamic Var: *tcp-flags-as-set*</h4><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L39">View Source</a></div><div id="IDextract-http-fields-to-map"><div><h4>Function: extract-http-fields-to-map</h4><pre>Arglists:
 =========
 
   (extract-http-fields-to-map http fields)
@@ -67,7 +41,7 @@ Docstring:
 ==========
 
   Extract the given fields from an org.jnetpcap.protocol.tcpip.Http instance and store each into a map.
-   fields is a vector that specifies which fields shall be extracted.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L149">View Source</a></div><div id="IDextract-subnet-information-to-map"><div><h3>Macro: extract-subnet-information-to-map</h3><pre>Arglists:
+   fields is a vector that specifies which fields shall be extracted.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L143">View Source</a></div><div id="IDextract-subnet-information-to-map"><div><h4>Macro: extract-subnet-information-to-map</h4><pre>Arglists:
 =========
 
   (extract-subnet-information-to-map protocol)
@@ -76,7 +50,7 @@ Docstring:
 ==========
 
   Try to get information about source and destination subnets like network addresses or subnet masks.
-   This is just a wild guess based on the private network ranges as defined in RFC 1918.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L138">View Source</a></div><div id="IDguess-subnet"><div><h3>Function: guess-subnet</h3><pre>Arglists:
+   This is just a wild guess based on the private network ranges as defined in RFC 1918.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L132">View Source</a></div><div id="IDguess-subnet"><div><h4>Function: guess-subnet</h4><pre>Arglists:
 =========
 
   (guess-subnet ipv4-addr)
@@ -84,7 +58,7 @@ Docstring:
 Docstring:
 ==========
 
-  Try to guess the subnet address based on private network classes as defined in RFC 1918.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L57">View Source</a></div><div id="IDguess-subnet-mask"><div><h3>Function: guess-subnet-mask</h3><pre>Arglists:
+  Try to guess the subnet address based on private network classes as defined in RFC 1918.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L51">View Source</a></div><div id="IDguess-subnet-mask"><div><h4>Function: guess-subnet-mask</h4><pre>Arglists:
 =========
 
   (guess-subnet-mask ipv4-addr)
@@ -92,7 +66,7 @@ Docstring:
 Docstring:
 ==========
 
-  Try to guess the subnet mask based on private network classes as defined in RFC 1918.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L68">View Source</a></div><div id="IDguess-subnet-mask-bits"><div><h3>Function: guess-subnet-mask-bits</h3><pre>Arglists:
+  Try to guess the subnet mask based on private network classes as defined in RFC 1918.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L62">View Source</a></div><div id="IDguess-subnet-mask-bits"><div><h4>Function: guess-subnet-mask-bits</h4><pre>Arglists:
 =========
 
   (guess-subnet-mask-bits ipv4-addr)
@@ -100,7 +74,7 @@ Docstring:
 Docstring:
 ==========
 
-  Try to guess the number of bits in the subnet mask based on private network classes as defined in RFC 1918.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L78">View Source</a></div><div id="IDnetwork-class"><div><h3>Function: network-class</h3><pre>Arglists:
+  Try to guess the number of bits in the subnet mask based on private network classes as defined in RFC 1918.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L72">View Source</a></div><div id="IDnetwork-class"><div><h4>Function: network-class</h4><pre>Arglists:
 =========
 
   (network-class ipv4-addr)
@@ -108,189 +82,7 @@ Docstring:
 Docstring:
 ==========
 
-  Determine the network class based on the private network classes as defined in RFC 1918. This assume no CIDR is used.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L48">View Source</a></div><div id="IDno-op"><div><h3>Function: no-op</h3><pre>Arglists:
-=========
-
-  (no-op obj)
-
-Docstring:
-==========
-
-  Function that forwardes the supplied argument as-is.
-   This is used for testing purposes.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L548">View Source</a></div><div id="IDno-op-converter-forwarder-fn"><div><h3>Function: no-op-converter-forwarder-fn</h3><pre>Arglists:
-=========
-
-  (no-op-converter-forwarder-fn packet)
-
-Docstring:
-==========
-
-  Forwarder that does nothing.
-   This is used for testing purposes.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L573">View Source</a></div><div id="IDpacket-byte-array-extract-bean-ipv4-udp"><div><h3>Function: packet-byte-array-extract-bean-ipv4-udp</h3><pre>Arglists:
-=========
-
-  (packet-byte-array-extract-bean-ipv4-udp ba offset)
-
-Docstring:
-==========
-
-  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L644">View Source</a></div><div id="IDpacket-byte-array-extract-bean-ipv4-udp-be"><div><h3>Function: packet-byte-array-extract-bean-ipv4-udp-be</h3><pre>Arglists:
-=========
-
-  (packet-byte-array-extract-bean-ipv4-udp-be ba offset)
-
-Docstring:
-==========
-
-  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L660">View Source</a></div><div id="IDpacket-byte-array-extract-map-ipv4-udp"><div><h3>Function: packet-byte-array-extract-map-ipv4-udp</h3><pre>Arglists:
-=========
-
-  (packet-byte-array-extract-map-ipv4-udp ba offset)
-
-Docstring:
-==========
-
-  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L612">View Source</a></div><div id="IDpacket-byte-array-extract-map-ipv4-udp-be"><div><h3>Function: packet-byte-array-extract-map-ipv4-udp-be</h3><pre>Arglists:
-=========
-
-  (packet-byte-array-extract-map-ipv4-udp-be ba offset)
-
-Docstring:
-==========
-
-  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L628">View Source</a></div><div id="IDpacket-byte-buffer-extract-bean-ipv4-udp-bulk"><div><h3>Function: packet-byte-buffer-extract-bean-ipv4-udp-bulk</h3><pre>Arglists:
-=========
-
-  (packet-byte-buffer-extract-bean-ipv4-udp-bulk bb)
-
-Docstring:
-==========
-
-  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L705">View Source</a></div><div id="IDpacket-byte-buffer-extract-bean-ipv4-udp-single"><div><h3>Function: packet-byte-buffer-extract-bean-ipv4-udp-single</h3><pre>Arglists:
-=========
-
-  (packet-byte-buffer-extract-bean-ipv4-udp-single bb)
-
-Docstring:
-==========
-
-  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L701">View Source</a></div><div id="IDpacket-byte-buffer-extract-map-ipv4-udp-bulk"><div><h3>Function: packet-byte-buffer-extract-map-ipv4-udp-bulk</h3><pre>Arglists:
-=========
-
-  (packet-byte-buffer-extract-map-ipv4-udp-bulk bb)
-
-Docstring:
-==========
-
-  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L697">View Source</a></div><div id="IDpacket-byte-buffer-extract-map-ipv4-udp-single"><div><h3>Function: packet-byte-buffer-extract-map-ipv4-udp-single</h3><pre>Arglists:
-=========
-
-  (packet-byte-buffer-extract-map-ipv4-udp-single bb)
-
-Docstring:
-==========
-
-  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L693">View Source</a></div><div id="IDparse-pcap-header-to-nested-map"><div><h3>Function: parse-pcap-header-to-nested-map</h3><pre>Arglists:
-=========
-
-  (parse-pcap-header-to-nested-map packet)
-
-Docstring:
-==========
-
-  Parse the information contained in the pcap header of a org.jnetpcap.packet.PcapPacket instance
-   and store it into a map. The resulting map is returned.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L233">View Source</a></div><div id="IDparse-protocol-headers-to-nested-maps"><div><h3>Function: parse-protocol-headers-to-nested-maps</h3><pre>Arglists:
-=========
-
-
-Docstring:
-==========
-
-  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L159">View Source</a></div><div id="IDpcap-packet-to-bean"><div><h3>Function: pcap-packet-to-bean</h3><pre>Arglists:
-=========
-
-
-Docstring:
-==========
-
-  Convenience function to parse a org.jnetpcap.packet.PcapPacket into a bean.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L465">View Source</a></div><div id="IDpcap-packet-to-bean-ipv4-udp-only"><div><h3>Function: pcap-packet-to-bean-ipv4-udp-only</h3><pre>Arglists:
-=========
-
-
-Docstring:
-==========
-
-  Convenience function to parse a org.jnetpcap.packet.PcapPacket into a bean.
-   Please note that this function only extracts data for IPv4 up to UDP.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L490">View Source</a></div><div id="IDpcap-packet-to-byte-vector"><div><h3>Function: pcap-packet-to-byte-vector</h3><pre>Arglists:
-=========
-
-  (pcap-packet-to-byte-vector pcap-packet)
-
-Docstring:
-==========
-
-  Convert the given org.jnetpcap.packet.PcapPacket to its byte array representation and return it as vector.
-   This can be handy for debugging purposes as the resulting vector can be easily converted back into a org.jnetpcap.packet.PcapPacket instance.
-
-   The re-assembly process is as follows:
-[rc@WOPR dist]$ CLASSPATH=$CLASSPATH:clj-net-pcap-1.3.1.jar:../lib/jnetpcap-1.4.r1390-1b.jar:../lib/clj-assorted-utils-1.0.0.jar clojure
-Clojure 1.5.1
-user=&gt; (use 'clj-net-pcap.native)
-nil
-user=&gt; (extract-and-load-native-libs)
-nil
-user=&gt; (import '(org.jnetpcap.packet PcapPacket))
-org.jnetpcap.packet.PcapPacket
-user=&gt; (import '(org.jnetpcap.nio JMemory))
-org.jnetpcap.nio.JMemory
-user=&gt; (import '(org.jnetpcap.nio JMemory$Type))
-org.jnetpcap.nio.JMemory$Type
-user=&gt; (def pkt (PcapPacket. JMemory$Type/POINTER))
-#'user/pkt
-user=&gt; (def ba (byte-array (map byte [22 3 -110 81 0 0 0 0 100 12 2 0 0 0 0 0 -48 0 0 0 -48 0 0 0 42 0 0 0 0 0 0 0 -9 -82 104 95 1 0 3 0 3 3 5 0 12 95 104 83 -1 2 0 12 17 0 0 0 17 0 0 0 67 -12 0 0 108 7 0 0 -1 2 0 12 12 95 104 83 17 0 0 0 17 0 0 0 108 7 0 0 67 -12 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 6 0 0 0 0 0 0 0 43 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -48 0 0 0 -48 0 0 0 4 0 0 0 0 0 0 0 1 0 0 0 0 8 0 0 0 0 0 0 14 0 0 0 -62 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3 0 0 0 0 8 0 0 14 0 0 0 40 0 0 0 -102 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 5 0 0 0 0 8 0 0 54 0 0 0 8 0 0 0 -110 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 8 0 0 62 0 0 0 -110 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 51 51 0 0 0 12 8 0 39 113 22 114 -122 -35 96 0 0 0 0 -102 17 1 -2 -128 0 0 0 0 0 0 81 -56 104 119 -93 23 0 36 -1 2 0 0 0 0 0 0 0 0 0 0 0 0 0 12 -12 67 7 108 0 -102 69 -96 77 45 83 69 65 82 67 72 32 42 32 72 84 84 80 47 49 46 49 13 10 72 111 115 116 58 91 70 70 48 50 58 58 67 93 58 49 57 48 48 13 10 83 84 58 117 114 110 58 77 105 99 114 111 115 111 102 116 32 87 105 110 100 111 119 115 32 80 101 101 114 32 78 97 109 101 32 82 101 115 111 108 117 116 105 111 110 32 80 114 111 116 111 99 111 108 58 32 86 52 58 73 80 86 54 58 76 105 110 107 76 111 99 97 108 13 10 77 97 110 58 34 115 115 100 112 58 100 105 115 99 111 118 101 114 34 13 10 77 88 58 51 13 10 13 10])))
-#'user/ba
-user=&gt; (.transferStateAndDataFrom pkt ba)
-576
-  user=&gt; (import '(org.jnetpcap.protocol.network Ip6))
-org.jnetpcap.protocol.network.Ip6
-user=&gt; (def ip6 (Ip6.))
-#'user/ip6
-user=&gt; (.hasHeader pkt ip6)
-true
-user=&gt; (.source ip6)
-#&lt;byte[] [B@3c1c6c94&gt;
-user=&gt; (use 'clj-net-pcap.pcap-data)
-nil
-user=&gt; (prettify-addr-array (.source ip6))
-&quot;FE80::51C8:6877:A317:0024&quot;
-user=&gt;
-  </pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L506">View Source</a></div><div id="IDpcap-packet-to-map"><div><h3>Function: pcap-packet-to-map</h3><pre>Arglists:
-=========
-
-
-Docstring:
-==========
-
-  Convenience function to parse a org.jnetpcap.packet.PcapPacket into a flat,
-   non-nested map.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L337">View Source</a></div><div id="IDpcap-packet-to-map-ipv4-udp-only"><div><h3>Function: pcap-packet-to-map-ipv4-udp-only</h3><pre>Arglists:
-=========
-
-
-Docstring:
-==========
-
-  Convenience function to parse a org.jnetpcap.packet.PcapPacket into a flat,
-   non-nested map.
-   Please note that this function only extracts data for IPv4 up to UDP.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L366">View Source</a></div><div id="IDpcap-packet-to-nested-maps"><div><h3>Function: pcap-packet-to-nested-maps</h3><pre>Arglists:
-=========
-
-  (pcap-packet-to-nested-maps packet)
-
-Docstring:
-==========
-
-  Convenience function to parse a org.jnetpcap.packet.PcapPacket into a map.
-   The result contains the pcap header and protocol header information.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L247">View Source</a></div><div id="IDprettify-addr-array"><div><h3>Function: prettify-addr-array</h3><pre>Arglists:
+  Determine the network class based on the private network classes as defined in RFC 1918. This assume no CIDR is used.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L42">View Source</a></div><div id="IDparse-protocol-headers-to-nested-maps"><div><h4>Var: parse-protocol-headers-to-nested-maps</h4><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a>View Source</a></div><div id="IDpcap-packet-to-bean"><div><h4>Var: pcap-packet-to-bean</h4><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a>View Source</a></div><div id="IDpcap-packet-to-map"><div><h4>Var: pcap-packet-to-map</h4><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a>View Source</a></div><div id="IDpcap-packet-to-nested-maps"><div><h4>Var: pcap-packet-to-nested-maps</h4><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a>View Source</a></div><div id="IDprettify-addr-array"><div><h4>Function: prettify-addr-array</h4><pre>Arglists:
 =========
 
   (prettify-addr-array a)
@@ -298,23 +90,7 @@ Docstring:
 Docstring:
 ==========
 
-  Convenience function to print addresses as strings.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L88">View Source</a></div><div id="IDprocess-packet-byte-buffer"><div><h3>Function: process-packet-byte-buffer</h3><pre>Arglists:
-=========
-
-  (process-packet-byte-buffer f bb)
-
-Docstring:
-==========
-
-  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L688">View Source</a></div><div id="IDprocess-packet-byte-buffer-bulk"><div><h3>Function: process-packet-byte-buffer-bulk</h3><pre>Arglists:
-=========
-
-  (process-packet-byte-buffer-bulk f bb)
-
-Docstring:
-==========
-
-  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L676">View Source</a></div><div id="IDprocess-protocol-headers-to-nested-maps"><div><h3>Macro: process-protocol-headers-to-nested-maps</h3><pre>Arglists:
+  Convenience function to print addresses as strings.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L82">View Source</a></div><div id="IDprocess-protocol-headers-to-nested-maps"><div><h4>Macro: process-protocol-headers-to-nested-maps</h4><pre>Arglists:
 =========
 
   (process-protocol-headers-to-nested-maps packet &amp; headers)
@@ -326,7 +102,7 @@ Docstring:
    packet is a org.jnetpcap.packet.PcapPacket instance.
    headers contains the description about which information shall be retrieved for each protocol.
 
-   For an example usage see parse-protocol-headers-to-nested-maps.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L99">View Source</a></div><div id="IDsrc-dst-to-map"><div><h3>Macro: src-dst-to-map</h3><pre>Arglists:
+   For an example usage see parse-protocol-headers-to-nested-maps.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L93">View Source</a></div><div id="IDsrc-dst-to-map"><div><h4>Macro: src-dst-to-map</h4><pre>Arglists:
 =========
 
   (src-dst-to-map protocol)
@@ -334,28 +110,4 @@ Docstring:
 Docstring:
 ==========
 
-  Write source and destination addresses into a map.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L132">View Source</a></div><div id="IDstdout-byte-array-forwarder-fn"><div><h3>Function: stdout-byte-array-forwarder-fn</h3><pre>Arglists:
-=========
-
-  (stdout-byte-array-forwarder-fn packet)
-
-Docstring:
-==========
-
-  Print the byte vector representation of a org.jnetpcap.packet.PcapPacket as returned by pcap-packet-to-byte-vector to *out*.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L560">View Source</a></div><div id="IDstdout-combined-forwarder-fn"><div><h3>Function: stdout-combined-forwarder-fn</h3><pre>Arglists:
-=========
-
-  (stdout-combined-forwarder-fn packet)
-
-Docstring:
-==========
-
-  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L566">View Source</a></div><div id="IDstdout-forwarder-fn"><div><h3>Function: stdout-forwarder-fn</h3><pre>Arglists:
-=========
-
-  (stdout-forwarder-fn packet)
-
-Docstring:
-==========
-
-  Pre-defined forwarder function which outputs information about org.jnetpcap.packet.PcapPacket to *out*.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L554">View Source</a></div></section><footer><p>These docs were generated by the <a href="https://github.com/tsdh/lein-html5-docs">Leiningen HTML5 Docs Plugin</a>.</p><a href="http://www.w3.org/html/logo/"><img alt="HTML5 Powered" height="64" src="http://www.w3.org/html/logo/badge/html5-badge-h-solo.png" title="HTML5 Powered" width="63" /></a></footer></div></body></html>
+  Write source and destination addresses into a map.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap_data.clj#L126">View Source</a></div></section></div><footer><p>These docs were generated by the <a href="https://github.com/tsdh/lein-html5-docs">Leiningen HTML5 Docs Plugin</a>, version 3.0.3.</p><a href="http://www.w3.org/html/logo/"><img alt="HTML5 Powered" height="64" src="http://www.w3.org/html/logo/badge/html5-badge-h-solo.png" title="HTML5 Powered" width="63" /></a><script src="http://code.jquery.com/jquery.min.js"></script><script src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script><script src="api-search.js"></script></footer></body></html>

@@ -1,31 +1,164 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.pcap" errors="0" failures="0" tests="14" time="3.5800" timestamp="2015-08-24_13:09:41+0200">
-    <testcase name="test-set-filter" classname="clj-net-pcap.test.pcap" time="0.2843">
+<testsuite name="clj-net-pcap.test.pcap" errors="0" failures="0" tests="14" time="0.3758" timestamp="2022-10-02_20:48:55+0200">
+    <testcase name="test-set-filter" classname="clj-net-pcap.test.pcap" time="0.0504">
     </testcase>
-    <testcase name="test-device-does-not-exist" classname="clj-net-pcap.test.pcap" time="0.2276">
+    <testcase name="test-device-does-not-exist" classname="clj-net-pcap.test.pcap" time="0.0007">
     </testcase>
-    <testcase name="test-activate-online-pcap-exception" classname="clj-net-pcap.test.pcap" time="0.2329">
+    <testcase name="test-activate-online-pcap-exception" classname="clj-net-pcap.test.pcap" time="0.0011">
     </testcase>
-    <testcase name="test-device-exists" classname="clj-net-pcap.test.pcap" time="0.2357">
+    <testcase name="test-device-exists" classname="clj-net-pcap.test.pcap" time="0.0007">
     </testcase>
-    <testcase name="test-create-and-activate-online-pcap" classname="clj-net-pcap.test.pcap" time="0.2619">
+    <testcase name="test-create-and-activate-online-pcap" classname="clj-net-pcap.test.pcap" time="0.0368">
     </testcase>
-    <testcase name="throw-exception-on-invalid-operation-three-args-test" classname="clj-net-pcap.test.pcap" time="0.2628">
+    <testcase name="throw-exception-on-invalid-operation-three-args-test" classname="clj-net-pcap.test.pcap" time="0.0438">
     </testcase>
-    <testcase name="throw-exception-on-invalid-operation-no-arg-test" classname="clj-net-pcap.test.pcap" time="0.2648">
+    <testcase name="throw-exception-on-invalid-operation-no-arg-test" classname="clj-net-pcap.test.pcap" time="0.0511">
     </testcase>
-    <testcase name="throw-exception-on-invalid-operation-single-arg-test" classname="clj-net-pcap.test.pcap" time="0.2678">
+    <testcase name="throw-exception-on-invalid-operation-single-arg-test" classname="clj-net-pcap.test.pcap" time="0.0490">
     </testcase>
-    <testcase name="test-create-online-pcap" classname="clj-net-pcap.test.pcap" time="0.2366">
+    <testcase name="test-create-online-pcap" classname="clj-net-pcap.test.pcap" time="0.0062">
     </testcase>
-    <testcase name="test-create-get-stat-fn" classname="clj-net-pcap.test.pcap" time="0.2710">
+    <testcase name="test-create-get-stat-fn" classname="clj-net-pcap.test.pcap" time="0.0545">
     </testcase>
-    <testcase name="test-create-filter" classname="clj-net-pcap.test.pcap" time="0.2797">
+    <testcase name="test-create-filter" classname="clj-net-pcap.test.pcap" time="0.0379">
     </testcase>
-    <testcase name="test-create-and-set-filter" classname="clj-net-pcap.test.pcap" time="0.2535">
+    <testcase name="test-create-and-set-filter" classname="clj-net-pcap.test.pcap" time="0.0308">
     </testcase>
-    <testcase name="test-get-device" classname="clj-net-pcap.test.pcap" time="0.2573">
+    <testcase name="test-get-device" classname="clj-net-pcap.test.pcap" time="0.0009">
     </testcase>
-    <testcase name="test-get-devices" classname="clj-net-pcap.test.pcap" time="0.2408">
+    <testcase name="test-get-devices" classname="clj-net-pcap.test.pcap" time="0.0015">
     </testcase>
+    <system-err>
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Error creating online pcap. Device non-existant-device-foo does not exist.
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+    </system-err>
+    <system-out>
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Please note that this test is supposed to print an error message like: &quot;Error creating online pcap. ...&quot;
+Error creating online pcap. Device non-existant-device-foo does not exist.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+{recv320, drop320, ifdrop320}
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+    </system-out>
+    <properties>
+        <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers">
+        </property>
+        <property name="java.vm.info" value="mixed mode, emulated-client, sharing">
+        </property>
+        <property name="clojure.debug" value="false">
+        </property>
+        <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
+        </property>
+        <property name="clj-net-pcap.version" value="1.8.0">
+        </property>
+        <property name="path.separator" value=":">
+        </property>
+        <property name="user.dir" value="/home/rc/repositories/private/clojure/clj-net-pcap">
+        </property>
+        <property name="java.vm.specification.vendor" value="Oracle Corporation">
+        </property>
+        <property name="user.country" value="US">
+        </property>
+        <property name="java.vendor.url" value="https://www.redhat.com/">
+        </property>
+        <property name="java.specification.name" value="Java Platform API Specification">
+        </property>
+        <property name="line.separator" value="
+">
+        </property>
+        <property name="sun.cpu.endian" value="little">
+        </property>
+        <property name="java.vm.version" value="17.0.3+7">
+        </property>
+        <property name="sun.java.launcher" value="SUN_STANDARD">
+        </property>
+        <property name="java.vendor" value="Red Hat, Inc.">
+        </property>
+        <property name="native.encoding" value="UTF-8">
+        </property>
+        <property name="java.specification.vendor" value="Oracle Corporation">
+        </property>
+        <property name="java.vm.compressedOopsMode" value="Zero based">
+        </property>
+        <property name="clojure.compile.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/target/classes">
+        </property>
+        <property name="java.vm.specification.version" value="17">
+        </property>
+        <property name="java.io.tmpdir" value="/tmp">
+        </property>
+        <property name="java.home" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64">
+        </property>
+        <property name="java.class.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/test:/home/rc/repositories/private/clojure/clj-net-pcap/src:/home/rc/repositories/private/clojure/clj-net-pcap/dev-resources:/home/rc/repositories/private/clojure/clj-net-pcap/resources:/home/rc/repositories/private/clojure/clj-net-pcap/target/classes:/root/.m2/repository/org/clojure/tools.analyzer.jvm/1.2.2/tools.analyzer.jvm-1.2.2.jar:/root/.m2/repository/org/clojure/tools.analyzer/1.1.0/tools.analyzer-1.1.0.jar:/root/.m2/repository/org/nrepl/incomplete/0.1.0/incomplete-0.1.0.jar:/root/.m2/repository/org/clojure/data.priority-map/1.1.0/data.priority-map-1.1.0.jar:/root/.m2/repository/org/ow2/asm/asm/9.2/asm-9.2.jar:/root/.m2/repository/org/clojure/clojure/1.11.1/clojure-1.11.1.jar:/root/.m2/repository/jline/jline/2.14.6/jline-2.14.6.jar:/root/.m2/repository/org/clojure/core.cache/1.0.225/core.cache-1.0.225.jar:/root/.m2/repository/cli4clj/cli4clj/1.9.0/cli4clj-1.9.0.jar:/root/.m2/repository/org/clojure/core.async/1.5.648/core.async-1.5.648.jar:/root/.m2/repository/clj-assorted-utils/clj-assorted-utils/1.19.0/clj-assorted-utils-1.19.0.jar:/root/.m2/repository/robert/hooke/1.3.0/hooke-1.3.0.jar:/root/.m2/repository/nrepl/nrepl/0.8.3/nrepl-0.8.3.jar:/root/.m2/repository/org/clojure/core.memoize/1.0.253/core.memoize-1.0.253.jar:/root/.m2/repository/org/clojure/core.specs.alpha/0.2.62/core.specs.alpha-0.2.62.jar:/root/.m2/repository/org/clojure/spec.alpha/0.3.218/spec.alpha-0.3.218.jar:/root/.m2/repository/test2junit/test2junit/1.4.4/test2junit-1.4.4.jar:/root/.m2/repository/org/clojure/tools.reader/1.3.6/tools.reader-1.3.6.jar:/root/.m2/repository/org/clojure/tools.cli/1.0.206/tools.cli-1.0.206.jar:/root/.m2/repository/jnetpcap/jnetpcap/1.5.r1457-1h/jnetpcap-1.5.r1457-1h.jar">
+        </property>
+        <property name="java.runtime.version" value="17.0.3+7">
+        </property>
+        <property name="java.vm.vendor" value="Red Hat, Inc.">
+        </property>
+        <property name="user.language" value="en">
+        </property>
+        <property name="java.vm.name" value="OpenJDK 64-Bit Server VM">
+        </property>
+        <property name="java.version" value="17.0.3">
+        </property>
+        <property name="os.arch" value="amd64">
+        </property>
+        <property name="user.home" value="/root">
+        </property>
+        <property name="java.specification.version" value="17">
+        </property>
+        <property name="sun.jnu.encoding" value="UTF-8">
+        </property>
+        <property name="java.vendor.version" value="21.9">
+        </property>
+        <property name="java.runtime.name" value="OpenJDK Runtime Environment">
+        </property>
+        <property name="sun.io.unicode.encoding" value="UnicodeLittle">
+        </property>
+        <property name="sun.arch.data.model" value="64">
+        </property>
+        <property name="java.class.version" value="61.0">
+        </property>
+        <property name="file.encoding" value="UTF-8">
+        </property>
+        <property name="jdk.debug" value="release">
+        </property>
+        <property name="user.timezone" value="Europe/Berlin">
+        </property>
+        <property name="os.name" value="Linux">
+        </property>
+        <property name="os.version" value="5.18.13-200.fc36.x86_64">
+        </property>
+        <property name="file.separator" value="/">
+        </property>
+        <property name="java.vm.specification.name" value="Java Virtual Machine Specification">
+        </property>
+        <property name="clj-net-pcap.lib.jnetpcap" value="/tmp/clj-net-pcap-native-tests_root/libjnetpcap.so">
+        </property>
+        <property name="clj-net-pcap.lib.jnetpcap-pcap100" value="/tmp/clj-net-pcap-native-tests_root/libjnetpcap-pcap100.so">
+        </property>
+        <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib">
+        </property>
+        <property name="java.version.date" value="2022-04-19">
+        </property>
+        <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
+        </property>
+        <property name="sun.java.command" value="clojure.main -i /tmp/form-init17313660210098136475.clj">
+        </property>
+        <property name="user.name" value="root">
+        </property>
+    </properties>
 </testsuite>

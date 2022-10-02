@@ -1,5 +1,5 @@
-;(defproject clj-net-pcap "1.7.2"
-(defproject clj-net-pcap "1.8.0-SNAPSHOT"
+(defproject clj-net-pcap "1.8.0"
+;(defproject clj-net-pcap "1.8.1-SNAPSHOT"
   :description "clj-net-pcap is a wrapper/adapter/facade (No matter how you want to call it.)
                 around jNetPcap that enables and eases packet capturing and processing with Clojure."
   :dependencies [[org.clojure/clojure "1.11.1"]
@@ -22,7 +22,7 @@
   :test2junit-run-ant true
   :test-selectors {:default (complement :main-cli)
                    :main-cli :main-cli}
-  :plugins [[lein-cloverage "1.0.2"]]
+  :plugins [[lein-cloverage "1.0.9"] [test2junit "1.4.4"] [lein-html5-docs "3.0.3"]]
   :profiles {:uberjar {:source-paths ["src" "src-main"]}
              :run {:source-paths ["src" "src-main"]}}
 )

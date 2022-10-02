@@ -1,26 +1,7 @@
 <!DOCTYPE html><html><head><meta charset="utf-8" /><title>Namespace clj-net-pcap.pcap</title><style type="text/css">body { margin: 10px;
           padding: 10px;
-          background-color: #F7F7F7;
-          font-family: serif; }
-
-  h1, h2, h3, h4 { color:#116275; }
-
-  code { font-size:12px;
-         font-family: monospace; }
-
-  pre { padding: 5px;
-        border: 2px dashed DarkGray;
-        background-color: #F7F7F7;
-        font-size:12px;
-        font-family: monospace; }
-
-  a { color: #116275; }
-  a:hover { background-color: #A8DFE6; }
-  a:visited { color: #276B86; }
-
-  td { padding-left: 5px; }
-
-  section, footer, header { float: left; }
+          background-color: #DFE9F5;
+          font-family: sans-serif; }
 
   #top { width: 800px;
          padding: 10px;
@@ -28,123 +9,29 @@
          margin-right: auto;
          overflow: hidden;
          background-color: #FFFFFF;
-         border: 3px solid DarkGray; }</style></head><body><div id="top"><header><h1>Namspace clj-net-pcap.pcap</h1><h4></h4></header><section id="ns-toc"><h2>Other Namespaces</h2><table><tr><td><a href="clj-net-pcap.CljNetPcapJavaAdapter.html">clj-net-pcap.CljNetPcapJavaAdapter</a></td><td><div>Adapter class to enable usage of clj-net-pcap from Java.</div></td></tr><tr><td><a href="clj-net-pcap.byte-array-extraction-dsl.html">clj-net-pcap.byte-array-extraction-dsl</a></td><td><div>A simple DSL for extracting data from packets that are represented as byte arrays.</div></td></tr><tr><td><a href="clj-net-pcap.core.html">clj-net-pcap.core</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.dsl.transformation.html">clj-net-pcap.dsl.transformation</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.main.html">clj-net-pcap.main</a></td><td><div>Main class and method for launching a simple clj-net-pcap based sniffer
-          that prints some i...</div></td></tr><tr><td><a href="clj-net-pcap.native.html">clj-net-pcap.native</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.packet-gen.html">clj-net-pcap.packet-gen</a></td><td><div>The packet-gen namespace contains functionality for generating and sending packets.</div></td></tr><tr><td><a href="clj-net-pcap.packet-offsets.html">clj-net-pcap.packet-offsets</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.pcap-data.html">clj-net-pcap.pcap-data</a></td><td><div></div></td></tr><tr><td><a href="clj-net-pcap.self-adaptive-dsl-adjustment.html">clj-net-pcap.self-adaptive-dsl-adjustment</a></td><td><div>A simple proof of concept for adjusting DSL statements with self-adaptivity.</div></td></tr><tr><td><a href="clj-net-pcap.sniffer.html">clj-net-pcap.sniffer</a></td><td><div>Convenience functions for easing the implementation of a working
-          sniffer.</div></td></tr><tr><td><a href="index.html">Back to Index</a></td><td></td></tr></table></section><section id="pubvars-toc"><h2>Public Vars</h2><nav><a href="#IDMULbuffer-sizeMUL">*buffer-size*</a>, <a href="#IDMULflagsMUL">*flags*</a>, <a href="#IDMULsnap-lenMUL">*snap-len*</a>, <a href="#IDactivate-online-pcap">activate-online-pcap</a>, <a href="#IDany">any</a>, <a href="#IDclose-pcap">close-pcap</a>, <a href="#IDcreate-and-activate-online-pcap">create-and-activate-online-pcap</a>, <a href="#IDcreate-and-set-filter">create-and-set-filter</a>, <a href="#IDcreate-filter">create-filter</a>, <a href="#IDcreate-offline-pcap">create-offline-pcap</a>, <a href="#IDcreate-online-pcap">create-online-pcap</a>, <a href="#IDcreate-pcap-from-file">create-pcap-from-file</a>, <a href="#IDcreate-stats-fn">create-stats-fn</a>, <a href="#IDdevice-existsQMARK">device-exists?</a>, <a href="#IDget-device">get-device</a>, <a href="#IDget-devices">get-devices</a>, <a href="#IDlo">lo</a>, <a href="#IDset-filter">set-filter</a></nav></section><section id="details"><h2>Details of Public Vars</h2><div id="IDMULbuffer-sizeMUL"><div><h3>Dynamic Var: *buffer-size*</h3><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap.clj#L32">View Source</a></div><div id="IDMULflagsMUL"><div><h3>Dynamic Var: *flags*</h3><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap.clj#L33">View Source</a></div><div id="IDMULsnap-lenMUL"><div><h3>Dynamic Var: *snap-len*</h3><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap.clj#L34">View Source</a></div><div id="IDactivate-online-pcap"><div><h3>Function: activate-online-pcap</h3><pre>Arglists:
-=========
+         color: #123154;
+         border: 3px solid #B4D3F5; }
 
-  (activate-online-pcap pcap)
+  pre { padding: 10px;
+        border: 2px dashed #B4D3F5;
+        background-color: #F0F6FD;
+        font-family: monospace; }
 
-Docstring:
-==========
+  a { color: #4A6A8F; }
+  a:hover { background-color: #B4D3F5; }
+  a:visited { color: #425365; }
 
-  Activates the passed Pcap instance.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap.clj#L88">View Source</a></div><div id="IDany"><div><h3>Var: any</h3><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap.clj#L38">View Source</a></div><div id="IDclose-pcap"><div><h3>Function: close-pcap</h3><pre>Arglists:
-=========
+  td, th { padding-left: 5px;
+           text-align: left; }
 
-  (close-pcap pcap)
-
-Docstring:
-==========
-
-  Closes the given Pcap instance.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap.clj#L177">View Source</a></div><div id="IDcreate-and-activate-online-pcap"><div><h3>Function: create-and-activate-online-pcap</h3><pre>Arglists:
-=========
-
-  (create-and-activate-online-pcap dev-name)
-
-Docstring:
-==========
-
-  Convenience function for creating and activating a Pcap instance in one step.
-   See create-online-pcap and activate-online-pcap for details.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap.clj#L129">View Source</a></div><div id="IDcreate-and-set-filter"><div><h3>Function: create-and-set-filter</h3><pre>Arglists:
-=========
-
-  (create-and-set-filter pcap filter-string)
-
-Docstring:
-==========
-
-  Convenience function for creating and setting a filter in one step.
-   For details see create-filter and set-filter.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap.clj#L122">View Source</a></div><div id="IDcreate-filter"><div><h3>Function: create-filter</h3><pre>Arglists:
-=========
-
-  (create-filter pcap filter-string)
-  (create-filter pcap filter-string optimize)
-  (create-filter pcap filter-string optimize netmask)
-
-Docstring:
-==========
-
-  Creates and compiles a filter given as String. Optionally the optimize flag
-   and netmask can be passed. The default value for optimize is 1 and for 
-   netmask is 0.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap.clj#L97">View Source</a></div><div id="IDcreate-offline-pcap"><div><h3>Function: create-offline-pcap</h3><pre>Arglists:
-=========
-
-  (create-offline-pcap file-name)
-
-Docstring:
-==========
-
-  Convenience function for creating and activating a Pcap instance in one step.
-   See create-online-pcap and activate-online-pcap for details.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap.clj#L205">View Source</a></div><div id="IDcreate-online-pcap"><div><h3>Function: create-online-pcap</h3><pre>Arglists:
-=========
-
-  (create-online-pcap dev-name)
-
-Docstring:
-==========
-
-  Creates a Pcap instance and initializes it with the values for:
-   *buffer-size*, *flags*, *snap-len*. You can &quot;override&quot; the default values
-   by &quot;re-binding&quot; those vars.
-   Please note: *flags* is currently only passed to Pcap.setPromisc().</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap.clj#L64">View Source</a></div><div id="IDcreate-pcap-from-file"><div><h3>Function: create-pcap-from-file</h3><pre>Arglists:
-=========
-
-  (create-pcap-from-file file-name)
-
-Docstring:
-==========
-
-  Create an offline org.jnetpcap.Pcap from a file.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap.clj#L194">View Source</a></div><div id="IDcreate-stats-fn"><div><h3>Function: create-stats-fn</h3><pre>Arglists:
-=========
-
-  (create-stats-fn pcap)
-
-Docstring:
-==========
-
-  Returns an fn that prints statistical data about a org.jnetpcap.Pcap instance.
-   Argument is the org.jnetpcap.Pcap instance.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap.clj#L182">View Source</a></div><div id="IDdevice-existsQMARK"><div><h3>Function: device-exists?</h3><pre>Arglists:
-=========
-
-  (device-exists? dev-name)
-
-Docstring:
-==========
-
-  Convenience function for checking if the device with dev-name exists.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap.clj#L59">View Source</a></div><div id="IDget-device"><div><h3>Function: get-device</h3><pre>Arglists:
-=========
-
-  (get-device dev-name)
-
-Docstring:
-==========
-
-  Returns the network device with the supplied dev-name or nil if the device 
-   does not exist.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap.clj#L53">View Source</a></div><div id="IDget-devices"><div><h3>Function: get-devices</h3><pre>Arglists:
-=========
-
-  (get-devices)
-
-Docstring:
-==========
-
-  Returns a vector containing all network devices found by Pcap or nil if an
-   error occured.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap.clj#L41">View Source</a></div><div id="IDlo"><div><h3>Var: lo</h3><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap.clj#L37">View Source</a></div><div id="IDset-filter"><div><h3>Function: set-filter</h3><pre>Arglists:
-=========
-
-  (set-filter pcap f)
-
-Docstring:
-==========
-
-  Sets the given filter f for the given Pcap instance pcap.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap.clj#L114">View Source</a></div></section><footer><p>These docs were generated by the <a href="https://github.com/tsdh/lein-html5-docs">Leiningen HTML5 Docs Plugin</a>.</p><a href="http://www.w3.org/html/logo/"><img alt="HTML5 Powered" height="64" src="http://www.w3.org/html/logo/badge/html5-badge-h-solo.png" title="HTML5 Powered" width="63" /></a></footer></div></body></html>
+  #ui-widget {
+    position: fixed;
+    top: 0em;
+    left: 0em;
+  }</style><link href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet" /></head><body><div id="ui-widget"><input autofocus="autofocus" id="api-search" placeholder="API Search" tabindex="1" /></div><div id="top"><header><h1>Namespace clj-net-pcap.pcap</h1><p>Functions for handling functionality related to org.jnetpcap.Pcap
+          such as listing network ...</p></header><section class="ns-toc" id="other-ns-toc"><h2>Other Namespaces</h2><details><summary>Show/Hide</summary><table><tr><td><a href="clj-net-pcap.CljNetPcapJavaAdapter.html">clj-net-pcap.CljNetPcapJavaAdapter</a></td><td><div>Adapter class to enable usage of clj-net-pcap from Java.</div></td></tr><tr><td><a href="clj-net-pcap.byte-array-extraction-dsl.html">clj-net-pcap.byte-array-extraction-dsl</a></td><td><div>A simple DSL for extracting data from packets that are represented as byte arrays.</div></td></tr><tr><td><a href="clj-net-pcap.core.html">clj-net-pcap.core</a></td><td><div>clj-net-pcap is a wrapper/adapter/facade (whatever) around jNetPcap that 
+          enables and ease...</div></td></tr><tr><td><a href="clj-net-pcap.dsl.transformation.html">clj-net-pcap.dsl.transformation</a></td><td><div>Transformation functions for the simple DSL for extracting data from packets that are represented as...</div></td></tr><tr><td><a href="clj-net-pcap.main.html">clj-net-pcap.main</a></td><td><div>Main class and method for launching a simple clj-net-pcap based sniffer
+          that prints some i...</div></td></tr><tr><td><a href="clj-net-pcap.native.html">clj-net-pcap.native</a></td><td><div>Functions etc. for extracting, loading etc. native libraries from the jar file.</div></td></tr><tr><td><a href="clj-net-pcap.packet-gen.html">clj-net-pcap.packet-gen</a></td><td><div>The packet-gen namespace contains functionality for generating and sending packets.</div></td></tr><tr><td><a href="clj-net-pcap.packet-offsets.html">clj-net-pcap.packet-offsets</a></td><td><div>Common offsets of header fields etc.</div></td></tr><tr><td><a href="clj-net-pcap.pcap-data.html">clj-net-pcap.pcap-data</a></td><td><div>Convenience functions for processing pcap data like packets and headers.</div></td></tr><tr><td><a href="clj-net-pcap.self-adaptive-dsl-adjustment.html">clj-net-pcap.self-adaptive-dsl-adjustment</a></td><td><div>A simple proof of concept for adjusting DSL statements with self-adaptivity.</div></td></tr><tr><td><a href="clj-net-pcap.sniffer.html">clj-net-pcap.sniffer</a></td><td><div>Convenience functions for easing the implementation of a working
+          sniffer.</div></td></tr><tr><td><a href="index.html">Index Page</a></td><td></td></tr><tr><td><a href="var-index.html">Alphabetic Var Index</a></td><td></td></tr></table></details></section><section id="pubvars-toc"><h2>Public Vars</h2><nav><a href="#IDMULbuffer-sizeMUL">*buffer-size*</a>, <a href="#IDMULflagsMUL">*flags*</a>, <a href="#IDany">any</a>, <a href="#IDcreate-and-activate-online-pcap">create-and-activate-online-pcap</a>, <a href="#IDcreate-and-set-filter">create-and-set-filter</a>, <a href="#IDcreate-offline-pcap">create-offline-pcap</a>, <a href="#IDcreate-stats-fn">create-stats-fn</a></nav></section><section><h2>Usage Documentation</h2><details open="open"><summary>Show/Hide</summary><pre>Functions for handling functionality related to org.jnetpcap.Pcap
+          such as listing network devices, creating and setting filters, or 
+          creating, starting, and stopping an pcap instance.</pre></details><a href="#top">Back to top</a></section><section id="details"><h2>Details of Public Vars</h2><div id="IDMULbuffer-sizeMUL"><div><h4>Dynamic Var: *buffer-size*</h4><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/pcap.clj#L30">View Source</a></div><div id="IDMULflagsMUL"><div><h4>Var: *flags*</h4><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a>View Source</a></div><div id="IDany"><div><h4>Var: any</h4><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a>View Source</a></div><div id="IDcreate-and-activate-online-pcap"><div><h4>Var: create-and-activate-online-pcap</h4><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a>View Source</a></div><div id="IDcreate-and-set-filter"><div><h4>Var: create-and-set-filter</h4><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a>View Source</a></div><div id="IDcreate-offline-pcap"><div><h4>Var: create-offline-pcap</h4><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a>View Source</a></div><div id="IDcreate-stats-fn"><div><h4>Var: create-stats-fn</h4><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a>View Source</a></div></section></div><footer><p>These docs were generated by the <a href="https://github.com/tsdh/lein-html5-docs">Leiningen HTML5 Docs Plugin</a>, version 3.0.3.</p><a href="http://www.w3.org/html/logo/"><img alt="HTML5 Powered" height="64" src="http://www.w3.org/html/logo/badge/html5-badge-h-solo.png" title="HTML5 Powered" width="63" /></a><script src="http://code.jquery.com/jquery.min.js"></script><script src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script><script src="api-search.js"></script></footer></body></html>

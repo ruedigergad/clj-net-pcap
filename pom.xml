@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>clj-net-pcap</groupId>
   <artifactId>clj-net-pcap</artifactId>
   <packaging>jar</packaging>
-  <version>1.7.2</version>
+  <version>1.8.1</version>
   <name>clj-net-pcap</name>
   <description>clj-net-pcap is a wrapper/adapter/facade (No matter how you want to call it.)
                 around jNetPcap that enables and eases packet capturing and processing with Clojure.</description>
@@ -11,7 +12,7 @@
     <url>https://github.com/ruedigergad/clj-net-pcap</url>
     <connection>scm:git:git://github.com/ruedigergad/clj-net-pcap.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/ruedigergad/clj-net-pcap.git</developerConnection>
-    <tag>c70578f6d39028db915eae4dd49567f90c976a0f</tag>
+    <tag>1d3c14205e9d2b00e64b359b57f1affe2cca071d</tag>
   </scm>
   <build>
     <sourceDirectory>src</sourceDirectory>
@@ -79,27 +80,27 @@
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>clojure</artifactId>
-      <version>1.10.0</version>
+      <version>1.11.1</version>
     </dependency>
     <dependency>
       <groupId>org.clojure</groupId>
       <artifactId>tools.cli</artifactId>
-      <version>0.4.1</version>
+      <version>1.0.206</version>
     </dependency>
     <dependency>
       <groupId>cli4clj</groupId>
       <artifactId>cli4clj</artifactId>
-      <version>1.7.1</version>
+      <version>1.9.0</version>
     </dependency>
     <dependency>
       <groupId>clj-assorted-utils</groupId>
       <artifactId>clj-assorted-utils</artifactId>
-      <version>1.18.3</version>
+      <version>1.19.0</version>
     </dependency>
     <dependency>
       <groupId>jnetpcap</groupId>
       <artifactId>jnetpcap</artifactId>
-      <version>1.4.r1425-1g</version>
+      <version>1.5.r1457-1h</version>
     </dependency>
   </dependencies>
 </project>

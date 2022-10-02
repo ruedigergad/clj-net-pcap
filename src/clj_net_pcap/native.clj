@@ -19,7 +19,8 @@
   clj-net-pcap.native
   (:require
     (clojure.java [io :as jio])
-    (clj-assorted-utils [util :as utils]))
+    (clj-assorted-utils [util :as utils])
+    [clj-assorted-utils.util :as utils])
   (:import (clj_net_pcap LibLoader)))
 
 (def ^:dynamic *lib-dir* "clj-net-pcap")
@@ -127,9 +128,15 @@
    This is needed with the new version of jnetpcap as it uses an updated mechanism for loading the native libraries.
    clj-net-pcap ships a modified version of a part of this jnetpcap mechanism that uses these clj-net-pcap.lib.* properties in JNILibrary/loadLibrary."
   []
-  (extract-native-libs)
-  (System/setProperty "clj-net-pcap.lib.jnetpcap" (pcap-lib-path pcap080))
-  (System/setProperty "clj-net-pcap.lib.jnetpcap-pcap100" (pcap-lib-path pcap100))
-  (utils/add-shutdown-hook remove-native-libs))
-
+  (if (and (utils/is-file? pcap080) (utils/is-file? pcap100))
+    (do
+      (print "Using native libs from current working directory...")
+      (System/setProperty "clj-net-pcap.lib.jnetpcap" pcap080)
+      (System/setProperty "clj-net-pcap.lib.jnetpcap-pcap100" pcap100))
+    (do
+      (print "Using native libs from clj-net-pcap jar file...")
+      (extract-native-libs)
+      (System/setProperty "clj-net-pcap.lib.jnetpcap" (pcap-lib-path pcap080))
+      (System/setProperty "clj-net-pcap.lib.jnetpcap-pcap100" (pcap-lib-path pcap100))
+      (utils/add-shutdown-hook remove-native-libs))))
 (extract-and-reference-native-libs)

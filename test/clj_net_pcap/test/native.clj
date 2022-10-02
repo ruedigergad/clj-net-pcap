@@ -21,7 +21,9 @@
    (clojure.java [io :as jio])
    (clojure [test :as test])
    (clj-assorted-utils [util :as utils])
-   (clj-net-pcap [native :as native])))
+   (clj-net-pcap [native :as native])
+   [clj-net-pcap.native :as native]
+   [clj-assorted-utils.util :as utils]))
 
 (def test-filename "test-native-file-foo")
 
@@ -86,3 +88,59 @@
         pcap100)
       (native/remove-native-libs)
       (test/is (not (utils/dir-exists? dir))))))
+
+(test/deftest extract-and-refernce-native-libs-from-jar
+  (binding [native/*lib-dir* "clj-net-pcap-native-tests"]
+    (let [dir (native/native-lib-dir)
+          prefix (cond
+                   (utils/is-os? "windows") ""
+                   :else "lib")
+          suffix (cond
+                   (utils/is-os? "windows") ".dll"
+                   :else ".so")
+          pcap080 (str dir prefix "jnetpcap" suffix)
+          pcap100 (str dir prefix "jnetpcap-pcap100" suffix)]
+      (test/is (not (utils/dir-exists? dir)))
+      (test/are [x] (not (utils/file-exists? x))
+        pcap080
+        pcap100)
+      (let [out-str (with-out-str (native/extract-and-reference-native-libs))]
+        (test/is (= "Using native libs from clj-net-pcap jar file..." out-str)))
+      (test/is pcap080 (System/getProperty "clj-net-pcap.lib.jnetpcap"))
+      (test/is pcap100 (System/getProperty "clj-net-pcap.lib.jnetpcap-pcap100"))
+      (test/are [x] (utils/file-exists? x)
+        pcap080
+        pcap100)
+      (native/remove-native-libs)
+      (test/is (not (utils/dir-exists? dir))))))
+
+(test/deftest extract-and-refernce-native-libs-from-current-working-directory
+  (let [prefix (cond
+                 (utils/is-os? "windows") ""
+                 :else "lib")
+        suffix (cond
+                 (utils/is-os? "windows") ".dll"
+                 :else ".so")
+        ; Refer to just the file names to read from current working directory.
+        pcap080 (str prefix "jnetpcap" suffix)
+        pcap100 (str prefix "jnetpcap-pcap100" suffix)]
+    (test/are [x] (not (utils/file-exists? x))
+      pcap080
+      pcap100)
+    ; Extract libs to current working directory ourselvses.
+    ; If clj-net-pcap finds these there, it should load them from there instead of extracting the ones from the jar file.
+    (native/copy-resource-to-file (native/pcap-jar-path pcap080) pcap080)
+    (native/copy-resource-to-file (native/pcap-jar-path pcap100) pcap100)
+    (test/are [x] (utils/file-exists? x)
+      pcap080
+      pcap100)
+    (let [out-str (with-out-str (native/extract-and-reference-native-libs))]
+      (test/is (= "Using native libs from current working directory..." out-str)))
+    (test/is pcap080 (System/getProperty "clj-net-pcap.lib.jnetpcap"))
+    (test/is pcap100 (System/getProperty "clj-net-pcap.lib.jnetpcap-pcap100"))
+    ; Clean up manually and check that clean up succeeded.
+    (utils/rm pcap080)
+    (utils/rm pcap100)
+    (test/are [x] (not (utils/file-exists? x))
+      pcap080
+      pcap100)))

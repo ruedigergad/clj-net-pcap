@@ -143,11 +143,11 @@
   []
   (if (and (utils/is-file? pcap080) (utils/is-file? pcap100))
     (do
-      (print "Using native libs from current working directory...")
+      (println "Using native libs from current working directory...")
       (System/setProperty "clj-net-pcap.lib.jnetpcap" pcap080)
       (System/setProperty "clj-net-pcap.lib.jnetpcap-pcap100" pcap100))
     (do
-      (print "Using native libs from clj-net-pcap jar file...")
+      (println "Using native libs from clj-net-pcap jar file...")
       (extract-native-libs)
       (System/setProperty "clj-net-pcap.lib.jnetpcap" (pcap-lib-path pcap080))
       (System/setProperty "clj-net-pcap.lib.jnetpcap-pcap100" (pcap-lib-path pcap100))

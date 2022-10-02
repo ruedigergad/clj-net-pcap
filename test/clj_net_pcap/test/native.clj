@@ -105,7 +105,7 @@
         pcap080
         pcap100)
       (let [out-str (with-out-str (native/extract-and-reference-native-libs))]
-        (test/is (= "Using native libs from clj-net-pcap jar file..." out-str)))
+        (test/is (= "Using native libs from clj-net-pcap jar file...\n" out-str)))
       (test/is pcap080 (System/getProperty "clj-net-pcap.lib.jnetpcap"))
       (test/is pcap100 (System/getProperty "clj-net-pcap.lib.jnetpcap-pcap100"))
       (test/are [x] (utils/file-exists? x)
@@ -135,7 +135,7 @@
       pcap080
       pcap100)
     (let [out-str (with-out-str (native/extract-and-reference-native-libs))]
-      (test/is (= "Using native libs from current working directory..." out-str)))
+      (test/is (= "Using native libs from current working directory...\n" out-str)))
     (test/is pcap080 (System/getProperty "clj-net-pcap.lib.jnetpcap"))
     (test/is pcap100 (System/getProperty "clj-net-pcap.lib.jnetpcap-pcap100"))
     ; Clean up manually and check that clean up succeeded.

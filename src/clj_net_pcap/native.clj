@@ -108,20 +108,24 @@
 (defn load-native-libs
   "Load the native libraries.
    This uses a little hack:
-   The LibLoader Java class is used for actually loading the native libs."
+   The LibLoader Java class is used for actually loading the native libs.
+   Starting with jnetpcap 1.5.x, this is deprecated in favour of extract-and-reference-native-libs."
   []
   (LibLoader/load (pcap-lib-path pcap080))
   (LibLoader/load (pcap-lib-path pcap100)))
 
 (defn extract-and-load-native-libs
-  "Convenience function for extracting and loading the native libraries."
+  "Convenience function for extracting and loading the native libraries.
+   Starting with jnetpcap 1.5.x, this is deprecated in favour of extract-and-reference-native-libs."
   []
   (extract-native-libs)
   (load-native-libs)
   (utils/add-shutdown-hook remove-native-libs))
 
 (defn extract-and-reference-native-libs
-  "Convenience function for extracting and referencing the native libraries via System Properties: \"clj-net-pcap.lib.[jnetpcap, jnetpcap-pcap100]\"."
+  "Convenience function for extracting and referencing the native libraries via System Properties: \"clj-net-pcap.lib.[jnetpcap, jnetpcap-pcap100]\".
+   This is needed with the new version of jnetpcap as it uses an updated mechanism for loading the native libraries.
+   clj-net-pcap ships a modified version of a part of this jnetpcap mechanism that uses these clj-net-pcap.lib.* properties in JNILibrary/loadLibrary."
   []
   (extract-native-libs)
   (System/setProperty "clj-net-pcap.lib.jnetpcap" (pcap-lib-path pcap080))

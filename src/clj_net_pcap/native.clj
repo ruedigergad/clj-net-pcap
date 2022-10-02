@@ -115,13 +115,26 @@
   (LibLoader/load (pcap-lib-path pcap080))
   (LibLoader/load (pcap-lib-path pcap100)))
 
+(def shutdown-hook-thread
+  (Thread. remove-native-libs))
+
+(defn register-shutdown-hook
+  "Register a JVM shutdown hook to delete native libs temp files.
+   This function aims on registering the shutdown hook once and thus tries to remove a possibly
+   previously registered hook before registering the new one."
+  []
+  ; This should never be called concurrently but we still synchronize on the shutfown-hook-thread instance, just in case.
+  (locking shutdown-hook-thread
+    (-> (Runtime/getRuntime) (.removeShutdownHook shutdown-hook-thread))
+    (-> (Runtime/getRuntime) (.addShutdownHook shutdown-hook-thread))))
+
 (defn extract-and-load-native-libs
   "Convenience function for extracting and loading the native libraries.
    Starting with jnetpcap 1.5.x, this is deprecated in favour of extract-and-reference-native-libs."
   []
   (extract-native-libs)
   (load-native-libs)
-  (utils/add-shutdown-hook remove-native-libs))
+  (register-shutdown-hook))
 
 (defn extract-and-reference-native-libs
   "Convenience function for extracting and referencing the native libraries via System Properties: \"clj-net-pcap.lib.[jnetpcap, jnetpcap-pcap100]\".
@@ -138,5 +151,6 @@
       (extract-native-libs)
       (System/setProperty "clj-net-pcap.lib.jnetpcap" (pcap-lib-path pcap080))
       (System/setProperty "clj-net-pcap.lib.jnetpcap-pcap100" (pcap-lib-path pcap100))
-      (utils/add-shutdown-hook remove-native-libs))))
+      (register-shutdown-hook))))
+
 (extract-and-reference-native-libs)

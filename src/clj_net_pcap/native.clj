@@ -54,7 +54,9 @@
 (defn pcap-jar-path
   "Get the path of the jnetpcap libraries inside the clj-net-pcap jar."
   [p]
-  (let [os (.toLowerCase (utils/get-os))
+  (let [os (cond
+             (utils/is-os? "windows") "windows"
+             :else (.toLowerCase (utils/get-os)))
         arch (.toLowerCase (utils/get-arch))]
     (str "native/" os "/" arch "/" p)))
 
@@ -91,11 +93,14 @@
 (defn remove-native-libs
   "Clean up native libs."
   []
-  (when (utils/file-exists? (pcap-lib-path pcap080))
-    (utils/rm (pcap-lib-path pcap080)))
-  (when (utils/file-exists? (pcap-lib-path pcap100))
-    (utils/rm (pcap-lib-path pcap100)))
-  (rm-native-lib-dir))
+  (try
+    (when (utils/file-exists? (pcap-lib-path pcap080))
+      (utils/rm (pcap-lib-path pcap080)))
+    (when (utils/file-exists? (pcap-lib-path pcap100))
+      (utils/rm (pcap-lib-path pcap100)))
+    (rm-native-lib-dir)
+    (catch Exception e
+      (println "Warning: Failed to delete temporarily extraced native libs. If you want to remove them manually, delete:" (native-lib-dir)))))
 
 (defn extract-native-libs
   "Extract the native libraries."
@@ -144,8 +149,8 @@
   (if (and (utils/is-file? pcap080) (utils/is-file? pcap100))
     (do
       (println "Using native libs from current working directory...")
-      (System/setProperty "clj-net-pcap.lib.jnetpcap" pcap080)
-      (System/setProperty "clj-net-pcap.lib.jnetpcap-pcap100" pcap100))
+      (System/setProperty "clj-net-pcap.lib.jnetpcap" (-> (jio/file pcap080) .getAbsolutePath))
+      (System/setProperty "clj-net-pcap.lib.jnetpcap-pcap100" (-> (jio/file pcap100) .getAbsolutePath)))
     (do
       (println "Using native libs from clj-net-pcap jar file...")
       (extract-native-libs)

@@ -59,7 +59,9 @@
     ["-h" "--help" "Print this help." :flag true]
     ["-i" "--interface"
      "Interface on which the packets are captured"
-     :default "lo"]
+     :default (cond
+                (utils/is-os? "windows") (-> (pcap/get-devices) first .getName)
+                :else "lo")]
     ["-r" "--raw"
      (str "Emit raw data instead of decoded packets."
           " Be careful, not all transformation and forwarder functions support this.")

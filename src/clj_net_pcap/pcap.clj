@@ -61,7 +61,12 @@
 (def lo (cond
           (device-exists? "lo") "lo"
           (device-exists? "lo0") "lo0"
-          :else (utils/println-err "Warning: Could not find name for loopback device.")))
+          :else (do
+                  (utils/println-err "Warning: Could not find name for loopback device.")
+                  (utils/println-err "Available devices are:")
+                  (doseq [dev (get-devices)]
+                    (utils/println-err (.getName dev))
+                    (utils/println-err (str "  " dev))))))
 (def any "any")
 (def first-wired-dev
   "This is a somewhat approximation to get the first wired network device.
@@ -98,8 +103,9 @@
         pcap (doto (Pcap/create dev-name err)
                (.setBufferSize *buffer-size*)
                (.setPromisc *flags*)
-               (.setSnaplen *snap-len*)
-               (.setImmediateMode 1))]
+               (.setSnaplen *snap-len*))]
+    (when (not (utils/is-os? "windows"))
+      (.setImmediateMode pcap 1))
     (if (nil? pcap)
       (let [errmsg (str "An error occured while creating a pcap instance: " (str err))]
         (utils/println-err errmsg)

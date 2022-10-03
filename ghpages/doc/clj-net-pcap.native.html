@@ -40,7 +40,7 @@
 Docstring:
 ==========
 
-  Copy from Jar to file.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L77">View Source</a></div><div id="IDextract-and-load-native-libs"><div><h4>Function: extract-and-load-native-libs</h4><pre>Arglists:
+  Copy from Jar to file.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L79">View Source</a></div><div id="IDextract-and-load-native-libs"><div><h4>Function: extract-and-load-native-libs</h4><pre>Arglists:
 =========
 
   (extract-and-load-native-libs)
@@ -49,7 +49,7 @@ Docstring:
 ==========
 
   Convenience function for extracting and loading the native libraries.
-   Starting with jnetpcap 1.5.x, this is deprecated in favour of extract-and-reference-native-libs.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L131">View Source</a></div><div id="IDextract-and-reference-native-libs"><div><h4>Function: extract-and-reference-native-libs</h4><pre>Arglists:
+   Starting with jnetpcap 1.5.x, this is deprecated in favour of extract-and-reference-native-libs.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L136">View Source</a></div><div id="IDextract-and-reference-native-libs"><div><h4>Function: extract-and-reference-native-libs</h4><pre>Arglists:
 =========
 
   (extract-and-reference-native-libs)
@@ -59,7 +59,7 @@ Docstring:
 
   Convenience function for extracting and referencing the native libraries via System Properties: &quot;clj-net-pcap.lib.[jnetpcap, jnetpcap-pcap100]&quot;.
    This is needed with the new version of jnetpcap as it uses an updated mechanism for loading the native libraries.
-   clj-net-pcap ships a modified version of a part of this jnetpcap mechanism that uses these clj-net-pcap.lib.* properties in JNILibrary/loadLibrary.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L139">View Source</a></div><div id="IDextract-native-lib"><div><h4>Function: extract-native-lib</h4><pre>Arglists:
+   clj-net-pcap ships a modified version of a part of this jnetpcap mechanism that uses these clj-net-pcap.lib.* properties in JNILibrary/loadLibrary.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L144">View Source</a></div><div id="IDextract-native-lib"><div><h4>Function: extract-native-lib</h4><pre>Arglists:
 =========
 
   (extract-native-lib l)
@@ -67,7 +67,7 @@ Docstring:
 Docstring:
 ==========
 
-  Extract a single native library l.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L84">View Source</a></div><div id="IDextract-native-libs"><div><h4>Function: extract-native-libs</h4><pre>Arglists:
+  Extract a single native library l.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L86">View Source</a></div><div id="IDextract-native-libs"><div><h4>Function: extract-native-libs</h4><pre>Arglists:
 =========
 
   (extract-native-libs)
@@ -75,7 +75,7 @@ Docstring:
 Docstring:
 ==========
 
-  Extract the native libraries.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L100">View Source</a></div><div id="IDload-native-libs"><div><h4>Function: load-native-libs</h4><pre>Arglists:
+  Extract the native libraries.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L105">View Source</a></div><div id="IDload-native-libs"><div><h4>Function: load-native-libs</h4><pre>Arglists:
 =========
 
   (load-native-libs)
@@ -86,7 +86,7 @@ Docstring:
   Load the native libraries.
    This uses a little hack:
    The LibLoader Java class is used for actually loading the native libs.
-   Starting with jnetpcap 1.5.x, this is deprecated in favour of extract-and-reference-native-libs.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L109">View Source</a></div><div id="IDmk-native-lib-dir"><div><h4>Function: mk-native-lib-dir</h4><pre>Arglists:
+   Starting with jnetpcap 1.5.x, this is deprecated in favour of extract-and-reference-native-libs.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L114">View Source</a></div><div id="IDmk-native-lib-dir"><div><h4>Function: mk-native-lib-dir</h4><pre>Arglists:
 =========
 
   (mk-native-lib-dir)
@@ -94,7 +94,7 @@ Docstring:
 Docstring:
 ==========
 
-  Create the dir for extracting the native libraries.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L66">View Source</a></div><div id="IDnative-lib-dir"><div><h4>Function: native-lib-dir</h4><pre>Arglists:
+  Create the dir for extracting the native libraries.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L68">View Source</a></div><div id="IDnative-lib-dir"><div><h4>Function: native-lib-dir</h4><pre>Arglists:
 =========
 
   (native-lib-dir)
@@ -127,7 +127,7 @@ Docstring:
 Docstring:
 ==========
 
-  Path for an actual library file, given the file name.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L61">View Source</a></div><div id="IDpcap080"><div><h4>Var: pcap080</h4><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L49">View Source</a></div><div id="IDpcap100"><div><h4>Var: pcap100</h4><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L51">View Source</a></div><div id="IDregister-shutdown-hook"><div><h4>Function: register-shutdown-hook</h4><pre>Arglists:
+  Path for an actual library file, given the file name.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L63">View Source</a></div><div id="IDpcap080"><div><h4>Var: pcap080</h4><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L49">View Source</a></div><div id="IDpcap100"><div><h4>Var: pcap100</h4><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L51">View Source</a></div><div id="IDregister-shutdown-hook"><div><h4>Function: register-shutdown-hook</h4><pre>Arglists:
 =========
 
   (register-shutdown-hook)
@@ -137,7 +137,7 @@ Docstring:
 
   Register a JVM shutdown hook to delete native libs temp files.
    This function aims on registering the shutdown hook once and thus tries to remove a possibly
-   previously registered hook before registering the new one.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L121">View Source</a></div><div id="IDremove-native-libs"><div><h4>Function: remove-native-libs</h4><pre>Arglists:
+   previously registered hook before registering the new one.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L126">View Source</a></div><div id="IDremove-native-libs"><div><h4>Function: remove-native-libs</h4><pre>Arglists:
 =========
 
   (remove-native-libs)
@@ -145,7 +145,7 @@ Docstring:
 Docstring:
 ==========
 
-  Clean up native libs.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L91">View Source</a></div><div id="IDrm-native-lib-dir"><div><h4>Function: rm-native-lib-dir</h4><pre>Arglists:
+  Clean up native libs.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L93">View Source</a></div><div id="IDrm-native-lib-dir"><div><h4>Function: rm-native-lib-dir</h4><pre>Arglists:
 =========
 
   (rm-native-lib-dir)
@@ -153,4 +153,4 @@ Docstring:
 Docstring:
 ==========
 
-  Remove the native library temp directory.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L71">View Source</a></div><div id="IDshutdown-hook-thread"><div><h4>Var: shutdown-hook-thread</h4><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L118">View Source</a></div></section></div><footer><p>These docs were generated by the <a href="https://github.com/tsdh/lein-html5-docs">Leiningen HTML5 Docs Plugin</a>, version 3.0.3.</p><a href="http://www.w3.org/html/logo/"><img alt="HTML5 Powered" height="64" src="http://www.w3.org/html/logo/badge/html5-badge-h-solo.png" title="HTML5 Powered" width="63" /></a><script src="http://code.jquery.com/jquery.min.js"></script><script src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script><script src="api-search.js"></script></footer></body></html>
+  Remove the native library temp directory.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L73">View Source</a></div><div id="IDshutdown-hook-thread"><div><h4>Var: shutdown-hook-thread</h4><pre>  No docs attached.</pre></div><a href="#top">Back to top</a> <a href="https://github.com/ruedigergad/clj-net-pcap/blob/master/src/clj_net_pcap/native.clj#L123">View Source</a></div></section></div><footer><p>These docs were generated by the <a href="https://github.com/tsdh/lein-html5-docs">Leiningen HTML5 Docs Plugin</a>, version 3.0.3.</p><a href="http://www.w3.org/html/logo/"><img alt="HTML5 Powered" height="64" src="http://www.w3.org/html/logo/badge/html5-badge-h-solo.png" title="HTML5 Powered" width="63" /></a><script src="http://code.jquery.com/jquery.min.js"></script><script src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script><script src="api-search.js"></script></footer></body></html>

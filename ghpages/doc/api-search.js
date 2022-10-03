@@ -63,7 +63,7 @@ $(function() {
     {label: "clj-net-pcap.dsl.transformation/ipv4-address", value: "clj-net-pcap.dsl.transformation.html#IDipv4-address"},
     {label: "clj-net-pcap.dsl.transformation/timestamp", value: "clj-net-pcap.dsl.transformation.html#IDtimestamp"},
     {label: "clj-net-pcap.dsl.transformation/timestamp-be", value: "clj-net-pcap.dsl.transformation.html#IDtimestamp-be"},
-    {label: "clj-net-pcap.main/-main", value: "clj-net-pcap.main.html#ID-main"},
+    {label: "clj-net-pcap.main/parse-args", value: "clj-net-pcap.main.html#IDparse-args"},
     {label: "clj-net-pcap.native/*lib-dir*", value: "clj-net-pcap.native.html#IDMULlib-dirMUL"},
     {label: "clj-net-pcap.native/copy-resource-to-file", value: "clj-net-pcap.native.html#IDcopy-resource-to-file"},
     {label: "clj-net-pcap.native/extract-and-load-native-libs", value: "clj-net-pcap.native.html#IDextract-and-load-native-libs"},

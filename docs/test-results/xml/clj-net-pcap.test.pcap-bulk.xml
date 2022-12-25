@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.pcap-bulk" errors="0" failures="0" tests="4" time="8.5247" timestamp="2022-12-25_18:53:01+0100">
-    <testcase name="cljnetpcap-send-and-receive-bytes-packet-without-intermediate-buffer-count-test" classname="clj-net-pcap.test.pcap-bulk" time="2.1820">
+<testsuite name="clj-net-pcap.test.pcap-bulk" errors="0" failures="0" tests="4" time="8.5440" timestamp="2022-12-25_19:48:20+0100">
+    <testcase name="cljnetpcap-send-and-receive-bytes-packet-without-intermediate-buffer-count-test" classname="clj-net-pcap.test.pcap-bulk" time="2.1780">
     </testcase>
-    <testcase name="cljnetpcap-send-and-receive-packet-maps-without-intermediate-buffer-count-test" classname="clj-net-pcap.test.pcap-bulk" time="2.0797">
+    <testcase name="cljnetpcap-send-and-receive-packet-maps-without-intermediate-buffer-count-test" classname="clj-net-pcap.test.pcap-bulk" time="2.1033">
     </testcase>
-    <testcase name="cljnetpcap-send-and-receive-packet-maps-via-intermediate-buffer-count-test" classname="clj-net-pcap.test.pcap-bulk" time="2.0817">
+    <testcase name="cljnetpcap-send-and-receive-packet-maps-via-intermediate-buffer-count-test" classname="clj-net-pcap.test.pcap-bulk" time="2.0850">
     </testcase>
-    <testcase name="cljnetpcap-send-and-receive-bytes-packet-via-intermediate-buffer-count-test" classname="clj-net-pcap.test.pcap-bulk" time="2.1779">
+    <testcase name="cljnetpcap-send-and-receive-bytes-packet-via-intermediate-buffer-count-test" classname="clj-net-pcap.test.pcap-bulk" time="2.1735">
     </testcase>
     <system-err>
 Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
@@ -33,7 +33,7 @@ Stopping online pcap.
         </property>
         <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
         </property>
-        <property name="clj-net-pcap.version" value="1.8.3-SNAPSHOT">
+        <property name="clj-net-pcap.version" value="1.8.3">
         </property>
         <property name="path.separator" value=":">
         </property>
@@ -72,7 +72,7 @@ Stopping online pcap.
         </property>
         <property name="java.home" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64">
         </property>
-        <property name="java.class.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/test:/home/rc/repositories/private/clojure/clj-net-pcap/src:/home/rc/repositories/private/clojure/clj-net-pcap/dev-resources:/home/rc/repositories/private/clojure/clj-net-pcap/resources:/home/rc/repositories/private/clojure/clj-net-pcap/target/classes:/root/.m2/repository/org/clojure/tools.analyzer.jvm/1.2.2/tools.analyzer.jvm-1.2.2.jar:/root/.m2/repository/org/clojure/tools.analyzer/1.1.0/tools.analyzer-1.1.0.jar:/root/.m2/repository/org/nrepl/incomplete/0.1.0/incomplete-0.1.0.jar:/root/.m2/repository/org/clojure/data.priority-map/1.1.0/data.priority-map-1.1.0.jar:/root/.m2/repository/org/ow2/asm/asm/9.2/asm-9.2.jar:/root/.m2/repository/org/clojure/clojure/1.11.1/clojure-1.11.1.jar:/root/.m2/repository/jline/jline/2.14.6/jline-2.14.6.jar:/root/.m2/repository/org/clojure/core.cache/1.0.225/core.cache-1.0.225.jar:/root/.m2/repository/cli4clj/cli4clj/1.9.0/cli4clj-1.9.0.jar:/root/.m2/repository/org/clojure/core.async/1.5.648/core.async-1.5.648.jar:/root/.m2/repository/clj-assorted-utils/clj-assorted-utils/1.19.0/clj-assorted-utils-1.19.0.jar:/root/.m2/repository/robert/hooke/1.3.0/hooke-1.3.0.jar:/root/.m2/repository/jnetpcap/jnetpcap/1.5.r1457-1i/jnetpcap-1.5.r1457-1i.jar:/root/.m2/repository/nrepl/nrepl/0.8.3/nrepl-0.8.3.jar:/root/.m2/repository/org/clojure/core.memoize/1.0.253/core.memoize-1.0.253.jar:/root/.m2/repository/org/clojure/core.specs.alpha/0.2.62/core.specs.alpha-0.2.62.jar:/root/.m2/repository/org/clojure/spec.alpha/0.3.218/spec.alpha-0.3.218.jar:/root/.m2/repository/test2junit/test2junit/1.4.4/test2junit-1.4.4.jar:/root/.m2/repository/org/clojure/tools.reader/1.3.6/tools.reader-1.3.6.jar:/root/.m2/repository/org/clojure/tools.cli/1.0.206/tools.cli-1.0.206.jar">
+        <property name="java.class.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/test:/home/rc/repositories/private/clojure/clj-net-pcap/src:/home/rc/repositories/private/clojure/clj-net-pcap/dev-resources:/home/rc/repositories/private/clojure/clj-net-pcap/resources:/home/rc/repositories/private/clojure/clj-net-pcap/target/classes:/root/.m2/repository/org/clojure/tools.analyzer.jvm/1.2.2/tools.analyzer.jvm-1.2.2.jar:/root/.m2/repository/org/clojure/tools.analyzer/1.1.0/tools.analyzer-1.1.0.jar:/root/.m2/repository/org/nrepl/incomplete/0.1.0/incomplete-0.1.0.jar:/root/.m2/repository/org/clojure/data.priority-map/1.1.0/data.priority-map-1.1.0.jar:/root/.m2/repository/org/ow2/asm/asm/9.2/asm-9.2.jar:/root/.m2/repository/org/clojure/clojure/1.11.1/clojure-1.11.1.jar:/root/.m2/repository/jline/jline/2.14.6/jline-2.14.6.jar:/root/.m2/repository/org/clojure/core.cache/1.0.225/core.cache-1.0.225.jar:/root/.m2/repository/cli4clj/cli4clj/1.9.0/cli4clj-1.9.0.jar:/root/.m2/repository/org/clojure/core.async/1.5.648/core.async-1.5.648.jar:/root/.m2/repository/clj-assorted-utils/clj-assorted-utils/1.19.0/clj-assorted-utils-1.19.0.jar:/root/.m2/repository/robert/hooke/1.3.0/hooke-1.3.0.jar:/root/.m2/repository/jnetpcap/jnetpcap/1.5.r1457-1i/jnetpcap-1.5.r1457-1i.jar:/root/.m2/repository/nrepl/nrepl/0.8.3/nrepl-0.8.3.jar:/root/.m2/repository/org/clojure/core.memoize/1.0.253/core.memoize-1.0.253.jar:/root/.m2/repository/org/clojure/core.specs.alpha/0.2.62/core.specs.alpha-0.2.62.jar:/root/.m2/repository/org/clojure/spec.alpha/0.3.218/spec.alpha-0.3.218.jar:/root/.m2/repository/test2junit/test2junit/1.4.4/test2junit-1.4.4.jar:/root/.m2/repository/org/clojure/tools.reader/1.3.6/tools.reader-1.3.6.jar:/root/.m2/repository/org/clojure/tools.cli/1.0.214/tools.cli-1.0.214.jar">
         </property>
         <property name="java.runtime.version" value="17.0.3+7">
         </property>
@@ -126,7 +126,7 @@ Stopping online pcap.
         </property>
         <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
         </property>
-        <property name="sun.java.command" value="clojure.main -i /tmp/form-init1622314863370425935.clj">
+        <property name="sun.java.command" value="clojure.main -i /tmp/form-init13506422024338930303.clj">
         </property>
         <property name="user.name" value="root">
         </property>

@@ -1,9 +1,9 @@
-;(defproject clj-net-pcap "1.8.2"
-(defproject clj-net-pcap "1.8.3-SNAPSHOT"
+(defproject clj-net-pcap "1.8.3"
+;(defproject clj-net-pcap "1.8.4-SNAPSHOT"
   :description "clj-net-pcap is a wrapper/adapter/facade (No matter how you want to call it.)
                 around jNetPcap that enables and eases packet capturing and processing with Clojure."
   :dependencies [[org.clojure/clojure "1.11.1"]
-                 [org.clojure/tools.cli "1.0.206"]
+                 [org.clojure/tools.cli "1.0.214"]
                  [cli4clj "1.9.0"]
                  [clj-assorted-utils "1.19.0"]
                  [jnetpcap "1.5.r1457-1i"]]

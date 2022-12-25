@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.pcap" errors="0" failures="0" tests="14" time="0.4387" timestamp="2022-10-03_15:35:29+0200">
-    <testcase name="test-set-filter" classname="clj-net-pcap.test.pcap" time="0.0455">
+<testsuite name="clj-net-pcap.test.pcap" errors="0" failures="0" tests="14" time="0.3711" timestamp="2022-12-25_18:52:52+0100">
+    <testcase name="test-set-filter" classname="clj-net-pcap.test.pcap" time="0.0510">
     </testcase>
-    <testcase name="test-device-does-not-exist" classname="clj-net-pcap.test.pcap" time="0.0016">
+    <testcase name="test-device-does-not-exist" classname="clj-net-pcap.test.pcap" time="0.0012">
     </testcase>
-    <testcase name="test-activate-online-pcap-exception" classname="clj-net-pcap.test.pcap" time="0.0018">
+    <testcase name="test-activate-online-pcap-exception" classname="clj-net-pcap.test.pcap" time="0.0015">
     </testcase>
-    <testcase name="test-device-exists" classname="clj-net-pcap.test.pcap" time="0.0013">
+    <testcase name="test-device-exists" classname="clj-net-pcap.test.pcap" time="0.0012">
     </testcase>
-    <testcase name="test-create-and-activate-online-pcap" classname="clj-net-pcap.test.pcap" time="0.0553">
+    <testcase name="test-create-and-activate-online-pcap" classname="clj-net-pcap.test.pcap" time="0.0474">
     </testcase>
-    <testcase name="throw-exception-on-invalid-operation-three-args-test" classname="clj-net-pcap.test.pcap" time="0.0684">
+    <testcase name="throw-exception-on-invalid-operation-three-args-test" classname="clj-net-pcap.test.pcap" time="0.0539">
     </testcase>
-    <testcase name="throw-exception-on-invalid-operation-no-arg-test" classname="clj-net-pcap.test.pcap" time="0.0454">
+    <testcase name="throw-exception-on-invalid-operation-no-arg-test" classname="clj-net-pcap.test.pcap" time="0.0472">
     </testcase>
-    <testcase name="throw-exception-on-invalid-operation-single-arg-test" classname="clj-net-pcap.test.pcap" time="0.0475">
+    <testcase name="throw-exception-on-invalid-operation-single-arg-test" classname="clj-net-pcap.test.pcap" time="0.0406">
     </testcase>
-    <testcase name="test-create-online-pcap" classname="clj-net-pcap.test.pcap" time="0.0044">
+    <testcase name="test-create-online-pcap" classname="clj-net-pcap.test.pcap" time="0.0024">
     </testcase>
-    <testcase name="test-create-get-stat-fn" classname="clj-net-pcap.test.pcap" time="0.0665">
+    <testcase name="test-create-get-stat-fn" classname="clj-net-pcap.test.pcap" time="0.0478">
     </testcase>
-    <testcase name="test-create-filter" classname="clj-net-pcap.test.pcap" time="0.0540">
+    <testcase name="test-create-filter" classname="clj-net-pcap.test.pcap" time="0.0402">
     </testcase>
-    <testcase name="test-create-and-set-filter" classname="clj-net-pcap.test.pcap" time="0.0325">
+    <testcase name="test-create-and-set-filter" classname="clj-net-pcap.test.pcap" time="0.0273">
     </testcase>
-    <testcase name="test-get-device" classname="clj-net-pcap.test.pcap" time="0.0017">
+    <testcase name="test-get-device" classname="clj-net-pcap.test.pcap" time="0.0012">
     </testcase>
-    <testcase name="test-get-devices" classname="clj-net-pcap.test.pcap" time="0.0029">
+    <testcase name="test-get-devices" classname="clj-net-pcap.test.pcap" time="0.0014">
     </testcase>
     <system-err>
 Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
@@ -63,7 +63,7 @@ Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832;
         </property>
         <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
         </property>
-        <property name="clj-net-pcap.version" value="1.8.2">
+        <property name="clj-net-pcap.version" value="1.8.3-SNAPSHOT">
         </property>
         <property name="path.separator" value=":">
         </property>
@@ -156,7 +156,7 @@ Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832;
         </property>
         <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
         </property>
-        <property name="sun.java.command" value="clojure.main -i /tmp/form-init15557231247951377411.clj">
+        <property name="sun.java.command" value="clojure.main -i /tmp/form-init1622314863370425935.clj">
         </property>
         <property name="user.name" value="root">
         </property>

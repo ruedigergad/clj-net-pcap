@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.protocols" errors="0" failures="0" tests="13" time="1.9615" timestamp="2022-10-03_15:35:46+0200">
-    <testcase name="test-extract-udp-beans-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.2039">
+<testsuite name="clj-net-pcap.test.protocols" errors="0" failures="0" tests="13" time="1.9603" timestamp="2022-12-25_18:53:09+0100">
+    <testcase name="test-extract-udp-beans-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.2045">
     </testcase>
-    <testcase name="test-extract-icmpv6-router-solicitation-beans-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.1061">
+    <testcase name="test-extract-icmpv6-router-solicitation-beans-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.1060">
     </testcase>
     <testcase name="test-extract-tcp-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.1020">
     </testcase>
-    <testcase name="test-extract-arp-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.2034">
+    <testcase name="test-extract-arp-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.2025">
     </testcase>
-    <testcase name="test-extract-tcp-beans-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.1048">
+    <testcase name="test-extract-tcp-beans-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.1052">
     </testcase>
-    <testcase name="test-extract-arp-nested-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.2027">
+    <testcase name="test-extract-arp-nested-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.2038">
     </testcase>
-    <testcase name="test-extract-arp-beans-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.2044">
+    <testcase name="test-extract-arp-beans-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.2055">
     </testcase>
-    <testcase name="test-extract-tcp-nested-maps-from-pcap-file-dns" classname="clj-net-pcap.test.protocols" time="0.2050">
+    <testcase name="test-extract-tcp-nested-maps-from-pcap-file-dns" classname="clj-net-pcap.test.protocols" time="0.2038">
     </testcase>
-    <testcase name="test-extract-http-nested-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.1048">
+    <testcase name="test-extract-http-nested-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.1054">
     </testcase>
-    <testcase name="test-extract-tcp-nested-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.1019">
+    <testcase name="test-extract-tcp-nested-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.1021">
     </testcase>
-    <testcase name="test-extract-icmpv6-router-solicitation-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.1033">
+    <testcase name="test-extract-icmpv6-router-solicitation-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.1020">
     </testcase>
-    <testcase name="test-extract-udp-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.2036">
+    <testcase name="test-extract-udp-maps-from-pcap-file" classname="clj-net-pcap.test.protocols" time="0.2037">
     </testcase>
-    <testcase name="test-extract-tcp-nested-maps-from-pcap-file-icmpv6" classname="clj-net-pcap.test.protocols" time="0.1051">
+    <testcase name="test-extract-tcp-nested-maps-from-pcap-file-icmpv6" classname="clj-net-pcap.test.protocols" time="0.1049">
     </testcase>
     <system-err>
     </system-err>
@@ -52,7 +52,7 @@ Waiting till handler completed...
         </property>
         <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
         </property>
-        <property name="clj-net-pcap.version" value="1.8.2">
+        <property name="clj-net-pcap.version" value="1.8.3-SNAPSHOT">
         </property>
         <property name="path.separator" value=":">
         </property>
@@ -145,7 +145,7 @@ Waiting till handler completed...
         </property>
         <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
         </property>
-        <property name="sun.java.command" value="clojure.main -i /tmp/form-init15557231247951377411.clj">
+        <property name="sun.java.command" value="clojure.main -i /tmp/form-init1622314863370425935.clj">
         </property>
         <property name="user.name" value="root">
         </property>

@@ -1,184 +1,1055 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <testsuites>
-  <testsuite errors="0" failures="0" id="0" name="byte-array-extraction-dsl" package="clj-net-pcap.test" tests="35" time="0.0577" timestamp="2015-08-24_13:09:21+0200">
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="timestamp-extraction-be-test" time="0.0022">
+  <testsuite errors="0" failures="0" id="0" name="byte-array-extraction-dsl" package="clj-net-pcap.test" tests="35" time="0.1661" timestamp="2022-12-25_18:52:41+0100">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="timestamp-extraction-be-test" time="0.0034">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="full-ipv4-udp-dsl-be-test" time="0.0020">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="full-ipv4-udp-dsl-be-test" time="0.0028">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="new-dsl-with-type-java-map-and-operation-test" time="0.0017">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="new-dsl-with-type-java-map-and-operation-test" time="0.0020">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="get-arff-type-header-test" time="0.0007">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="get-arff-type-header-test" time="0.0009">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="simple-hardcoded-offsets-dsl-test" time="0.0010">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="simple-hardcoded-offsets-dsl-test" time="0.0016">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="dsl-with-type-json-str-test" time="0.0026">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="dsl-with-type-json-str-test" time="0.0031">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="get-arff-type-header-new-dsl-test" time="0.0021">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="get-arff-type-header-new-dsl-test" time="0.0032">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="dsl-with-type-clj-map-test" time="0.0014">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="dsl-with-type-clj-map-test" time="0.0027">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="simple-packet-offsets-name-dsl-test" time="0.0010">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="simple-packet-offsets-name-dsl-test" time="0.0015">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="new-dsl-with-type-json-str-test" time="0.0027">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="new-dsl-with-type-json-str-test" time="0.0210">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="extended-packet-offsets-name-dsl-le-strings-test" time="0.0014">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="extended-packet-offsets-name-dsl-le-strings-test" time="0.0046">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="new-dsl-with-type-java-map-and-operation-test-2" time="0.0013">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="new-dsl-with-type-java-map-and-operation-test-2" time="0.0032">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="dsl-with-type-java-map-test" time="0.0012">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="dsl-with-type-java-map-test" time="0.0083">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="get-arff-numeric-type-test-2" time="0.0001">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="get-arff-numeric-type-test-2" time="0.0002">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="extended-packet-offsets-name-dsl-be-test" time="0.0014">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="extended-packet-offsets-name-dsl-be-test" time="0.0027">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="new-dsl-with-type-csv-str-test" time="0.0032">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="new-dsl-with-type-csv-str-test" time="0.0043">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="dsl-with-type-csv-str-test" time="0.0009">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="dsl-with-type-csv-str-test" time="0.0018">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="get-arff-string-type-test" time="0.0001">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="get-arff-string-type-test" time="0.0003">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="dsl-with-type-json-str-test-3" time="0.0018">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="dsl-with-type-json-str-test-3" time="0.0039">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="new-dsl-with-type-java-map-and-operation-test-3" time="0.0017">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="new-dsl-with-type-java-map-and-operation-test-3" time="0.0040">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="dsl-with-type-json-str-test-2" time="0.0015">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="dsl-with-type-json-str-test-2" time="0.0072">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="dsl-default-to-java-map-type-test" time="0.0014">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="dsl-default-to-java-map-type-test" time="0.0059">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="timestamp-extraction-le-test" time="0.0013">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="timestamp-extraction-le-test" time="0.0036">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="new-dsl-with-type-clj-map-test" time="0.0015">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="new-dsl-with-type-clj-map-test" time="0.0031">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="ipv4-version-extraction-test" time="0.0018">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="ipv4-version-extraction-test" time="0.0051">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="ipv4-address-extraction-test" time="0.0018">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="ipv4-address-extraction-test" time="0.0037">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="extended-packet-offsets-name-dsl-le-test" time="0.0013">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="extended-packet-offsets-name-dsl-le-test" time="0.0026">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="new-dsl-with-type-java-map-test" time="0.0013">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="new-dsl-with-type-java-map-test" time="0.0022">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="dsl-with-type-csv-str-test-2" time="0.0013">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="dsl-with-type-csv-str-test-2" time="0.0020">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="dsl-with-type-csv-str-test-3" time="0.0016">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="dsl-with-type-csv-str-test-3" time="0.0030">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="full-ipv4-udp-dsl-le-test" time="0.0018">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="full-ipv4-udp-dsl-le-test" time="0.0077">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="get-arff-header-test" time="0.0003">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="get-arff-header-test" time="0.0009">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="resolve-transf-fn-old-syntax-test" time="0.0001">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="resolve-transf-fn-old-syntax-test" time="0.0004">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="ethernet-address-extraction-test" time="0.0016">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="ethernet-address-extraction-test" time="0.0042">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="get-arff-numeric-type-test" time="0.0001">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction-dsl" name="get-arff-numeric-type-test" time="0.0004">
     </testcase>
+
+        <system-err>
+    </system-err>
+
+        <system-out>
+Unknown type:32:invalid-type-name
+Defaulting to :java-maps
+    </system-out>
+
+        <properties>
+              <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers">
+        </property>
+
+              <property name="java.vm.info" value="mixed mode, emulated-client, sharing">
+        </property>
+
+              <property name="clojure.debug" value="false">
+        </property>
+
+              <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
+        </property>
+
+              <property name="clj-net-pcap.version" value="1.8.3-SNAPSHOT">
+        </property>
+
+              <property name="path.separator" value=":">
+        </property>
+
+              <property name="user.dir" value="/home/rc/repositories/private/clojure/clj-net-pcap">
+        </property>
+
+              <property name="java.vm.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="user.country" value="US">
+        </property>
+
+              <property name="java.vendor.url" value="https://www.redhat.com/">
+        </property>
+
+              <property name="java.specification.name" value="Java Platform API Specification">
+        </property>
+
+              <property name="line.separator" value=" ">
+        </property>
+
+              <property name="sun.cpu.endian" value="little">
+        </property>
+
+              <property name="java.vm.version" value="17.0.3+7">
+        </property>
+
+              <property name="sun.java.launcher" value="SUN_STANDARD">
+        </property>
+
+              <property name="java.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="native.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="java.vm.compressedOopsMode" value="Zero based">
+        </property>
+
+              <property name="clojure.compile.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/target/classes">
+        </property>
+
+              <property name="java.vm.specification.version" value="17">
+        </property>
+
+              <property name="java.io.tmpdir" value="/tmp">
+        </property>
+
+              <property name="java.home" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64">
+        </property>
+
+              <property name="java.class.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/test:/home/rc/repositories/private/clojure/clj-net-pcap/src:/home/rc/repositories/private/clojure/clj-net-pcap/dev-resources:/home/rc/repositories/private/clojure/clj-net-pcap/resources:/home/rc/repositories/private/clojure/clj-net-pcap/target/classes:/root/.m2/repository/org/clojure/tools.analyzer.jvm/1.2.2/tools.analyzer.jvm-1.2.2.jar:/root/.m2/repository/org/clojure/tools.analyzer/1.1.0/tools.analyzer-1.1.0.jar:/root/.m2/repository/org/nrepl/incomplete/0.1.0/incomplete-0.1.0.jar:/root/.m2/repository/org/clojure/data.priority-map/1.1.0/data.priority-map-1.1.0.jar:/root/.m2/repository/org/ow2/asm/asm/9.2/asm-9.2.jar:/root/.m2/repository/org/clojure/clojure/1.11.1/clojure-1.11.1.jar:/root/.m2/repository/jline/jline/2.14.6/jline-2.14.6.jar:/root/.m2/repository/org/clojure/core.cache/1.0.225/core.cache-1.0.225.jar:/root/.m2/repository/cli4clj/cli4clj/1.9.0/cli4clj-1.9.0.jar:/root/.m2/repository/org/clojure/core.async/1.5.648/core.async-1.5.648.jar:/root/.m2/repository/clj-assorted-utils/clj-assorted-utils/1.19.0/clj-assorted-utils-1.19.0.jar:/root/.m2/repository/robert/hooke/1.3.0/hooke-1.3.0.jar:/root/.m2/repository/jnetpcap/jnetpcap/1.5.r1457-1i/jnetpcap-1.5.r1457-1i.jar:/root/.m2/repository/nrepl/nrepl/0.8.3/nrepl-0.8.3.jar:/root/.m2/repository/org/clojure/core.memoize/1.0.253/core.memoize-1.0.253.jar:/root/.m2/repository/org/clojure/core.specs.alpha/0.2.62/core.specs.alpha-0.2.62.jar:/root/.m2/repository/org/clojure/spec.alpha/0.3.218/spec.alpha-0.3.218.jar:/root/.m2/repository/test2junit/test2junit/1.4.4/test2junit-1.4.4.jar:/root/.m2/repository/org/clojure/tools.reader/1.3.6/tools.reader-1.3.6.jar:/root/.m2/repository/org/clojure/tools.cli/1.0.206/tools.cli-1.0.206.jar">
+        </property>
+
+              <property name="java.runtime.version" value="17.0.3+7">
+        </property>
+
+              <property name="java.vm.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="user.language" value="en">
+        </property>
+
+              <property name="java.vm.name" value="OpenJDK 64-Bit Server VM">
+        </property>
+
+              <property name="java.version" value="17.0.3">
+        </property>
+
+              <property name="os.arch" value="amd64">
+        </property>
+
+              <property name="user.home" value="/root">
+        </property>
+
+              <property name="java.specification.version" value="17">
+        </property>
+
+              <property name="sun.jnu.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.vendor.version" value="21.9">
+        </property>
+
+              <property name="java.runtime.name" value="OpenJDK Runtime Environment">
+        </property>
+
+              <property name="sun.io.unicode.encoding" value="UnicodeLittle">
+        </property>
+
+              <property name="sun.arch.data.model" value="64">
+        </property>
+
+              <property name="java.class.version" value="61.0">
+        </property>
+
+              <property name="file.encoding" value="UTF-8">
+        </property>
+
+              <property name="jdk.debug" value="release">
+        </property>
+
+              <property name="user.timezone" value="Europe/Berlin">
+        </property>
+
+              <property name="os.name" value="Linux">
+        </property>
+
+              <property name="os.version" value="5.18.13-200.fc36.x86_64">
+        </property>
+
+              <property name="file.separator" value="/">
+        </property>
+
+              <property name="java.vm.specification.name" value="Java Virtual Machine Specification">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap" value="/tmp/clj-net-pcap_root/libjnetpcap.so">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap-pcap100" value="/tmp/clj-net-pcap_root/libjnetpcap-pcap100.so">
+        </property>
+
+              <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib">
+        </property>
+
+              <property name="java.version.date" value="2022-04-19">
+        </property>
+
+              <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
+        </property>
+
+              <property name="sun.java.command" value="clojure.main -i /tmp/form-init1622314863370425935.clj">
+        </property>
+
+              <property name="user.name" value="root">
+        </property>
+
+        </properties>
 
   </testsuite>
-  <testsuite errors="0" failures="0" id="1" name="byte-array-extraction" package="clj-net-pcap.test" tests="6" time="0.4186" timestamp="2015-08-24_13:09:21+0200">
-        <testcase classname="clj-net-pcap.test.byte-array-extraction" name="test-extract-udp-maps-from-pcap-file-ipv4-udp-only-reference" time="0.2089">
+  <testsuite errors="0" failures="0" id="1" name="byte-array-extraction" package="clj-net-pcap.test" tests="6" time="0.4502" timestamp="2022-12-25_18:52:40+0100">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction" name="test-extract-udp-maps-from-pcap-file-ipv4-udp-only-reference" time="0.2142">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction" name="test-extract-data-from-byte-array-to-map-ipv4-udp-only-be" time="0.0007">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction" name="test-extract-data-from-byte-array-to-map-ipv4-udp-only-be" time="0.0014">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction" name="test-extract-data-from-byte-array-to-bean-ipv4-udp-only-be" time="0.0004">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction" name="test-extract-data-from-byte-array-to-bean-ipv4-udp-only-be" time="0.0017">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction" name="test-extract-udp-beans-from-pcap-file-ipv4-udp-only-reference" time="0.2020">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction" name="test-extract-udp-beans-from-pcap-file-ipv4-udp-only-reference" time="0.2058">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction" name="test-extract-data-from-byte-array-to-bean-ipv4-udp-only" time="0.0005">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction" name="test-extract-data-from-byte-array-to-bean-ipv4-udp-only" time="0.0008">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.byte-array-extraction" name="test-extract-data-from-byte-array-to-map-ipv4-udp-only" time="0.0004">
+        <testcase classname="clj-net-pcap.test.byte-array-extraction" name="test-extract-data-from-byte-array-to-map-ipv4-udp-only" time="0.0007">
     </testcase>
+
+        <system-err>
+    </system-err>
+
+        <system-out>
+Waiting till handler completed...
+Waiting till handler completed...
+    </system-out>
+
+        <properties>
+              <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers">
+        </property>
+
+              <property name="java.vm.info" value="mixed mode, emulated-client, sharing">
+        </property>
+
+              <property name="clojure.debug" value="false">
+        </property>
+
+              <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
+        </property>
+
+              <property name="clj-net-pcap.version" value="1.8.3-SNAPSHOT">
+        </property>
+
+              <property name="path.separator" value=":">
+        </property>
+
+              <property name="user.dir" value="/home/rc/repositories/private/clojure/clj-net-pcap">
+        </property>
+
+              <property name="java.vm.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="user.country" value="US">
+        </property>
+
+              <property name="java.vendor.url" value="https://www.redhat.com/">
+        </property>
+
+              <property name="java.specification.name" value="Java Platform API Specification">
+        </property>
+
+              <property name="line.separator" value=" ">
+        </property>
+
+              <property name="sun.cpu.endian" value="little">
+        </property>
+
+              <property name="java.vm.version" value="17.0.3+7">
+        </property>
+
+              <property name="sun.java.launcher" value="SUN_STANDARD">
+        </property>
+
+              <property name="java.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="native.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="java.vm.compressedOopsMode" value="Zero based">
+        </property>
+
+              <property name="clojure.compile.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/target/classes">
+        </property>
+
+              <property name="java.vm.specification.version" value="17">
+        </property>
+
+              <property name="java.io.tmpdir" value="/tmp">
+        </property>
+
+              <property name="java.home" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64">
+        </property>
+
+              <property name="java.class.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/test:/home/rc/repositories/private/clojure/clj-net-pcap/src:/home/rc/repositories/private/clojure/clj-net-pcap/dev-resources:/home/rc/repositories/private/clojure/clj-net-pcap/resources:/home/rc/repositories/private/clojure/clj-net-pcap/target/classes:/root/.m2/repository/org/clojure/tools.analyzer.jvm/1.2.2/tools.analyzer.jvm-1.2.2.jar:/root/.m2/repository/org/clojure/tools.analyzer/1.1.0/tools.analyzer-1.1.0.jar:/root/.m2/repository/org/nrepl/incomplete/0.1.0/incomplete-0.1.0.jar:/root/.m2/repository/org/clojure/data.priority-map/1.1.0/data.priority-map-1.1.0.jar:/root/.m2/repository/org/ow2/asm/asm/9.2/asm-9.2.jar:/root/.m2/repository/org/clojure/clojure/1.11.1/clojure-1.11.1.jar:/root/.m2/repository/jline/jline/2.14.6/jline-2.14.6.jar:/root/.m2/repository/org/clojure/core.cache/1.0.225/core.cache-1.0.225.jar:/root/.m2/repository/cli4clj/cli4clj/1.9.0/cli4clj-1.9.0.jar:/root/.m2/repository/org/clojure/core.async/1.5.648/core.async-1.5.648.jar:/root/.m2/repository/clj-assorted-utils/clj-assorted-utils/1.19.0/clj-assorted-utils-1.19.0.jar:/root/.m2/repository/robert/hooke/1.3.0/hooke-1.3.0.jar:/root/.m2/repository/jnetpcap/jnetpcap/1.5.r1457-1i/jnetpcap-1.5.r1457-1i.jar:/root/.m2/repository/nrepl/nrepl/0.8.3/nrepl-0.8.3.jar:/root/.m2/repository/org/clojure/core.memoize/1.0.253/core.memoize-1.0.253.jar:/root/.m2/repository/org/clojure/core.specs.alpha/0.2.62/core.specs.alpha-0.2.62.jar:/root/.m2/repository/org/clojure/spec.alpha/0.3.218/spec.alpha-0.3.218.jar:/root/.m2/repository/test2junit/test2junit/1.4.4/test2junit-1.4.4.jar:/root/.m2/repository/org/clojure/tools.reader/1.3.6/tools.reader-1.3.6.jar:/root/.m2/repository/org/clojure/tools.cli/1.0.206/tools.cli-1.0.206.jar">
+        </property>
+
+              <property name="java.runtime.version" value="17.0.3+7">
+        </property>
+
+              <property name="java.vm.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="user.language" value="en">
+        </property>
+
+              <property name="java.vm.name" value="OpenJDK 64-Bit Server VM">
+        </property>
+
+              <property name="java.version" value="17.0.3">
+        </property>
+
+              <property name="os.arch" value="amd64">
+        </property>
+
+              <property name="user.home" value="/root">
+        </property>
+
+              <property name="java.specification.version" value="17">
+        </property>
+
+              <property name="sun.jnu.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.vendor.version" value="21.9">
+        </property>
+
+              <property name="java.runtime.name" value="OpenJDK Runtime Environment">
+        </property>
+
+              <property name="sun.io.unicode.encoding" value="UnicodeLittle">
+        </property>
+
+              <property name="sun.arch.data.model" value="64">
+        </property>
+
+              <property name="java.class.version" value="61.0">
+        </property>
+
+              <property name="file.encoding" value="UTF-8">
+        </property>
+
+              <property name="jdk.debug" value="release">
+        </property>
+
+              <property name="user.timezone" value="Europe/Berlin">
+        </property>
+
+              <property name="os.name" value="Linux">
+        </property>
+
+              <property name="os.version" value="5.18.13-200.fc36.x86_64">
+        </property>
+
+              <property name="file.separator" value="/">
+        </property>
+
+              <property name="java.vm.specification.name" value="Java Virtual Machine Specification">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap" value="/tmp/clj-net-pcap_root/libjnetpcap.so">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap-pcap100" value="/tmp/clj-net-pcap_root/libjnetpcap-pcap100.so">
+        </property>
+
+              <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib">
+        </property>
+
+              <property name="java.version.date" value="2022-04-19">
+        </property>
+
+              <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
+        </property>
+
+              <property name="sun.java.command" value="clojure.main -i /tmp/form-init1622314863370425935.clj">
+        </property>
+
+              <property name="user.name" value="root">
+        </property>
+
+        </properties>
 
   </testsuite>
-  <testsuite errors="0" failures="0" id="2" name="core" package="clj-net-pcap.test" tests="8" time="2.2717" timestamp="2015-08-24_13:09:23+0200">
-        <testcase classname="clj-net-pcap.test.core" name="test-unsupported-operation-throws-exception" time="0.2888">
+  <testsuite errors="0" failures="0" id="2" name="core" package="clj-net-pcap.test" tests="8" time="0.5166" timestamp="2022-12-25_18:52:41+0100">
+        <testcase classname="clj-net-pcap.test.core" name="test-unsupported-operation-throws-exception" time="0.0699">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.core" name="test-add-filter" time="0.2733">
+        <testcase classname="clj-net-pcap.test.core" name="test-add-filter" time="0.0658">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.core" name="test-get-filter" time="0.2736">
+        <testcase classname="clj-net-pcap.test.core" name="test-get-filter" time="0.0538">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.core" name="test-remove-last-filter" time="0.2860">
+        <testcase classname="clj-net-pcap.test.core" name="test-remove-last-filter" time="0.0615">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.core" name="test-simple-get-stats" time="0.2706">
+        <testcase classname="clj-net-pcap.test.core" name="test-simple-get-stats" time="0.0597">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.core" name="test-do-not-add-empty-filter" time="0.2708">
+        <testcase classname="clj-net-pcap.test.core" name="test-do-not-add-empty-filter" time="0.0595">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.core" name="cljnetpcap-test" time="0.3207">
+        <testcase classname="clj-net-pcap.test.core" name="cljnetpcap-test" time="0.0776">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.core" name="test-remove-filter" time="0.2856">
+        <testcase classname="clj-net-pcap.test.core" name="test-remove-filter" time="0.0635">
     </testcase>
+
+        <system-err>
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+    </system-err>
+
+        <system-out>
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Stopping online pcap.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Stopping online pcap.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Stopping online pcap.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Stopping online pcap.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Stopping online pcap.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Stopping online pcap.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Stopping online pcap.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Stopping online pcap.
+    </system-out>
+
+        <properties>
+              <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers">
+        </property>
+
+              <property name="java.vm.info" value="mixed mode, emulated-client, sharing">
+        </property>
+
+              <property name="clojure.debug" value="false">
+        </property>
+
+              <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
+        </property>
+
+              <property name="clj-net-pcap.version" value="1.8.3-SNAPSHOT">
+        </property>
+
+              <property name="path.separator" value=":">
+        </property>
+
+              <property name="user.dir" value="/home/rc/repositories/private/clojure/clj-net-pcap">
+        </property>
+
+              <property name="java.vm.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="user.country" value="US">
+        </property>
+
+              <property name="java.vendor.url" value="https://www.redhat.com/">
+        </property>
+
+              <property name="java.specification.name" value="Java Platform API Specification">
+        </property>
+
+              <property name="line.separator" value=" ">
+        </property>
+
+              <property name="sun.cpu.endian" value="little">
+        </property>
+
+              <property name="java.vm.version" value="17.0.3+7">
+        </property>
+
+              <property name="sun.java.launcher" value="SUN_STANDARD">
+        </property>
+
+              <property name="java.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="native.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="java.vm.compressedOopsMode" value="Zero based">
+        </property>
+
+              <property name="clojure.compile.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/target/classes">
+        </property>
+
+              <property name="java.vm.specification.version" value="17">
+        </property>
+
+              <property name="java.io.tmpdir" value="/tmp">
+        </property>
+
+              <property name="java.home" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64">
+        </property>
+
+              <property name="java.class.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/test:/home/rc/repositories/private/clojure/clj-net-pcap/src:/home/rc/repositories/private/clojure/clj-net-pcap/dev-resources:/home/rc/repositories/private/clojure/clj-net-pcap/resources:/home/rc/repositories/private/clojure/clj-net-pcap/target/classes:/root/.m2/repository/org/clojure/tools.analyzer.jvm/1.2.2/tools.analyzer.jvm-1.2.2.jar:/root/.m2/repository/org/clojure/tools.analyzer/1.1.0/tools.analyzer-1.1.0.jar:/root/.m2/repository/org/nrepl/incomplete/0.1.0/incomplete-0.1.0.jar:/root/.m2/repository/org/clojure/data.priority-map/1.1.0/data.priority-map-1.1.0.jar:/root/.m2/repository/org/ow2/asm/asm/9.2/asm-9.2.jar:/root/.m2/repository/org/clojure/clojure/1.11.1/clojure-1.11.1.jar:/root/.m2/repository/jline/jline/2.14.6/jline-2.14.6.jar:/root/.m2/repository/org/clojure/core.cache/1.0.225/core.cache-1.0.225.jar:/root/.m2/repository/cli4clj/cli4clj/1.9.0/cli4clj-1.9.0.jar:/root/.m2/repository/org/clojure/core.async/1.5.648/core.async-1.5.648.jar:/root/.m2/repository/clj-assorted-utils/clj-assorted-utils/1.19.0/clj-assorted-utils-1.19.0.jar:/root/.m2/repository/robert/hooke/1.3.0/hooke-1.3.0.jar:/root/.m2/repository/jnetpcap/jnetpcap/1.5.r1457-1i/jnetpcap-1.5.r1457-1i.jar:/root/.m2/repository/nrepl/nrepl/0.8.3/nrepl-0.8.3.jar:/root/.m2/repository/org/clojure/core.memoize/1.0.253/core.memoize-1.0.253.jar:/root/.m2/repository/org/clojure/core.specs.alpha/0.2.62/core.specs.alpha-0.2.62.jar:/root/.m2/repository/org/clojure/spec.alpha/0.3.218/spec.alpha-0.3.218.jar:/root/.m2/repository/test2junit/test2junit/1.4.4/test2junit-1.4.4.jar:/root/.m2/repository/org/clojure/tools.reader/1.3.6/tools.reader-1.3.6.jar:/root/.m2/repository/org/clojure/tools.cli/1.0.206/tools.cli-1.0.206.jar">
+        </property>
+
+              <property name="java.runtime.version" value="17.0.3+7">
+        </property>
+
+              <property name="java.vm.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="user.language" value="en">
+        </property>
+
+              <property name="java.vm.name" value="OpenJDK 64-Bit Server VM">
+        </property>
+
+              <property name="java.version" value="17.0.3">
+        </property>
+
+              <property name="os.arch" value="amd64">
+        </property>
+
+              <property name="user.home" value="/root">
+        </property>
+
+              <property name="java.specification.version" value="17">
+        </property>
+
+              <property name="sun.jnu.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.vendor.version" value="21.9">
+        </property>
+
+              <property name="java.runtime.name" value="OpenJDK Runtime Environment">
+        </property>
+
+              <property name="sun.io.unicode.encoding" value="UnicodeLittle">
+        </property>
+
+              <property name="sun.arch.data.model" value="64">
+        </property>
+
+              <property name="java.class.version" value="61.0">
+        </property>
+
+              <property name="file.encoding" value="UTF-8">
+        </property>
+
+              <property name="jdk.debug" value="release">
+        </property>
+
+              <property name="user.timezone" value="Europe/Berlin">
+        </property>
+
+              <property name="os.name" value="Linux">
+        </property>
+
+              <property name="os.version" value="5.18.13-200.fc36.x86_64">
+        </property>
+
+              <property name="file.separator" value="/">
+        </property>
+
+              <property name="java.vm.specification.name" value="Java Virtual Machine Specification">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap" value="/tmp/clj-net-pcap_root/libjnetpcap.so">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap-pcap100" value="/tmp/clj-net-pcap_root/libjnetpcap-pcap100.so">
+        </property>
+
+              <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib">
+        </property>
+
+              <property name="java.version.date" value="2022-04-19">
+        </property>
+
+              <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
+        </property>
+
+              <property name="sun.java.command" value="clojure.main -i /tmp/form-init1622314863370425935.clj">
+        </property>
+
+              <property name="user.name" value="root">
+        </property>
+
+        </properties>
 
   </testsuite>
-  <testsuite errors="0" failures="0" id="3" name="file-output" package="clj-net-pcap.test" tests="5" time="11.4267" timestamp="2015-08-24_13:09:35+0200">
-        <testcase classname="clj-net-pcap.test.file-output" name="csv-str-to-file-online-test" time="2.2885">
+  <testsuite errors="0" failures="0" id="3" name="file-output" package="clj-net-pcap.test" tests="5" time="10.3585" timestamp="2022-12-25_18:52:52+0100">
+        <testcase classname="clj-net-pcap.test.file-output" name="csv-str-to-file-online-test" time="2.0832">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.file-output" name="json-str-to-file-online-three-packets-test" time="2.2803">
+        <testcase classname="clj-net-pcap.test.file-output" name="json-str-to-file-online-three-packets-test" time="2.0783">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.file-output" name="csv-str-to-file-online-bs2-test" time="2.2917">
+        <testcase classname="clj-net-pcap.test.file-output" name="csv-str-to-file-online-bs2-test" time="2.0720">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.file-output" name="json-str-to-file-online-test" time="2.2807">
+        <testcase classname="clj-net-pcap.test.file-output" name="json-str-to-file-online-test" time="2.0605">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.file-output" name="csv-str-to-file-online-three-packets-test" time="2.2827">
+        <testcase classname="clj-net-pcap.test.file-output" name="csv-str-to-file-online-three-packets-test" time="2.0566">
     </testcase>
+
+        <system-err>
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 64 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 64 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 64 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 64 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 64 ; and promiscuous mode (flags) = 1
+    </system-err>
+
+        <system-out>
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =326432; and promiscuous mode (flags) =321
+Stopping online pcap.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =326432; and promiscuous mode (flags) =321
+Stopping online pcap.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =326432; and promiscuous mode (flags) =321
+Stopping online pcap.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =326432; and promiscuous mode (flags) =321
+Stopping online pcap.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =326432; and promiscuous mode (flags) =321
+Stopping online pcap.
+    </system-out>
+
+        <properties>
+              <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers">
+        </property>
+
+              <property name="java.vm.info" value="mixed mode, emulated-client, sharing">
+        </property>
+
+              <property name="clojure.debug" value="false">
+        </property>
+
+              <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
+        </property>
+
+              <property name="clj-net-pcap.version" value="1.8.3-SNAPSHOT">
+        </property>
+
+              <property name="path.separator" value=":">
+        </property>
+
+              <property name="user.dir" value="/home/rc/repositories/private/clojure/clj-net-pcap">
+        </property>
+
+              <property name="java.vm.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="user.country" value="US">
+        </property>
+
+              <property name="java.vendor.url" value="https://www.redhat.com/">
+        </property>
+
+              <property name="java.specification.name" value="Java Platform API Specification">
+        </property>
+
+              <property name="line.separator" value=" ">
+        </property>
+
+              <property name="sun.cpu.endian" value="little">
+        </property>
+
+              <property name="java.vm.version" value="17.0.3+7">
+        </property>
+
+              <property name="sun.java.launcher" value="SUN_STANDARD">
+        </property>
+
+              <property name="java.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="native.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="java.vm.compressedOopsMode" value="Zero based">
+        </property>
+
+              <property name="clojure.compile.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/target/classes">
+        </property>
+
+              <property name="java.vm.specification.version" value="17">
+        </property>
+
+              <property name="java.io.tmpdir" value="/tmp">
+        </property>
+
+              <property name="java.home" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64">
+        </property>
+
+              <property name="java.class.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/test:/home/rc/repositories/private/clojure/clj-net-pcap/src:/home/rc/repositories/private/clojure/clj-net-pcap/dev-resources:/home/rc/repositories/private/clojure/clj-net-pcap/resources:/home/rc/repositories/private/clojure/clj-net-pcap/target/classes:/root/.m2/repository/org/clojure/tools.analyzer.jvm/1.2.2/tools.analyzer.jvm-1.2.2.jar:/root/.m2/repository/org/clojure/tools.analyzer/1.1.0/tools.analyzer-1.1.0.jar:/root/.m2/repository/org/nrepl/incomplete/0.1.0/incomplete-0.1.0.jar:/root/.m2/repository/org/clojure/data.priority-map/1.1.0/data.priority-map-1.1.0.jar:/root/.m2/repository/org/ow2/asm/asm/9.2/asm-9.2.jar:/root/.m2/repository/org/clojure/clojure/1.11.1/clojure-1.11.1.jar:/root/.m2/repository/jline/jline/2.14.6/jline-2.14.6.jar:/root/.m2/repository/org/clojure/core.cache/1.0.225/core.cache-1.0.225.jar:/root/.m2/repository/cli4clj/cli4clj/1.9.0/cli4clj-1.9.0.jar:/root/.m2/repository/org/clojure/core.async/1.5.648/core.async-1.5.648.jar:/root/.m2/repository/clj-assorted-utils/clj-assorted-utils/1.19.0/clj-assorted-utils-1.19.0.jar:/root/.m2/repository/robert/hooke/1.3.0/hooke-1.3.0.jar:/root/.m2/repository/jnetpcap/jnetpcap/1.5.r1457-1i/jnetpcap-1.5.r1457-1i.jar:/root/.m2/repository/nrepl/nrepl/0.8.3/nrepl-0.8.3.jar:/root/.m2/repository/org/clojure/core.memoize/1.0.253/core.memoize-1.0.253.jar:/root/.m2/repository/org/clojure/core.specs.alpha/0.2.62/core.specs.alpha-0.2.62.jar:/root/.m2/repository/org/clojure/spec.alpha/0.3.218/spec.alpha-0.3.218.jar:/root/.m2/repository/test2junit/test2junit/1.4.4/test2junit-1.4.4.jar:/root/.m2/repository/org/clojure/tools.reader/1.3.6/tools.reader-1.3.6.jar:/root/.m2/repository/org/clojure/tools.cli/1.0.206/tools.cli-1.0.206.jar">
+        </property>
+
+              <property name="java.runtime.version" value="17.0.3+7">
+        </property>
+
+              <property name="java.vm.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="user.language" value="en">
+        </property>
+
+              <property name="java.vm.name" value="OpenJDK 64-Bit Server VM">
+        </property>
+
+              <property name="java.version" value="17.0.3">
+        </property>
+
+              <property name="os.arch" value="amd64">
+        </property>
+
+              <property name="user.home" value="/root">
+        </property>
+
+              <property name="java.specification.version" value="17">
+        </property>
+
+              <property name="sun.jnu.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.vendor.version" value="21.9">
+        </property>
+
+              <property name="java.runtime.name" value="OpenJDK Runtime Environment">
+        </property>
+
+              <property name="sun.io.unicode.encoding" value="UnicodeLittle">
+        </property>
+
+              <property name="sun.arch.data.model" value="64">
+        </property>
+
+              <property name="java.class.version" value="61.0">
+        </property>
+
+              <property name="file.encoding" value="UTF-8">
+        </property>
+
+              <property name="jdk.debug" value="release">
+        </property>
+
+              <property name="user.timezone" value="Europe/Berlin">
+        </property>
+
+              <property name="os.name" value="Linux">
+        </property>
+
+              <property name="os.version" value="5.18.13-200.fc36.x86_64">
+        </property>
+
+              <property name="file.separator" value="/">
+        </property>
+
+              <property name="java.vm.specification.name" value="Java Virtual Machine Specification">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap" value="/tmp/clj-net-pcap_root/libjnetpcap.so">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap-pcap100" value="/tmp/clj-net-pcap_root/libjnetpcap-pcap100.so">
+        </property>
+
+              <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib">
+        </property>
+
+              <property name="java.version.date" value="2022-04-19">
+        </property>
+
+              <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
+        </property>
+
+              <property name="sun.java.command" value="clojure.main -i /tmp/form-init1622314863370425935.clj">
+        </property>
+
+              <property name="user.name" value="root">
+        </property>
+
+        </properties>
 
   </testsuite>
-  <testsuite errors="0" failures="0" id="4" name="java-interop" package="clj-net-pcap.test" tests="3" time="0.5112" timestamp="2015-08-24_13:09:35+0200">
-        <testcase classname="clj-net-pcap.test.java-interop" name="test-java-static-extract-nested-maps-from-pcap-file" time="0.2063">
+  <testsuite errors="0" failures="0" id="4" name="java-interop" package="clj-net-pcap.test" tests="3" time="0.3168" timestamp="2022-12-25_18:52:52+0100">
+        <testcase classname="clj-net-pcap.test.java-interop" name="test-java-static-extract-nested-maps-from-pcap-file" time="0.1101">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.java-interop" name="test-java-static-extract-maps-from-pcap-file" time="0.1018">
+        <testcase classname="clj-net-pcap.test.java-interop" name="test-java-static-extract-maps-from-pcap-file" time="0.1025">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.java-interop" name="test-java-static-extract-beans-from-pcap-file" time="0.2020">
+        <testcase classname="clj-net-pcap.test.java-interop" name="test-java-static-extract-beans-from-pcap-file" time="0.1025">
     </testcase>
+
+        <system-err>
+    </system-err>
+
+        <system-out>
+Waiting till handler completed...
+Waiting till handler completed...
+Waiting till handler completed...
+    </system-out>
+
+        <properties>
+              <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers">
+        </property>
+
+              <property name="java.vm.info" value="mixed mode, emulated-client, sharing">
+        </property>
+
+              <property name="clojure.debug" value="false">
+        </property>
+
+              <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
+        </property>
+
+              <property name="clj-net-pcap.version" value="1.8.3-SNAPSHOT">
+        </property>
+
+              <property name="path.separator" value=":">
+        </property>
+
+              <property name="user.dir" value="/home/rc/repositories/private/clojure/clj-net-pcap">
+        </property>
+
+              <property name="java.vm.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="user.country" value="US">
+        </property>
+
+              <property name="java.vendor.url" value="https://www.redhat.com/">
+        </property>
+
+              <property name="java.specification.name" value="Java Platform API Specification">
+        </property>
+
+              <property name="line.separator" value=" ">
+        </property>
+
+              <property name="sun.cpu.endian" value="little">
+        </property>
+
+              <property name="java.vm.version" value="17.0.3+7">
+        </property>
+
+              <property name="sun.java.launcher" value="SUN_STANDARD">
+        </property>
+
+              <property name="java.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="native.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="java.vm.compressedOopsMode" value="Zero based">
+        </property>
+
+              <property name="clojure.compile.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/target/classes">
+        </property>
+
+              <property name="java.vm.specification.version" value="17">
+        </property>
+
+              <property name="java.io.tmpdir" value="/tmp">
+        </property>
+
+              <property name="java.home" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64">
+        </property>
+
+              <property name="java.class.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/test:/home/rc/repositories/private/clojure/clj-net-pcap/src:/home/rc/repositories/private/clojure/clj-net-pcap/dev-resources:/home/rc/repositories/private/clojure/clj-net-pcap/resources:/home/rc/repositories/private/clojure/clj-net-pcap/target/classes:/root/.m2/repository/org/clojure/tools.analyzer.jvm/1.2.2/tools.analyzer.jvm-1.2.2.jar:/root/.m2/repository/org/clojure/tools.analyzer/1.1.0/tools.analyzer-1.1.0.jar:/root/.m2/repository/org/nrepl/incomplete/0.1.0/incomplete-0.1.0.jar:/root/.m2/repository/org/clojure/data.priority-map/1.1.0/data.priority-map-1.1.0.jar:/root/.m2/repository/org/ow2/asm/asm/9.2/asm-9.2.jar:/root/.m2/repository/org/clojure/clojure/1.11.1/clojure-1.11.1.jar:/root/.m2/repository/jline/jline/2.14.6/jline-2.14.6.jar:/root/.m2/repository/org/clojure/core.cache/1.0.225/core.cache-1.0.225.jar:/root/.m2/repository/cli4clj/cli4clj/1.9.0/cli4clj-1.9.0.jar:/root/.m2/repository/org/clojure/core.async/1.5.648/core.async-1.5.648.jar:/root/.m2/repository/clj-assorted-utils/clj-assorted-utils/1.19.0/clj-assorted-utils-1.19.0.jar:/root/.m2/repository/robert/hooke/1.3.0/hooke-1.3.0.jar:/root/.m2/repository/jnetpcap/jnetpcap/1.5.r1457-1i/jnetpcap-1.5.r1457-1i.jar:/root/.m2/repository/nrepl/nrepl/0.8.3/nrepl-0.8.3.jar:/root/.m2/repository/org/clojure/core.memoize/1.0.253/core.memoize-1.0.253.jar:/root/.m2/repository/org/clojure/core.specs.alpha/0.2.62/core.specs.alpha-0.2.62.jar:/root/.m2/repository/org/clojure/spec.alpha/0.3.218/spec.alpha-0.3.218.jar:/root/.m2/repository/test2junit/test2junit/1.4.4/test2junit-1.4.4.jar:/root/.m2/repository/org/clojure/tools.reader/1.3.6/tools.reader-1.3.6.jar:/root/.m2/repository/org/clojure/tools.cli/1.0.206/tools.cli-1.0.206.jar">
+        </property>
+
+              <property name="java.runtime.version" value="17.0.3+7">
+        </property>
+
+              <property name="java.vm.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="user.language" value="en">
+        </property>
+
+              <property name="java.vm.name" value="OpenJDK 64-Bit Server VM">
+        </property>
+
+              <property name="java.version" value="17.0.3">
+        </property>
+
+              <property name="os.arch" value="amd64">
+        </property>
+
+              <property name="user.home" value="/root">
+        </property>
+
+              <property name="java.specification.version" value="17">
+        </property>
+
+              <property name="sun.jnu.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.vendor.version" value="21.9">
+        </property>
+
+              <property name="java.runtime.name" value="OpenJDK Runtime Environment">
+        </property>
+
+              <property name="sun.io.unicode.encoding" value="UnicodeLittle">
+        </property>
+
+              <property name="sun.arch.data.model" value="64">
+        </property>
+
+              <property name="java.class.version" value="61.0">
+        </property>
+
+              <property name="file.encoding" value="UTF-8">
+        </property>
+
+              <property name="jdk.debug" value="release">
+        </property>
+
+              <property name="user.timezone" value="Europe/Berlin">
+        </property>
+
+              <property name="os.name" value="Linux">
+        </property>
+
+              <property name="os.version" value="5.18.13-200.fc36.x86_64">
+        </property>
+
+              <property name="file.separator" value="/">
+        </property>
+
+              <property name="java.vm.specification.name" value="Java Virtual Machine Specification">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap" value="/tmp/clj-net-pcap_root/libjnetpcap.so">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap-pcap100" value="/tmp/clj-net-pcap_root/libjnetpcap-pcap100.so">
+        </property>
+
+              <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib">
+        </property>
+
+              <property name="java.version.date" value="2022-04-19">
+        </property>
+
+              <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
+        </property>
+
+              <property name="sun.java.command" value="clojure.main -i /tmp/form-init1622314863370425935.clj">
+        </property>
+
+              <property name="user.name" value="root">
+        </property>
+
+        </properties>
 
   </testsuite>
   <testsuite errors="0" failures="0" id="5" name="main" package="clj-net-pcap.test" tests="9" time="2.2780" timestamp="2015-08-24_13:09:38+0200">
@@ -210,318 +1081,2115 @@
     </testcase>
 
   </testsuite>
-  <testsuite errors="0" failures="0" id="6" name="native" package="clj-net-pcap.test" tests="6" time="0.0090" timestamp="2015-08-24_13:09:38+0200">
-        <testcase classname="clj-net-pcap.test.native" name="extract-remove-native-libs" time="0.0036">
+  <testsuite errors="0" failures="0" id="6" name="native" package="clj-net-pcap.test" tests="8" time="0.0603" timestamp="2022-12-25_18:52:52+0100">
+        <testcase classname="clj-net-pcap.test.native" name="extract-and-refernce-native-libs-from-current-working-directory" time="0.0160">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.native" name="extract-from-jar-to-file" time="0.0030">
+        <testcase classname="clj-net-pcap.test.native" name="extract-remove-native-libs" time="0.0090">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.native" name="find-lib-in-jar" time="0.0002">
+        <testcase classname="clj-net-pcap.test.native" name="extract-and-refernce-native-libs-from-jar" time="0.0129">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.native" name="get-url-for-lib-error" time="0.0001">
+        <testcase classname="clj-net-pcap.test.native" name="extract-from-jar-to-file" time="0.0144">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.native" name="mk-rm-native-lib-dir" time="0.0007">
+        <testcase classname="clj-net-pcap.test.native" name="find-lib-in-jar" time="0.0010">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.native" name="get-url-for-lib" time="0.0002">
+        <testcase classname="clj-net-pcap.test.native" name="get-url-for-lib-error" time="0.0005">
     </testcase>
+
+        <testcase classname="clj-net-pcap.test.native" name="mk-rm-native-lib-dir" time="0.0017">
+    </testcase>
+
+        <testcase classname="clj-net-pcap.test.native" name="get-url-for-lib" time="0.0003">
+    </testcase>
+
+        <system-err>
+    </system-err>
+
+        <system-out>
+
+Using the following path to locate the library inside the JAR file: 32native/linux/amd64/libjnetpcap.so
+    </system-out>
+
+        <properties>
+              <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers">
+        </property>
+
+              <property name="java.vm.info" value="mixed mode, emulated-client, sharing">
+        </property>
+
+              <property name="clojure.debug" value="false">
+        </property>
+
+              <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
+        </property>
+
+              <property name="clj-net-pcap.version" value="1.8.3-SNAPSHOT">
+        </property>
+
+              <property name="path.separator" value=":">
+        </property>
+
+              <property name="user.dir" value="/home/rc/repositories/private/clojure/clj-net-pcap">
+        </property>
+
+              <property name="java.vm.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="user.country" value="US">
+        </property>
+
+              <property name="java.vendor.url" value="https://www.redhat.com/">
+        </property>
+
+              <property name="java.specification.name" value="Java Platform API Specification">
+        </property>
+
+              <property name="line.separator" value=" ">
+        </property>
+
+              <property name="sun.cpu.endian" value="little">
+        </property>
+
+              <property name="java.vm.version" value="17.0.3+7">
+        </property>
+
+              <property name="sun.java.launcher" value="SUN_STANDARD">
+        </property>
+
+              <property name="java.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="native.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="java.vm.compressedOopsMode" value="Zero based">
+        </property>
+
+              <property name="clojure.compile.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/target/classes">
+        </property>
+
+              <property name="java.vm.specification.version" value="17">
+        </property>
+
+              <property name="java.io.tmpdir" value="/tmp">
+        </property>
+
+              <property name="java.home" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64">
+        </property>
+
+              <property name="java.class.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/test:/home/rc/repositories/private/clojure/clj-net-pcap/src:/home/rc/repositories/private/clojure/clj-net-pcap/dev-resources:/home/rc/repositories/private/clojure/clj-net-pcap/resources:/home/rc/repositories/private/clojure/clj-net-pcap/target/classes:/root/.m2/repository/org/clojure/tools.analyzer.jvm/1.2.2/tools.analyzer.jvm-1.2.2.jar:/root/.m2/repository/org/clojure/tools.analyzer/1.1.0/tools.analyzer-1.1.0.jar:/root/.m2/repository/org/nrepl/incomplete/0.1.0/incomplete-0.1.0.jar:/root/.m2/repository/org/clojure/data.priority-map/1.1.0/data.priority-map-1.1.0.jar:/root/.m2/repository/org/ow2/asm/asm/9.2/asm-9.2.jar:/root/.m2/repository/org/clojure/clojure/1.11.1/clojure-1.11.1.jar:/root/.m2/repository/jline/jline/2.14.6/jline-2.14.6.jar:/root/.m2/repository/org/clojure/core.cache/1.0.225/core.cache-1.0.225.jar:/root/.m2/repository/cli4clj/cli4clj/1.9.0/cli4clj-1.9.0.jar:/root/.m2/repository/org/clojure/core.async/1.5.648/core.async-1.5.648.jar:/root/.m2/repository/clj-assorted-utils/clj-assorted-utils/1.19.0/clj-assorted-utils-1.19.0.jar:/root/.m2/repository/robert/hooke/1.3.0/hooke-1.3.0.jar:/root/.m2/repository/jnetpcap/jnetpcap/1.5.r1457-1i/jnetpcap-1.5.r1457-1i.jar:/root/.m2/repository/nrepl/nrepl/0.8.3/nrepl-0.8.3.jar:/root/.m2/repository/org/clojure/core.memoize/1.0.253/core.memoize-1.0.253.jar:/root/.m2/repository/org/clojure/core.specs.alpha/0.2.62/core.specs.alpha-0.2.62.jar:/root/.m2/repository/org/clojure/spec.alpha/0.3.218/spec.alpha-0.3.218.jar:/root/.m2/repository/test2junit/test2junit/1.4.4/test2junit-1.4.4.jar:/root/.m2/repository/org/clojure/tools.reader/1.3.6/tools.reader-1.3.6.jar:/root/.m2/repository/org/clojure/tools.cli/1.0.206/tools.cli-1.0.206.jar">
+        </property>
+
+              <property name="java.runtime.version" value="17.0.3+7">
+        </property>
+
+              <property name="java.vm.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="user.language" value="en">
+        </property>
+
+              <property name="java.vm.name" value="OpenJDK 64-Bit Server VM">
+        </property>
+
+              <property name="java.version" value="17.0.3">
+        </property>
+
+              <property name="os.arch" value="amd64">
+        </property>
+
+              <property name="user.home" value="/root">
+        </property>
+
+              <property name="java.specification.version" value="17">
+        </property>
+
+              <property name="sun.jnu.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.vendor.version" value="21.9">
+        </property>
+
+              <property name="java.runtime.name" value="OpenJDK Runtime Environment">
+        </property>
+
+              <property name="sun.io.unicode.encoding" value="UnicodeLittle">
+        </property>
+
+              <property name="sun.arch.data.model" value="64">
+        </property>
+
+              <property name="java.class.version" value="61.0">
+        </property>
+
+              <property name="file.encoding" value="UTF-8">
+        </property>
+
+              <property name="jdk.debug" value="release">
+        </property>
+
+              <property name="user.timezone" value="Europe/Berlin">
+        </property>
+
+              <property name="os.name" value="Linux">
+        </property>
+
+              <property name="os.version" value="5.18.13-200.fc36.x86_64">
+        </property>
+
+              <property name="file.separator" value="/">
+        </property>
+
+              <property name="java.vm.specification.name" value="Java Virtual Machine Specification">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap" value="/tmp/clj-net-pcap-native-tests_root/libjnetpcap.so">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap-pcap100" value="/tmp/clj-net-pcap-native-tests_root/libjnetpcap-pcap100.so">
+        </property>
+
+              <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib">
+        </property>
+
+              <property name="java.version.date" value="2022-04-19">
+        </property>
+
+              <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
+        </property>
+
+              <property name="sun.java.command" value="clojure.main -i /tmp/form-init1622314863370425935.clj">
+        </property>
+
+              <property name="user.name" value="root">
+        </property>
+
+        </properties>
 
   </testsuite>
-  <testsuite errors="0" failures="0" id="7" name="packet-gen" package="clj-net-pcap.test" tests="17" time="0.0195" timestamp="2015-08-24_13:09:38+0200">
-        <testcase classname="clj-net-pcap.test.packet-gen" name="generate-packet-data-ipv4-with-automatically-calculated-checksum-test" time="0.0031">
+  <testsuite errors="0" failures="0" id="7" name="packet-gen" package="clj-net-pcap.test" tests="17" time="0.0381" timestamp="2022-12-25_18:52:52+0100">
+        <testcase classname="clj-net-pcap.test.packet-gen" name="generate-packet-data-ipv4-with-automatically-calculated-checksum-test" time="0.0038">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.packet-gen" name="generate-packet-data-ipv4-with-udp-vec-payload-compute-len-test" time="0.0013">
+        <testcase classname="clj-net-pcap.test.packet-gen" name="generate-packet-data-ipv4-with-udp-vec-payload-compute-len-test" time="0.0015">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.packet-gen" name="generate-packet-data-ipv4-with-udp-test" time="0.0012">
+        <testcase classname="clj-net-pcap.test.packet-gen" name="generate-packet-data-ipv4-with-udp-test" time="0.0015">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.packet-gen" name="ipv4-string-to-byte-array-127_128_129_130-unchecked-test" time="0.0004">
+        <testcase classname="clj-net-pcap.test.packet-gen" name="ipv4-string-to-byte-array-127_128_129_130-unchecked-test" time="0.0008">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.packet-gen" name="eth-mac-string-to-byte-array-7F_80_81_82_83_84-unchecked-test" time="0.0004">
+        <testcase classname="clj-net-pcap.test.packet-gen" name="eth-mac-string-to-byte-array-7F_80_81_82_83_84-unchecked-test" time="0.0010">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.packet-gen" name="generate-packet-data-ipv4-with-icmp-compute-len-test" time="0.0012">
+        <testcase classname="clj-net-pcap.test.packet-gen" name="generate-packet-data-ipv4-with-icmp-compute-len-test" time="0.0056">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.packet-gen" name="generate-packet-data-ethernet-test" time="0.0004">
+        <testcase classname="clj-net-pcap.test.packet-gen" name="generate-packet-data-ethernet-test" time="0.0010">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.packet-gen" name="eth-mac-string-to-byte-array-FF_FE_FD_F2_F1_F0-unchecked-test" time="0.0004">
+        <testcase classname="clj-net-pcap.test.packet-gen" name="eth-mac-string-to-byte-array-FF_FE_FD_F2_F1_F0-unchecked-test" time="0.0008">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.packet-gen" name="generate-packet-data-ipv4-with-icmp-test" time="0.0012">
+        <testcase classname="clj-net-pcap.test.packet-gen" name="generate-packet-data-ipv4-with-icmp-test" time="0.0017">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.packet-gen" name="ipv4-string-to-byte-array-252_253_254_255-unchecked-test" time="0.0004">
+        <testcase classname="clj-net-pcap.test.packet-gen" name="ipv4-string-to-byte-array-252_253_254_255-unchecked-test" time="0.0007">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.packet-gen" name="generate-packet-data-ipv4-with-udp-compute-len-test" time="0.0010">
+        <testcase classname="clj-net-pcap.test.packet-gen" name="generate-packet-data-ipv4-with-udp-compute-len-test" time="0.0014">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.packet-gen" name="ipv4-string-to-byte-array-1_2_3_4-unchecked-test" time="0.0004">
+        <testcase classname="clj-net-pcap.test.packet-gen" name="ipv4-string-to-byte-array-1_2_3_4-unchecked-test" time="0.0006">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.packet-gen" name="generate-packet-data-ipv4-with-icmp-vec-payload-compute-len-test" time="0.0011">
+        <testcase classname="clj-net-pcap.test.packet-gen" name="generate-packet-data-ipv4-with-icmp-vec-payload-compute-len-test" time="0.0015">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.packet-gen" name="eth-mac-string-to-byte-array-10_11_12_1A_1B_1C-unchecked-test" time="0.0004">
+        <testcase classname="clj-net-pcap.test.packet-gen" name="eth-mac-string-to-byte-array-10_11_12_1A_1B_1C-unchecked-test" time="0.0007">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.packet-gen" name="generate-packet-data-ethernet-compute-len-test" time="0.0005">
+        <testcase classname="clj-net-pcap.test.packet-gen" name="generate-packet-data-ethernet-compute-len-test" time="0.0008">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.packet-gen" name="generate-packet-data-ipv4-with-manually-set-checksum-test" time="0.0029">
+        <testcase classname="clj-net-pcap.test.packet-gen" name="generate-packet-data-ipv4-with-manually-set-checksum-test" time="0.0049">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.packet-gen" name="eth-mac-string-to-byte-array-01_02_03_04_05_06-unchecked-test" time="0.0004">
+        <testcase classname="clj-net-pcap.test.packet-gen" name="eth-mac-string-to-byte-array-01_02_03_04_05_06-unchecked-test" time="0.0006">
     </testcase>
+
+        <system-err>
+    </system-err>
+
+        <system-out>
+    </system-out>
+
+        <properties>
+              <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers">
+        </property>
+
+              <property name="java.vm.info" value="mixed mode, emulated-client, sharing">
+        </property>
+
+              <property name="clojure.debug" value="false">
+        </property>
+
+              <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
+        </property>
+
+              <property name="clj-net-pcap.version" value="1.8.3-SNAPSHOT">
+        </property>
+
+              <property name="path.separator" value=":">
+        </property>
+
+              <property name="user.dir" value="/home/rc/repositories/private/clojure/clj-net-pcap">
+        </property>
+
+              <property name="java.vm.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="user.country" value="US">
+        </property>
+
+              <property name="java.vendor.url" value="https://www.redhat.com/">
+        </property>
+
+              <property name="java.specification.name" value="Java Platform API Specification">
+        </property>
+
+              <property name="line.separator" value=" ">
+        </property>
+
+              <property name="sun.cpu.endian" value="little">
+        </property>
+
+              <property name="java.vm.version" value="17.0.3+7">
+        </property>
+
+              <property name="sun.java.launcher" value="SUN_STANDARD">
+        </property>
+
+              <property name="java.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="native.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="java.vm.compressedOopsMode" value="Zero based">
+        </property>
+
+              <property name="clojure.compile.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/target/classes">
+        </property>
+
+              <property name="java.vm.specification.version" value="17">
+        </property>
+
+              <property name="java.io.tmpdir" value="/tmp">
+        </property>
+
+              <property name="java.home" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64">
+        </property>
+
+              <property name="java.class.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/test:/home/rc/repositories/private/clojure/clj-net-pcap/src:/home/rc/repositories/private/clojure/clj-net-pcap/dev-resources:/home/rc/repositories/private/clojure/clj-net-pcap/resources:/home/rc/repositories/private/clojure/clj-net-pcap/target/classes:/root/.m2/repository/org/clojure/tools.analyzer.jvm/1.2.2/tools.analyzer.jvm-1.2.2.jar:/root/.m2/repository/org/clojure/tools.analyzer/1.1.0/tools.analyzer-1.1.0.jar:/root/.m2/repository/org/nrepl/incomplete/0.1.0/incomplete-0.1.0.jar:/root/.m2/repository/org/clojure/data.priority-map/1.1.0/data.priority-map-1.1.0.jar:/root/.m2/repository/org/ow2/asm/asm/9.2/asm-9.2.jar:/root/.m2/repository/org/clojure/clojure/1.11.1/clojure-1.11.1.jar:/root/.m2/repository/jline/jline/2.14.6/jline-2.14.6.jar:/root/.m2/repository/org/clojure/core.cache/1.0.225/core.cache-1.0.225.jar:/root/.m2/repository/cli4clj/cli4clj/1.9.0/cli4clj-1.9.0.jar:/root/.m2/repository/org/clojure/core.async/1.5.648/core.async-1.5.648.jar:/root/.m2/repository/clj-assorted-utils/clj-assorted-utils/1.19.0/clj-assorted-utils-1.19.0.jar:/root/.m2/repository/robert/hooke/1.3.0/hooke-1.3.0.jar:/root/.m2/repository/jnetpcap/jnetpcap/1.5.r1457-1i/jnetpcap-1.5.r1457-1i.jar:/root/.m2/repository/nrepl/nrepl/0.8.3/nrepl-0.8.3.jar:/root/.m2/repository/org/clojure/core.memoize/1.0.253/core.memoize-1.0.253.jar:/root/.m2/repository/org/clojure/core.specs.alpha/0.2.62/core.specs.alpha-0.2.62.jar:/root/.m2/repository/org/clojure/spec.alpha/0.3.218/spec.alpha-0.3.218.jar:/root/.m2/repository/test2junit/test2junit/1.4.4/test2junit-1.4.4.jar:/root/.m2/repository/org/clojure/tools.reader/1.3.6/tools.reader-1.3.6.jar:/root/.m2/repository/org/clojure/tools.cli/1.0.206/tools.cli-1.0.206.jar">
+        </property>
+
+              <property name="java.runtime.version" value="17.0.3+7">
+        </property>
+
+              <property name="java.vm.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="user.language" value="en">
+        </property>
+
+              <property name="java.vm.name" value="OpenJDK 64-Bit Server VM">
+        </property>
+
+              <property name="java.version" value="17.0.3">
+        </property>
+
+              <property name="os.arch" value="amd64">
+        </property>
+
+              <property name="user.home" value="/root">
+        </property>
+
+              <property name="java.specification.version" value="17">
+        </property>
+
+              <property name="sun.jnu.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.vendor.version" value="21.9">
+        </property>
+
+              <property name="java.runtime.name" value="OpenJDK Runtime Environment">
+        </property>
+
+              <property name="sun.io.unicode.encoding" value="UnicodeLittle">
+        </property>
+
+              <property name="sun.arch.data.model" value="64">
+        </property>
+
+              <property name="java.class.version" value="61.0">
+        </property>
+
+              <property name="file.encoding" value="UTF-8">
+        </property>
+
+              <property name="jdk.debug" value="release">
+        </property>
+
+              <property name="user.timezone" value="Europe/Berlin">
+        </property>
+
+              <property name="os.name" value="Linux">
+        </property>
+
+              <property name="os.version" value="5.18.13-200.fc36.x86_64">
+        </property>
+
+              <property name="file.separator" value="/">
+        </property>
+
+              <property name="java.vm.specification.name" value="Java Virtual Machine Specification">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap" value="/tmp/clj-net-pcap-native-tests_root/libjnetpcap.so">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap-pcap100" value="/tmp/clj-net-pcap-native-tests_root/libjnetpcap-pcap100.so">
+        </property>
+
+              <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib">
+        </property>
+
+              <property name="java.version.date" value="2022-04-19">
+        </property>
+
+              <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
+        </property>
+
+              <property name="sun.java.command" value="clojure.main -i /tmp/form-init1622314863370425935.clj">
+        </property>
+
+              <property name="user.name" value="root">
+        </property>
+
+        </properties>
 
   </testsuite>
-  <testsuite errors="0" failures="0" id="8" name="pcap-bulk" package="clj-net-pcap.test" tests="4" time="9.3233" timestamp="2015-08-24_13:09:50+0200">
-        <testcase classname="clj-net-pcap.test.pcap-bulk" name="cljnetpcap-send-and-receive-bytes-packet-without-intermediate-buffer-count-test" time="2.3858">
+  <testsuite errors="0" failures="0" id="8" name="pcap-bulk" package="clj-net-pcap.test" tests="4" time="8.5247" timestamp="2022-12-25_18:53:01+0100">
+        <testcase classname="clj-net-pcap.test.pcap-bulk" name="cljnetpcap-send-and-receive-bytes-packet-without-intermediate-buffer-count-test" time="2.1820">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-bulk" name="cljnetpcap-send-and-receive-packet-maps-without-intermediate-buffer-count-test" time="2.2736">
+        <testcase classname="clj-net-pcap.test.pcap-bulk" name="cljnetpcap-send-and-receive-packet-maps-without-intermediate-buffer-count-test" time="2.0797">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-bulk" name="cljnetpcap-send-and-receive-packet-maps-via-intermediate-buffer-count-test" time="2.3017">
+        <testcase classname="clj-net-pcap.test.pcap-bulk" name="cljnetpcap-send-and-receive-packet-maps-via-intermediate-buffer-count-test" time="2.0817">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-bulk" name="cljnetpcap-send-and-receive-bytes-packet-via-intermediate-buffer-count-test" time="2.3608">
+        <testcase classname="clj-net-pcap.test.pcap-bulk" name="cljnetpcap-send-and-receive-bytes-packet-via-intermediate-buffer-count-test" time="2.1779">
     </testcase>
+
+        <system-err>
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+    </system-err>
+
+        <system-out>
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Stopping online pcap.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Stopping online pcap.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Stopping online pcap.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Stopping online pcap.
+    </system-out>
+
+        <properties>
+              <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers">
+        </property>
+
+              <property name="java.vm.info" value="mixed mode, emulated-client, sharing">
+        </property>
+
+              <property name="clojure.debug" value="false">
+        </property>
+
+              <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
+        </property>
+
+              <property name="clj-net-pcap.version" value="1.8.3-SNAPSHOT">
+        </property>
+
+              <property name="path.separator" value=":">
+        </property>
+
+              <property name="user.dir" value="/home/rc/repositories/private/clojure/clj-net-pcap">
+        </property>
+
+              <property name="java.vm.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="user.country" value="US">
+        </property>
+
+              <property name="java.vendor.url" value="https://www.redhat.com/">
+        </property>
+
+              <property name="java.specification.name" value="Java Platform API Specification">
+        </property>
+
+              <property name="line.separator" value=" ">
+        </property>
+
+              <property name="sun.cpu.endian" value="little">
+        </property>
+
+              <property name="java.vm.version" value="17.0.3+7">
+        </property>
+
+              <property name="sun.java.launcher" value="SUN_STANDARD">
+        </property>
+
+              <property name="java.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="native.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="java.vm.compressedOopsMode" value="Zero based">
+        </property>
+
+              <property name="clojure.compile.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/target/classes">
+        </property>
+
+              <property name="java.vm.specification.version" value="17">
+        </property>
+
+              <property name="java.io.tmpdir" value="/tmp">
+        </property>
+
+              <property name="java.home" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64">
+        </property>
+
+              <property name="java.class.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/test:/home/rc/repositories/private/clojure/clj-net-pcap/src:/home/rc/repositories/private/clojure/clj-net-pcap/dev-resources:/home/rc/repositories/private/clojure/clj-net-pcap/resources:/home/rc/repositories/private/clojure/clj-net-pcap/target/classes:/root/.m2/repository/org/clojure/tools.analyzer.jvm/1.2.2/tools.analyzer.jvm-1.2.2.jar:/root/.m2/repository/org/clojure/tools.analyzer/1.1.0/tools.analyzer-1.1.0.jar:/root/.m2/repository/org/nrepl/incomplete/0.1.0/incomplete-0.1.0.jar:/root/.m2/repository/org/clojure/data.priority-map/1.1.0/data.priority-map-1.1.0.jar:/root/.m2/repository/org/ow2/asm/asm/9.2/asm-9.2.jar:/root/.m2/repository/org/clojure/clojure/1.11.1/clojure-1.11.1.jar:/root/.m2/repository/jline/jline/2.14.6/jline-2.14.6.jar:/root/.m2/repository/org/clojure/core.cache/1.0.225/core.cache-1.0.225.jar:/root/.m2/repository/cli4clj/cli4clj/1.9.0/cli4clj-1.9.0.jar:/root/.m2/repository/org/clojure/core.async/1.5.648/core.async-1.5.648.jar:/root/.m2/repository/clj-assorted-utils/clj-assorted-utils/1.19.0/clj-assorted-utils-1.19.0.jar:/root/.m2/repository/robert/hooke/1.3.0/hooke-1.3.0.jar:/root/.m2/repository/jnetpcap/jnetpcap/1.5.r1457-1i/jnetpcap-1.5.r1457-1i.jar:/root/.m2/repository/nrepl/nrepl/0.8.3/nrepl-0.8.3.jar:/root/.m2/repository/org/clojure/core.memoize/1.0.253/core.memoize-1.0.253.jar:/root/.m2/repository/org/clojure/core.specs.alpha/0.2.62/core.specs.alpha-0.2.62.jar:/root/.m2/repository/org/clojure/spec.alpha/0.3.218/spec.alpha-0.3.218.jar:/root/.m2/repository/test2junit/test2junit/1.4.4/test2junit-1.4.4.jar:/root/.m2/repository/org/clojure/tools.reader/1.3.6/tools.reader-1.3.6.jar:/root/.m2/repository/org/clojure/tools.cli/1.0.206/tools.cli-1.0.206.jar">
+        </property>
+
+              <property name="java.runtime.version" value="17.0.3+7">
+        </property>
+
+              <property name="java.vm.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="user.language" value="en">
+        </property>
+
+              <property name="java.vm.name" value="OpenJDK 64-Bit Server VM">
+        </property>
+
+              <property name="java.version" value="17.0.3">
+        </property>
+
+              <property name="os.arch" value="amd64">
+        </property>
+
+              <property name="user.home" value="/root">
+        </property>
+
+              <property name="java.specification.version" value="17">
+        </property>
+
+              <property name="sun.jnu.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.vendor.version" value="21.9">
+        </property>
+
+              <property name="java.runtime.name" value="OpenJDK Runtime Environment">
+        </property>
+
+              <property name="sun.io.unicode.encoding" value="UnicodeLittle">
+        </property>
+
+              <property name="sun.arch.data.model" value="64">
+        </property>
+
+              <property name="java.class.version" value="61.0">
+        </property>
+
+              <property name="file.encoding" value="UTF-8">
+        </property>
+
+              <property name="jdk.debug" value="release">
+        </property>
+
+              <property name="user.timezone" value="Europe/Berlin">
+        </property>
+
+              <property name="os.name" value="Linux">
+        </property>
+
+              <property name="os.version" value="5.18.13-200.fc36.x86_64">
+        </property>
+
+              <property name="file.separator" value="/">
+        </property>
+
+              <property name="java.vm.specification.name" value="Java Virtual Machine Specification">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap" value="/tmp/clj-net-pcap-native-tests_root/libjnetpcap.so">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap-pcap100" value="/tmp/clj-net-pcap-native-tests_root/libjnetpcap-pcap100.so">
+        </property>
+
+              <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib">
+        </property>
+
+              <property name="java.version.date" value="2022-04-19">
+        </property>
+
+              <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
+        </property>
+
+              <property name="sun.java.command" value="clojure.main -i /tmp/form-init1622314863370425935.clj">
+        </property>
+
+              <property name="user.name" value="root">
+        </property>
+
+        </properties>
 
   </testsuite>
-  <testsuite errors="0" failures="0" id="9" name="pcap-data" package="clj-net-pcap.test" tests="7" time="0.3103" timestamp="2015-08-24_13:09:51+0200">
-        <testcase classname="clj-net-pcap.test.pcap-data" name="test-guess-class-b-net-2" time="0.0013">
+  <testsuite errors="0" failures="0" id="9" name="pcap-data" package="clj-net-pcap.test" tests="7" time="0.3107" timestamp="2022-12-25_18:53:01+0100">
+        <testcase classname="clj-net-pcap.test.pcap-data" name="test-guess-class-b-net-2" time="0.0010">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-data" name="test-timestamp-compare-to-2" time="0.1019">
+        <testcase classname="clj-net-pcap.test.pcap-data" name="test-timestamp-compare-to-2" time="0.1021">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-data" name="test-timestamp-compare-to-1" time="0.1012">
+        <testcase classname="clj-net-pcap.test.pcap-data" name="test-timestamp-compare-to-1" time="0.1015">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-data" name="test-guess-class-b-net" time="0.0010">
+        <testcase classname="clj-net-pcap.test.pcap-data" name="test-guess-class-b-net" time="0.0008">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-data" name="test-guess-class-c-net" time="0.0008">
+        <testcase classname="clj-net-pcap.test.pcap-data" name="test-guess-class-c-net" time="0.0006">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-data" name="test-timestamp-equals" time="0.1015">
+        <testcase classname="clj-net-pcap.test.pcap-data" name="test-timestamp-equals" time="0.1016">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-data" name="test-guess-class-a-net" time="0.0010">
+        <testcase classname="clj-net-pcap.test.pcap-data" name="test-guess-class-a-net" time="0.0007">
     </testcase>
+
+        <system-err>
+    </system-err>
+
+        <system-out>
+Waiting till handler completed...
+Waiting till handler completed...
+Waiting till handler completed...
+    </system-out>
+
+        <properties>
+              <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers">
+        </property>
+
+              <property name="java.vm.info" value="mixed mode, emulated-client, sharing">
+        </property>
+
+              <property name="clojure.debug" value="false">
+        </property>
+
+              <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
+        </property>
+
+              <property name="clj-net-pcap.version" value="1.8.3-SNAPSHOT">
+        </property>
+
+              <property name="path.separator" value=":">
+        </property>
+
+              <property name="user.dir" value="/home/rc/repositories/private/clojure/clj-net-pcap">
+        </property>
+
+              <property name="java.vm.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="user.country" value="US">
+        </property>
+
+              <property name="java.vendor.url" value="https://www.redhat.com/">
+        </property>
+
+              <property name="java.specification.name" value="Java Platform API Specification">
+        </property>
+
+              <property name="line.separator" value=" ">
+        </property>
+
+              <property name="sun.cpu.endian" value="little">
+        </property>
+
+              <property name="java.vm.version" value="17.0.3+7">
+        </property>
+
+              <property name="sun.java.launcher" value="SUN_STANDARD">
+        </property>
+
+              <property name="java.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="native.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="java.vm.compressedOopsMode" value="Zero based">
+        </property>
+
+              <property name="clojure.compile.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/target/classes">
+        </property>
+
+              <property name="java.vm.specification.version" value="17">
+        </property>
+
+              <property name="java.io.tmpdir" value="/tmp">
+        </property>
+
+              <property name="java.home" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64">
+        </property>
+
+              <property name="java.class.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/test:/home/rc/repositories/private/clojure/clj-net-pcap/src:/home/rc/repositories/private/clojure/clj-net-pcap/dev-resources:/home/rc/repositories/private/clojure/clj-net-pcap/resources:/home/rc/repositories/private/clojure/clj-net-pcap/target/classes:/root/.m2/repository/org/clojure/tools.analyzer.jvm/1.2.2/tools.analyzer.jvm-1.2.2.jar:/root/.m2/repository/org/clojure/tools.analyzer/1.1.0/tools.analyzer-1.1.0.jar:/root/.m2/repository/org/nrepl/incomplete/0.1.0/incomplete-0.1.0.jar:/root/.m2/repository/org/clojure/data.priority-map/1.1.0/data.priority-map-1.1.0.jar:/root/.m2/repository/org/ow2/asm/asm/9.2/asm-9.2.jar:/root/.m2/repository/org/clojure/clojure/1.11.1/clojure-1.11.1.jar:/root/.m2/repository/jline/jline/2.14.6/jline-2.14.6.jar:/root/.m2/repository/org/clojure/core.cache/1.0.225/core.cache-1.0.225.jar:/root/.m2/repository/cli4clj/cli4clj/1.9.0/cli4clj-1.9.0.jar:/root/.m2/repository/org/clojure/core.async/1.5.648/core.async-1.5.648.jar:/root/.m2/repository/clj-assorted-utils/clj-assorted-utils/1.19.0/clj-assorted-utils-1.19.0.jar:/root/.m2/repository/robert/hooke/1.3.0/hooke-1.3.0.jar:/root/.m2/repository/jnetpcap/jnetpcap/1.5.r1457-1i/jnetpcap-1.5.r1457-1i.jar:/root/.m2/repository/nrepl/nrepl/0.8.3/nrepl-0.8.3.jar:/root/.m2/repository/org/clojure/core.memoize/1.0.253/core.memoize-1.0.253.jar:/root/.m2/repository/org/clojure/core.specs.alpha/0.2.62/core.specs.alpha-0.2.62.jar:/root/.m2/repository/org/clojure/spec.alpha/0.3.218/spec.alpha-0.3.218.jar:/root/.m2/repository/test2junit/test2junit/1.4.4/test2junit-1.4.4.jar:/root/.m2/repository/org/clojure/tools.reader/1.3.6/tools.reader-1.3.6.jar:/root/.m2/repository/org/clojure/tools.cli/1.0.206/tools.cli-1.0.206.jar">
+        </property>
+
+              <property name="java.runtime.version" value="17.0.3+7">
+        </property>
+
+              <property name="java.vm.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="user.language" value="en">
+        </property>
+
+              <property name="java.vm.name" value="OpenJDK 64-Bit Server VM">
+        </property>
+
+              <property name="java.version" value="17.0.3">
+        </property>
+
+              <property name="os.arch" value="amd64">
+        </property>
+
+              <property name="user.home" value="/root">
+        </property>
+
+              <property name="java.specification.version" value="17">
+        </property>
+
+              <property name="sun.jnu.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.vendor.version" value="21.9">
+        </property>
+
+              <property name="java.runtime.name" value="OpenJDK Runtime Environment">
+        </property>
+
+              <property name="sun.io.unicode.encoding" value="UnicodeLittle">
+        </property>
+
+              <property name="sun.arch.data.model" value="64">
+        </property>
+
+              <property name="java.class.version" value="61.0">
+        </property>
+
+              <property name="file.encoding" value="UTF-8">
+        </property>
+
+              <property name="jdk.debug" value="release">
+        </property>
+
+              <property name="user.timezone" value="Europe/Berlin">
+        </property>
+
+              <property name="os.name" value="Linux">
+        </property>
+
+              <property name="os.version" value="5.18.13-200.fc36.x86_64">
+        </property>
+
+              <property name="file.separator" value="/">
+        </property>
+
+              <property name="java.vm.specification.name" value="Java Virtual Machine Specification">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap" value="/tmp/clj-net-pcap-native-tests_root/libjnetpcap.so">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap-pcap100" value="/tmp/clj-net-pcap-native-tests_root/libjnetpcap-pcap100.so">
+        </property>
+
+              <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib">
+        </property>
+
+              <property name="java.version.date" value="2022-04-19">
+        </property>
+
+              <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
+        </property>
+
+              <property name="sun.java.command" value="clojure.main -i /tmp/form-init1622314863370425935.clj">
+        </property>
+
+              <property name="user.name" value="root">
+        </property>
+
+        </properties>
 
   </testsuite>
-  <testsuite errors="0" failures="0" id="10" name="pcap-offline" package="clj-net-pcap.test" tests="9" time="2.3248" timestamp="2015-08-24_13:09:53+0200">
-        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-extract-byte-arrays-raw-data-from-pcap-file" time="0.1028">
+  <testsuite errors="0" failures="0" id="10" name="pcap-offline" package="clj-net-pcap.test" tests="9" time="1.9274" timestamp="2022-12-25_18:53:03+0100">
+        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-extract-byte-arrays-raw-data-from-pcap-file" time="0.1023">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-process-pcap-file-as-nested-maps" time="0.2036">
+        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-process-pcap-file-as-nested-maps" time="0.1020">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-process-pcap-file" time="1.2048">
+        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-process-pcap-file" time="1.2031">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-extract-maps-from-pcap-file" time="0.2020">
+        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-extract-maps-from-pcap-file" time="0.1043">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-create-pcap-from-file-error" time="0.0007">
+        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-create-pcap-from-file-error" time="0.0018">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-create-pcap-from-file-and-dispatch" time="0.2012">
+        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-create-pcap-from-file-and-dispatch" time="0.2024">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-extract-nested-maps-from-pcap-file" time="0.2026">
+        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-extract-nested-maps-from-pcap-file" time="0.1042">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-extract-beans-from-pcap-file" time="0.2032">
+        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-extract-beans-from-pcap-file" time="0.1020">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-create-pcap-from-file" time="0.0003">
+        <testcase classname="clj-net-pcap.test.pcap-offline" name="test-create-pcap-from-file" time="0.0002">
     </testcase>
+
+        <system-err>
+An error occured while opening the offline pcap file:this.file.does-not-exist: No such file or directory
+    </system-err>
+
+        <system-out>
+Waiting till handler completed...
+Waiting till handler completed...
+Waiting till handler completed...
+Waiting till handler completed...
+Please note: this test is supposed to emit an error message.
+32The error message should complain about the file &apos;this.file.does-not-exist&apos; not being there.
+An error occured while opening the offline pcap file:this.file.does-not-exist: No such file or directory
+Waiting till handler completed...
+Waiting till handler completed...
+    </system-out>
+
+        <properties>
+              <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers">
+        </property>
+
+              <property name="java.vm.info" value="mixed mode, emulated-client, sharing">
+        </property>
+
+              <property name="clojure.debug" value="false">
+        </property>
+
+              <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
+        </property>
+
+              <property name="clj-net-pcap.version" value="1.8.3-SNAPSHOT">
+        </property>
+
+              <property name="path.separator" value=":">
+        </property>
+
+              <property name="user.dir" value="/home/rc/repositories/private/clojure/clj-net-pcap">
+        </property>
+
+              <property name="java.vm.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="user.country" value="US">
+        </property>
+
+              <property name="java.vendor.url" value="https://www.redhat.com/">
+        </property>
+
+              <property name="java.specification.name" value="Java Platform API Specification">
+        </property>
+
+              <property name="line.separator" value=" ">
+        </property>
+
+              <property name="sun.cpu.endian" value="little">
+        </property>
+
+              <property name="java.vm.version" value="17.0.3+7">
+        </property>
+
+              <property name="sun.java.launcher" value="SUN_STANDARD">
+        </property>
+
+              <property name="java.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="native.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="java.vm.compressedOopsMode" value="Zero based">
+        </property>
+
+              <property name="clojure.compile.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/target/classes">
+        </property>
+
+              <property name="java.vm.specification.version" value="17">
+        </property>
+
+              <property name="java.io.tmpdir" value="/tmp">
+        </property>
+
+              <property name="java.home" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64">
+        </property>
+
+              <property name="java.class.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/test:/home/rc/repositories/private/clojure/clj-net-pcap/src:/home/rc/repositories/private/clojure/clj-net-pcap/dev-resources:/home/rc/repositories/private/clojure/clj-net-pcap/resources:/home/rc/repositories/private/clojure/clj-net-pcap/target/classes:/root/.m2/repository/org/clojure/tools.analyzer.jvm/1.2.2/tools.analyzer.jvm-1.2.2.jar:/root/.m2/repository/org/clojure/tools.analyzer/1.1.0/tools.analyzer-1.1.0.jar:/root/.m2/repository/org/nrepl/incomplete/0.1.0/incomplete-0.1.0.jar:/root/.m2/repository/org/clojure/data.priority-map/1.1.0/data.priority-map-1.1.0.jar:/root/.m2/repository/org/ow2/asm/asm/9.2/asm-9.2.jar:/root/.m2/repository/org/clojure/clojure/1.11.1/clojure-1.11.1.jar:/root/.m2/repository/jline/jline/2.14.6/jline-2.14.6.jar:/root/.m2/repository/org/clojure/core.cache/1.0.225/core.cache-1.0.225.jar:/root/.m2/repository/cli4clj/cli4clj/1.9.0/cli4clj-1.9.0.jar:/root/.m2/repository/org/clojure/core.async/1.5.648/core.async-1.5.648.jar:/root/.m2/repository/clj-assorted-utils/clj-assorted-utils/1.19.0/clj-assorted-utils-1.19.0.jar:/root/.m2/repository/robert/hooke/1.3.0/hooke-1.3.0.jar:/root/.m2/repository/jnetpcap/jnetpcap/1.5.r1457-1i/jnetpcap-1.5.r1457-1i.jar:/root/.m2/repository/nrepl/nrepl/0.8.3/nrepl-0.8.3.jar:/root/.m2/repository/org/clojure/core.memoize/1.0.253/core.memoize-1.0.253.jar:/root/.m2/repository/org/clojure/core.specs.alpha/0.2.62/core.specs.alpha-0.2.62.jar:/root/.m2/repository/org/clojure/spec.alpha/0.3.218/spec.alpha-0.3.218.jar:/root/.m2/repository/test2junit/test2junit/1.4.4/test2junit-1.4.4.jar:/root/.m2/repository/org/clojure/tools.reader/1.3.6/tools.reader-1.3.6.jar:/root/.m2/repository/org/clojure/tools.cli/1.0.206/tools.cli-1.0.206.jar">
+        </property>
+
+              <property name="java.runtime.version" value="17.0.3+7">
+        </property>
+
+              <property name="java.vm.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="user.language" value="en">
+        </property>
+
+              <property name="java.vm.name" value="OpenJDK 64-Bit Server VM">
+        </property>
+
+              <property name="java.version" value="17.0.3">
+        </property>
+
+              <property name="os.arch" value="amd64">
+        </property>
+
+              <property name="user.home" value="/root">
+        </property>
+
+              <property name="java.specification.version" value="17">
+        </property>
+
+              <property name="sun.jnu.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.vendor.version" value="21.9">
+        </property>
+
+              <property name="java.runtime.name" value="OpenJDK Runtime Environment">
+        </property>
+
+              <property name="sun.io.unicode.encoding" value="UnicodeLittle">
+        </property>
+
+              <property name="sun.arch.data.model" value="64">
+        </property>
+
+              <property name="java.class.version" value="61.0">
+        </property>
+
+              <property name="file.encoding" value="UTF-8">
+        </property>
+
+              <property name="jdk.debug" value="release">
+        </property>
+
+              <property name="user.timezone" value="Europe/Berlin">
+        </property>
+
+              <property name="os.name" value="Linux">
+        </property>
+
+              <property name="os.version" value="5.18.13-200.fc36.x86_64">
+        </property>
+
+              <property name="file.separator" value="/">
+        </property>
+
+              <property name="java.vm.specification.name" value="Java Virtual Machine Specification">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap" value="/tmp/clj-net-pcap-native-tests_root/libjnetpcap.so">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap-pcap100" value="/tmp/clj-net-pcap-native-tests_root/libjnetpcap-pcap100.so">
+        </property>
+
+              <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib">
+        </property>
+
+              <property name="java.version.date" value="2022-04-19">
+        </property>
+
+              <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
+        </property>
+
+              <property name="sun.java.command" value="clojure.main -i /tmp/form-init1622314863370425935.clj">
+        </property>
+
+              <property name="user.name" value="root">
+        </property>
+
+        </properties>
 
   </testsuite>
-  <testsuite errors="0" failures="0" id="11" name="pcap-send" package="clj-net-pcap.test" tests="10" time="5.9200" timestamp="2015-08-24_13:09:59+0200">
-        <testcase classname="clj-net-pcap.test.pcap-send" name="cljnetpcap-send-and-receive-bytes-packet-with-count-and-delay-test" time="0.7765">
+  <testsuite errors="0" failures="0" id="11" name="pcap-send" package="clj-net-pcap.test" tests="11" time="3.9265" timestamp="2022-12-25_18:53:07+0100">
+        <testcase classname="clj-net-pcap.test.pcap-send" name="cljnetpcap-send-and-receive-bytes-packet-with-count-and-delay-test" time="0.5676">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-send" name="cljnetpcap-send-and-receive-packet-from-description-map-with-count-and-delay-test" time="0.7837">
+        <testcase classname="clj-net-pcap.test.pcap-send" name="cljnetpcap-send-and-receive-packet-from-description-map-with-count-and-delay-test" time="0.5877">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-send" name="cljnetpcap-send-and-receive-bytes-packet-raw-test" time="0.3788">
+        <testcase classname="clj-net-pcap.test.pcap-send" name="cljnetpcap-send-and-receive-bytes-packet-raw-test" time="0.1627">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-send" name="cljnetpcap-send-and-receive-packet-from-description-map-count-test" time="0.8008">
+        <testcase classname="clj-net-pcap.test.pcap-send" name="cljnetpcap-send-and-receive-packet-from-description-map-count-test" time="0.5874">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-send" name="cljnetpcap-send-and-receive-bytes-packet-with-count-test" time="0.6878">
+        <testcase classname="clj-net-pcap.test.pcap-send" name="cljnetpcap-send-and-receive-bytes-packet-test" time="0.1699">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-send" name="cljnetpcap-send-and-receive-bytes-packet-maps-test" time="0.3876">
+        <testcase classname="clj-net-pcap.test.pcap-send" name="cljnetpcap-send-and-receive-bytes-packet-with-count-test" time="0.4759">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-send" name="pcap-send-and-sniff-byte-array-test" time="0.3758">
+        <testcase classname="clj-net-pcap.test.pcap-send" name="pcap-send-and-sniff-byte-array-test" time="0.1546">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-send" name="cljnetpcap-send-and-receive-bytes-packet-count-test" time="0.7718">
+        <testcase classname="clj-net-pcap.test.pcap-send" name="cljnetpcap-send-and-receive-bytes-packet-count-test" time="0.5547">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-send" name="naive-pcap-send-byte-array-test" time="0.2808">
+        <testcase classname="clj-net-pcap.test.pcap-send" name="cljnetpcap-send-and-receive-packet-maps-test" time="0.1563">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap-send" name="cljnetpcap-send-and-receive-packet-from-description-map-with-count-test" time="0.6737">
+        <testcase classname="clj-net-pcap.test.pcap-send" name="naive-pcap-send-byte-array-test" time="0.0347">
     </testcase>
+
+        <testcase classname="clj-net-pcap.test.pcap-send" name="cljnetpcap-send-and-receive-packet-from-description-map-with-count-test" time="0.4649">
+    </testcase>
+
+        <system-err>
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+    </system-err>
+
+        <system-out>
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Stopping online pcap.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Stopping online pcap.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Stopping online pcap.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Stopping online pcap.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Stopping online pcap.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Stopping online pcap.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Stopping online pcap.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Stopping online pcap.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Stopping online pcap.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Stopping online pcap.
+    </system-out>
+
+        <properties>
+              <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers">
+        </property>
+
+              <property name="java.vm.info" value="mixed mode, emulated-client, sharing">
+        </property>
+
+              <property name="clojure.debug" value="false">
+        </property>
+
+              <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
+        </property>
+
+              <property name="clj-net-pcap.version" value="1.8.3-SNAPSHOT">
+        </property>
+
+              <property name="path.separator" value=":">
+        </property>
+
+              <property name="user.dir" value="/home/rc/repositories/private/clojure/clj-net-pcap">
+        </property>
+
+              <property name="java.vm.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="user.country" value="US">
+        </property>
+
+              <property name="java.vendor.url" value="https://www.redhat.com/">
+        </property>
+
+              <property name="java.specification.name" value="Java Platform API Specification">
+        </property>
+
+              <property name="line.separator" value=" ">
+        </property>
+
+              <property name="sun.cpu.endian" value="little">
+        </property>
+
+              <property name="java.vm.version" value="17.0.3+7">
+        </property>
+
+              <property name="sun.java.launcher" value="SUN_STANDARD">
+        </property>
+
+              <property name="java.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="native.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="java.vm.compressedOopsMode" value="Zero based">
+        </property>
+
+              <property name="clojure.compile.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/target/classes">
+        </property>
+
+              <property name="java.vm.specification.version" value="17">
+        </property>
+
+              <property name="java.io.tmpdir" value="/tmp">
+        </property>
+
+              <property name="java.home" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64">
+        </property>
+
+              <property name="java.class.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/test:/home/rc/repositories/private/clojure/clj-net-pcap/src:/home/rc/repositories/private/clojure/clj-net-pcap/dev-resources:/home/rc/repositories/private/clojure/clj-net-pcap/resources:/home/rc/repositories/private/clojure/clj-net-pcap/target/classes:/root/.m2/repository/org/clojure/tools.analyzer.jvm/1.2.2/tools.analyzer.jvm-1.2.2.jar:/root/.m2/repository/org/clojure/tools.analyzer/1.1.0/tools.analyzer-1.1.0.jar:/root/.m2/repository/org/nrepl/incomplete/0.1.0/incomplete-0.1.0.jar:/root/.m2/repository/org/clojure/data.priority-map/1.1.0/data.priority-map-1.1.0.jar:/root/.m2/repository/org/ow2/asm/asm/9.2/asm-9.2.jar:/root/.m2/repository/org/clojure/clojure/1.11.1/clojure-1.11.1.jar:/root/.m2/repository/jline/jline/2.14.6/jline-2.14.6.jar:/root/.m2/repository/org/clojure/core.cache/1.0.225/core.cache-1.0.225.jar:/root/.m2/repository/cli4clj/cli4clj/1.9.0/cli4clj-1.9.0.jar:/root/.m2/repository/org/clojure/core.async/1.5.648/core.async-1.5.648.jar:/root/.m2/repository/clj-assorted-utils/clj-assorted-utils/1.19.0/clj-assorted-utils-1.19.0.jar:/root/.m2/repository/robert/hooke/1.3.0/hooke-1.3.0.jar:/root/.m2/repository/jnetpcap/jnetpcap/1.5.r1457-1i/jnetpcap-1.5.r1457-1i.jar:/root/.m2/repository/nrepl/nrepl/0.8.3/nrepl-0.8.3.jar:/root/.m2/repository/org/clojure/core.memoize/1.0.253/core.memoize-1.0.253.jar:/root/.m2/repository/org/clojure/core.specs.alpha/0.2.62/core.specs.alpha-0.2.62.jar:/root/.m2/repository/org/clojure/spec.alpha/0.3.218/spec.alpha-0.3.218.jar:/root/.m2/repository/test2junit/test2junit/1.4.4/test2junit-1.4.4.jar:/root/.m2/repository/org/clojure/tools.reader/1.3.6/tools.reader-1.3.6.jar:/root/.m2/repository/org/clojure/tools.cli/1.0.206/tools.cli-1.0.206.jar">
+        </property>
+
+              <property name="java.runtime.version" value="17.0.3+7">
+        </property>
+
+              <property name="java.vm.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="user.language" value="en">
+        </property>
+
+              <property name="java.vm.name" value="OpenJDK 64-Bit Server VM">
+        </property>
+
+              <property name="java.version" value="17.0.3">
+        </property>
+
+              <property name="os.arch" value="amd64">
+        </property>
+
+              <property name="user.home" value="/root">
+        </property>
+
+              <property name="java.specification.version" value="17">
+        </property>
+
+              <property name="sun.jnu.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.vendor.version" value="21.9">
+        </property>
+
+              <property name="java.runtime.name" value="OpenJDK Runtime Environment">
+        </property>
+
+              <property name="sun.io.unicode.encoding" value="UnicodeLittle">
+        </property>
+
+              <property name="sun.arch.data.model" value="64">
+        </property>
+
+              <property name="java.class.version" value="61.0">
+        </property>
+
+              <property name="file.encoding" value="UTF-8">
+        </property>
+
+              <property name="jdk.debug" value="release">
+        </property>
+
+              <property name="user.timezone" value="Europe/Berlin">
+        </property>
+
+              <property name="os.name" value="Linux">
+        </property>
+
+              <property name="os.version" value="5.18.13-200.fc36.x86_64">
+        </property>
+
+              <property name="file.separator" value="/">
+        </property>
+
+              <property name="java.vm.specification.name" value="Java Virtual Machine Specification">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap" value="/tmp/clj-net-pcap-native-tests_root/libjnetpcap.so">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap-pcap100" value="/tmp/clj-net-pcap-native-tests_root/libjnetpcap-pcap100.so">
+        </property>
+
+              <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib">
+        </property>
+
+              <property name="java.version.date" value="2022-04-19">
+        </property>
+
+              <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
+        </property>
+
+              <property name="sun.java.command" value="clojure.main -i /tmp/form-init1622314863370425935.clj">
+        </property>
+
+              <property name="user.name" value="root">
+        </property>
+
+        </properties>
 
   </testsuite>
-  <testsuite errors="0" failures="0" id="12" name="pcap" package="clj-net-pcap.test" tests="14" time="3.5800" timestamp="2015-08-24_13:09:41+0200">
-        <testcase classname="clj-net-pcap.test.pcap" name="test-set-filter" time="0.2843">
+  <testsuite errors="0" failures="0" id="12" name="pcap" package="clj-net-pcap.test" tests="14" time="0.3711" timestamp="2022-12-25_18:52:52+0100">
+        <testcase classname="clj-net-pcap.test.pcap" name="test-set-filter" time="0.0510">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap" name="test-device-does-not-exist" time="0.2276">
+        <testcase classname="clj-net-pcap.test.pcap" name="test-device-does-not-exist" time="0.0012">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap" name="test-activate-online-pcap-exception" time="0.2329">
+        <testcase classname="clj-net-pcap.test.pcap" name="test-activate-online-pcap-exception" time="0.0015">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap" name="test-device-exists" time="0.2357">
+        <testcase classname="clj-net-pcap.test.pcap" name="test-device-exists" time="0.0012">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap" name="test-create-and-activate-online-pcap" time="0.2619">
+        <testcase classname="clj-net-pcap.test.pcap" name="test-create-and-activate-online-pcap" time="0.0474">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap" name="throw-exception-on-invalid-operation-three-args-test" time="0.2628">
+        <testcase classname="clj-net-pcap.test.pcap" name="throw-exception-on-invalid-operation-three-args-test" time="0.0539">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap" name="throw-exception-on-invalid-operation-no-arg-test" time="0.2648">
+        <testcase classname="clj-net-pcap.test.pcap" name="throw-exception-on-invalid-operation-no-arg-test" time="0.0472">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap" name="throw-exception-on-invalid-operation-single-arg-test" time="0.2678">
+        <testcase classname="clj-net-pcap.test.pcap" name="throw-exception-on-invalid-operation-single-arg-test" time="0.0406">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap" name="test-create-online-pcap" time="0.2366">
+        <testcase classname="clj-net-pcap.test.pcap" name="test-create-online-pcap" time="0.0024">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap" name="test-create-get-stat-fn" time="0.2710">
+        <testcase classname="clj-net-pcap.test.pcap" name="test-create-get-stat-fn" time="0.0478">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap" name="test-create-filter" time="0.2797">
+        <testcase classname="clj-net-pcap.test.pcap" name="test-create-filter" time="0.0402">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap" name="test-create-and-set-filter" time="0.2535">
+        <testcase classname="clj-net-pcap.test.pcap" name="test-create-and-set-filter" time="0.0273">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap" name="test-get-device" time="0.2573">
+        <testcase classname="clj-net-pcap.test.pcap" name="test-get-device" time="0.0012">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.pcap" name="test-get-devices" time="0.2408">
+        <testcase classname="clj-net-pcap.test.pcap" name="test-get-devices" time="0.0014">
     </testcase>
+
+        <system-err>
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Error creating online pcap. Device non-existant-device-foo does not exist.
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+    </system-err>
+
+        <system-out>
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Please note that this test is supposed to print an error message like: &quot;Error creating online pcap. ...&quot;
+Error creating online pcap. Device non-existant-device-foo does not exist.
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+{recv320, drop320, ifdrop320}
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+    </system-out>
+
+        <properties>
+              <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers">
+        </property>
+
+              <property name="java.vm.info" value="mixed mode, emulated-client, sharing">
+        </property>
+
+              <property name="clojure.debug" value="false">
+        </property>
+
+              <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
+        </property>
+
+              <property name="clj-net-pcap.version" value="1.8.3-SNAPSHOT">
+        </property>
+
+              <property name="path.separator" value=":">
+        </property>
+
+              <property name="user.dir" value="/home/rc/repositories/private/clojure/clj-net-pcap">
+        </property>
+
+              <property name="java.vm.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="user.country" value="US">
+        </property>
+
+              <property name="java.vendor.url" value="https://www.redhat.com/">
+        </property>
+
+              <property name="java.specification.name" value="Java Platform API Specification">
+        </property>
+
+              <property name="line.separator" value=" ">
+        </property>
+
+              <property name="sun.cpu.endian" value="little">
+        </property>
+
+              <property name="java.vm.version" value="17.0.3+7">
+        </property>
+
+              <property name="sun.java.launcher" value="SUN_STANDARD">
+        </property>
+
+              <property name="java.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="native.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="java.vm.compressedOopsMode" value="Zero based">
+        </property>
+
+              <property name="clojure.compile.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/target/classes">
+        </property>
+
+              <property name="java.vm.specification.version" value="17">
+        </property>
+
+              <property name="java.io.tmpdir" value="/tmp">
+        </property>
+
+              <property name="java.home" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64">
+        </property>
+
+              <property name="java.class.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/test:/home/rc/repositories/private/clojure/clj-net-pcap/src:/home/rc/repositories/private/clojure/clj-net-pcap/dev-resources:/home/rc/repositories/private/clojure/clj-net-pcap/resources:/home/rc/repositories/private/clojure/clj-net-pcap/target/classes:/root/.m2/repository/org/clojure/tools.analyzer.jvm/1.2.2/tools.analyzer.jvm-1.2.2.jar:/root/.m2/repository/org/clojure/tools.analyzer/1.1.0/tools.analyzer-1.1.0.jar:/root/.m2/repository/org/nrepl/incomplete/0.1.0/incomplete-0.1.0.jar:/root/.m2/repository/org/clojure/data.priority-map/1.1.0/data.priority-map-1.1.0.jar:/root/.m2/repository/org/ow2/asm/asm/9.2/asm-9.2.jar:/root/.m2/repository/org/clojure/clojure/1.11.1/clojure-1.11.1.jar:/root/.m2/repository/jline/jline/2.14.6/jline-2.14.6.jar:/root/.m2/repository/org/clojure/core.cache/1.0.225/core.cache-1.0.225.jar:/root/.m2/repository/cli4clj/cli4clj/1.9.0/cli4clj-1.9.0.jar:/root/.m2/repository/org/clojure/core.async/1.5.648/core.async-1.5.648.jar:/root/.m2/repository/clj-assorted-utils/clj-assorted-utils/1.19.0/clj-assorted-utils-1.19.0.jar:/root/.m2/repository/robert/hooke/1.3.0/hooke-1.3.0.jar:/root/.m2/repository/jnetpcap/jnetpcap/1.5.r1457-1i/jnetpcap-1.5.r1457-1i.jar:/root/.m2/repository/nrepl/nrepl/0.8.3/nrepl-0.8.3.jar:/root/.m2/repository/org/clojure/core.memoize/1.0.253/core.memoize-1.0.253.jar:/root/.m2/repository/org/clojure/core.specs.alpha/0.2.62/core.specs.alpha-0.2.62.jar:/root/.m2/repository/org/clojure/spec.alpha/0.3.218/spec.alpha-0.3.218.jar:/root/.m2/repository/test2junit/test2junit/1.4.4/test2junit-1.4.4.jar:/root/.m2/repository/org/clojure/tools.reader/1.3.6/tools.reader-1.3.6.jar:/root/.m2/repository/org/clojure/tools.cli/1.0.206/tools.cli-1.0.206.jar">
+        </property>
+
+              <property name="java.runtime.version" value="17.0.3+7">
+        </property>
+
+              <property name="java.vm.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="user.language" value="en">
+        </property>
+
+              <property name="java.vm.name" value="OpenJDK 64-Bit Server VM">
+        </property>
+
+              <property name="java.version" value="17.0.3">
+        </property>
+
+              <property name="os.arch" value="amd64">
+        </property>
+
+              <property name="user.home" value="/root">
+        </property>
+
+              <property name="java.specification.version" value="17">
+        </property>
+
+              <property name="sun.jnu.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.vendor.version" value="21.9">
+        </property>
+
+              <property name="java.runtime.name" value="OpenJDK Runtime Environment">
+        </property>
+
+              <property name="sun.io.unicode.encoding" value="UnicodeLittle">
+        </property>
+
+              <property name="sun.arch.data.model" value="64">
+        </property>
+
+              <property name="java.class.version" value="61.0">
+        </property>
+
+              <property name="file.encoding" value="UTF-8">
+        </property>
+
+              <property name="jdk.debug" value="release">
+        </property>
+
+              <property name="user.timezone" value="Europe/Berlin">
+        </property>
+
+              <property name="os.name" value="Linux">
+        </property>
+
+              <property name="os.version" value="5.18.13-200.fc36.x86_64">
+        </property>
+
+              <property name="file.separator" value="/">
+        </property>
+
+              <property name="java.vm.specification.name" value="Java Virtual Machine Specification">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap" value="/tmp/clj-net-pcap-native-tests_root/libjnetpcap.so">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap-pcap100" value="/tmp/clj-net-pcap-native-tests_root/libjnetpcap-pcap100.so">
+        </property>
+
+              <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib">
+        </property>
+
+              <property name="java.version.date" value="2022-04-19">
+        </property>
+
+              <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
+        </property>
+
+              <property name="sun.java.command" value="clojure.main -i /tmp/form-init1622314863370425935.clj">
+        </property>
+
+              <property name="user.name" value="root">
+        </property>
+
+        </properties>
 
   </testsuite>
-  <testsuite errors="0" failures="0" id="13" name="protocols" package="clj-net-pcap.test" tests="13" time="2.4287" timestamp="2015-08-24_13:10:01+0200">
-        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-udp-beans-from-pcap-file" time="0.1020">
+  <testsuite errors="0" failures="0" id="13" name="protocols" package="clj-net-pcap.test" tests="13" time="1.9603" timestamp="2022-12-25_18:53:09+0100">
+        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-udp-beans-from-pcap-file" time="0.2045">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-icmpv6-router-solicitation-beans-from-pcap-file" time="0.2019">
+        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-icmpv6-router-solicitation-beans-from-pcap-file" time="0.1060">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-tcp-maps-from-pcap-file" time="0.2019">
+        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-tcp-maps-from-pcap-file" time="0.1020">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-arp-maps-from-pcap-file" time="0.2020">
+        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-arp-maps-from-pcap-file" time="0.2025">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-tcp-beans-from-pcap-file" time="0.2019">
+        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-tcp-beans-from-pcap-file" time="0.1052">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-arp-nested-maps-from-pcap-file" time="0.2028">
+        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-arp-nested-maps-from-pcap-file" time="0.2038">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-arp-beans-from-pcap-file" time="0.2017">
+        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-arp-beans-from-pcap-file" time="0.2055">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-tcp-nested-maps-from-pcap-file-dns" time="0.2018">
+        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-tcp-nested-maps-from-pcap-file-dns" time="0.2038">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-http-nested-maps-from-pcap-file" time="0.2020">
+        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-http-nested-maps-from-pcap-file" time="0.1054">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-tcp-nested-maps-from-pcap-file" time="0.2020">
+        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-tcp-nested-maps-from-pcap-file" time="0.1021">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-icmpv6-router-solicitation-maps-from-pcap-file" time="0.2019">
+        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-icmpv6-router-solicitation-maps-from-pcap-file" time="0.1020">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-udp-maps-from-pcap-file" time="0.2018">
+        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-udp-maps-from-pcap-file" time="0.2037">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-tcp-nested-maps-from-pcap-file-icmpv6" time="0.1018">
+        <testcase classname="clj-net-pcap.test.protocols" name="test-extract-tcp-nested-maps-from-pcap-file-icmpv6" time="0.1049">
     </testcase>
+
+        <system-err>
+    </system-err>
+
+        <system-out>
+Waiting till handler completed...
+Waiting till handler completed...
+Waiting till handler completed...
+Waiting till handler completed...
+Waiting till handler completed...
+Waiting till handler completed...
+Waiting till handler completed...
+Waiting till handler completed...
+Waiting till handler completed...
+Waiting till handler completed...
+Waiting till handler completed...
+Waiting till handler completed...
+Waiting till handler completed...
+    </system-out>
+
+        <properties>
+              <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers">
+        </property>
+
+              <property name="java.vm.info" value="mixed mode, emulated-client, sharing">
+        </property>
+
+              <property name="clojure.debug" value="false">
+        </property>
+
+              <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
+        </property>
+
+              <property name="clj-net-pcap.version" value="1.8.3-SNAPSHOT">
+        </property>
+
+              <property name="path.separator" value=":">
+        </property>
+
+              <property name="user.dir" value="/home/rc/repositories/private/clojure/clj-net-pcap">
+        </property>
+
+              <property name="java.vm.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="user.country" value="US">
+        </property>
+
+              <property name="java.vendor.url" value="https://www.redhat.com/">
+        </property>
+
+              <property name="java.specification.name" value="Java Platform API Specification">
+        </property>
+
+              <property name="line.separator" value=" ">
+        </property>
+
+              <property name="sun.cpu.endian" value="little">
+        </property>
+
+              <property name="java.vm.version" value="17.0.3+7">
+        </property>
+
+              <property name="sun.java.launcher" value="SUN_STANDARD">
+        </property>
+
+              <property name="java.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="native.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="java.vm.compressedOopsMode" value="Zero based">
+        </property>
+
+              <property name="clojure.compile.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/target/classes">
+        </property>
+
+              <property name="java.vm.specification.version" value="17">
+        </property>
+
+              <property name="java.io.tmpdir" value="/tmp">
+        </property>
+
+              <property name="java.home" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64">
+        </property>
+
+              <property name="java.class.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/test:/home/rc/repositories/private/clojure/clj-net-pcap/src:/home/rc/repositories/private/clojure/clj-net-pcap/dev-resources:/home/rc/repositories/private/clojure/clj-net-pcap/resources:/home/rc/repositories/private/clojure/clj-net-pcap/target/classes:/root/.m2/repository/org/clojure/tools.analyzer.jvm/1.2.2/tools.analyzer.jvm-1.2.2.jar:/root/.m2/repository/org/clojure/tools.analyzer/1.1.0/tools.analyzer-1.1.0.jar:/root/.m2/repository/org/nrepl/incomplete/0.1.0/incomplete-0.1.0.jar:/root/.m2/repository/org/clojure/data.priority-map/1.1.0/data.priority-map-1.1.0.jar:/root/.m2/repository/org/ow2/asm/asm/9.2/asm-9.2.jar:/root/.m2/repository/org/clojure/clojure/1.11.1/clojure-1.11.1.jar:/root/.m2/repository/jline/jline/2.14.6/jline-2.14.6.jar:/root/.m2/repository/org/clojure/core.cache/1.0.225/core.cache-1.0.225.jar:/root/.m2/repository/cli4clj/cli4clj/1.9.0/cli4clj-1.9.0.jar:/root/.m2/repository/org/clojure/core.async/1.5.648/core.async-1.5.648.jar:/root/.m2/repository/clj-assorted-utils/clj-assorted-utils/1.19.0/clj-assorted-utils-1.19.0.jar:/root/.m2/repository/robert/hooke/1.3.0/hooke-1.3.0.jar:/root/.m2/repository/jnetpcap/jnetpcap/1.5.r1457-1i/jnetpcap-1.5.r1457-1i.jar:/root/.m2/repository/nrepl/nrepl/0.8.3/nrepl-0.8.3.jar:/root/.m2/repository/org/clojure/core.memoize/1.0.253/core.memoize-1.0.253.jar:/root/.m2/repository/org/clojure/core.specs.alpha/0.2.62/core.specs.alpha-0.2.62.jar:/root/.m2/repository/org/clojure/spec.alpha/0.3.218/spec.alpha-0.3.218.jar:/root/.m2/repository/test2junit/test2junit/1.4.4/test2junit-1.4.4.jar:/root/.m2/repository/org/clojure/tools.reader/1.3.6/tools.reader-1.3.6.jar:/root/.m2/repository/org/clojure/tools.cli/1.0.206/tools.cli-1.0.206.jar">
+        </property>
+
+              <property name="java.runtime.version" value="17.0.3+7">
+        </property>
+
+              <property name="java.vm.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="user.language" value="en">
+        </property>
+
+              <property name="java.vm.name" value="OpenJDK 64-Bit Server VM">
+        </property>
+
+              <property name="java.version" value="17.0.3">
+        </property>
+
+              <property name="os.arch" value="amd64">
+        </property>
+
+              <property name="user.home" value="/root">
+        </property>
+
+              <property name="java.specification.version" value="17">
+        </property>
+
+              <property name="sun.jnu.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.vendor.version" value="21.9">
+        </property>
+
+              <property name="java.runtime.name" value="OpenJDK Runtime Environment">
+        </property>
+
+              <property name="sun.io.unicode.encoding" value="UnicodeLittle">
+        </property>
+
+              <property name="sun.arch.data.model" value="64">
+        </property>
+
+              <property name="java.class.version" value="61.0">
+        </property>
+
+              <property name="file.encoding" value="UTF-8">
+        </property>
+
+              <property name="jdk.debug" value="release">
+        </property>
+
+              <property name="user.timezone" value="Europe/Berlin">
+        </property>
+
+              <property name="os.name" value="Linux">
+        </property>
+
+              <property name="os.version" value="5.18.13-200.fc36.x86_64">
+        </property>
+
+              <property name="file.separator" value="/">
+        </property>
+
+              <property name="java.vm.specification.name" value="Java Virtual Machine Specification">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap" value="/tmp/clj-net-pcap-native-tests_root/libjnetpcap.so">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap-pcap100" value="/tmp/clj-net-pcap-native-tests_root/libjnetpcap-pcap100.so">
+        </property>
+
+              <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib">
+        </property>
+
+              <property name="java.version.date" value="2022-04-19">
+        </property>
+
+              <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
+        </property>
+
+              <property name="sun.java.command" value="clojure.main -i /tmp/form-init1622314863370425935.clj">
+        </property>
+
+              <property name="user.name" value="root">
+        </property>
+
+        </properties>
 
   </testsuite>
-  <testsuite errors="0" failures="0" id="14" name="self-adaptive-dsl-adjustment" package="clj-net-pcap.test" tests="15" time="0.0268" timestamp="2015-08-24_13:10:01+0200">
-        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="self-adaptation-controller-restore-full-dsl-on-slowdown-test" time="0.0083">
+  <testsuite errors="0" failures="0" id="14" name="self-adaptive-dsl-adjustment" package="clj-net-pcap.test" tests="15" time="0.0622" timestamp="2022-12-25_18:53:09+0100">
+        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="self-adaptation-controller-restore-full-dsl-on-slowdown-test" time="0.0158">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="stat-delta-test" time="0.0005">
+        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="stat-delta-test" time="0.0008">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="moving-average-calculator-test-2" time="0.0001">
+        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="moving-average-calculator-test-2" time="0.0002">
     </testcase>
 
         <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="determine-max-capture-rate-test-1" time="0.0010">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="self-adaptation-controller-cap-rate-calc-test-1" time="0.0016">
+        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="self-adaptation-controller-cap-rate-calc-test-1" time="0.0049">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="simple-repetition-detection-test-1" time="0.0009">
+        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="simple-repetition-detection-test-1" time="0.0010">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="simple-repetition-detection-test-2" time="0.0016">
+        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="simple-repetition-detection-test-2" time="0.0013">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="determine-max-capture-rate-test-5" time="0.0019">
+        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="determine-max-capture-rate-test-5" time="0.0024">
     </testcase>
 
         <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="moving-average-calculator-test-3" time="0.0002">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="moving-average-calculator-test-1" time="0.0009">
+        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="moving-average-calculator-test-1" time="0.0008">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="get-dropped-sum-test" time="0.0001">
+        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="get-dropped-sum-test" time="0.0002">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="self-adaptation-controller-initialization-test" time="0.0002">
+        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="self-adaptation-controller-initialization-test" time="0.0005">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="determine-max-capture-rate-test-4" time="0.0009">
+        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="determine-max-capture-rate-test-4" time="0.0010">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="self-adaptation-controller-limit-dsl-on-speedup-test" time="0.0038">
+        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="self-adaptation-controller-limit-dsl-on-speedup-test" time="0.0096">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="self-adaptation-controller-cap-rate-calc-test-2" time="0.0022">
+        <testcase classname="clj-net-pcap.test.self-adaptive-dsl-adjustment" name="self-adaptation-controller-cap-rate-calc-test-2" time="0.0166">
     </testcase>
+
+        <system-err>
+    </system-err>
+
+        <system-out>
+Determined max. capture rate:32-1.0
+Determined max. capture rate:32-1.0
+Determined max. capture rate:329900.0
+Adjusting max. capture rate for current state.
+{132{:dsl32[{:a32A} {:b32B} {:c32C}], :max-cap-rate329900.0}, 232{:dsl32[{:b32B} {:c32C}], :max-cap-rate32-1}}
+self-adaptivity-controller state changed from32132to322
+Resetting inact-ctr to322
+Restoring DSL for state:321
+self-adaptivity-controller state changed from32232to321
+Resetting inact-ctr to322
+Determined max. capture rate:32-1.0
+Determined max. capture rate:32-1.0
+Determined max. capture rate:329900.0
+Adjusting max. capture rate for current state.
+{132{:dsl32[{:a32A} {:b32B} {:c32C}], :max-cap-rate329900.0}, 232{:dsl32[{:b32B} {:c32C}], :max-cap-rate32-1}}
+self-adaptivity-controller state changed from32132to322
+Resetting inact-ctr to322
+Determined max. capture rate:32-1.0
+Determined max. capture rate:32-1.0
+Determined max. capture rate:329900.0
+Adjusting max. capture rate for current state.
+{132{:dsl32[{:a32A} {:b32B} {:c32C}], :max-cap-rate329900.0}, 232{:dsl32[{:b32B} {:c32C}], :max-cap-rate32-1}}
+self-adaptivity-controller state changed from32132to322
+Resetting inact-ctr to322
+Restoring DSL for state:321
+self-adaptivity-controller state changed from32232to321
+Resetting inact-ctr to322
+Using next simpler DSL sub part:322
+self-adaptivity-controller state changed from32132to322
+Resetting inact-ctr to322
+Determined max. capture rate:32-1.0
+Determined max. capture rate:32-1.0
+Determined max. capture rate:329900.0
+Adjusting max. capture rate for current state.
+{132{:dsl32[{:a32A} {:b32B} {:c32C}], :max-cap-rate329900.0}, 232{:dsl32[{:b32B} {:c32C}], :max-cap-rate32-1}}
+self-adaptivity-controller state changed from32132to322
+Resetting inact-ctr to320
+Determined max. capture rate:32-1.0
+Determined max. capture rate:32-1.0
+Determined max. capture rate:329900.0
+Adjusting max. capture rate for current state.
+{132{:dsl32[{:a32A} {:b32B} {:c32C}], :max-cap-rate329900.0}, 232{:dsl32[{:b32B} {:c32C}], :max-cap-rate329900.0}, 332{:dsl32[{:c32C}], :max-cap-rate32-1}}
+self-adaptivity-controller state changed from32232to323
+Resetting inact-ctr to320
+    </system-out>
+
+        <properties>
+              <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers">
+        </property>
+
+              <property name="java.vm.info" value="mixed mode, emulated-client, sharing">
+        </property>
+
+              <property name="clojure.debug" value="false">
+        </property>
+
+              <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
+        </property>
+
+              <property name="clj-net-pcap.version" value="1.8.3-SNAPSHOT">
+        </property>
+
+              <property name="path.separator" value=":">
+        </property>
+
+              <property name="user.dir" value="/home/rc/repositories/private/clojure/clj-net-pcap">
+        </property>
+
+              <property name="java.vm.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="user.country" value="US">
+        </property>
+
+              <property name="java.vendor.url" value="https://www.redhat.com/">
+        </property>
+
+              <property name="java.specification.name" value="Java Platform API Specification">
+        </property>
+
+              <property name="line.separator" value=" ">
+        </property>
+
+              <property name="sun.cpu.endian" value="little">
+        </property>
+
+              <property name="java.vm.version" value="17.0.3+7">
+        </property>
+
+              <property name="sun.java.launcher" value="SUN_STANDARD">
+        </property>
+
+              <property name="java.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="native.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="java.vm.compressedOopsMode" value="Zero based">
+        </property>
+
+              <property name="clojure.compile.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/target/classes">
+        </property>
+
+              <property name="java.vm.specification.version" value="17">
+        </property>
+
+              <property name="java.io.tmpdir" value="/tmp">
+        </property>
+
+              <property name="java.home" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64">
+        </property>
+
+              <property name="java.class.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/test:/home/rc/repositories/private/clojure/clj-net-pcap/src:/home/rc/repositories/private/clojure/clj-net-pcap/dev-resources:/home/rc/repositories/private/clojure/clj-net-pcap/resources:/home/rc/repositories/private/clojure/clj-net-pcap/target/classes:/root/.m2/repository/org/clojure/tools.analyzer.jvm/1.2.2/tools.analyzer.jvm-1.2.2.jar:/root/.m2/repository/org/clojure/tools.analyzer/1.1.0/tools.analyzer-1.1.0.jar:/root/.m2/repository/org/nrepl/incomplete/0.1.0/incomplete-0.1.0.jar:/root/.m2/repository/org/clojure/data.priority-map/1.1.0/data.priority-map-1.1.0.jar:/root/.m2/repository/org/ow2/asm/asm/9.2/asm-9.2.jar:/root/.m2/repository/org/clojure/clojure/1.11.1/clojure-1.11.1.jar:/root/.m2/repository/jline/jline/2.14.6/jline-2.14.6.jar:/root/.m2/repository/org/clojure/core.cache/1.0.225/core.cache-1.0.225.jar:/root/.m2/repository/cli4clj/cli4clj/1.9.0/cli4clj-1.9.0.jar:/root/.m2/repository/org/clojure/core.async/1.5.648/core.async-1.5.648.jar:/root/.m2/repository/clj-assorted-utils/clj-assorted-utils/1.19.0/clj-assorted-utils-1.19.0.jar:/root/.m2/repository/robert/hooke/1.3.0/hooke-1.3.0.jar:/root/.m2/repository/jnetpcap/jnetpcap/1.5.r1457-1i/jnetpcap-1.5.r1457-1i.jar:/root/.m2/repository/nrepl/nrepl/0.8.3/nrepl-0.8.3.jar:/root/.m2/repository/org/clojure/core.memoize/1.0.253/core.memoize-1.0.253.jar:/root/.m2/repository/org/clojure/core.specs.alpha/0.2.62/core.specs.alpha-0.2.62.jar:/root/.m2/repository/org/clojure/spec.alpha/0.3.218/spec.alpha-0.3.218.jar:/root/.m2/repository/test2junit/test2junit/1.4.4/test2junit-1.4.4.jar:/root/.m2/repository/org/clojure/tools.reader/1.3.6/tools.reader-1.3.6.jar:/root/.m2/repository/org/clojure/tools.cli/1.0.206/tools.cli-1.0.206.jar">
+        </property>
+
+              <property name="java.runtime.version" value="17.0.3+7">
+        </property>
+
+              <property name="java.vm.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="user.language" value="en">
+        </property>
+
+              <property name="java.vm.name" value="OpenJDK 64-Bit Server VM">
+        </property>
+
+              <property name="java.version" value="17.0.3">
+        </property>
+
+              <property name="os.arch" value="amd64">
+        </property>
+
+              <property name="user.home" value="/root">
+        </property>
+
+              <property name="java.specification.version" value="17">
+        </property>
+
+              <property name="sun.jnu.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.vendor.version" value="21.9">
+        </property>
+
+              <property name="java.runtime.name" value="OpenJDK Runtime Environment">
+        </property>
+
+              <property name="sun.io.unicode.encoding" value="UnicodeLittle">
+        </property>
+
+              <property name="sun.arch.data.model" value="64">
+        </property>
+
+              <property name="java.class.version" value="61.0">
+        </property>
+
+              <property name="file.encoding" value="UTF-8">
+        </property>
+
+              <property name="jdk.debug" value="release">
+        </property>
+
+              <property name="user.timezone" value="Europe/Berlin">
+        </property>
+
+              <property name="os.name" value="Linux">
+        </property>
+
+              <property name="os.version" value="5.18.13-200.fc36.x86_64">
+        </property>
+
+              <property name="file.separator" value="/">
+        </property>
+
+              <property name="java.vm.specification.name" value="Java Virtual Machine Specification">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap" value="/tmp/clj-net-pcap-native-tests_root/libjnetpcap.so">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap-pcap100" value="/tmp/clj-net-pcap-native-tests_root/libjnetpcap-pcap100.so">
+        </property>
+
+              <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib">
+        </property>
+
+              <property name="java.version.date" value="2022-04-19">
+        </property>
+
+              <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
+        </property>
+
+              <property name="sun.java.command" value="clojure.main -i /tmp/form-init1622314863370425935.clj">
+        </property>
+
+              <property name="user.name" value="root">
+        </property>
+
+        </properties>
 
   </testsuite>
-  <testsuite errors="0" failures="0" id="15" name="sniffer" package="clj-net-pcap.test" tests="3" time="2.5598" timestamp="2015-08-24_13:10:04+0200">
-        <testcase classname="clj-net-pcap.test.sniffer" name="test-sniffer" time="1.2680">
+  <testsuite errors="0" failures="0" id="15" name="sniffer" package="clj-net-pcap.test" tests="2" time="1.0849" timestamp="2022-12-25_18:53:10+0100">
+        <testcase classname="clj-net-pcap.test.sniffer" name="sniffer-forwarder-interaction" time="1.0778">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.sniffer" name="sniffer-forwarder-interaction" time="1.2890">
+        <testcase classname="clj-net-pcap.test.sniffer" name="test-forwarder" time="0.0037">
     </testcase>
 
-        <testcase classname="clj-net-pcap.test.sniffer" name="test-forwarder" time="0.0013">
-    </testcase>
+        <system-err>
+Creating pcap with: device = lo ; buffer size = 67108864 ; snaplen = 128 ; and promiscuous mode (flags) = 1
+    </system-err>
+
+        <system-out>
+Creating pcap with: device =32lo32; buffer size =326710886432; snaplen =3212832; and promiscuous mode (flags) =321
+Stopping online pcap.
+    </system-out>
+
+        <properties>
+              <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers">
+        </property>
+
+              <property name="java.vm.info" value="mixed mode, emulated-client, sharing">
+        </property>
+
+              <property name="clojure.debug" value="false">
+        </property>
+
+              <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
+        </property>
+
+              <property name="clj-net-pcap.version" value="1.8.3-SNAPSHOT">
+        </property>
+
+              <property name="path.separator" value=":">
+        </property>
+
+              <property name="user.dir" value="/home/rc/repositories/private/clojure/clj-net-pcap">
+        </property>
+
+              <property name="java.vm.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="user.country" value="US">
+        </property>
+
+              <property name="java.vendor.url" value="https://www.redhat.com/">
+        </property>
+
+              <property name="java.specification.name" value="Java Platform API Specification">
+        </property>
+
+              <property name="line.separator" value=" ">
+        </property>
+
+              <property name="sun.cpu.endian" value="little">
+        </property>
+
+              <property name="java.vm.version" value="17.0.3+7">
+        </property>
+
+              <property name="sun.java.launcher" value="SUN_STANDARD">
+        </property>
+
+              <property name="java.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="native.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.specification.vendor" value="Oracle Corporation">
+        </property>
+
+              <property name="java.vm.compressedOopsMode" value="Zero based">
+        </property>
+
+              <property name="clojure.compile.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/target/classes">
+        </property>
+
+              <property name="java.vm.specification.version" value="17">
+        </property>
+
+              <property name="java.io.tmpdir" value="/tmp">
+        </property>
+
+              <property name="java.home" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64">
+        </property>
+
+              <property name="java.class.path" value="/home/rc/repositories/private/clojure/clj-net-pcap/test:/home/rc/repositories/private/clojure/clj-net-pcap/src:/home/rc/repositories/private/clojure/clj-net-pcap/dev-resources:/home/rc/repositories/private/clojure/clj-net-pcap/resources:/home/rc/repositories/private/clojure/clj-net-pcap/target/classes:/root/.m2/repository/org/clojure/tools.analyzer.jvm/1.2.2/tools.analyzer.jvm-1.2.2.jar:/root/.m2/repository/org/clojure/tools.analyzer/1.1.0/tools.analyzer-1.1.0.jar:/root/.m2/repository/org/nrepl/incomplete/0.1.0/incomplete-0.1.0.jar:/root/.m2/repository/org/clojure/data.priority-map/1.1.0/data.priority-map-1.1.0.jar:/root/.m2/repository/org/ow2/asm/asm/9.2/asm-9.2.jar:/root/.m2/repository/org/clojure/clojure/1.11.1/clojure-1.11.1.jar:/root/.m2/repository/jline/jline/2.14.6/jline-2.14.6.jar:/root/.m2/repository/org/clojure/core.cache/1.0.225/core.cache-1.0.225.jar:/root/.m2/repository/cli4clj/cli4clj/1.9.0/cli4clj-1.9.0.jar:/root/.m2/repository/org/clojure/core.async/1.5.648/core.async-1.5.648.jar:/root/.m2/repository/clj-assorted-utils/clj-assorted-utils/1.19.0/clj-assorted-utils-1.19.0.jar:/root/.m2/repository/robert/hooke/1.3.0/hooke-1.3.0.jar:/root/.m2/repository/jnetpcap/jnetpcap/1.5.r1457-1i/jnetpcap-1.5.r1457-1i.jar:/root/.m2/repository/nrepl/nrepl/0.8.3/nrepl-0.8.3.jar:/root/.m2/repository/org/clojure/core.memoize/1.0.253/core.memoize-1.0.253.jar:/root/.m2/repository/org/clojure/core.specs.alpha/0.2.62/core.specs.alpha-0.2.62.jar:/root/.m2/repository/org/clojure/spec.alpha/0.3.218/spec.alpha-0.3.218.jar:/root/.m2/repository/test2junit/test2junit/1.4.4/test2junit-1.4.4.jar:/root/.m2/repository/org/clojure/tools.reader/1.3.6/tools.reader-1.3.6.jar:/root/.m2/repository/org/clojure/tools.cli/1.0.206/tools.cli-1.0.206.jar">
+        </property>
+
+              <property name="java.runtime.version" value="17.0.3+7">
+        </property>
+
+              <property name="java.vm.vendor" value="Red Hat, Inc.">
+        </property>
+
+              <property name="user.language" value="en">
+        </property>
+
+              <property name="java.vm.name" value="OpenJDK 64-Bit Server VM">
+        </property>
+
+              <property name="java.version" value="17.0.3">
+        </property>
+
+              <property name="os.arch" value="amd64">
+        </property>
+
+              <property name="user.home" value="/root">
+        </property>
+
+              <property name="java.specification.version" value="17">
+        </property>
+
+              <property name="sun.jnu.encoding" value="UTF-8">
+        </property>
+
+              <property name="java.vendor.version" value="21.9">
+        </property>
+
+              <property name="java.runtime.name" value="OpenJDK Runtime Environment">
+        </property>
+
+              <property name="sun.io.unicode.encoding" value="UnicodeLittle">
+        </property>
+
+              <property name="sun.arch.data.model" value="64">
+        </property>
+
+              <property name="java.class.version" value="61.0">
+        </property>
+
+              <property name="file.encoding" value="UTF-8">
+        </property>
+
+              <property name="jdk.debug" value="release">
+        </property>
+
+              <property name="user.timezone" value="Europe/Berlin">
+        </property>
+
+              <property name="os.name" value="Linux">
+        </property>
+
+              <property name="os.version" value="5.18.13-200.fc36.x86_64">
+        </property>
+
+              <property name="file.separator" value="/">
+        </property>
+
+              <property name="java.vm.specification.name" value="Java Virtual Machine Specification">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap" value="/tmp/clj-net-pcap-native-tests_root/libjnetpcap.so">
+        </property>
+
+              <property name="clj-net-pcap.lib.jnetpcap-pcap100" value="/tmp/clj-net-pcap-native-tests_root/libjnetpcap-pcap100.so">
+        </property>
+
+              <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib">
+        </property>
+
+              <property name="java.version.date" value="2022-04-19">
+        </property>
+
+              <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
+        </property>
+
+              <property name="sun.java.command" value="clojure.main -i /tmp/form-init1622314863370425935.clj">
+        </property>
+
+              <property name="user.name" value="root">
+        </property>
+
+        </properties>
 
   </testsuite>
 </testsuites>

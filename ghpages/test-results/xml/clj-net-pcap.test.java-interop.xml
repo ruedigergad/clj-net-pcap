@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.java-interop" errors="0" failures="0" tests="3" time="0.3169" timestamp="2022-10-03_15:35:29+0200">
-    <testcase name="test-java-static-extract-nested-maps-from-pcap-file" classname="clj-net-pcap.test.java-interop" time="0.1095">
+<testsuite name="clj-net-pcap.test.java-interop" errors="0" failures="0" tests="3" time="0.3168" timestamp="2022-12-25_18:52:52+0100">
+    <testcase name="test-java-static-extract-nested-maps-from-pcap-file" classname="clj-net-pcap.test.java-interop" time="0.1101">
     </testcase>
     <testcase name="test-java-static-extract-maps-from-pcap-file" classname="clj-net-pcap.test.java-interop" time="0.1025">
     </testcase>
-    <testcase name="test-java-static-extract-beans-from-pcap-file" classname="clj-net-pcap.test.java-interop" time="0.1027">
+    <testcase name="test-java-static-extract-beans-from-pcap-file" classname="clj-net-pcap.test.java-interop" time="0.1025">
     </testcase>
     <system-err>
     </system-err>
@@ -22,7 +22,7 @@ Waiting till handler completed...
         </property>
         <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
         </property>
-        <property name="clj-net-pcap.version" value="1.8.2">
+        <property name="clj-net-pcap.version" value="1.8.3-SNAPSHOT">
         </property>
         <property name="path.separator" value=":">
         </property>
@@ -115,7 +115,7 @@ Waiting till handler completed...
         </property>
         <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
         </property>
-        <property name="sun.java.command" value="clojure.main -i /tmp/form-init15557231247951377411.clj">
+        <property name="sun.java.command" value="clojure.main -i /tmp/form-init1622314863370425935.clj">
         </property>
         <property name="user.name" value="root">
         </property>

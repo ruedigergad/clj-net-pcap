@@ -15,10 +15,10 @@
   :javac-options     ["-target" "1.8" "-source" "1.8"]
 ;  :jvm-opts ["-Dnio.blocksize=1048576"]
   :omit-source true
-  :html5-docs-docs-dir "ghpages/doc"
+  :html5-docs-docs-dir "docs/doc"
   :html5-docs-ns-includes #"^clj-net-pcap.*"
   :html5-docs-repository-url "https://github.com/ruedigergad/clj-net-pcap/blob/master"
-  :test2junit-output-dir "ghpages/test-results"
+  :test2junit-output-dir "docs/test-results"
   :test2junit-run-ant true
   :test-selectors {:default (complement :main-cli)
                    :main-cli :main-cli}

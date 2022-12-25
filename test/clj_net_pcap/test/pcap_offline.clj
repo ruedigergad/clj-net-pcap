@@ -44,15 +44,17 @@
   (let [pcap (pcap/create-pcap-from-file test-file)]
     (test/is (not (nil? pcap)))))
 
-(test/deftest test-create-pcap-from-file-and-dispatch
-  (let [pcap (pcap/create-pcap-from-file test-file)
-        my-counter (utils/prepare-counter)
-        packet-handler (proxy [PcapPacketHandler] []
-                         (nextPacket [p u] (utils/inc-counter my-counter)))]
-    (test/is (= 0 @my-counter))
-    (.dispatch pcap -1 packet-handler nil)
-    (utils/sleep 200)
-    (test/is (= 6 @my-counter))))
+; The use of .dispatch with pcap files is deprecated.
+; Use core/process-pcap-file for processing pcap files.
+;(test/deftest test-create-pcap-from-file-and-dispatch
+;  (let [pcap (pcap/create-pcap-from-file test-file)
+;        my-counter (utils/prepare-counter)
+;        packet-handler (proxy [PcapPacketHandler] []
+;                         (nextPacket [p u] (utils/inc-counter my-counter)))]
+;    (test/is (= 0 @my-counter))
+;    (.dispatch pcap -1 packet-handler nil)
+;    (utils/sleep 200)
+;    (test/is (= 6 @my-counter))))
 
 (test/deftest test-process-pcap-file
   (let [my-counter (utils/counter)

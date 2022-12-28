@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.packet-gen" errors="0" failures="0" tests="17" time="0.0288" timestamp="2022-12-25_19:48:11+0100">
-    <testcase name="generate-packet-data-ipv4-with-automatically-calculated-checksum-test" classname="clj-net-pcap.test.packet-gen" time="0.0046">
+<testsuite name="clj-net-pcap.test.packet-gen" errors="0" failures="0" tests="17" time="0.0403" timestamp="2022-12-28_12:05:12+0100">
+    <testcase name="generate-packet-data-ipv4-with-automatically-calculated-checksum-test" classname="clj-net-pcap.test.packet-gen" time="0.0028">
     </testcase>
-    <testcase name="generate-packet-data-ipv4-with-udp-vec-payload-compute-len-test" classname="clj-net-pcap.test.packet-gen" time="0.0039">
+    <testcase name="generate-packet-data-ipv4-with-udp-vec-payload-compute-len-test" classname="clj-net-pcap.test.packet-gen" time="0.0023">
     </testcase>
-    <testcase name="generate-packet-data-ipv4-with-udp-test" classname="clj-net-pcap.test.packet-gen" time="0.0016">
+    <testcase name="generate-packet-data-ipv4-with-udp-test" classname="clj-net-pcap.test.packet-gen" time="0.0026">
     </testcase>
-    <testcase name="ipv4-string-to-byte-array-127_128_129_130-unchecked-test" classname="clj-net-pcap.test.packet-gen" time="0.0007">
+    <testcase name="ipv4-string-to-byte-array-127_128_129_130-unchecked-test" classname="clj-net-pcap.test.packet-gen" time="0.0010">
     </testcase>
-    <testcase name="eth-mac-string-to-byte-array-7F_80_81_82_83_84-unchecked-test" classname="clj-net-pcap.test.packet-gen" time="0.0005">
+    <testcase name="eth-mac-string-to-byte-array-7F_80_81_82_83_84-unchecked-test" classname="clj-net-pcap.test.packet-gen" time="0.0006">
     </testcase>
-    <testcase name="generate-packet-data-ipv4-with-icmp-compute-len-test" classname="clj-net-pcap.test.packet-gen" time="0.0012">
+    <testcase name="generate-packet-data-ipv4-with-icmp-compute-len-test" classname="clj-net-pcap.test.packet-gen" time="0.0035">
     </testcase>
-    <testcase name="generate-packet-data-ethernet-test" classname="clj-net-pcap.test.packet-gen" time="0.0005">
+    <testcase name="generate-packet-data-ethernet-test" classname="clj-net-pcap.test.packet-gen" time="0.0032">
     </testcase>
-    <testcase name="eth-mac-string-to-byte-array-FF_FE_FD_F2_F1_F0-unchecked-test" classname="clj-net-pcap.test.packet-gen" time="0.0004">
+    <testcase name="eth-mac-string-to-byte-array-FF_FE_FD_F2_F1_F0-unchecked-test" classname="clj-net-pcap.test.packet-gen" time="0.0008">
     </testcase>
-    <testcase name="generate-packet-data-ipv4-with-icmp-test" classname="clj-net-pcap.test.packet-gen" time="0.0011">
+    <testcase name="generate-packet-data-ipv4-with-icmp-test" classname="clj-net-pcap.test.packet-gen" time="0.0019">
     </testcase>
-    <testcase name="ipv4-string-to-byte-array-252_253_254_255-unchecked-test" classname="clj-net-pcap.test.packet-gen" time="0.0004">
+    <testcase name="ipv4-string-to-byte-array-252_253_254_255-unchecked-test" classname="clj-net-pcap.test.packet-gen" time="0.0007">
     </testcase>
-    <testcase name="generate-packet-data-ipv4-with-udp-compute-len-test" classname="clj-net-pcap.test.packet-gen" time="0.0010">
+    <testcase name="generate-packet-data-ipv4-with-udp-compute-len-test" classname="clj-net-pcap.test.packet-gen" time="0.0015">
     </testcase>
-    <testcase name="ipv4-string-to-byte-array-1_2_3_4-unchecked-test" classname="clj-net-pcap.test.packet-gen" time="0.0004">
+    <testcase name="ipv4-string-to-byte-array-1_2_3_4-unchecked-test" classname="clj-net-pcap.test.packet-gen" time="0.0007">
     </testcase>
-    <testcase name="generate-packet-data-ipv4-with-icmp-vec-payload-compute-len-test" classname="clj-net-pcap.test.packet-gen" time="0.0010">
+    <testcase name="generate-packet-data-ipv4-with-icmp-vec-payload-compute-len-test" classname="clj-net-pcap.test.packet-gen" time="0.0016">
     </testcase>
-    <testcase name="eth-mac-string-to-byte-array-10_11_12_1A_1B_1C-unchecked-test" classname="clj-net-pcap.test.packet-gen" time="0.0004">
+    <testcase name="eth-mac-string-to-byte-array-10_11_12_1A_1B_1C-unchecked-test" classname="clj-net-pcap.test.packet-gen" time="0.0007">
     </testcase>
-    <testcase name="generate-packet-data-ethernet-compute-len-test" classname="clj-net-pcap.test.packet-gen" time="0.0005">
+    <testcase name="generate-packet-data-ethernet-compute-len-test" classname="clj-net-pcap.test.packet-gen" time="0.0009">
     </testcase>
-    <testcase name="generate-packet-data-ipv4-with-manually-set-checksum-test" classname="clj-net-pcap.test.packet-gen" time="0.0033">
+    <testcase name="generate-packet-data-ipv4-with-manually-set-checksum-test" classname="clj-net-pcap.test.packet-gen" time="0.0054">
     </testcase>
-    <testcase name="eth-mac-string-to-byte-array-01_02_03_04_05_06-unchecked-test" classname="clj-net-pcap.test.packet-gen" time="0.0005">
+    <testcase name="eth-mac-string-to-byte-array-01_02_03_04_05_06-unchecked-test" classname="clj-net-pcap.test.packet-gen" time="0.0007">
     </testcase>
     <system-err>
     </system-err>
@@ -47,7 +47,7 @@
         </property>
         <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
         </property>
-        <property name="clj-net-pcap.version" value="1.8.3">
+        <property name="clj-net-pcap.version" value="1.8.4">
         </property>
         <property name="path.separator" value=":">
         </property>
@@ -140,7 +140,7 @@
         </property>
         <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
         </property>
-        <property name="sun.java.command" value="clojure.main -i /tmp/form-init13506422024338930303.clj">
+        <property name="sun.java.command" value="clojure.main -i /tmp/form-init11185699983368843978.clj">
         </property>
         <property name="user.name" value="root">
         </property>

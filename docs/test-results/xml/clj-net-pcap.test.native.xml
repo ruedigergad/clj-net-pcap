@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="clj-net-pcap.test.native" errors="0" failures="0" tests="8" time="0.0612" timestamp="2022-12-25_19:48:11+0100">
-    <testcase name="extract-and-refernce-native-libs-from-current-working-directory" classname="clj-net-pcap.test.native" time="0.0123">
+<testsuite name="clj-net-pcap.test.native" errors="0" failures="0" tests="8" time="0.0552" timestamp="2022-12-28_12:05:12+0100">
+    <testcase name="extract-and-refernce-native-libs-from-current-working-directory" classname="clj-net-pcap.test.native" time="0.0124">
     </testcase>
-    <testcase name="extract-remove-native-libs" classname="clj-net-pcap.test.native" time="0.0121">
+    <testcase name="extract-remove-native-libs" classname="clj-net-pcap.test.native" time="0.0100">
     </testcase>
-    <testcase name="extract-and-refernce-native-libs-from-jar" classname="clj-net-pcap.test.native" time="0.0152">
+    <testcase name="extract-and-refernce-native-libs-from-jar" classname="clj-net-pcap.test.native" time="0.0105">
     </testcase>
-    <testcase name="extract-from-jar-to-file" classname="clj-net-pcap.test.native" time="0.0139">
+    <testcase name="extract-from-jar-to-file" classname="clj-net-pcap.test.native" time="0.0132">
     </testcase>
-    <testcase name="find-lib-in-jar" classname="clj-net-pcap.test.native" time="0.0014">
+    <testcase name="find-lib-in-jar" classname="clj-net-pcap.test.native" time="0.0025">
     </testcase>
-    <testcase name="get-url-for-lib-error" classname="clj-net-pcap.test.native" time="0.0005">
+    <testcase name="get-url-for-lib-error" classname="clj-net-pcap.test.native" time="0.0004">
     </testcase>
-    <testcase name="mk-rm-native-lib-dir" classname="clj-net-pcap.test.native" time="0.0009">
+    <testcase name="mk-rm-native-lib-dir" classname="clj-net-pcap.test.native" time="0.0010">
     </testcase>
     <testcase name="get-url-for-lib" classname="clj-net-pcap.test.native" time="0.0003">
     </testcase>
@@ -31,7 +31,7 @@ Using the following path to locate the library inside the JAR file: 32native/lin
         </property>
         <property name="sun.boot.library.path" value="/usr/lib/jvm/java-17-openjdk-17.0.3.0.7-2.fc36.x86_64/lib">
         </property>
-        <property name="clj-net-pcap.version" value="1.8.3">
+        <property name="clj-net-pcap.version" value="1.8.4">
         </property>
         <property name="path.separator" value=":">
         </property>
@@ -124,7 +124,7 @@ Using the following path to locate the library inside the JAR file: 32native/lin
         </property>
         <property name="java.vendor.url.bug" value="https://bugzilla.redhat.com/enter_bug.cgi?product=Fedora&amp;component=java-17-openjdk&amp;version=36">
         </property>
-        <property name="sun.java.command" value="clojure.main -i /tmp/form-init13506422024338930303.clj">
+        <property name="sun.java.command" value="clojure.main -i /tmp/form-init11185699983368843978.clj">
         </property>
         <property name="user.name" value="root">
         </property>

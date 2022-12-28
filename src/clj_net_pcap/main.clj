@@ -59,9 +59,11 @@
     ["-h" "--help" "Print this help." :flag true]
     ["-i" "--interface"
      "Interface on which the packets are captured"
-     :default (cond
-                (utils/is-os? "windows") (-> (pcap/get-devices) first .getName)
-                :else "lo")]
+     :default (if pcap/lo
+                pcap/lo
+                (do
+                  (utils/println-err "Warning: loopback device is undefined. Using first available device as default.")
+                  (-> (pcap/get-devices) first .getName)))]
     ["-r" "--raw"
      (str "Emit raw data instead of decoded packets."
           " Be careful, not all transformation and forwarder functions support this.")

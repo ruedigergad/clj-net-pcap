@@ -56,17 +56,28 @@
   [dev-name]
   (not (nil? (get-device dev-name))))
 
+(defn print-devices
+  []
+  (utils/println-err "Available devices are:")
+  (doseq [dev (get-devices)]
+    (utils/println-err (.getName dev))
+    (utils/println-err (str "  " dev))))
 
+(when (utils/is-os? "windows")
+  (print-devices))
 
 (def lo (cond
           (device-exists? "lo") "lo"
           (device-exists? "lo0") "lo0"
-          :else (do
-                  (utils/println-err "Warning: Could not find name for loopback device.")
-                  (utils/println-err "Available devices are:")
-                  (doseq [dev (get-devices)]
-                    (utils/println-err (.getName dev))
-                    (utils/println-err (str "  " dev))))))
+          :else (let [lo-devs (filter #(string/includes? (string/lower-case (.getDescription %1)) "loopback") (get-devices))]
+                  (if (not (empty? lo-devs))
+                    (let [lo-dev (first lo-devs)]
+                      (utils/println-err "Using the following device as loopback:")
+                      (utils/println-err (str "  " lo-dev))
+                      (.getName lo-dev))
+                    (do
+                      (utils/println-err "Warning: Could not find name for loopback device.")
+                      (print-devices))))))
 (def any "any")
 (def first-wired-dev
   "This is a somewhat approximation to get the first wired network device.

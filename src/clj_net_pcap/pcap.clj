@@ -57,6 +57,7 @@
   (not (nil? (get-device dev-name))))
 
 (defn print-devices
+  "Print information about available devices to stderr."
   []
   (utils/println-err "Available devices are:")
   (doseq [dev (get-devices)]

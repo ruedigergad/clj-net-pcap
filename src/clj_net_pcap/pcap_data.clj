@@ -22,7 +22,9 @@
     (clojure [string :as string])
     (clojure.java [io :as jio])
     (clj-assorted-utils [util :as utils])
-    (clj-net-pcap [packet-offsets :as offsets]))
+    (clj-net-pcap
+     [native :as native]
+     [packet-offsets :as offsets]))
   (:import
     (java.io BufferedWriter IOException)
     (java.nio ByteBuffer)

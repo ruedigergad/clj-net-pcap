@@ -22,7 +22,7 @@
   :test2junit-run-ant true
   :test-selectors {:default (complement :main-cli)
                    :main-cli :main-cli}
-  :plugins [[lein-cloverage "1.0.9"] [test2junit "1.4.4"] [lein-html5-docs "3.0.3"]]
+  :plugins [[lein-cloverage "1.2.4"] [test2junit "1.4.4"] [lein-html5-docs "3.0.3"]]
   :profiles {:uberjar {:source-paths ["src" "src-main"]}
              :run {:source-paths ["src" "src-main"]}}
 )

@@ -13,7 +13,9 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: << checksum "project.clj" >>
+          keys:
+            - v1-dependencies-{{ checksum "project.clj" }}
+            - v1-dependencies-
       - run: sudo apt-get update; sudo apt-get install libpcap0.8 -qq
       - run: sudo ln -s /usr/lib/x86_64-linux-gnu/libpcap.so.0.8 /usr/lib/x86_64-linux-gnu/libpcap.so
       - run: sudo LEIN_ROOT=1 .circleci/bin/lein deps
@@ -21,7 +23,7 @@ jobs:
           paths:
             - $HOME/.m2
             - $HOME/.lein
-          key: << checksum "project.clj" >>
+          key: v1-dependencies-{{ checksum "project.clj" }}
       - run: sudo LEIN_ROOT=1 .circleci/bin/lein test
       - run: sudo LEIN_ROOT=1 .circleci/bin/lein cloverage -o cov --coveralls
       - coveralls/upload

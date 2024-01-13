@@ -22,8 +22,9 @@
     (clojure [string :as string])
     (clojure.java [io :as jio])
     (clj-assorted-utils [util :as utils])
+    #_{:clj-kondo/ignore [:unused-namespace]}
     (clj-net-pcap
-     [native :as native]
+     [native :as native] ; Explicitly require namespace here because cloverage uses a different ns load order during instrumentation.
      [packet-offsets :as offsets]))
   (:import
     (java.io BufferedWriter IOException)

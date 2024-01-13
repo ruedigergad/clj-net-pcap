@@ -19,8 +19,7 @@
   clj-net-pcap.native
   (:require
     (clojure.java [io :as jio])
-    (clj-assorted-utils [util :as utils])
-    [clj-assorted-utils.util :as utils])
+    (clj-assorted-utils [util :as utils]))
   (:import (clj_net_pcap LibLoader)))
 
 (def ^:dynamic *lib-dir* "clj-net-pcap")
